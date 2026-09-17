@@ -1,1898 +1,1902 @@
 {
-  "activities": [
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Food Detectives",
-      "activity_details": "Explore carbohydrates, proteins, and fats through an interactive 3D quiz-and-learn activity.",
-      "activity_path": [
-        {
-          "label": "3D Quiz",
-          "path": "activities/food-detectives/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Germination of Seeds",
-      "activity_details": "Soak dry whole seeds of gram or moong in water for a day. Drain excess water and cover seeds with wet cotton cloth. Keep moist for 2-3 days. Observe daily for the emergence of a white structure (root) and later a shoot.",
-      "activity_path": [
-        {
-          "label": "Interactive",
-          "path": "activities/germination-of-seeds/index.html"
-        },
-        {
-          "label": "3D Interactive",
-          "path": "activities/germination-of-seeds/3d/index.html"
-        }
-      ]
-    },
-
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Test for Carbohydrates (Starch)",
-      "activity_details": "Place bread slice, potato slice, and soaked chickpea seeds on separate plates. Add 2-3 drops of iodine solution. Observe blue-black color change indicating the presence of starch in bread and potato.",
-      "activity_path":[
-        {
-          "label":"Test for Carbohydrates",
-          "path": "activities/Test for Carbohydrates/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Test for Proteins",
-      "activity_details": "Grind gram/pea seeds and mash banana in separate test tubes. Add water, copper sulphate solution, and caustic soda. Violet color indicates the presence of proteins in the gram/pea seeds.",
-      "activity_path": [
-        {
-          "label": "Test for Proteins",
-          "path": "activities/test-for-proteins/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Test for Fats",
-      "activity_details": "Place peanuts, dry coconut pieces, and rice grains on separate white paper sheets. Crush them by folding the paper. Oily patches on the paper indicate the presence of fats in peanuts and dry coconut."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Observation of Stomata in Leaves",
-      "activity_details": "Tear the lower epidermis of a leaf (e.g., balsam). Place the peel on a slide with water, cover with a cover slip, and observe under a compound microscope. Identify the pores (stomata) surrounded by bean-shaped guard cells."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Photosynthesis - Starch Test",
-      "activity_details": "Boil a leaf in spirit to remove chlorophyll. Wash the leaf and add iodine solution. A blue-black color confirms the presence of starch, indicating photosynthesis."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Study How Insect Pests Spoil Food Grains",
-      "activity_details": "Observe infected grains for small holes, powdery material, thread-like structures, and foul smell. Break hollow grains to find organisms (worms/insects) and observe under a hand lens."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Food",
-      "activity_name": "Observation of Pond Water for Micro-organisms",
-      "activity_details": "Filter pond water through muslin cloth, place a drop on a slide with a cover slip, and observe under a compound microscope. Identify different microorganisms like algae and protozoa."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Explore Fabrics from Fibre",
-      "activity_details": "Cut a piece of cloth, pull out threads (yarn) using a needle, and scratch the yarn with your nail to split it into thin strands (fibres)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Classification of Materials",
-      "activity_details": "Test materials (wax, glass, sugar, leaf, coal, wood, coin, sponge) for hardness, solubility in water, float/sink, and transparency (using a dark spot on paper).",
-      "activity_path": [
-    {
-      "label": "Classification of Materials",
-      "path": "activities/classification_of_material/index.html"
-    }
-  ]
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Separation of Mixture (Iron, Sand, Salt)",
-      "activity_details": "Use a magnet to separate iron filings. Add water to dissolve salt, filter to separate sand, and evaporate the filtrate to obtain common salt."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Reversible and Irreversible Changes",
-      "activity_details": "Dissolve salt in water and then evaporate to get salt back (reversible). Cut a potato and try to join the pieces back (irreversible)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Neutralisation Reaction",
-      "activity_details": "Add phenolphthalein indicator to dilute HCl. Add dilute NaOH dropwise until the solution turns pink. Add HCl again until the solution becomes colorless."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Identification of Acidic/Basic/Neutral Salts",
-      "activity_details": "Test ferric chloride, sodium acetate, and sodium chloride solutions with red and blue litmus papers. Ferric chloride turns blue litmus red (acidic). Sodium acetate turns red litmus blue (basic). Sodium chloride shows no change (neutral)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Differentiating Physical and Chemical Changes",
-      "activity_details": "Fold paper (physical, reversible). Tear paper (physical, irreversible). Burn paper (chemical change, new substances formed)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Compare Water Absorption Capacity of Fibres",
-      "activity_details": "Weigh dry cotton, wool, and nylon fabric pieces. Immerse in water, drip dry, and weigh wet fabric. Calculate the water absorbed per gram of fabric."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Differentiate Natural and Man-made Fibres",
-      "activity_details": "Burn cotton, wool, polyester, and nylon threads. Natural fibres burn to ash, while synthetic fibres melt and form a bead before burning."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Metallic Oxides are Basic in Nature",
-      "activity_details": "Burn magnesium ribbon, collect the ash, add water, and test the solution with red and blue litmus papers. Red litmus turns blue, indicating basic nature."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Non-metallic Oxides are Acidic in Nature",
-      "activity_details": "Burn sulphur powder in a spoon and introduce it into a jar with water. Test the solution with litmus papers. Blue litmus turns red, indicating acidic nature."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Show Iron is More Reactive than Copper",
-      "activity_details": "Immerse an iron nail/shaving blade in copper sulphate solution. Observe the blue colour fading to green and a brown deposit (copper) forming on the iron."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Hydrogen Gas from Acid-Metal Reaction",
-      "activity_details": "Add aluminium foil to dilute hydrochloric acid in a conical flask. Bring a burning matchstick near the mouth of the tube to hear a 'pop' sound, confirming hydrogen gas."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Electric Conductivity of Metals and Non-metals",
-      "activity_details": "Make a simple electric circuit with a bulb. Test iron nail, zinc granules, sulphur lump, and coal piece. The bulb glows for iron and zinc (metals) but not for sulphur and coal (non-metals)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Oxygen is Necessary for Combustion",
-      "activity_details": "Light two candles. Cover one with a glass jar. The covered candle extinguishes after some time as oxygen is used up."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Ignition Temperature",
-      "activity_details": "Heat an empty paper cone and a paper cone filled with water over a flame. The empty cone burns, while the water-filled cone does not because heat is absorbed by the water."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Measure Temperature of Water (Heating, Boiling, Cooling)",
-      "activity_details": "Heat water and measure temperature every 2 minutes. Record temperature during heating, boiling (constant), and cooling. Draw a graph of the observations."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Materials",
-      "activity_name": "Distinguish Good Conductors and Poor Conductors of Heat",
-      "activity_details": "Place metal, plastic, and wooden objects in hot water. Touch the exposed ends after 2 and 4 minutes. Metal ends become hot (conductors), while plastic/wood ends remain cold (insulators)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Study Transpiration",
-      "activity_details": "Cover a leafy branch and a leafless branch with polythene bags. Water droplets appear inside the bag covering the leafy branch due to transpiration."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Identify Parts of a Flower and Distinguish Unisexual/Bisexual",
-      "activity_details": "Cut a flower (like Petunia) vertically to identify sepals, petals, stamens, and pistil. Flowers with both stamens and pistil are bisexual; flowers with only one are unisexual."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Learn about Joints and Movement",
-      "activity_details": "Move different body parts (head, neck, arm, elbow, etc.) and identify the type of joint (ball-and-socket, hinge, pivot, gliding, fixed) based on the movement."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Find Out What Exhaled Air Contains",
-      "activity_details": "Blow air through a straw into lime water. The lime water turns milky, confirming the presence of carbon dioxide in exhaled air."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Understand Mechanism of Breathing",
-      "activity_details": "Use a model (plastic bottle, Y-tube, balloons, rubber sheet). Pulling the rubber sheet downwards inflates the balloons (inhalation), pushing it upwards deflates them (exhalation)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Observe Osmosis in Potato",
-      "activity_details": "Make a cavity in a potato, fill it with sugar solution, and place it in a Petri dish of water. The level of sugar solution rises due to osmosis (water moving into the potato)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Study Reproduction in Fungi (Bread Mould)",
-      "activity_details": "Sprinkle water on a bread slice, keep in a warm place for 2-3 days. Observe thread-like hyphae and sporangia under a microscope."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Study Reproduction in Yeast",
-      "activity_details": "Dissolve yeast in warm sugar solution. After an hour, observe a drop under the microscope. Identify budding yeast cells."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Prepare Temporary Slide of Plant Cells (Onion)",
-      "activity_details": "Remove a peel from onion, stain with methylene blue, mount in glycerine, and observe under microscope to identify cell wall, nucleus, and cytoplasm."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "World of the Living",
-      "activity_name": "Create Awareness about Gender-based Discrimination",
-      "activity_details": "Participate in activities like self-awareness (listing strengths/weaknesses), group discussions on gender stereotypes, and role plays to understand gender sensitivity."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Measure Length by Counting Steps",
-      "activity_details": "Walk along a wall counting footsteps, measure foot length, and convert the length into cm/m. Compare results with classmates."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Find Speed of Hopping",
-      "activity_details": "Hop on one leg for distances of 20m, 25m, 30m, 35m, and 40m. Measure time taken and calculate speed for each distance."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Understand Net Force",
-      "activity_details": "Push a heavy box alone, with a partner (same direction), and with a partner (opposite direction). Observe the ease of movement in each case."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Show Liquid Pressure Depends on Height, Not Volume",
-      "activity_details": "Make holes at the same height in bottles of different capacities. Fill to the same water level and observe the distance the water streams travel."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Explain Working Principle of a Rubber Dropper",
-      "activity_details": "Press the rubber bulb of a dropper, immerse the nozzle in water, and release the bulb. Water rushes in due to air pressure (vacuum created)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Moving Things, People and Ideas",
-      "activity_name": "Show Static Friction Increases with Weight",
-      "activity_details": "Pull a wooden block with a rubber band. Add weights (0.5kg, 1kg, 2kg) and measure the stretched length of the rubber band when the block just starts moving."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Make a Bulb Glow with a Simple Circuit",
-      "activity_details": "Connect a cell, bulb, and switch with wires. Close the switch to complete the circuit and make the bulb glow."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Make a Magnet and Observe its Properties",
-      "activity_details": "Rub an iron nail with a magnet 30-40 times. Test with pins. Float on thermocol in water to find the north-south direction."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Find Out if Both Poles of a Magnet are Equally Strong",
-      "activity_details": "Place a pin at a distance from a magnet and slowly move it closer. Note the distance at which it is pulled. Repeat for both poles and compare."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Observe Heating Effect of Electric Current",
-      "activity_details": "Wrap nichrome wire around a candle, connect to a battery, and observe the wax melting due to heat from the current."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Observe Strength of Electromagnet with Number of Turns",
-      "activity_details": "Wind 20, 40, and 60 turns of wire on iron bolts. Connect to a battery and count the number of nails attracted by each."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "How Things Work",
-      "activity_name": "Study Electrolysis of Water",
-      "activity_details": "Insert electrodes in salt water with a U-shape wire. Connect to a battery and observe bubbles forming at both electrodes (hydrogen and oxygen)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Study Shadow Formation",
-      "activity_details": "Use a torch, opaque/translucent/transparent objects, and a screen. Observe the formation and nature of shadows.",
-      "activity_path": [
-    {
-      "label": "Light Detective Lab",
-      "path": "activities/light_detective_lab/index.html"
-    }
-  ]
-
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Show Air Exerts Pressure",
-      "activity_details": "Fill a plastic bottle with hot water, empty it, and cap it tightly. Pour cold water over it and observe the bottle deforming due to external air pressure."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Observe Air Expands on Heating",
-      "activity_details": "Fix a balloon on the mouth of an empty bottle. Place in hot water (balloon inflates) and then in cold water (balloon deflates)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Observe Image Formed by Concave Mirror",
-      "activity_details": "Place a candle at different distances from a concave mirror. Move a screen to obtain a sharp image and observe its size and nature (real/inverted)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Observe Image Formed by Convex Lens",
-      "activity_details": "Place a candle at different distances from a convex lens. Move a screen to obtain a sharp image and observe its size and nature (real/inverted/virtual)."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Burn a Candle in a Glass of Water (Fun Game)",
-      "activity_details": "Place a lighted candle in front of a glass sheet. Place a glass of water behind the sheet at the image position. The candle appears to be burning in water."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Verify Laws of Reflection",
-      "activity_details": "Use a plane mirror, knitting needles, and a protractor. Trace the incident and reflected rays, measure the angles, and verify that angle of incidence equals angle of reflection."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Phenomena",
-      "activity_name": "Observe Moon Phases",
-      "activity_details": "Use a half-painted ball. Stand at the centre of a circle as your friend moves the ball along the circle, keeping the white side facing the sun. Observe the visible white portion."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Resources",
-      "activity_name": "Role of Air",
-      "activity_details": "Paste/draw pictures of activities like burning, reading, drying clothes, kite flying, etc., and write the role of air in each activity."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Resources",
-      "activity_name": "Recycle Waste Paper",
-      "activity_details": "Tear waste paper, soak in water, blend to a pulp, spread on a wire mesh frame, press, and dry to make recycled paper."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Resources",
-      "activity_name": "Infiltration of Water through Soil",
-      "activity_details": "Use a cut plastic bottle as a funnel with filter paper. Add soil, pour water, and observe water trickling down into the container."
-    },
-    {
-      "class": "VI",
-      "subject": "Science",
-      "topic": "Natural Resources",
-      "activity_name": "Cleaning of Muddy Water",
-      "activity_details": "Filter muddy water through muslin cloth. Swirl alum in the water to settle fine particles. Decant and boil the water to kill germs."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Nutrition in Plants",
-      "activity_name": "Test for Starch (Iodine Test)",
-      "activity_details": "Boil a leaf in water, then in methylated spirit to remove chlorophyll. Add iodine solution to test for starch."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Nutrition in Plants",
-      "activity_name": "Chlorophyll is Necessary for Photosynthesis",
-      "activity_details": "Destarch a variegated leaf plant, expose to sunlight, and test for starch. Only the green parts turn blue-black."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Nutrition in Plants",
-      "activity_name": "Sunlight is Necessary for Photosynthesis",
-      "activity_details": "Cover part of a destarched leaf with black paper, expose to sunlight, and test for starch. Only the uncovered part turns blue-black."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Nutrition in Plants",
-      "activity_name": "Carbon Dioxide is Necessary for Photosynthesis",
-      "activity_details": "Insert a leaf through a split cork into a flask with KOH (absorbs CO2). Expose to sunlight and test for starch. The leaf inside the flask does not turn blue-black."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Measuring Temperature of Water",
-      "activity_details": "Dip a thermometer in water, heat the water, and record the temperature every 2 minutes."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Measuring Body Temperature",
-      "activity_details": "Use a clinical thermometer. Shake it to below 35°C, place under the tongue for one minute, and read the temperature."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Conduction of Heat",
-      "activity_details": "Fix aluminium and iron rods in a T-shape holder with wax pieces on them. Heat the middle and observe which wax falls first."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Absorption of Heat",
-      "activity_details": "Paste black paper on one can and white on another. Fill with water, leave in the sun, and measure the temperature difference."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Convection in Liquids",
-      "activity_details": "Place a KMnO4 crystal at the bottom of a beaker of water. Heat slowly and observe the convection currents."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Heat",
-      "activity_name": "Convection in Gases",
-      "activity_details": "Cut a paper spiral, suspend it over a candle flame, and observe it rotating due to rising hot air."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Acids, Bases and Salts",
-      "activity_name": "Testing with Indicators",
-      "activity_details": "Test shampoo, lemon juice, vinegar, soap solution with litmus, turmeric, and china rose extract. Record colour changes to identify acidic/basic nature.",
-      "activity_path": [
-    {
-      "label": "Testing with Indicators",
-      "path": "activities/Testing_with_Indicator/index.html"
-    }
-  ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Acids, Bases and Salts",
-      "activity_name": "Neutralisation Reaction",
-      "activity_details": "Add phenolphthalein to HCl. Add NaOH dropwise until pink. Add HCl again until it becomes colourless, showing neutralisation."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Ice Melting and Water Evaporation",
-      "activity_details": "Heat ice to melt it, then heat water to evaporate it. Condense water vapour on an inverted watch glass to get water back (physical changes).",
-      "activity_path": [
-        {
-            "label": "Ice Melting and Water Evaporation",
-            "path": "activities/Physical_and_Chemical_Changes/index.html"
-        }
-    ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Heating a Shaving Blade",
-      "activity_details": "Heat a shaving blade over a flame (colour changes) and let it cool (regains colour) - physical change."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Burning Magnesium Ribbon",
-      "activity_details": "Burn magnesium ribbon, collect the ash, add water, and test with phenolphthalein (turns pink) - chemical change."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Zinc + Copper Sulphate Reaction",
-      "activity_details": "Add zinc granules to copper sulphate solution. Observe colour change and brown deposit (chemical change)."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Baking Soda + Vinegar Reaction",
-      "activity_details": "Use a W-tube. Add baking soda and vinegar, pass the gas through lime water, and observe it turning milky (chemical change)."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Physical and Chemical Changes",
-      "activity_name": "Crystallisation",
-      "activity_details": "Make a saturated copper sulphate solution, heat, and cool to get crystals."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Wind, Storms and Cyclones",
-      "activity_name": "Air Expansion/Contraction",
-      "activity_details": "Heat a test tube with a coloured water drop in a glass tube. Observe the drop moving. Cool the tube and observe the drop moving back."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Wind, Storms and Cyclones",
-      "activity_name": "Air Pressure (Plastic Bottle)",
-      "activity_details": "Pour hot water into a thin plastic bottle, empty it, close the lid, and pour cold water over it. Observe the bottle deforming."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Wind, Storms and Cyclones",
-      "activity_name": "Air Pressure (Funnel and Ball)",
-      "activity_details": "Place a plastic ball in a funnel and blow through the stem. The ball rises due to low pressure created at the nozzle."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Soils",
-      "activity_name": "Soil Layers",
-      "activity_details": "Add soil samples to water in tumblers, stir, and leave undisturbed to observe different layers (gravel, sand, clay, humus)."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Soils",
-      "activity_name": "Water in Soil",
-      "activity_details": "Heat soil in a test tube and observe water droplets on the inner side."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Soils",
-      "activity_name": "Water Holding Capacity",
-      "activity_details": "Pour 100 mL of water through sandy, clayey, and loamy soil in funnels. Measure the water collected to compare absorption.",
-      "activity_path": [
-        {
-          "label": "Water_Holding_Capacity",
-          "path": "activities/Water Holding Capacity/index.html"
-
-        }
-     ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Respiration in Organisms",
-      "activity_name": "Exhaled Air - Lime Water",
-      "activity_details": "Blow through a Y-tube into lime water and tap water. Observe lime water turning milky due to CO2 in exhaled air."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Respiration in Organisms",
-      "activity_name": "Mechanism of Breathing (Model)",
-      "activity_details": "Make a model with a bell jar, Y-tube, balloons, and rubber sheet. Pull/push the rubber sheet to show inhalation/exhalation."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Transportation in Animals and Plants",
-      "activity_name": "Stethoscope",
-      "activity_details": "Fix a rubber tube to a funnel, stretch a rubber sheet on the funnel mouth, and place on the chest to hear the heartbeat."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Transportation in Animals and Plants",
-      "activity_name": "Osmosis in Potato",
-      "activity_details": "Make a potato cavity with sugar solution, place in water, and observe the level rise due to osmosis."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Reproduction in Plants",
-      "activity_name": "Budding in Yeast",
-      "activity_details": "Dissolve yeast in warm sugar solution and observe budding under a microscope after an hour."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Motion and Time",
-      "activity_name": "Simple Pendulum",
-      "activity_details": "Suspend a bob from a G-clamp, displace and release. Measure time for 20 oscillations and calculate the time period.",
-      "activity_path": [
-        {
-          "label": "Pendulum",
-          "path": "activities/simple-pendulum/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Motion and Time",
-      "activity_name": "Average Speed",
-      "activity_details": "Mark a 50 m line, walk with normal gait, measure time, and calculate speed.",
-      "activity_path": [
-        {
-      "label": "Average Speed",
-      "path": "activities/average-speed/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Motion and Time",
-      "activity_name": "Sun-dial",
-      "activity_details": "Place a sun-dial in the N-S direction and read the time from the shadow."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Electric Current and its Effects",
-      "activity_name": "Heating Effect",
-      "activity_details": "Connect a resistor to a generator, rotate at moderate speed, and check the hotness of the resistor."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Electric Current and its Effects",
-      "activity_name": "Magnetic Effect",
-      "activity_details": "Place a compass needle near a wire connected to a cell/switch. Close the switch and observe the needle deflection."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Electric Current and its Effects",
-      "activity_name": "Electromagnet",
-      "activity_details": "Wind insulated copper wire on an iron nail, connect to a cell, and test with iron filings."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Identify Lenses and Mirrors",
-      "activity_details": "Observe polished/curved surfaces to classify as plane, convex, concave mirrors and convex, concave lenses.",
-      "activity_path": [
-        {
-          "label": "Identify Lenses and Mirrors",
-          "path": "activities/Identify Lenses and Mirrors/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Concave Mirror Image",
-      "activity_details": "Place a candle at different distances from a concave mirror and obtain the image on a screen."
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Convex Lens Image",
-      "activity_details": "Place a candle at different distances from a convex lens and obtain the image on a screen.",
-      "activity_path": [
-        {
-        "label": "Convex Lens Image",
-        "path": "activities/Convex Lens Image/index.html"
-        }
-    ]
-    },
-       {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Colour Disc",
-      "activity_details": "Divide a circular disc into 7 colours, rotate rapidly, and observe it appearing white.",
-      "activity_path": [
-        {
-          "label": "Colour_Disc",
-          "path": "activities/Colour Disc/index.html"
-       }
-     ]
-    },
-    {
-      "class": "VII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Water Prism",
-      "activity_details": "Place a mirror in a water-filled tumbler, reflect sunlight to a wall, and observe the spectrum."
-    },
-    {
-      "class": "VII",
-      "subject": "Mathematics",
-      "topic": "Integers",
-      "activity_name": "Integer Number Line Game",
-      "activity_details": "Move a character left or right on a number line to solve integer addition and subtraction problems.",
-      "activity_path": [
-        {
-          "label": "Number Line Game",
-          "path": "activities/integers-number-line/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Mathematics",
-      "topic": "Fractions and Decimals",
-      "activity_name": "Fraction Visualizer",
-      "activity_details": "Click equal pizza slices to represent fractions and connect shaded parts with decimal values.",
-      "activity_path": [
-        {
-          "label": "Fraction Visualizer",
-          "path": "activities/fraction-visualizer/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Mathematics",
-      "topic": "Simple Equations",
-      "activity_name": "Balance the Equation",
-      "activity_details": "Drag or select a number for x and use a balance model to solve equations such as x + 5 = 12.",
-      "activity_path": [
-        {
-          "label": "Balance Lab",
-          "path": "activities/simple-equations-balance/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Mathematics",
-      "topic": "Lines and Angles",
-      "activity_name": "Angle Explorer",
-      "activity_details": "Move a ray to create angles and identify acute, right, obtuse, straight, and reflex angles.",
-      "activity_path": [
-        {
-          "label": "Angle Explorer",
-          "path": "activities/angle-explorer/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VII",
-      "subject": "Mathematics",
-      "topic": "Perimeter and Area",
-      "activity_name": "Area Builder",
-      "activity_details": "Change the length and breadth of a rectangle, count grid squares, and calculate area and perimeter.",
-      "activity_path": [
-        {
-          "label": "Area Builder",
-          "path": "activities/area-builder/index.html"
-        },
-        {
-          "label": "Simulator",
-          "path": "https://pythonstudio.technikh.com/#preview=phone&code=%23%20Area%20Builder%0A%23%20Each%20grid%20square%20is%201%20%C3%97%201%20unit%0A%0A%0Alength%20%3D%20int(input(%22Enter%20the%20length%20of%20the%20rectangle%3A%20%22))%0Abreadth%20%3D%20int(input(%22Enter%20the%20breadth%20of%20the%20rectangle%3A%20%22))%0A%0A%23%20Calculate%20area%20and%20perimeter%0Aarea%20%3D%20length%20*%20breadth%0Aperimeter%20%3D%202%20*%20(length%20%2B%20breadth)%0A%0Aprint(%22%5Cn---%20Rectangle%20---%22)%0A%0A%23%20Display%20the%20grid%0Afor%20i%20in%20range(breadth)%3A%0A%20%20%20%20print(%22%E2%96%A0%20%22%20*%20length)%0A%0Aprint(%22%5CnArea%20%3D%22%2C%20area%2C%20%22square%20units%22)%0Aprint(%22Perimeter%20%3D%22%2C%20perimeter%2C%20%22units%22)%0A%0A%23%20Compare%0Aprint(%22%5Cn---%20Comparison%20---%22)%0A%0Aif%20area%20%3E%20perimeter%3A%0A%20%20%20%20print(%22Area%20is%20greater%20than%20perimeter.%22)%0Aelif%20area%20%3C%20perimeter%3A%0A%20%20%20%20print(%22Perimeter%20is%20greater%20than%20area.%22)%0Aelse%3A%0A%20%20%20%20print(%22Area%20and%20perimeter%20have%20the%20same%20numerical%20value.%22)%0A%0A%23%20Verification%0Asquares%20%3D%20length%20*%20breadth%0A%0Aprint(%22%5Cn---%20Verification%20---%22)%0Aprint(%22Number%20of%20small%20squares%20inside%20%3D%22%2C%20squares)%0Aprint(%22Area%20using%20multiplication%20%3D%22%2C%20length%2C%20%22%C3%97%22%2C%20breadth%2C%20%22%3D%22%2C%20area)%0A%0Aif%20squares%20%3D%3D%20area%3A%0A%20%20%20%20print(%22%E2%9C%93%20Area%20verified!%22)"
-        }
-      ]
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Crop Production and Management",
-      "activity_name": "Effect of Manure and Fertiliser on Plant Growth",
-      "activity_details": "Plant moong/gram seedlings in pots with soil+cow dung manure, soil+urea, and soil only. Observe growth after 7-10 days."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Microorganisms",
-      "activity_name": "Microorganisms in Soil and Pond Water",
-      "activity_details": "Collect soil and pond water samples. Observe drops under a microscope to identify microorganisms."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Microorganisms",
-      "activity_name": "Fermentation by Yeast",
-      "activity_details": "Dissolve sugar in warm water, add yeast powder, close with cotton, and observe after 4-5 hours. Notice the alcoholic smell."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Synthetic Fibres and Plastics",
-      "activity_name": "Strength of Fibres",
-      "activity_details": "Tie cotton, nylon, and other threads to a polythene bag. Add weights until the thread breaks to compare strength."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Synthetic Fibres and Plastics",
-      "activity_name": "Water Absorption of Fabrics",
-      "activity_details": "Soak cotton and nylon cloth pieces in water, compare drying time and amount of water absorbed."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Malleability",
-      "activity_details": "Beat copper wire, coal piece, zinc, etc., with a hammer. Metals flatten (malleable), non-metals break."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Electrical Conductivity",
-      "activity_details": "Test materials in a circuit board with a bulb to classify as conductors or insulators."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Rust is Basic in Nature",
-      "activity_details": "Test rust with red and blue litmus papers. Red litmus turns blue, indicating basic nature."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Sulphur Burning - Acidic Nature",
-      "activity_details": "Burn sulphur in a deflagrating spoon and introduce into a flask with litmus papers. Blue litmus turns red."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Magnesium + Water",
-      "activity_details": "Add magnesium to water, heat, and test with red litmus (turns blue)."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Zinc + Hot Water",
-      "activity_details": "Add zinc to water, heat, and test with red litmus (turns blue)."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Metals + Dilute HCl",
-      "activity_details": "Test Mg, Al, Fe, Cu, S, and charcoal with dilute HCl. Observe reactions and test the gas with a matchstick (pop sound for H2)."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Aluminium + Base",
-      "activity_details": "Add aluminium foil to NaOH solution, heat, and test the gas with a matchstick."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Materials: Metals and Non-metals",
-      "activity_name": "Displacement Reactions",
-      "activity_details": "Immerse Fe and Zn strips in CuSO4 solution. Observe colour change and deposit."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Combustion and Flame",
-      "activity_name": "Combustible Substances",
-      "activity_details": "Test straw, wood, paper, iron nail, stone, and glass over a flame to identify combustible and non-combustible substances."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Combustion and Flame",
-      "activity_name": "Air is Necessary for Combustion",
-      "activity_details": "Light a candle under a bell jar with wooden blocks. Remove blocks and cover with a glass plate to see the flame extinguish."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Combustion and Flame",
-      "activity_name": "Heating Water in a Paper Cup",
-      "activity_details": "Heat an empty paper cup and a water-filled paper cup over a candle flame. The water-filled cup does not burn."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Combustion and Flame",
-      "activity_name": "Zones of a Flame",
-      "activity_details": "Insert a copper tube into the innermost part of the flame. Hold a glass slide in the middle zone. Hold a copper wire in the outer zone. Observe the effects."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Cell: Structure and Function",
-      "activity_name": "Observing Amoeba, Paramecium, and Yeast",
-      "activity_details": "Observe permanent slides of Amoeba, Paramecium, and yeast under a microscope. Draw their shapes."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Cell: Structure and Function",
-      "activity_name": "Observing Plant Cells (Onion Peel)",
-      "activity_details": "Remove onion peel, stain with methylene blue, and observe under a microscope. Identify cell wall, nucleus, and cytoplasm."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Reproduction in Animals",
-      "activity_name": "Asexual Reproduction (Hydra and Amoeba)",
-      "activity_details": "Observe permanent slides of Hydra (budding) and Amoeba (binary fission)."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Force and Pressure",
-      "activity_name": "Non-contact Forces",
-      "activity_details": "Float a magnet on thermocol in water and bring another magnet near it. Rub plastic straws and observe repulsion."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Force and Pressure",
-      "activity_name": "Pressure and Area",
-      "activity_details": "Place a board with nails on sand with weight. Reverse the board and observe the difference in penetration."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Friction",
-      "activity_name": "Measuring Weight with Spring Balance",
-      "activity_details": "Suspend an object from a spring balance and read the scale."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Friction",
-      "activity_name": "Friction and Surface Nature",
-      "activity_details": "Pull a wooden block on sandpaper, sunmica, and glass sheet. Compare the force required."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Pleasant Sound vs Noise",
-      "activity_details": "Fill glasses with different water levels and strike with a pencil to produce sounds."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Sound Through a String",
-      "activity_details": "Make a string telephone with paper cups and speak through one end."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Waves in a Slinky",
-      "activity_details": "Create transverse and longitudinal waves in a slinky."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Chemical Effects of Electric Current",
-      "activity_name": "Electrolysis of Water",
-      "activity_details": "Pass current through water with a universal indicator. Collect gases in droppers at the electrodes."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Chemical Effects of Electric Current",
-      "activity_name": "Electroplating",
-      "activity_details": "Pass current through a copper sulphate solution with copper electrodes. Observe copper deposition on one electrode."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Some Natural Phenomena",
-      "activity_name": "Making an Electroscope",
-      "activity_details": "Make an electroscope with a bell jar, J-shaped wire, and aluminium foil. Charge by rubbing a comb."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Some Natural Phenomena",
-      "activity_name": "Interaction of Charged Objects",
-      "activity_details": "Rub balloons and refills with cloth. Observe attraction and repulsion between like and unlike charges."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Laws of Reflection",
-      "activity_details": "Use a ray streak apparatus and plane mirror. Measure the angle of incidence and reflection."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Multiple Reflections",
-      "activity_details": "Use two plane mirrors to see objects behind you."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Kaleidoscope",
-      "activity_details": "Make a kaleidoscope with 3 mirror strips and bangle pieces. Observe the patterns."
-    },
-    {
-      "class": "VIII",
-      "subject": "Science",
-      "topic": "Light",
-      "activity_name": "Splitting Sunlight",
-      "activity_details": "Pass sunlight through a prism to observe the spectrum."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Matter in Our Surroundings",
-      "activity_name": "Compressibility of Gases and Liquids",
-      "activity_details": "Pull the piston of a syringe, block the nozzle, and push the piston. Repeat with water-filled syringe."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Matter in Our Surroundings",
-      "activity_name": "Boiling Point of Water",
-      "activity_details": "Heat water in a fusion tube with a capillary tube in an aluminium block. Record the temperature when a steady stream of bubbles appears."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Matter in Our Surroundings",
-      "activity_name": "Melting Point of Ice",
-      "activity_details": "Keep crushed ice in a beaker with a thermometer. Record the temperature when the ice starts melting."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Matter in Our Surroundings",
-      "activity_name": "Sublimation",
-      "activity_details": "Heat camphor/naphthalene/iodine in a China dish with an inverted funnel. Observe the solid deposit on the funnel."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Matter in Our Surroundings",
-      "activity_name": "Rate of Evaporation",
-      "activity_details": "Take water, acetone, and rectified spirit in beakers. Record temperature and volume decrease after 10 minutes."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Is Matter Around Us Pure?",
-      "activity_name": "Saturated Solution",
-      "activity_details": "Add salt to water with stirring until no more dissolves (at room temp and hot water)."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Is Matter Around Us Pure?",
-      "activity_name": "Separation of Sand, Salt, and Camphor",
-      "activity_details": "Sublime camphor, dissolve salt in water, filter sand, and evaporate the filtrate to get salt."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Is Matter Around Us Pure?",
-      "activity_name": "Homogeneous and Heterogeneous Mixtures",
-      "activity_details": "Prepare salt solution (homogeneous), chalk suspension, and starch colloid (heterogeneous). Observe transparency and filtration."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Is Matter Around Us Pure?",
-      "activity_name": "Tyndall Effect",
-      "activity_details": "Pass a torch light through salt solution, starch solution, and chalk suspension to observe the light path."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Is Matter Around Us Pure?",
-      "activity_name": "Mixture vs Compound",
-      "activity_details": "Mix iron and sulphur (mixture). Heat some to form a compound. Compare with magnet, acid, and appearance."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Atoms and Molecules",
-      "activity_name": "Law of Conservation of Mass",
-      "activity_details": "Weigh a flask with AgNO3 in an ignition tube and NaCl solution before and after reaction."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Structure of the Atom",
-      "activity_name": "Electron Distribution Model",
-      "activity_details": "Make wire loops with beads for the orbits of a Na atom. Fix on cardboard with a nucleus at the centre."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "The Fundamental Unit of Life",
-      "activity_name": "Study Plant Cells (Onion Peel)",
-      "activity_details": "Remove onion peel, stain with safranin/methylene blue, mount, and observe under a microscope."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "The Fundamental Unit of Life",
-      "activity_name": "Study Animal Cells (Cheek Cells)",
-      "activity_details": "Scrape the cheek gently, stain with methylene blue, mount, and observe under a microscope."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "The Fundamental Unit of Life",
-      "activity_name": "Osmosis",
-      "activity_details": "Keep de-shelled eggs in water and sugar solution. Observe swelling and shrinking."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "The Fundamental Unit of Life",
-      "activity_name": "Plasmolysis and Deplasmolysis",
-      "activity_details": "Mount Rheo/Tradescantia peel in water. Add sugar solution (plasmolysis) and then water (deplasmolysis)."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Motion",
-      "activity_name": "Direction of Motion in Circular Path",
-      "activity_details": "Tie an eraser to a thread, move it in a circular path, release, and observe tangential motion."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Force and Laws of Motion",
-      "activity_name": "Action and Reaction Forces",
-      "activity_details": "Fill a syringe with water, attach a bent sleeve, push the piston, and observe the water stream and sleeve movement."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Force and Laws of Motion",
-      "activity_name": "Third Law of Motion",
-      "activity_details": "Pull two spring balances joined together and compare readings."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Gravitation",
-      "activity_name": "Pressure and Area",
-      "activity_details": "Put a board with nails on sand with weight. Reverse the board and observe penetration."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Gravitation",
-      "activity_name": "Pressure and Depth",
-      "activity_details": "Immerse a funnel with a rubber membrane connected to a U-tube at different depths. Observe the water level."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Gravitation",
-      "activity_name": "Buoyant Force",
-      "activity_details": "Push an empty plastic bottle into water and feel the upward push."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Gravitation",
-      "activity_name": "Archimedes Principle",
-      "activity_details": "Suspend a stone from a spring balance, immerse it in an overflow can, and collect displaced water. Compare weights."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Work and Energy",
-      "activity_name": "Potential Energy",
-      "activity_details": "Stretch a rubber band tied to a wooden spool with a straw. Release and observe the straw's movement."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Work and Energy",
-      "activity_name": "Interconversion of Energy",
-      "activity_details": "Use a Yo-Yo to observe the conversion of potential to kinetic energy."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Vibrations Produce Sound",
-      "activity_details": "Strike a tuning fork and touch a suspended plastic ball. Observe the ball moving due to vibrations."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Longitudinal Waves",
-      "activity_details": "Push and pull a slinky alternately to create compression and rarefaction."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Speed of Pulse in Slinky",
-      "activity_details": "Create a pulse in a stretched slinky and measure the time for a to-and-fro movement."
-    },
-    {
-      "class": "IX",
-      "subject": "Science",
-      "topic": "Sound",
-      "activity_name": "Reflection of Sound",
-      "activity_details": "Use cardboard tubes and wooden boards to observe reflected sound."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Chemical Reactions and Equations",
-      "activity_name": "Chemical Reaction Indicators",
-      "activity_details": "Test Pb(NO3)2 + KI (precipitate), Zn + HCl (gas), CaO + H2O (heat), NaOH + phenolphthalein (colour change)."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Chemical Reactions and Equations",
-      "activity_name": "Types of Chemical Reactions",
-      "activity_details": "Perform combination (CaO+H2O), decomposition (Pb(NO3)2 heating), displacement (CuSO4+Fe), redox (MnO2+HCl), and double displacement (BaCl2+Na2SO4)."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Chemical Reactions and Equations",
-      "activity_name": "Electrolysis of Water",
-      "activity_details": "Pass current through water with Na2SO4 and a universal indicator. Collect gases at the electrodes."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Chemical Reactions and Equations",
-      "activity_name": "Redox Reaction",
-      "activity_details": "Heat copper powder to form CuO (oxidation). Pass H2 over CuO in a W-tube (reduction)."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Acids, Bases and Salts",
-      "activity_name": "Identification with Indicators",
-      "activity_details": "Test HCl, H2SO4, CH3COOH, NaOH, Ca(OH)2, NH4OH, lemon juice, and coffee with litmus, phenolphthalein, and methyl orange."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Acids, Bases and Salts",
-      "activity_name": "pH Estimation",
-      "activity_details": "Test solutions with pH paper/universal indicator and compare with the colour chart."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Metals and Non-metals",
-      "activity_name": "Physical Properties",
-      "activity_details": "Test Cu, Al, S, and I2 for lustre, hardness, malleability, conductivity, and sonority."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Metals and Non-metals",
-      "activity_name": "Chemical Properties of Metals",
-      "activity_details": "Heat Mg, Al, Zn, Fe, Cu in air. React with cold and hot water. React with dilute HCl."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Metals and Non-metals",
-      "activity_name": "Reactivity Series",
-      "activity_details": "Immerse Zn, Mg, Cu, and Al strips in ZnSO4, MgSO4, CuSO4, and Al2(SO4)3 solutions. Observe deposition."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Metals and Non-metals",
-      "activity_name": "Rusting - Moisture and Air",
-      "activity_details": "Keep iron nails in water (air+water), boiled water+oil (no air), and anhydrous CaCl2 (dry air). Observe rusting."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Carbon and Its Compounds",
-      "activity_name": "Properties of Ethanoic Acid",
-      "activity_details": "Test odour, solubility, litmus effect, and reaction with NaHCO3 (CO2 gas)."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Carbon and Its Compounds",
-      "activity_name": "Esterification",
-      "activity_details": "Heat ethanol + ethanoic acid with conc. H2SO4 and observe the fruity smell."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Carbon and Its Compounds",
-      "activity_name": "Hard Water - Soap vs Detergent",
-      "activity_details": "Test hard water with soap and detergent solutions and compare the amount of foam."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "Stomata Study",
-      "activity_details": "Remove the lower epidermal peel of a leaf, stain, mount, and observe stomata."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "Light in Photosynthesis",
-      "activity_details": "Destarch a plant, cover part of a leaf with black paper, expose to light, and test for starch."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "CO2 in Photosynthesis",
-      "activity_details": "Insert a leaf into a flask with KOH, expose to light, and test for starch."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "CO2 in Respiration",
-      "activity_details": "Blow air into lime water through a straw and observe the colour change."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "Anaerobic Respiration",
-      "activity_details": "Ferment sugar solution with yeast and pass the CO2 through lime water."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "Salivary Amylase Effect",
-      "activity_details": "Add saliva to starch solution and test with iodine after 10 minutes."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Life Processes",
-      "activity_name": "Imbibition",
-      "activity_details": "Weigh raisins, soak in water, weigh again, and calculate the water absorbed."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Control and Coordination",
-      "activity_name": "Phototropism",
-      "activity_details": "Grow seedlings in a shoe box with a hole. Observe bending towards the light."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Control and Coordination",
-      "activity_name": "Geotropism",
-      "activity_details": "Grow seeds in a cup with holes. Observe roots growing downwards."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Reflection and Refraction",
-      "activity_name": "Concave Mirror Image",
-      "activity_details": "Place a candle at different distances from a concave mirror. Obtain the image on a screen.",
-      "activity_path": [
-        {
-          "label": "Concave Mirror Image",
-          "path": "activities/concave-mirror-image/index.html"
-        }
-      ]
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Reflection and Refraction",
-      "activity_name": "Convex Lens Image",
-      "activity_details": "Place a candle at different distances from a convex lens. Obtain the image on a screen."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Reflection and Refraction",
-      "activity_name": "Refraction through Glass Slab",
-      "activity_details": "Use the pin method to trace the incident and emergent rays through a glass slab.",
-      "activity_path": [
-        {
-          "label": "Refraction through Glass Slab",
-          "path": "activities/Refraction-through-GlassSlab/index.html"
-        }
-      ]
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Electricity",
-      "activity_name": "Factors Affecting Resistance",
-      "activity_details": "Test nichrome wires of different length, thickness, and constantan wire. Compare currents."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Electricity",
-      "activity_name": "Current and PD in Series and Parallel",
-      "activity_details": "Measure current and potential difference across resistors in series and parallel combinations."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Magnetic Effects of Electric Current",
-      "activity_name": "Magnetic Field from Current",
-      "activity_details": "Pass current through a thick copper wire and observe compass needle deflection."
-    },
-    {
-      "class": "X",
-      "subject": "Science",
-      "topic": "Magnetic Effects of Electric Current",
-      "activity_name": "Electromagnetic Induction",
-      "activity_details": "Move a bar magnet in/out of a circular coil connected to a micro-ammeter."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Addition of One-digit Numbers",
-      "activity_details": "Use small aluminium foil balls on a mala (garland). Throw a die to get numbers, count the balls, and add the numbers."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Estimation in Addition/Subtraction",
-      "activity_details": "Pick up pebbles in both hands, estimate the number, count the actual number, and compare."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Tens and Ones (Place Value)",
-      "activity_details": "Pick straws according to numbers on a die. Bundle 10 straws together to count tens and ones."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Even and Odd Numbers",
-      "activity_details": "Two children pick pebbles turn by turn. Check if any pebble is left after equal distribution.",
-      "activity_path":[
-        {
-          "label":"Even and Odd Numbers",
-          "path": "activities/Even and Odd/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Forming Two-digit Numbers",
-      "activity_details": "Pick two digit cards, form all possible numbers, compare them, and identify the bigger number."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Addition/Subtraction with Carrying",
-      "activity_details": "Use shapes (Δ for ones, ○ for tens, □ for hundreds) to represent numbers and perform addition/subtraction with carrying."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Forming Three-digit Numbers",
-      "activity_details": "Rotate strips with digits on a shuttlecock box to form three-digit numbers."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Multiplication with Concrete Objects",
-      "activity_details": "Paste vertical broomsticks on cardboard. Place horizontal sticks and count the points of intersection to find the product."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Number System",
-      "activity_name": "Division by Grouping",
-      "activity_details": "Place buttons inside bangles (groups). Count the number of bangles filled (quotient) and the remaining buttons (remainder)."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Data Handling",
-      "activity_name": "Collect, Display and Interpret Data",
-      "activity_details": "Students drop pebbles in boxes labelled with their favourite fruits. Count and tabulate the data.",
-       "activity_path": [
-        {
-          "label": "Data Handling",
-          "path": "activities/Data Handling/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Factors and Multiples",
-      "activity_name": "Multiples of Numbers",
-      "activity_details": "Make a 10x10 grid and use cutouts with holes to show multiples of 2, 3, 4,... 9."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Magic Squares",
-      "activity_name": "3x3 Magic Square (Magic Constant 15)",
-      "activity_details": "Draw a 3x3 grid with outside squares. Arrange numbers 1-9 and transfer the outside numbers to form a magic square."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Make a Tangram",
-      "activity_details": "Draw and cut a square into 7 tangram pieces. Arrange them to form different shapes."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Nets of Cubes and Cuboids",
-      "activity_details": "Open the folds of a box, flatten it, and draw its boundary and fold lines to create a net."
-    },
-    {
-      "class": "VI",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Identify 2-D Shapes in 3-D Shapes",
-      "activity_details": "Trace the faces of 3D objects (chalk box, bottle cap, etc.) to identify 2D shapes.",
-      "activity_path":[
-        {
-          "label":"2D-3D Shape",
-          "path":"activities/Identify 2-D Shape in 3-D Shape/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VIII",
-      "subject": "Mathematics",
-      "topic": "Linear Equations",
-      "activity_name": "Linear Equations Balance Lab",
-      "activity_details": "Use a balance model to solve equations of the form ax + b = c by adjusting x and observing both sides.",
-      "activity_path": [
-        {
-          "label": "Balance Lab",
-          "path": "activities/linear-equations-balance/index.html"
-        },
-        {
-          "label": "Group Challenge",
-          "path": "activities/linear-equations-balance/group-challenge/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VIII",
-      "subject": "Mathematics",
-      "topic": "Exponents and Powers",
-      "activity_name": "Powers and Exponents Pattern Lab",
-      "activity_details": "Build powers with base and exponent sliders, expand repeated multiplication, and compare growth patterns.",
-      "activity_path": [
-        {
-          "label": "Pattern Lab",
-          "path": "activities/powers-pattern-lab/index.html"
-        }
-      ]
-    },
-    {
-      "class": "VIII",
-      "subject": "Mathematics",
-      "topic": "Mensuration",
-      "activity_name": "Mensuration Area Lab",
-      "activity_details": "Change dimensions of rectangles, parallelograms, trapeziums, and circles to connect shapes with area formulas.",
-      "activity_path": [
-        {
-          "label": "Area Lab",
-          "path": "activities/mensuration-area-lab/index.html"
-        }
-      ]
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Measurement of Angles",
-      "activity_details": "Fix plastic strips with a full protractor. Move one strip to form and measure different angles (acute, obtuse, right, straight, reflex).",
-      "activity_path": [
-        {
-          "label": "Measurement of Angles",
-          "path": "activities/measurement-of-angles/index.html"
-        }
-      ]
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Parallel Lines and a Transversal",
-      "activity_details": "Fix three strips (two parallel, one transversal). Measure corresponding, alternate, and interior angles."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Properties of a Triangle",
-      "activity_details": "Form triangles with strips. Measure angles and sides to verify angle sum, exterior angle, and isosceles/equilateral properties."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Mid-point Theorem",
-      "activity_details": "Form a triangle, fix a strip at the mid-points of two sides. Verify that it is parallel to the third side and half its length."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Basic Proportionality Theorem",
-      "activity_details": "Draw a line parallel to one side of a triangle. Verify that it divides the other two sides proportionally."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Properties of Quadrilaterals",
-      "activity_details": "Form different quadrilaterals (parallelogram, rhombus, rectangle, square) with strips. Verify opposite sides, angles, and diagonal properties."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Exploring Area with Geoboard",
-      "activity_details": "Form rectangles, squares, and right triangles on a geoboard. Count unit squares to find the area."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Areas of Similar Triangles",
-      "activity_details": "Form similar triangles on a geoboard. Compare the ratio of their areas to the ratio of the squares of their corresponding sides."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Median and Area of a Triangle",
-      "activity_details": "Draw a median in a triangle on a geoboard. Verify that it divides the triangle into two equal areas."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Triangles on the Same Base and Between Same Parallels",
-      "activity_details": "Form triangles on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Parallelograms on the Same Base and Between Same Parallels",
-      "activity_details": "Form parallelograms on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Areas of Triangle, Parallelogram, and Trapezium",
-      "activity_details": "Use cut-outs of triangles and trapeziums to derive the area formulas for triangle, parallelogram, and trapezium."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry",
-      "activity_name": "Pythagoras Theorem",
-      "activity_details": "Arrange square cut-outs to verify that a² + b² = c² in a right-angled triangle.",
-      "activity_path": [
-        {
-          "label": "2D Challenge",
-          "path": "activities/pythagoras/index.html"
-        },
-        {
-          "label": "3D Interactive",
-          "path": "activities/pythagoras/3d/index.html"
-        }
-      ]
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Algebraic Identities",
-      "activity_name": "Verification of (a+b)² and (a-b)²",
-      "activity_details": "Arrange square and rectangular cut-outs to verify (a+b)² = a²+2ab+b² and (a-b)² = a²-2ab+b²."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Algebraic Identities",
-      "activity_name": "Verification of a² - b²",
-      "activity_details": "Arrange square and trapezium cut-outs to verify a² - b² = (a+b)(a-b)."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Algebraic Identities",
-      "activity_name": "Factorisation of Quadratic Polynomial",
-      "activity_details": "Use algebraic tiles (x², x, 1) to factorise expressions like x²+5x+6, x²-x-6, 2x²-7x+6."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry (Circles)",
-      "activity_name": "Angle Subtended by Chords at Centre",
-      "activity_details": "Fix plastic strips as chords on a circular board. Measure the angles subtended at the centre to verify equal chords subtend equal angles and vice-versa."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry (Circles)",
-      "activity_name": "Perpendicular from Centre to Chord",
-      "activity_details": "Draw a perpendicular from the centre of a circle to a chord. Verify that it bisects the chord."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry (Circles)",
-      "activity_name": "Angle in a Semi-circle",
-      "activity_details": "Mark a diameter on a circular board. Measure the angle at any point on the semi-circle and verify it is 90°."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry (Circles)",
-      "activity_name": "Cyclic Quadrilateral",
-      "activity_details": "Form a cyclic quadrilateral on a circular board. Measure opposite angles and verify their sum is 180°."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Geometry (Circles)",
-      "activity_name": "Tangents to a Circle",
-      "activity_details": "Draw tangents from an external point on a circular board. Verify that the lengths of the tangents are equal and the radius is perpendicular to the tangent."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Trigonometry",
-      "activity_name": "Trigonometric Ratios",
-      "activity_details": "Use a circular board, wire needle, and strips to measure sin θ, cos θ, tan θ, sec θ, cosec θ, and cot θ."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Trigonometry",
-      "activity_name": "Trigonometric Ratios of Special Angles",
-      "activity_details": "Use the circular board to find the values of trigonometric ratios for 0°, 30°, 45°, 60°, and 90°."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Trigonometry",
-      "activity_name": "Verification of Trigonometric Identities",
-      "activity_details": "Use the circular board setup to verify identities like sin²θ + cos²θ = 1, 1 + tan²θ = sec²θ."
-    },
-    {
-      "class": "IX-X",
-      "subject": "Mathematics",
-      "topic": "Mensuration",
-      "activity_name": "Surface Area and Volume of Solids",
-      "activity_details": "Use a cube with cut-outs of a cuboid, cylinder, cone, and hemisphere. Compare the change in volume and surface area after removing the cut-outs."
-    }
-  ]
+"activities": [
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Food Detectives",
+"activity_details": "Explore carbohydrates, proteins, and fats through an interactive 3D quiz-and-learn activity.",
+"activity_path": [
+{
+"label": "3D Quiz",
+"path": "activities/food-detectives/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Germination of Seeds",
+"activity_details": "Soak dry whole seeds of gram or moong in water for a day. Drain excess water and cover seeds with wet cotton cloth. Keep moist for 2-3 days. Observe daily for the emergence of a white structure (root) and later a shoot.",
+"activity_path": [
+{
+"label": "Interactive",
+"path": "activities/germination-of-seeds/index.html"
+},
+{
+"label": "3D Interactive",
+"path": "activities/germination-of-seeds/3d/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Test for Carbohydrates (Starch)",
+"activity_details": "Place bread slice, potato slice, and soaked chickpea seeds on separate plates. Add 2-3 drops of iodine solution. Observe blue-black color change indicating the presence of starch in bread and potato.",
+"activity_path": [
+{
+"label": "Test for Carbohydrates",
+"path": "activities/Test for Carbohydrates/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Test for Proteins",
+"activity_details": "Grind gram/pea seeds and mash banana in separate test tubes. Add water, copper sulphate solution, and caustic soda. Violet color indicates the presence of proteins in the gram/pea seeds.",
+"activity_path": [
+{
+"label": "Test for Proteins",
+"path": "activities/test-for-proteins/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Test for Fats",
+"activity_details": "Place peanuts, dry coconut pieces, and rice grains on separate white paper sheets. Crush them by folding the paper. Oily patches on the paper indicate the presence of fats in peanuts and dry coconut."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Observation of Stomata in Leaves",
+"activity_details": "Tear the lower epidermis of a leaf (e.g., balsam). Place the peel on a slide with water, cover with a cover slip, and observe under a compound microscope. Identify the pores (stomata) surrounded by bean-shaped guard cells."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Photosynthesis - Starch Test",
+"activity_details": "Boil a leaf in spirit to remove chlorophyll. Wash the leaf and add iodine solution. A blue-black color confirms the presence of starch, indicating photosynthesis."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Study How Insect Pests Spoil Food Grains",
+"activity_details": "Observe infected grains for small holes, powdery material, thread-like structures, and foul smell. Break hollow grains to find organisms (worms/insects) and observe under a hand lens."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Food",
+"activity_name": "Observation of Pond Water for Micro-organisms",
+"activity_details": "Filter pond water through muslin cloth, place a drop on a slide with a cover slip, and observe under a compound microscope. Identify different microorganisms like algae and protozoa."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Explore Fabrics from Fibre",
+"activity_details": "Cut a piece of cloth, pull out threads (yarn) using a needle, and scratch the yarn with your nail to split it into thin strands (fibres)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Classification of Materials",
+"activity_details": "Test materials (wax, glass, sugar, leaf, coal, wood, coin, sponge) for hardness, solubility in water, float/sink, and transparency (using a dark spot on paper).",
+"activity_path": [
+{
+"label": "Classification of Materials",
+"path": "activities/classification_of_material/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Separation of Mixture (Iron, Sand, Salt)",
+"activity_details": "Use a magnet to separate iron filings. Add water to dissolve salt, filter to separate sand, and evaporate the filtrate to obtain common salt."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Reversible and Irreversible Changes",
+"activity_details": "Dissolve salt in water and then evaporate to get salt back (reversible). Cut a potato and try to join the pieces back (irreversible)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Neutralisation Reaction",
+"activity_details": "Add phenolphthalein indicator to dilute HCl. Add dilute NaOH dropwise until the solution turns pink. Add HCl again until the solution becomes colorless."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Identification of Acidic/Basic/Neutral Salts",
+"activity_details": "Test ferric chloride, sodium acetate, and sodium chloride solutions with red and blue litmus papers. Ferric chloride turns blue litmus red (acidic). Sodium acetate turns red litmus blue (basic). Sodium chloride shows no change (neutral)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Differentiating Physical and Chemical Changes",
+"activity_details": "Fold paper (physical, reversible). Tear paper (physical, irreversible). Burn paper (chemical change, new substances formed)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Compare Water Absorption Capacity of Fibres",
+"activity_details": "Weigh dry cotton, wool, and nylon fabric pieces. Immerse in water, drip dry, and weigh wet fabric. Calculate the water absorbed per gram of fabric."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Differentiate Natural and Man-made Fibres",
+"activity_details": "Burn cotton, wool, polyester, and nylon threads. Natural fibres burn to ash, while synthetic fibres melt and form a bead before burning."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Metallic Oxides are Basic in Nature",
+"activity_details": "Burn magnesium ribbon, collect the ash, add water, and test the solution with red and blue litmus papers. Red litmus turns blue, indicating basic nature."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Non-metallic Oxides are Acidic in Nature",
+"activity_details": "Burn sulphur powder in a spoon and introduce it into a jar with water. Test the solution with litmus papers. Blue litmus turns red, indicating acidic nature."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Show Iron is More Reactive than Copper",
+"activity_details": "Immerse an iron nail/shaving blade in copper sulphate solution. Observe the blue colour fading to green and a brown deposit (copper) forming on the iron."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Hydrogen Gas from Acid-Metal Reaction",
+"activity_details": "Add aluminium foil to dilute hydrochloric acid in a conical flask. Bring a burning matchstick near the mouth of the tube to hear a 'pop' sound, confirming hydrogen gas."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Electric Conductivity of Metals and Non-metals",
+"activity_details": "Make a simple electric circuit with a bulb. Test iron nail, zinc granules, sulphur lump, and coal piece. The bulb glows for iron and zinc (metals) but not for sulphur and coal (non-metals)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Oxygen is Necessary for Combustion",
+"activity_details": "Light two candles. Cover one with a glass jar. The covered candle extinguishes after some time as oxygen is used up."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Ignition Temperature",
+"activity_details": "Heat an empty paper cone and a paper cone filled with water over a flame. The empty cone burns, while the water-filled cone does not because heat is absorbed by the water."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Measure Temperature of Water (Heating, Boiling, Cooling)",
+"activity_details": "Heat water and measure temperature every 2 minutes. Record temperature during heating, boiling (constant), and cooling. Draw a graph of the observations."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Materials",
+"activity_name": "Distinguish Good Conductors and Poor Conductors of Heat",
+"activity_details": "Place metal, plastic, and wooden objects in hot water. Touch the exposed ends after 2 and 4 minutes. Metal ends become hot (conductors), while plastic/wood ends remain cold (insulators)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Study Transpiration",
+"activity_details": "Cover a leafy branch and a leafless branch with polythene bags. Water droplets appear inside the bag covering the leafy branch due to transpiration."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Identify Parts of a Flower and Distinguish Unisexual/Bisexual",
+"activity_details": "Cut a flower (like Petunia) vertically to identify sepals, petals, stamens, and pistil. Flowers with both stamens and pistil are bisexual; flowers with only one are unisexual."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Learn about Joints and Movement",
+"activity_details": "Move different body parts (head, neck, arm, elbow, etc.) and identify the type of joint (ball-and-socket, hinge, pivot, gliding, fixed) based on the movement."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Find Out What Exhaled Air Contains",
+"activity_details": "Blow air through a straw into lime water. The lime water turns milky, confirming the presence of carbon dioxide in exhaled air."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Understand Mechanism of Breathing",
+"activity_details": "Use a model (plastic bottle, Y-tube, balloons, rubber sheet). Pulling the rubber sheet downwards inflates the balloons (inhalation), pushing it upwards deflates them (exhalation)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Observe Osmosis in Potato",
+"activity_details": "Make a cavity in a potato, fill it with sugar solution, and place it in a Petri dish of water. The level of sugar solution rises due to osmosis (water moving into the potato)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Study Reproduction in Fungi (Bread Mould)",
+"activity_details": "Sprinkle water on a bread slice, keep in a warm place for 2-3 days. Observe thread-like hyphae and sporangia under a microscope."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Study Reproduction in Yeast",
+"activity_details": "Dissolve yeast in warm sugar solution. After an hour, observe a drop under the microscope. Identify budding yeast cells."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Prepare Temporary Slide of Plant Cells (Onion)",
+"activity_details": "Remove a peel from onion, stain with methylene blue, mount in glycerine, and observe under microscope to identify cell wall, nucleus, and cytoplasm."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "World of the Living",
+"activity_name": "Create Awareness about Gender-based Discrimination",
+"activity_details": "Participate in activities like self-awareness (listing strengths/weaknesses), group discussions on gender stereotypes, and role plays to understand gender sensitivity."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Measure Length by Counting Steps",
+"activity_details": "Walk along a wall counting footsteps, measure foot length, and convert the length into cm/m. Compare results with classmates."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Find Speed of Hopping",
+"activity_details": "Hop on one leg for distances of 20m, 25m, 30m, 35m, and 40m. Measure time taken and calculate speed for each distance."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Understand Net Force",
+"activity_details": "Push a heavy box alone, with a partner (same direction), and with a partner (opposite direction). Observe the ease of movement in each case."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Show Liquid Pressure Depends on Height, Not Volume",
+"activity_details": "Make holes at the same height in bottles of different capacities. Fill to the same water level and observe the distance the water streams travel."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Explain Working Principle of a Rubber Dropper",
+"activity_details": "Press the rubber bulb of a dropper, immerse the nozzle in water, and release the bulb. Water rushes in due to air pressure (vacuum created)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Moving Things, People and Ideas",
+"activity_name": "Show Static Friction Increases with Weight",
+"activity_details": "Pull a wooden block with a rubber band. Add weights (0.5kg, 1kg, 2kg) and measure the stretched length of the rubber band when the block just starts moving."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Make a Bulb Glow with a Simple Circuit",
+"activity_details": "Connect a cell, bulb, and switch with wires. Close the switch to complete the circuit and make the bulb glow."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Make a Magnet and Observe its Properties",
+"activity_details": "Rub an iron nail with a magnet 30-40 times. Test with pins. Float on thermocol in water to find the north-south direction."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Find Out if Both Poles of a Magnet are Equally Strong",
+"activity_details": "Place a pin at a distance from a magnet and slowly move it closer. Note the distance at which it is pulled. Repeat for both poles and compare."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Observe Heating Effect of Electric Current",
+"activity_details": "Wrap nichrome wire around a candle, connect to a battery, and observe the wax melting due to heat from the current."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Observe Strength of Electromagnet with Number of Turns",
+"activity_details": "Wind 20, 40, and 60 turns of wire on iron bolts. Connect to a battery and count the number of nails attracted by each."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "How Things Work",
+"activity_name": "Study Electrolysis of Water",
+"activity_details": "Insert electrodes in salt water with a U-shape wire. Connect to a battery and observe bubbles forming at both electrodes (hydrogen and oxygen)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Study Shadow Formation",
+"activity_details": "Use a torch, opaque/translucent/transparent objects, and a screen. Observe the formation and nature of shadows.",
+"activity_path": [
+{
+"label": "Light Detective Lab",
+"path": "activities/light_detective_lab/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Show Air Exerts Pressure",
+"activity_details": "Fill a plastic bottle with hot water, empty it, and cap it tightly. Pour cold water over it and observe the bottle deforming due to external air pressure."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Observe Air Expands on Heating",
+"activity_details": "Fix a balloon on the mouth of an empty bottle. Place in hot water (balloon inflates) and then in cold water (balloon deflates)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Observe Image Formed by Concave Mirror",
+"activity_details": "Place a candle at different distances from a concave mirror. Move a screen to obtain a sharp image and observe its size and nature (real/inverted)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Observe Image Formed by Convex Lens",
+"activity_details": "Place a candle at different distances from a convex lens. Move a screen to obtain a sharp image and observe its size and nature (real/inverted/virtual)."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Burn a Candle in a Glass of Water (Fun Game)",
+"activity_details": "Place a lighted candle in front of a glass sheet. Place a glass of water behind the sheet at the image position. The candle appears to be burning in water."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Verify Laws of Reflection",
+"activity_details": "Use a plane mirror, knitting needles, and a protractor. Trace the incident and reflected rays, measure the angles, and verify that angle of incidence equals angle of reflection."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Phenomena",
+"activity_name": "Observe Moon Phases",
+"activity_details": "Use a half-painted ball. Stand at the centre of a circle as your friend moves the ball along the circle, keeping the white side facing the sun. Observe the visible white portion."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Resources",
+"activity_name": "Role of Air",
+"activity_details": "Paste/draw pictures of activities like burning, reading, drying clothes, kite flying, etc., and write the role of air in each activity."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Resources",
+"activity_name": "Recycle Waste Paper",
+"activity_details": "Tear waste paper, soak in water, blend to a pulp, spread on a wire mesh frame, press, and dry to make recycled paper."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Resources",
+"activity_name": "Infiltration of Water through Soil",
+"activity_details": "Use a cut plastic bottle as a funnel with filter paper. Add soil, pour water, and observe water trickling down into the container."
+},
+{
+"class": "VI",
+"subject": "Science",
+"topic": "Natural Resources",
+"activity_name": "Cleaning of Muddy Water",
+"activity_details": "Filter muddy water through muslin cloth. Swirl alum in the water to settle fine particles. Decant and boil the water to kill germs."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Nutrition in Plants",
+"activity_name": "Test for Starch (Iodine Test)",
+"activity_details": "Boil a leaf in water, then in methylated spirit to remove chlorophyll. Add iodine solution to test for starch."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Nutrition in Plants",
+"activity_name": "Chlorophyll is Necessary for Photosynthesis",
+"activity_details": "Destarch a variegated leaf plant, expose to sunlight, and test for starch. Only the green parts turn blue-black."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Nutrition in Plants",
+"activity_name": "Sunlight is Necessary for Photosynthesis",
+"activity_details": "Cover part of a destarched leaf with black paper, expose to sunlight, and test for starch. Only the uncovered part turns blue-black."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Nutrition in Plants",
+"activity_name": "Carbon Dioxide is Necessary for Photosynthesis",
+"activity_details": "Insert a leaf through a split cork into a flask with KOH (absorbs CO2). Expose to sunlight and test for starch. The leaf inside the flask does not turn blue-black."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Measuring Temperature of Water",
+"activity_details": "Dip a thermometer in water, heat the water, and record the temperature every 2 minutes."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Measuring Body Temperature",
+"activity_details": "Use a clinical thermometer. Shake it to below 35°C, place under the tongue for one minute, and read the temperature."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Conduction of Heat",
+"activity_details": "Fix aluminium and iron rods in a T-shape holder with wax pieces on them. Heat the middle and observe which wax falls first."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Absorption of Heat",
+"activity_details": "Paste black paper on one can and white on another. Fill with water, leave in the sun, and measure the temperature difference."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Convection in Liquids",
+"activity_details": "Place a KMnO4 crystal at the bottom of a beaker of water. Heat slowly and observe the convection currents."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Heat",
+"activity_name": "Convection in Gases",
+"activity_details": "Cut a paper spiral, suspend it over a candle flame, and observe it rotating due to rising hot air."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Acids, Bases and Salts",
+"activity_name": "Testing with Indicators",
+"activity_details": "Test shampoo, lemon juice, vinegar, soap solution with litmus, turmeric, and china rose extract. Record colour changes to identify acidic/basic nature.",
+"activity_path": [
+{
+"label": "Testing with Indicators",
+"path": "activities/Testing_with_Indicator/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Acids, Bases and Salts",
+"activity_name": "Neutralisation Reaction",
+"activity_details": "Add phenolphthalein to HCl. Add NaOH dropwise until pink. Add HCl again until it becomes colourless, showing neutralisation."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Ice Melting and Water Evaporation",
+"activity_details": "Heat ice to melt it, then heat water to evaporate it. Condense water vapour on an inverted watch glass to get water back (physical changes).",
+"activity_path": [
+{
+"label": "Ice Melting and Water Evaporation",
+"path": "activities/Physical_and_Chemical_Changes/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Heating a Shaving Blade",
+"activity_details": "Heat a shaving blade over a flame (colour changes) and let it cool (regains colour) - physical change."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Burning Magnesium Ribbon",
+"activity_details": "Burn magnesium ribbon, collect the ash, add water, and test with phenolphthalein (turns pink) - chemical change."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Zinc + Copper Sulphate Reaction",
+"activity_details": "Add zinc granules to copper sulphate solution. Observe colour change and brown deposit (chemical change)."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Baking Soda + Vinegar Reaction",
+"activity_details": "Use a W-tube. Add baking soda and vinegar, pass the gas through lime water, and observe it turning milky (chemical change)."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Physical and Chemical Changes",
+"activity_name": "Crystallisation",
+"activity_details": "Make a saturated copper sulphate solution, heat, and cool to get crystals."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Wind, Storms and Cyclones",
+"activity_name": "Air Expansion/Contraction",
+"activity_details": "Heat a test tube with a coloured water drop in a glass tube. Observe the drop moving. Cool the tube and observe the drop moving back."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Wind, Storms and Cyclones",
+"activity_name": "Air Pressure (Plastic Bottle)",
+"activity_details": "Pour hot water into a thin plastic bottle, empty it, close the lid, and pour cold water over it. Observe the bottle deforming."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Wind, Storms and Cyclones",
+"activity_name": "Air Pressure (Funnel and Ball)",
+"activity_details": "Place a plastic ball in a funnel and blow through the stem. The ball rises due to low pressure created at the nozzle."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Soils",
+"activity_name": "Soil Layers",
+"activity_details": "Add soil samples to water in tumblers, stir, and leave undisturbed to observe different layers (gravel, sand, clay, humus)."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Soils",
+"activity_name": "Water in Soil",
+"activity_details": "Heat soil in a test tube and observe water droplets on the inner side."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Soils",
+"activity_name": "Water Holding Capacity",
+"activity_details": "Pour 100 mL of water through sandy, clayey, and loamy soil in funnels. Measure the water collected to compare absorption.",
+"activity_path": [
+{
+"label": "Water_Holding_Capacity",
+"path": "activities/Water Holding Capacity/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Respiration in Organisms",
+"activity_name": "Exhaled Air - Lime Water",
+"activity_details": "Blow through a Y-tube into lime water and tap water. Observe lime water turning milky due to CO2 in exhaled air."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Respiration in Organisms",
+"activity_name": "Mechanism of Breathing (Model)",
+"activity_details": "Make a model with a bell jar, Y-tube, balloons, and rubber sheet. Pull/push the rubber sheet to show inhalation/exhalation."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Transportation in Animals and Plants",
+"activity_name": "Stethoscope",
+"activity_details": "Fix a rubber tube to a funnel, stretch a rubber sheet on the funnel mouth, and place on the chest to hear the heartbeat."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Transportation in Animals and Plants",
+"activity_name": "Osmosis in Potato",
+"activity_details": "Make a potato cavity with sugar solution, place in water, and observe the level rise due to osmosis."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Reproduction in Plants",
+"activity_name": "Budding in Yeast",
+"activity_details": "Dissolve yeast in warm sugar solution and observe budding under a microscope after an hour."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Motion and Time",
+"activity_name": "Simple Pendulum",
+"activity_details": "Suspend a bob from a G-clamp, displace and release. Measure time for 20 oscillations and calculate the time period.",
+"activity_path": [
+{
+"label": "Pendulum",
+"path": "activities/simple-pendulum/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Motion and Time",
+"activity_name": "Average Speed",
+"activity_details": "Mark a 50 m line, walk with normal gait, measure time, and calculate speed.",
+"activity_path": [
+{
+"label": "Average Speed",
+"path": "activities/average-speed/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Motion and Time",
+"activity_name": "Sun-dial",
+"activity_details": "Place a sun-dial in the N-S direction and read the time from the shadow."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Electric Current and its Effects",
+"activity_name": "Heating Effect",
+"activity_details": "Connect a resistor to a generator, rotate at moderate speed, and check the hotness of the resistor."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Electric Current and its Effects",
+"activity_name": "Magnetic Effect",
+"activity_details": "Place a compass needle near a wire connected to a cell/switch. Close the switch and observe the needle deflection."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Electric Current and its Effects",
+"activity_name": "Electromagnet",
+"activity_details": "Wind insulated copper wire on an iron nail, connect to a cell, and test with iron filings."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Identify Lenses and Mirrors",
+"activity_details": "Observe polished/curved surfaces to classify as plane, convex, concave mirrors and convex, concave lenses.",
+"activity_path": [
+{
+"label": "Identify Lenses and Mirrors",
+"path": "activities/Identify Lenses and Mirrors/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Concave Mirror Image",
+"activity_details": "Place a candle at different distances from a concave mirror and obtain the image on a screen."
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Convex Lens Image",
+"activity_details": "Place a candle at different distances from a convex lens and obtain the image on a screen.",
+"activity_path": [
+{
+"label": "Convex Lens Image",
+"path": "activities/Convex Lens Image/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Colour Disc",
+"activity_details": "Divide a circular disc into 7 colours, rotate rapidly, and observe it appearing white.",
+"activity_path": [
+{
+"label": "Colour_Disc",
+"path": "activities/Colour Disc/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Water Prism",
+"activity_details": "Place a mirror in a water-filled tumbler, reflect sunlight to a wall, and observe the spectrum."
+},
+{
+"class": "VII",
+"subject": "Mathematics",
+"topic": "Integers",
+"activity_name": "Integer Number Line Game",
+"activity_details": "Move a character left or right on a number line to solve integer addition and subtraction problems.",
+"activity_path": [
+{
+"label": "Number Line Game",
+"path": "activities/integers-number-line/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Mathematics",
+"topic": "Fractions and Decimals",
+"activity_name": "Fraction Visualizer",
+"activity_details": "Click equal pizza slices to represent fractions and connect shaded parts with decimal values.",
+"activity_path": [
+{
+"label": "Fraction Visualizer",
+"path": "activities/fraction-visualizer/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Mathematics",
+"topic": "Simple Equations",
+"activity_name": "Balance the Equation",
+"activity_details": "Drag or select a number for x and use a balance model to solve equations such as x + 5 = 12.",
+"activity_path": [
+{
+"label": "Balance Lab",
+"path": "activities/simple-equations-balance/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Mathematics",
+"topic": "Lines and Angles",
+"activity_name": "Angle Explorer",
+"activity_details": "Move a ray to create angles and identify acute, right, obtuse, straight, and reflex angles.",
+"activity_path": [
+{
+"label": "Angle Explorer",
+"path": "activities/angle-explorer/index.html"
+}
+]
+},
+{
+"class": "VII",
+"subject": "Mathematics",
+"topic": "Perimeter and Area",
+"activity_name": "Area Builder",
+"activity_details": "Change the length and breadth of a rectangle, count grid squares, and calculate area and perimeter.",
+"activity_path": [
+{
+"label": "Area Builder",
+"path": "activities/area-builder/index.html"
+},
+{
+"label": "Simulator",
+"path": "https://pythonstudio.technikh.com/#preview=phone&code=%23%20Area%20Builder%0A%23%20Each%20grid%20square%20is%201%20%C3%97%201%20unit%0A%0A%0Alength%20%3D%20int(input(%22Enter%20the%20length%20of%20the%20rectangle%3A%20%22))%0Abreadth%20%3D%20int(input(%22Enter%20the%20breadth%20of%20the%20rectangle%3A%20%22))%0A%0A%23%20Calculate%20area%20and%20perimeter%0Aarea%20%3D%20length%20*%20breadth%0Aperimeter%20%3D%202%20*%20(length%20%2B%20breadth)%0A%0Aprint(%22%5Cn---%20Rectangle%20---%22)%0A%0A%23%20Display%20the%20grid%0Afor%20i%20in%20range(breadth)%3A%0A%20%20%20%20print(%22%E2%96%A0%20%22%20*%20length)%0A%0Aprint(%22%5CnArea%20%3D%22%2C%20area%2C%20%22square%20units%22)%0Aprint(%22Perimeter%20%3D%22%2C%20perimeter%2C%20%22units%22)%0A%0A%23%20Compare%0Aprint(%22%5Cn---%20Comparison%20---%22)%0A%0Aif%20area%20%3E%20perimeter%3A%0A%20%20%20%20print(%22Area%20is%20greater%20than%20perimeter.%22)%0Aelif%20area%20%3C%20perimeter%3A%0A%20%20%20%20print(%22Perimeter%20is%20greater%20than%20area.%22)%0Aelse%3A%0A%20%20%20%20print(%22Area%20and%20perimeter%20have%20the%20same%20numerical%20value.%22)%0A%0A%23%20Verification%0Asquares%20%3D%20length%20*%20breadth%0A%0Aprint(%22%5Cn---%20Verification%20---%22)%0Aprint(%22Number%20of%20small%20squares%20inside%20%3D%22%2C%20squares)%0Aprint(%22Area%20using%20multiplication%20%3D%22%2C%20length%2C%20%22%C3%97%22%2C%20breadth%2C%20%22%3D%22%2C%20area)%0A%0Aif%20squares%20%3D%3D%20area%3A%0A%20%20%20%20print(%22%E2%9C%93%20Area%20verified!%22"
+}
+]
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Crop Production and Management",
+"activity_name": "Effect of Manure and Fertiliser on Plant Growth",
+"activity_details": "Plant moong/gram seedlings in pots with soil+cow dung manure, soil+urea, and soil only. Observe growth after 7-10 days."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Microorganisms",
+"activity_name": "Microorganisms in Soil and Pond Water",
+"activity_details": "Collect soil and pond water samples. Observe drops under a microscope to identify microorganisms."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Microorganisms",
+"activity_name": "Fermentation by Yeast",
+"activity_details": "Dissolve sugar in warm water, add yeast powder, close with cotton, and observe after 4-5 hours. Notice the alcoholic smell."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Synthetic Fibres and Plastics",
+"activity_name": "Strength of Fibres",
+"activity_details": "Tie cotton, nylon, and other threads to a polythene bag. Add weights until the thread breaks to compare strength."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Synthetic Fibres and Plastics",
+"activity_name": "Water Absorption of Fabrics",
+"activity_details": "Soak cotton and nylon cloth pieces in water, compare drying time and amount of water absorbed."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Malleability",
+"activity_details": "Beat copper wire, coal piece, zinc, etc., with a hammer. Metals flatten (malleable), non-metals break."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Electrical Conductivity",
+"activity_details": "Test materials in a circuit board with a bulb to classify as conductors or insulators."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Rust is Basic in Nature",
+"activity_details": "Test rust with red and blue litmus papers. Red litmus turns blue, indicating basic nature."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Sulphur Burning - Acidic Nature",
+"activity_details": "Burn sulphur in a deflagrating spoon and introduce into a flask with litmus papers. Blue litmus turns red."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Magnesium + Water",
+"activity_details": "Add magnesium to water, heat, and test with red litmus (turns blue)."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Zinc + Hot Water",
+"activity_details": "Add zinc to water, heat, and test with red litmus (turns blue)."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Metals + Dilute HCl",
+"activity_details": "Test Mg, Al, Fe, Cu, S, and charcoal with dilute HCl. Observe reactions and test the gas with a matchstick (pop sound for H2)."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Aluminium + Base",
+"activity_details": "Add aluminium foil to NaOH solution, heat, and test the gas with a matchstick."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Materials: Metals and Non-metals",
+"activity_name": "Displacement Reactions",
+"activity_details": "Immerse Fe and Zn strips in CuSO4 solution. Observe colour change and deposit."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Combustion and Flame",
+"activity_name": "Combustible Substances",
+"activity_details": "Test straw, wood, paper, iron nail, stone, and glass over a flame to identify combustible and non-combustible substances."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Combustion and Flame",
+"activity_name": "Air is Necessary for Combustion",
+"activity_details": "Light a candle under a bell jar with wooden blocks. Remove blocks and cover with a glass plate to see the flame extinguish."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Combustion and Flame",
+"activity_name": "Heating Water in a Paper Cup",
+"activity_details": "Heat an empty paper cup and a water-filled paper cup over a candle flame. The water-filled cup does not burn."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Combustion and Flame",
+"activity_name": "Zones of a Flame",
+"activity_details": "Insert a copper tube into the innermost part of the flame. Hold a glass slide in the middle zone. Hold a copper wire in the outer zone. Observe the effects."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Cell: Structure and Function",
+"activity_name": "Observing Amoeba, Paramecium, and Yeast",
+"activity_details": "Observe permanent slides of Amoeba, Paramecium, and yeast under a microscope. Draw their shapes."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Cell: Structure and Function",
+"activity_name": "Observing Plant Cells (Onion Peel)",
+"activity_details": "Remove onion peel, stain with methylene blue, and observe under a microscope. Identify cell wall, nucleus, and cytoplasm."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Reproduction in Animals",
+"activity_name": "Asexual Reproduction (Hydra and Amoeba)",
+"activity_details": "Observe permanent slides of Hydra (budding) and Amoeba (binary fission)."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Force and Pressure",
+"activity_name": "Non-contact Forces",
+"activity_details": "Float a magnet on thermocol in water and bring another magnet near it. Rub plastic straws and observe repulsion."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Force and Pressure",
+"activity_name": "Pressure and Area",
+"activity_details": "Place a board with nails on sand with weight. Reverse the board and observe the difference in penetration."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Friction",
+"activity_name": "Measuring Weight with Spring Balance",
+"activity_details": "Suspend an object from a spring balance and read the scale."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Friction",
+"activity_name": "Friction and Surface Nature",
+"activity_details": "Pull a wooden block on sandpaper, sunmica, and glass sheet. Compare the force required."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Pleasant Sound vs Noise",
+"activity_details": "Fill glasses with different water levels and strike with a pencil to produce sounds."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Sound Through a String",
+"activity_details": "Make a string telephone with paper cups and speak through one end."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Waves in a Slinky",
+"activity_details": "Create transverse and longitudinal waves in a slinky."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Chemical Effects of Electric Current",
+"activity_name": "Electrolysis of Water",
+"activity_details": "Pass current through water with a universal indicator. Collect gases in droppers at the electrodes."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Chemical Effects of Electric Current",
+"activity_name": "Electroplating",
+"activity_details": "Pass current through a copper sulphate solution with copper electrodes. Observe copper deposition on one electrode."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Some Natural Phenomena",
+"activity_name": "Making an Electroscope",
+"activity_details": "Make an electroscope with a bell jar, J-shaped wire, and aluminium foil. Charge by rubbing a comb."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Some Natural Phenomena",
+"activity_name": "Interaction of Charged Objects",
+"activity_details": "Rub balloons and refills with cloth. Observe attraction and repulsion between like and unlike charges."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Laws of Reflection",
+"activity_details": "Use a ray streak apparatus and plane mirror. Measure the angle of incidence and reflection."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Multiple Reflections",
+"activity_details": "Use two plane mirrors to see objects behind you."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Kaleidoscope",
+"activity_details": "Make a kaleidoscope with 3 mirror strips and bangle pieces. Observe the patterns."
+},
+{
+"class": "VIII",
+"subject": "Science",
+"topic": "Light",
+"activity_name": "Splitting Sunlight",
+"activity_details": "Pass sunlight through a prism to observe the spectrum."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Matter in Our Surroundings",
+"activity_name": "Compressibility of Gases and Liquids",
+"activity_details": "Pull the piston of a syringe, block the nozzle, and push the piston. Repeat with water-filled syringe."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Matter in Our Surroundings",
+"activity_name": "Boiling Point of Water",
+"activity_details": "Heat water in a fusion tube with a capillary tube in an aluminium block. Record the temperature when a steady stream of bubbles appears."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Matter in Our Surroundings",
+"activity_name": "Melting Point of Ice",
+"activity_details": "Keep crushed ice in a beaker with a thermometer. Record the temperature when the ice starts melting."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Matter in Our Surroundings",
+"activity_name": "Sublimation",
+"activity_details": "Heat camphor/naphthalene/iodine in a China dish with an inverted funnel. Observe the solid deposit on the funnel."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Matter in Our Surroundings",
+"activity_name": "Rate of Evaporation",
+"activity_details": "Take water, acetone, and rectified spirit in beakers. Record temperature and volume decrease after 10 minutes."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Is Matter Around Us Pure?",
+"activity_name": "Saturated Solution",
+"activity_details": "Add salt to water with stirring until no more dissolves (at room temp and hot water)."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Is Matter Around Us Pure?",
+"activity_name": "Separation of Sand, Salt, and Camphor",
+"activity_details": "Sublime camphor, dissolve salt in water, filter sand, and evaporate the filtrate to get salt."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Is Matter Around Us Pure?",
+"activity_name": "Homogeneous and Heterogeneous Mixtures",
+"activity_details": "Prepare salt solution (homogeneous), chalk suspension, and starch colloid (heterogeneous). Observe transparency and filtration."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Is Matter Around Us Pure?",
+"activity_name": "Tyndall Effect",
+"activity_details": "Pass a torch light through salt solution, starch solution, and chalk suspension to observe the light path."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Is Matter Around Us Pure?",
+"activity_name": "Mixture vs Compound",
+"activity_details": "Mix iron and sulphur (mixture). Heat some to form a compound. Compare with magnet, acid, and appearance."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Atoms and Molecules",
+"activity_name": "Law of Conservation of Mass",
+"activity_details": "Weigh a flask with AgNO3 in an ignition tube and NaCl solution before and after reaction."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Structure of the Atom",
+"activity_name": "Electron Distribution Model",
+"activity_details": "Make wire loops with beads for the orbits of a Na atom. Fix on cardboard with a nucleus at the centre."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "The Fundamental Unit of Life",
+"activity_name": "Study Plant Cells (Onion Peel)",
+"activity_details": "Remove onion peel, stain with safranin/methylene blue, mount, and observe under a microscope."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "The Fundamental Unit of Life",
+"activity_name": "Study Animal Cells (Cheek Cells)",
+"activity_details": "Scrape the cheek gently, stain with methylene blue, mount, and observe under a microscope."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "The Fundamental Unit of Life",
+"activity_name": "Osmosis",
+"activity_details": "Keep de-shelled eggs in water and sugar solution. Observe swelling and shrinking."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "The Fundamental Unit of Life",
+"activity_name": "Plasmolysis and Deplasmolysis",
+"activity_details": "Mount Rheo/Tradescantia peel in water. Add sugar solution (plasmolysis) and then water (deplasmolysis)."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Motion",
+"activity_name": "Direction of Motion in Circular Path",
+"activity_details": "Tie an eraser to a thread, move it in a circular path, release, and observe tangential motion."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Force and Laws of Motion",
+"activity_name": "Action and Reaction Forces",
+"activity_details": "Fill a syringe with water, attach a bent sleeve, push the piston, and observe the water stream and sleeve movement."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Force and Laws of Motion",
+"activity_name": "Third Law of Motion",
+"activity_details": "Pull two spring balances joined together and compare readings."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Gravitation",
+"activity_name": "Pressure and Area",
+"activity_details": "Put a board with nails on sand with weight. Reverse the board and observe penetration."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Gravitation",
+"activity_name": "Pressure and Depth",
+"activity_details": "Immerse a funnel with a rubber membrane connected to a U-tube at different depths. Observe the water level."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Gravitation",
+"activity_name": "Buoyant Force",
+"activity_details": "Push an empty plastic bottle into water and feel the upward push."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Gravitation",
+"activity_name": "Archimedes Principle",
+"activity_details": "Suspend a stone from a spring balance, immerse it in an overflow can, and collect displaced water. Compare weights.",
+"activity_path": [
+{
+"label": "Lab Simulation",
+"path": "activities/Archimedes-Principle/index.html"
+}
+]
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Work and Energy",
+"activity_name": "Potential Energy",
+"activity_details": "Stretch a rubber band tied to a wooden spool with a straw. Release and observe the straw's movement."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Work and Energy",
+"activity_name": "Interconversion of Energy",
+"activity_details": "Use a Yo-Yo to observe the conversion of potential to kinetic energy."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Vibrations Produce Sound",
+"activity_details": "Strike a tuning fork and touch a suspended plastic ball. Observe the ball moving due to vibrations."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Longitudinal Waves",
+"activity_details": "Push and pull a slinky alternately to create compression and rarefaction."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Speed of Pulse in Slinky",
+"activity_details": "Create a pulse in a stretched slinky and measure the time for a to-and-fro movement."
+},
+{
+"class": "IX",
+"subject": "Science",
+"topic": "Sound",
+"activity_name": "Reflection of Sound",
+"activity_details": "Use cardboard tubes and wooden boards to observe reflected sound."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Chemical Reactions and Equations",
+"activity_name": "Chemical Reaction Indicators",
+"activity_details": "Test Pb(NO3)2 + KI (precipitate), Zn + HCl (gas), CaO + H2O (heat), NaOH + phenolphthalein (colour change)."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Chemical Reactions and Equations",
+"activity_name": "Types of Chemical Reactions",
+"activity_details": "Perform combination (CaO+H2O), decomposition (Pb(NO3)2 heating), displacement (CuSO4+Fe), redox (MnO2+HCl), and double displacement (BaCl2+Na2SO4)."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Chemical Reactions and Equations",
+"activity_name": "Electrolysis of Water",
+"activity_details": "Pass current through water with Na2SO4 and a universal indicator. Collect gases at the electrodes."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Chemical Reactions and Equations",
+"activity_name": "Redox Reaction",
+"activity_details": "Heat copper powder to form CuO (oxidation). Pass H2 over CuO in a W-tube (reduction)."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Acids, Bases and Salts",
+"activity_name": "Identification with Indicators",
+"activity_details": "Test HCl, H2SO4, CH3COOH, NaOH, Ca(OH)2, NH4OH, lemon juice, and coffee with litmus, phenolphthalein, and methyl orange."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Acids, Bases and Salts",
+"activity_name": "pH Estimation",
+"activity_details": "Test solutions with pH paper/universal indicator and compare with the colour chart."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Metals and Non-metals",
+"activity_name": "Physical Properties",
+"activity_details": "Test Cu, Al, S, and I2 for lustre, hardness, malleability, conductivity, and sonority."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Metals and Non-metals",
+"activity_name": "Chemical Properties of Metals",
+"activity_details": "Heat Mg, Al, Zn, Fe, Cu in air. React with cold and hot water. React with dilute HCl."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Metals and Non-metals",
+"activity_name": "Reactivity Series",
+"activity_details": "Immerse Zn, Mg, Cu, and Al strips in ZnSO4, MgSO4, CuSO4, and Al2(SO4)3 solutions. Observe deposition."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Metals and Non-metals",
+"activity_name": "Rusting - Moisture and Air",
+"activity_details": "Keep iron nails in water (air+water), boiled water+oil (no air), and anhydrous CaCl2 (dry air). Observe rusting."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Carbon and Its Compounds",
+"activity_name": "Properties of Ethanoic Acid",
+"activity_details": "Test odour, solubility, litmus effect, and reaction with NaHCO3 (CO2 gas)."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Carbon and Its Compounds",
+"activity_name": "Esterification",
+"activity_details": "Heat ethanol + ethanoic acid with conc. H2SO4 and observe the fruity smell."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Carbon and Its Compounds",
+"activity_name": "Hard Water - Soap vs Detergent",
+"activity_details": "Test hard water with soap and detergent solutions and compare the amount of foam."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "Stomata Study",
+"activity_details": "Remove the lower epidermal peel of a leaf, stain, mount, and observe stomata."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "Light in Photosynthesis",
+"activity_details": "Destarch a plant, cover part of a leaf with black paper, expose to light, and test for starch."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "CO2 in Photosynthesis",
+"activity_details": "Insert a leaf into a flask with KOH, expose to light, and test for starch."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "CO2 in Respiration",
+"activity_details": "Blow air into lime water through a straw and observe the colour change."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "Anaerobic Respiration",
+"activity_details": "Ferment sugar solution with yeast and pass the CO2 through lime water."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "Salivary Amylase Effect",
+"activity_details": "Add saliva to starch solution and test with iodine after 10 minutes."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Life Processes",
+"activity_name": "Imbibition",
+"activity_details": "Weigh raisins, soak in water, weigh again, and calculate the water absorbed."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Control and Coordination",
+"activity_name": "Phototropism",
+"activity_details": "Grow seedlings in a shoe box with a hole. Observe bending towards the light."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Control and Coordination",
+"activity_name": "Geotropism",
+"activity_details": "Grow seeds in a cup with holes. Observe roots growing downwards."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Reflection and Refraction",
+"activity_name": "Concave Mirror Image",
+"activity_details": "Place a candle at different distances from a concave mirror. Obtain the image on a screen.",
+"activity_path": [
+{
+"label": "Concave Mirror Image",
+"path": "activities/concave-mirror-image/index.html"
+}
+]
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Reflection and Refraction",
+"activity_name": "Convex Lens Image",
+"activity_details": "Place a candle at different distances from a convex lens. Obtain the image on a screen."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Reflection and Refraction",
+"activity_name": "Refraction through Glass Slab",
+"activity_details": "Use the pin method to trace the incident and emergent rays through a glass slab.",
+"activity_path": [
+{
+"label": "Refraction through Glass Slab",
+"path": "activities/Refraction-through-GlassSlab/index.html"
+}
+]
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Electricity",
+"activity_name": "Factors Affecting Resistance",
+"activity_details": "Test nichrome wires of different length, thickness, and constantan wire. Compare currents."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Electricity",
+"activity_name": "Current and PD in Series and Parallel",
+"activity_details": "Measure current and potential difference across resistors in series and parallel combinations.",
+"activity_path": "activities/current-and-pd-series-parallel/index.html"
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Magnetic Effects of Electric Current",
+"activity_name": "Magnetic Field from Current",
+"activity_details": "Pass current through a thick copper wire and observe compass needle deflection."
+},
+{
+"class": "X",
+"subject": "Science",
+"topic": "Magnetic Effects of Electric Current",
+"activity_name": "Electromagnetic Induction",
+"activity_details": "Move a bar magnet in/out of a circular coil connected to a micro-ammeter."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Addition of One-digit Numbers",
+"activity_details": "Use small aluminium foil balls on a mala (garland). Throw a die to get numbers, count the balls, and add the numbers."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Estimation in Addition/Subtraction",
+"activity_details": "Pick up pebbles in both hands, estimate the number, count the actual number, and compare."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Tens and Ones (Place Value)",
+"activity_details": "Pick straws according to numbers on a die. Bundle 10 straws together to count tens and ones."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Even and Odd Numbers",
+"activity_details": "Two children pick pebbles turn by turn. Check if any pebble is left after equal distribution.",
+"activity_path": [
+{
+"label": "Even and Odd Numbers",
+"path": "activities/Even and Odd/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Forming Two-digit Numbers",
+"activity_details": "Pick two digit cards, form all possible numbers, compare them, and identify the bigger number."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Addition/Subtraction with Carrying",
+"activity_details": "Use shapes (Δ for ones, ○ for tens, □ for hundreds) to represent numbers and perform addition/subtraction with carrying."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Forming Three-digit Numbers",
+"activity_details": "Rotate strips with digits on a shuttlecock box to form three-digit numbers."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Multiplication with Concrete Objects",
+"activity_details": "Paste vertical broomsticks on cardboard. Place horizontal sticks and count the points of intersection to find the product."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Number System",
+"activity_name": "Division by Grouping",
+"activity_details": "Place buttons inside bangles (groups). Count the number of bangles filled (quotient) and the remaining buttons (remainder)."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Data Handling",
+"activity_name": "Collect, Display and Interpret Data",
+"activity_details": "Students drop pebbles in boxes labelled with their favourite fruits. Count and tabulate the data.",
+"activity_path": [
+{
+"label": "Data Handling",
+"path": "activities/Data Handling/index.html"
+}
+]
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Factors and Multiples",
+"activity_name": "Multiples of Numbers",
+"activity_details": "Make a 10x10 grid and use cutouts with holes to show multiples of 2, 3, 4,... 9."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Magic Squares",
+"activity_name": "3x3 Magic Square (Magic Constant 15)",
+"activity_details": "Draw a 3x3 grid with outside squares. Arrange numbers 1-9 and transfer the outside numbers to form a magic square."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Make a Tangram",
+"activity_details": "Draw and cut a square into 7 tangram pieces. Arrange them to form different shapes."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Nets of Cubes and Cuboids",
+"activity_details": "Open the folds of a box, flatten it, and draw its boundary and fold lines to create a net."
+},
+{
+"class": "VI",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Identify 2-D Shapes in 3-D Shapes",
+"activity_details": "Trace the faces of 3D objects (chalk box, bottle cap, etc.) to identify 2D shapes.",
+"activity_path": [
+{
+"label": "2D-3D Shape",
+"path": "activities/Identify 2-D Shape in 3-D Shape/index.html"
+}
+]
+},
+{
+"class": "VIII",
+"subject": "Mathematics",
+"topic": "Linear Equations",
+"activity_name": "Linear Equations Balance Lab",
+"activity_details": "Use a balance model to solve equations of the form ax + b = c by adjusting x and observing both sides.",
+"activity_path": [
+{
+"label": "Balance Lab",
+"path": "activities/linear-equations-balance/index.html"
+},
+{
+"label": "Group Challenge",
+"path": "activities/linear-equations-balance/group-challenge/index.html"
+}
+]
+},
+{
+"class": "VIII",
+"subject": "Mathematics",
+"topic": "Exponents and Powers",
+"activity_name": "Powers and Exponents Pattern Lab",
+"activity_details": "Build powers with base and exponent sliders, expand repeated multiplication, and compare growth patterns.",
+"activity_path": [
+{
+"label": "Pattern Lab",
+"path": "activities/powers-pattern-lab/index.html"
+}
+]
+},
+{
+"class": "VIII",
+"subject": "Mathematics",
+"topic": "Mensuration",
+"activity_name": "Mensuration Area Lab",
+"activity_details": "Change dimensions of rectangles, parallelograms, trapeziums, and circles to connect shapes with area formulas.",
+"activity_path": [
+{
+"label": "Area Lab",
+"path": "activities/mensuration-area-lab/index.html"
+}
+]
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Measurement of Angles",
+"activity_details": "Fix plastic strips with a full protractor. Move one strip to form and measure different angles (acute, obtuse, right, straight, reflex).",
+"activity_path": [
+{
+"label": "Measurement of Angles",
+"path": "activities/measurement-of-angles/index.html"
+}
+]
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Parallel Lines and a Transversal",
+"activity_details": "Fix three strips (two parallel, one transversal). Measure corresponding, alternate, and interior angles."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Properties of a Triangle",
+"activity_details": "Form triangles with strips. Measure angles and sides to verify angle sum, exterior angle, and isosceles/equilateral properties."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Mid-point Theorem",
+"activity_details": "Form a triangle, fix a strip at the mid-points of two sides. Verify that it is parallel to the third side and half its length."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Basic Proportionality Theorem",
+"activity_details": "Draw a line parallel to one side of a triangle. Verify that it divides the other two sides proportionally."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Properties of Quadrilaterals",
+"activity_details": "Form different quadrilaterals (parallelogram, rhombus, rectangle, square) with strips. Verify opposite sides, angles, and diagonal properties."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Exploring Area with Geoboard",
+"activity_details": "Form rectangles, squares, and right triangles on a geoboard. Count unit squares to find the area."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Areas of Similar Triangles",
+"activity_details": "Form similar triangles on a geoboard. Compare the ratio of their areas to the ratio of the squares of their corresponding sides."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Median and Area of a Triangle",
+"activity_details": "Draw a median in a triangle on a geoboard. Verify that it divides the triangle into two equal areas."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Triangles on the Same Base and Between Same Parallels",
+"activity_details": "Form triangles on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Parallelograms on the Same Base and Between Same Parallels",
+"activity_details": "Form parallelograms on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Areas of Triangle, Parallelogram, and Trapezium",
+"activity_details": "Use cut-outs of triangles and trapeziums to derive the area formulas for triangle, parallelogram, and trapezium."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry",
+"activity_name": "Pythagoras Theorem",
+"activity_details": "Arrange square cut-outs to verify that a² + b² = c² in a right-angled triangle.",
+"activity_path": [
+{
+"label": "2D Challenge",
+"path": "activities/pythagoras/index.html"
+},
+{
+"label": "3D Interactive",
+"path": "activities/pythagoras/3d/index.html"
+}
+]
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Algebraic Identities",
+"activity_name": "Verification of (a+b)² and (a-b)²",
+"activity_details": "Arrange square and rectangular cut-outs to verify (a+b)² = a²+2ab+b² and (a-b)² = a²-2ab+b²."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Algebraic Identities",
+"activity_name": "Verification of a² - b²",
+"activity_details": "Arrange square and trapezium cut-outs to verify a² - b² = (a+b)(a-b)."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Algebraic Identities",
+"activity_name": "Factorisation of Quadratic Polynomial",
+"activity_details": "Use algebraic tiles (x², x, 1) to factorise expressions like x²+5x+6, x²-x-6, 2x²-7x+6."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry (Circles)",
+"activity_name": "Angle Subtended by Chords at Centre",
+"activity_details": "Fix plastic strips as chords on a circular board. Measure the angles subtended at the centre to verify equal chords subtend equal angles and vice-versa."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry (Circles)",
+"activity_name": "Perpendicular from Centre to Chord",
+"activity_details": "Draw a perpendicular from the centre of a circle to a chord. Verify that it bisects the chord."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry (Circles)",
+"activity_name": "Angle in a Semi-circle",
+"activity_details": "Mark a diameter on a circular board. Measure the angle at any point on the semi-circle and verify it is 90°."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry (Circles)",
+"activity_name": "Cyclic Quadrilateral",
+"activity_details": "Form a cyclic quadrilateral on a circular board. Measure opposite angles and verify their sum is 180°."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Geometry (Circles)",
+"activity_name": "Tangents to a Circle",
+"activity_details": "Draw tangents from an external point on a circular board. Verify that the lengths of the tangents are equal and the radius is perpendicular to the tangent."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Trigonometry",
+"activity_name": "Trigonometric Ratios",
+"activity_details": "Use a circular board, wire needle, and strips to measure sin θ, cos θ, tan θ, sec θ, cosec θ, and cot θ."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Trigonometry",
+"activity_name": "Trigonometric Ratios of Special Angles",
+"activity_details": "Use the circular board to find the values of trigonometric ratios for 0°, 30°, 45°, 60°, and 90°."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Trigonometry",
+"activity_name": "Verification of Trigonometric Identities",
+"activity_details": "Use the circular board setup to verify identities like sin²θ + cos²θ = 1, 1 + tan²θ = sec²θ."
+},
+{
+"class": "IX-X",
+"subject": "Mathematics",
+"topic": "Mensuration",
+"activity_name": "Surface Area and Volume of Solids",
+"activity_details": "Use a cube with cut-outs of a cuboid, cylinder, cone, and hemisphere. Compare the change in volume and surface area after removing the cut-outs."
+}
+]
 }

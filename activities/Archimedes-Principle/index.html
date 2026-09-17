@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archimedes' Principle Lab - Class IX Science</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #059669;
+      --warning: #d97706;
+      --border-color: #cbd5e1;
+      --water-color: rgba(56, 189, 248, 0.65);
+      --water-deep: rgba(14, 165, 233, 0.85);
+      --stone-color: #78716c;
+      --metal-color: #94a3b8;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #e0e7ff;
+      color: #3730a3;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .instructions {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      background-color: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 860px) {
+      .main-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Simulation Canvas / SVG */
+    .sim-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      user-select: none;
+    }
+
+    /* Controls */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 480px) {
+      .controls-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    select:focus, input[type="range"]:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+
+    .slider-container {
+      grid-column: 1 / -1;
+      background: #eff6ff;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1e40af;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: #cbd5e1;
+      padding: 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: grab;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: grab;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-reset {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn-reset:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-step {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-step:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Data Tables & Calculations */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .highlight-cell {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Verification Box */
+    .verification-box {
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ver-initial {
+      background-color: #f8fafc;
+      border-color: var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .ver-partial {
+      background-color: #fefce8;
+      border-color: #fde047;
+      color: #854d0e;
+    }
+
+    .ver-matched {
+      background-color: #f0fdf4;
+      border-color: #86efac;
+      color: #14532d;
+    }
+
+    .formula-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: monospace;
+      font-size: 0.95rem;
+      font-weight: bold;
+      padding: 4px 0;
+      border-top: 1px dashed rgba(0,0,0,0.1);
+    }
+
+    .quiz-card {
+      border-left: 4px solid var(--warning);
+    }
+
+    .quiz-question {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .quiz-option-btn {
+      text-align: left;
+      background: #f8fafc;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .quiz-option-btn:hover {
+      background: #f1f5f9;
+    }
+
+    .quiz-option-btn.correct {
+      background: #dcfce7 !important;
+      border-color: #22c55e !important;
+      color: #15803d !important;
+      font-weight: 700;
+    }
+
+    .quiz-option-btn.wrong {
+      background: #fee2e2 !important;
+      border-color: #ef4444 !important;
+      color: #b91c1c !important;
+    }
+
+    .quiz-feedback {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 4px;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="badge">NCERT Class IX &bull; Gravitation</span>
+      <h1>Archimedes' Principle Lab</h1>
+      <div class="instructions">
+        <strong>Activity Goal:</strong> Observe that the loss of weight of a solid immersed in fluid is strictly equal to the weight of fluid overflowing from the Eureka can.
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <!-- Left Column: Experiment Simulation Area -->
+      <section class="card" aria-label="Interactive Experimentation Apparatus">
+        <div class="card-title">
+          <span>Experimental Setup</span>
+          <span style="font-size: 0.85rem; font-weight: normal; color: var(--text-muted);">(Eureka Can + Spring Balance)</span>
+        </div>
+
+        <div class="sim-wrapper" id="simSvgContainer">
+          <svg id="labSvg" viewBox="0 0 450 360" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="canMetal" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#cbd5e1" />
+                <stop offset="50%" stop-color="#f1f5f9" />
+                <stop offset="100%" stop-color="#94a3b8" />
+              </linearGradient>
+              <linearGradient id="balanceGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#fde047" />
+                <stop offset="50%" stop-color="#fef08a" />
+                <stop offset="100%" stop-color="#eab308" />
+              </linearGradient>
+              <pattern id="gridPattern" width="10" height="10" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="10" y2="0" stroke="#f1f5f9" stroke-width="1"/>
+                <line x1="0" y1="0" x2="0" y2="10" stroke="#f1f5f9" stroke-width="1"/>
+              </pattern>
+            </defs>
+
+            <!-- Background subtle grid -->
+            <rect width="450" height="360" fill="url(#gridPattern)" />
+
+            <!-- Bench surface -->
+            <rect x="10" y="335" width="430" height="14" rx="3" fill="#64748b" />
+
+            <!-- Stand Base & Rod -->
+            <rect x="25" y="325" width="80" height="10" rx="2" fill="#334155" />
+            <rect x="60" y="20" width="8" height="310" fill="#475569" />
+            <!-- Stand Arm -->
+            <path d="M 60 30 L 160 30 L 160 45" fill="none" stroke="#475569" stroke-width="6" stroke-linecap="round" />
+
+            <!-- Spring Balance Casing -->
+            <rect x="145" y="45" width="30" height="75" rx="4" fill="url(#balanceGrad)" stroke="#ca8a04" stroke-width="1.5" />
+            <!-- Balance scale markings -->
+            <line x1="148" y1="60" x2="155" y2="60" stroke="#854d0e" stroke-width="1.5" />
+            <line x1="148" y1="75" x2="158" y2="75" stroke="#854d0e" stroke-width="1.5" />
+            <line x1="148" y1="90" x2="155" y2="90" stroke="#854d0e" stroke-width="1.5" />
+            <line x1="148" y1="105" x2="158" y2="105" stroke="#854d0e" stroke-width="1.5" />
+
+            <!-- Spring Indicator Pointer (moves with tension) -->
+            <polygon id="balancePointer" points="166,60 172,56 172,64" fill="#dc2626" />
+            <!-- Spring balance reading display badge -->
+            <rect x="180" y="52" width="55" height="20" rx="4" fill="#ffffff" stroke="#cbd5e1" />
+            <text id="balanceTextSvg" x="207" y="66" font-size="11" font-family="monospace" font-weight="bold" fill="#dc2626" text-anchor="middle">2.50N</text>
+
+            <!-- Suspended String -->
+            <line id="hangString" x1="160" y1="120" x2="160" y2="180" stroke="#334155" stroke-width="1.5" stroke-dasharray="2,2" />
+
+            <!-- Submerged Object (Stone/Metal) -->
+            <g id="suspendedObject" transform="translate(160, 180)">
+              <ellipse id="objectShape" cx="0" cy="18" rx="20" ry="20" fill="var(--stone-color)" stroke="#44403c" stroke-width="1.5" />
+              <text id="objectLabel" x="0" y="22" font-size="9" fill="#ffffff" font-weight="bold" text-anchor="middle">Stone</text>
+            </g>
+
+            <!-- Eureka / Overflow Can -->
+            <!-- Back liquid layer inside can -->
+            <rect id="canWater" x="110" y="215" width="100" height="118" rx="2" fill="var(--water-color)" />
+            <!-- Overflow Can Body -->
+            <path d="M 110 200 L 110 333 L 210 333 L 210 215 L 235 235 L 235 242 L 210 223 L 210 200 Z"
+                  fill="none" stroke="#475569" stroke-width="3" stroke-linejoin="round" />
+            <text x="145" y="325" font-size="10" fill="#64748b" font-weight="600">Overflow Can</text>
+
+            <!-- Overflow spout flow stream (visible only during submersion) -->
+            <path id="spoutFlow" d="M 235 238 Q 255 250 265 290" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" opacity="0"/>
+
+            <!-- Measuring Cylinder on Digital Balance (Right) -->
+            <rect x="250" y="315" width="60" height="18" rx="2" fill="#334155" />
+            <!-- Digital readout on scale -->
+            <rect x="260" y="320" width="40" height="10" rx="1" fill="#0f172a" />
+            <text id="digitalScaleReadout" x="280" y="328" font-size="8" font-family="monospace" fill="#22c55e" text-anchor="middle">0.00N</text>
+
+            <!-- Graduated cylinder body -->
+            <rect x="257" y="240" width="46" height="75" rx="2" fill="rgba(241, 245, 249, 0.4)" stroke="#64748b" stroke-width="2" />
+            <!-- Graduation marks on cylinder -->
+            <line x1="257" y1="295" x2="263" y2="295" stroke="#94a3b8" stroke-width="1"/>
+            <line x1="257" y1="280" x2="267" y2="280" stroke="#94a3b8" stroke-width="1"/>
+            <line x1="257" y1="265" x2="263" y2="265" stroke="#94a3b8" stroke-width="1"/>
+            <line x1="257" y1="250" x2="267" y2="250" stroke="#94a3b8" stroke-width="1"/>
+            <!-- Liquid collected in beaker -->
+            <rect id="beakerLiquid" x="259" y="313" width="42" height="0" fill="var(--water-deep)" />
+            <text x="280" y="235" font-size="9" fill="#475569" font-weight="bold" text-anchor="middle">Displaced Fluid</text>
+          </svg>
+        </div>
+
+        <!-- Direct Controls for Manipulation -->
+        <div class="controls-grid">
+          <div class="form-group">
+            <label for="objectSelect">Select Suspended Body:</label>
+            <select id="objectSelect">
+              <option value="stone" selected>Porous Stone (Mass: 255g, Vol: 100cm³)</option>
+              <option value="aluminum">Aluminum Block (Mass: 270g, Vol: 100cm³)</option>
+              <option value="iron">Iron Cylinder (Mass: 780g, Vol: 100cm³)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="liquidSelect">Select Immersion Liquid:</label>
+            <select id="liquidSelect">
+              <option value="water" selected>Tap Water (Density: 1.00 g/cm³)</option>
+              <option value="saltwater">Salt Water (Density: 1.15 g/cm³)</option>
+              <option value="mustardoil">Mustard Oil (Density: 0.90 g/cm³)</option>
+            </select>
+          </div>
+
+          <div class="slider-container">
+            <div class="slider-header">
+              <label for="submersionSlider" style="color: inherit;">Immersion Level (Displacement):</label>
+              <span id="sliderPercentText">0% Submerged</span>
+            </div>
+            <input type="range" id="submersionSlider" min="0" max="100" value="0" step="1" aria-label="Immersion percentage slider">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" id="btnStepSubmerge" class="btn-step">Immerse Step (+25%)</button>
+          <button type="button" id="btnReset" class="btn-reset">Reset Setup</button>
+        </div>
+      </section>
+
+      <!-- Right Column: Quantitative Observations & Concept Check -->
+      <section class="card" aria-label="Measurements and Scientific Verification">
+        <div class="card-title">
+          <span>Observation & Balance</span>
+          <span style="font-size: 0.8rem; font-weight: normal; background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">g ≈ 9.8 m/s²</span>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Measured Parameter</th>
+                <th>Symbol / Unit</th>
+                <th>Reading</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>True Weight in Air</td>
+                <td><strong>W₁</strong> (N)</td>
+                <td id="tdWeightAir">2.50 N</td>
+              </tr>
+              <tr>
+                <td>Spring Balance Reading</td>
+                <td><strong>W₂</strong> (N)</td>
+                <td id="tdWeightLiquid" class="highlight-cell">2.50 N</td>
+              </tr>
+              <tr>
+                <td>Apparent Weight Loss (W₁ - W₂)</td>
+                <td><strong>ΔW</strong> (N)</td>
+                <td id="tdWeightLoss" style="font-weight: 700; color: #dc2626;">0.00 N</td>
+              </tr>
+              <tr>
+                <td>Overflow Fluid Volume</td>
+                <td><strong>V</strong> (cm³ or mL)</td>
+                <td id="tdDisplacedVol">0.0 mL</td>
+              </tr>
+              <tr>
+                <td>Weight of Displaced Fluid</td>
+                <td><strong>W_disp</strong> (N)</td>
+                <td id="tdDisplacedWeight" class="highlight-cell">0.00 N</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Verification Banner dynamically updated -->
+        <div id="verificationCard" class="verification-box ver-initial">
+          <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+            <span id="verIcon">&#9432;</span>
+            <span id="verTitle">Awaiting Immersion</span>
+          </div>
+          <p id="verDescription">Move the immersion slider to gradually lower the body into the overflow can.</p>
+          <div class="formula-row">
+            <span>Apparent Loss (W₁ - W₂): <span id="dynLoss">0.00 N</span></span>
+            <span>Fluid Weight: <span id="dynFluid">0.00 N</span></span>
+          </div>
+        </div>
+
+        <!-- Interactive Classroom Check -->
+        <div class="card quiz-card" style="box-shadow:none; padding:12px; gap:8px;">
+          <span class="badge" style="background:#fef3c7; color:#92400e; width:fit-content;">Concept Check</span>
+          <p class="quiz-question" id="quizQuestion">What happens to the buoyant force if you push the completely submerged object deeper into the liquid?</p>
+          <div class="quiz-options">
+            <button type="button" class="quiz-option-btn" data-correct="false" onclick="handleQuiz(this, false)">It increases because water pressure increases with depth.</button>
+            <button type="button" class="quiz-option-btn" data-correct="true" onclick="handleQuiz(this, true)">It stays constant because the volume of displaced liquid does not change.</button>
+            <button type="button" class="quiz-option-btn" data-correct="false" onclick="handleQuiz(this, false)">It decreases as the liquid column pushes downwards.</button>
+          </div>
+          <div id="quizFeedback" class="quiz-feedback" aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // Constants
+      const G = 9.8; // m/s^2
+
+      // Object properties (density in g/cm^3, volume fixed at 100 cm^3)
+      const OBJECTS = {
+        stone: { name: "Stone", volumeCm3: 100, massGrams: 255, color: "#78716c", stroke: "#44403c" },
+        aluminum: { name: "Aluminum", volumeCm3: 100, massGrams: 270, color: "#94a3b8", stroke: "#475569" },
+        iron: { name: "Iron Block", volumeCm3: 100, massGrams: 780, color: "#475569", stroke: "#1e293b" }
+      };
+
+      // Liquids (density in g/cm^3)
+      const LIQUIDS = {
+        water: { name: "Tap Water", densityGcm3: 1.00, color: "rgba(56, 189, 248, 0.65)", deepColor: "rgba(14, 165, 233, 0.9)" },
+        saltwater: { name: "Salt Water", densityGcm3: 1.15, color: "rgba(45, 212, 191, 0.70)", deepColor: "rgba(13, 148, 136, 0.9)" },
+        mustardoil: { name: "Mustard Oil", densityGcm3: 0.90, color: "rgba(250, 204, 21, 0.70)", deepColor: "rgba(202, 138, 4, 0.9)" }
+      };
+
+      // State
+      let currentObjectKey = "stone";
+      let currentLiquidKey = "water";
+      let submersionPercent = 0;
+
+      // DOM Elements
+      const objectSelect = document.getElementById("objectSelect");
+      const liquidSelect = document.getElementById("liquidSelect");
+      const submersionSlider = document.getElementById("submersionSlider");
+      const sliderPercentText = document.getElementById("sliderPercentText");
+      const btnStepSubmerge = document.getElementById("btnStepSubmerge");
+      const btnReset = document.getElementById("btnReset");
+
+      // Table & Display Elements
+      const tdWeightAir = document.getElementById("tdWeightAir");
+      const tdWeightLiquid = document.getElementById("tdWeightLiquid");
+      const tdWeightLoss = document.getElementById("tdWeightLoss");
+      const tdDisplacedVol = document.getElementById("tdDisplacedVol");
+      const tdDisplacedWeight = document.getElementById("tdDisplacedWeight");
+
+      const verificationCard = document.getElementById("verificationCard");
+      const verIcon = document.getElementById("verIcon");
+      const verTitle = document.getElementById("verTitle");
+      const verDescription = document.getElementById("verDescription");
+      const dynLoss = document.getElementById("dynLoss");
+      const dynFluid = document.getElementById("dynFluid");
+
+      // SVG Elements
+      const suspendedObject = document.getElementById("suspendedObject");
+      const objectShape = document.getElementById("objectShape");
+      const objectLabel = document.getElementById("objectLabel");
+      const hangString = document.getElementById("hangString");
+      const balancePointer = document.getElementById("balancePointer");
+      const balanceTextSvg = document.getElementById("balanceTextSvg");
+      const canWater = document.getElementById("canWater");
+      const beakerLiquid = document.getElementById("beakerLiquid");
+      const digitalScaleReadout = document.getElementById("digitalScaleReadout");
+      const spoutFlow = document.getElementById("spoutFlow");
+
+      // Calculate state & sync UI
+      function updateCalculations() {
+        const obj = OBJECTS[currentObjectKey];
+        const liq = LIQUIDS[currentLiquidKey];
+
+        // 1. True weight in Air: W = m * g (m in kg)
+        const massKg = obj.massGrams / 1000;
+        const weightAir = massKg * G;
+
+        // 2. Submerged Volume: V_sub (cm³)
+        const submergedVolume = (submersionPercent / 100) * obj.volumeCm3;
+
+        // 3. Displaced Liquid Mass: m_liq = V_sub * density_liq (grams)
+        const displacedMassGrams = submergedVolume * liq.densityGcm3;
+        const displacedMassKg = displacedMassGrams / 1000;
+
+        // 4. Weight of displaced liquid (Upthrust / Buoyant Force)
+        const buoyantForce = displacedMassKg * G;
+
+        // 5. Apparent weight on spring balance
+        const apparentWeight = Math.max(0, weightAir - buoyantForce);
+        const weightLoss = weightAir - apparentWeight;
+
+        // Render Table & Values
+        tdWeightAir.textContent = weightAir.toFixed(2) + " N";
+        tdWeightLiquid.textContent = apparentWeight.toFixed(2) + " N";
+        tdWeightLoss.textContent = weightLoss.toFixed(2) + " N";
+        tdDisplacedVol.textContent = submergedVolume.toFixed(1) + " mL";
+        tdDisplacedWeight.textContent = buoyantForce.toFixed(2) + " N";
+
+        dynLoss.textContent = weightLoss.toFixed(2) + " N";
+        dynFluid.textContent = buoyantForce.toFixed(2) + " N";
+
+        sliderPercentText.textContent = submersionPercent + "% Submerged";
+
+        // Update SVG Graphics
+        updateSvgVisuals({
+          weightAir,
+          apparentWeight,
+          submergedVolume,
+          buoyantForce,
+          obj,
+          liq
+        });
+
+        // Verification Status Card
+        updateFeedbackCard(submersionPercent, weightLoss, buoyantForce);
+      }
+
+      function updateSvgVisuals(data) {
+        // Dynamic color updates
+        canWater.setAttribute("fill", data.liq.color);
+        beakerLiquid.setAttribute("fill", data.liq.deepColor);
+        objectShape.setAttribute("fill", data.obj.color);
+        objectShape.setAttribute("stroke", data.obj.stroke);
+        objectLabel.textContent = data.obj.name.split(" ")[0];
+
+        // Physical vertical motion:
+        // When 0% -> y = 140 (high up above can)
+        // When 100% -> y = 240 (fully deep inside overflow can)
+        const startY = 140;
+        const fullySubmergedY = 245;
+        const currentY = startY + ((fullySubmergedY - startY) * (submersionPercent / 100));
+
+        suspendedObject.setAttribute("transform", `translate(160, ${currentY})`);
+
+        // Update String length
+        hangString.setAttribute("y2", currentY);
+
+        // Spring Balance pointer indicator
+        // Scale mapping: 0N to 8N corresponds to Y position 60px to 105px
+        const maxScaleN = 8.0;
+        const pointerY = 60 + Math.min(45, (data.apparentWeight / maxScaleN) * 45);
+        balancePointer.setAttribute("points", `166,${pointerY} 172,${pointerY - 4} 172,${pointerY + 4}`);
+        balanceTextSvg.textContent = data.apparentWeight.toFixed(2) + "N";
+
+        // Beaker water level (height max: 55px for 100ml)
+        const beakerMaxHeight = 55;
+        const collectedHeight = (submersionPercent / 100) * beakerMaxHeight;
+        beakerLiquid.setAttribute("height", collectedHeight);
+        beakerLiquid.setAttribute("y", 313 - collectedHeight);
+
+        // Digital scale reading in beaker
+        digitalScaleReadout.textContent = data.buoyantForce.toFixed(2) + "N";
+
+        // Spout stream effect: visible when water is being displaced
+        if (submersionPercent > 0) {
+          spoutFlow.setAttribute("opacity", "0.85");
+          spoutFlow.setAttribute("stroke", data.liq.deepColor);
+        } else {
+          spoutFlow.setAttribute("opacity", "0");
+        }
+      }
+
+      function updateFeedbackCard(percent, loss, displacedW) {
+        verificationCard.className = "verification-box";
+
+        if (percent === 0) {
+          verificationCard.classList.add("ver-initial");
+          verIcon.innerHTML = "&#9432;";
+          verTitle.textContent = "Object in Air (No Submersion)";
+          verDescription.textContent = "The spring balance shows the true weight of the object in air. Eureka can is full to the brim.";
+        } else if (percent < 100) {
+          verificationCard.classList.add("ver-partial");
+          verIcon.innerHTML = "&#9888;";
+          verTitle.textContent = `Partially Submerged (${percent}%)`;
+          verDescription.textContent = `Part of the solid is submerged. The apparent weight loss (${loss.toFixed(2)} N) perfectly equals the weight of overflowing fluid (${displacedW.toFixed(2)} N).`;
+        } else {
+          verificationCard.classList.add("ver-matched");
+          verIcon.innerHTML = "&#10004;";
+          verTitle.textContent = "Archimedes' Principle Verified! (100% Submerged)";
+          verDescription.textContent = `When fully immersed, Apparent Weight Loss (${loss.toFixed(2)} N) == Weight of Displaced Liquid (${displacedW.toFixed(2)} N). Upthrust equals fluid displaced!`;
+        }
+      }
+
+      // Event Listeners
+      submersionSlider.addEventListener("input", function (e) {
+        submersionPercent = parseInt(e.target.value, 10);
+        updateCalculations();
+      });
+
+      objectSelect.addEventListener("change", function (e) {
+        currentObjectKey = e.target.value;
+        updateCalculations();
+      });
+
+      liquidSelect.addEventListener("change", function (e) {
+        currentLiquidKey = e.target.value;
+        updateCalculations();
+      });
+
+      btnStepSubmerge.addEventListener("click", function () {
+        if (submersionPercent >= 100) {
+          submersionPercent = 0;
+        } else {
+          submersionPercent = Math.min(100, submersionPercent + 25);
+        }
+        submersionSlider.value = submersionPercent;
+        updateCalculations();
+      });
+
+      btnReset.addEventListener("click", function () {
+        currentObjectKey = "stone";
+        currentLiquidKey = "water";
+        submersionPercent = 0;
+
+        objectSelect.value = "stone";
+        liquidSelect.value = "water";
+        submersionSlider.value = 0;
+
+        // Reset concept check buttons
+        const qBtns = document.querySelectorAll(".quiz-option-btn");
+        qBtns.forEach(btn => {
+          btn.classList.remove("correct", "wrong");
+          btn.disabled = false;
+        });
+        document.getElementById("quizFeedback").textContent = "";
+
+        updateCalculations();
+      });
+
+      // Quiz interaction exposed to window
+      window.handleQuiz = function (button, isCorrect) {
+        const buttons = document.querySelectorAll(".quiz-option-btn");
+        const feedback = document.getElementById("quizFeedback");
+
+        buttons.forEach(btn => {
+          btn.disabled = true;
+          if (btn.getAttribute("data-correct") === "true") {
+            btn.classList.add("correct");
+          }
+        });
+
+        if (isCorrect) {
+          button.classList.add("correct");
+          feedback.textContent = "✓ Correct! Once fully submerged, the displaced volume does not increase with depth; hence the buoyant force remains identical.";
+          feedback.style.color = "var(--success)";
+        } else {
+          button.classList.add("wrong");
+          feedback.textContent = "✗ Incorrect. Pressure increases with depth, but the difference in pressure between top and bottom surfaces (buoyancy = ρ · V · g) depends strictly on submerged volume!";
+          feedback.style.color = "#dc2626";
+        }
+      };
+
+      // Initial layout render
+      updateCalculations();
+    })();
+  </script>
+</body>
+</html>
