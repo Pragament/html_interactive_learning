@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Measurement of Angles</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f6f8fc;
+    color: #172033;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #e2e6ef;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 23px;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    border: 1px solid #d7deeb;
+    background: white;
+    color: #24304a;
+    padding: 9px 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.primary {
+    background: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
+}
+
+main {
+    max-width: 1200px;
+    margin: 22px auto;
+    padding: 0 18px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e1e6f0;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(31,45,75,.05);
+    overflow: hidden;
+}
+
+.card-head {
+    padding: 18px 20px 10px;
+}
+
+.card-head h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card-head p {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 6px 0;
+}
+
+.visual {
+    padding: 10px 20px 20px;
+}
+
+#protractor {
+    width: 100%;
+    height: 500px;
+    display: block;
+    background:
+        linear-gradient(#edf1f8 1px, transparent 1px),
+        linear-gradient(90deg, #edf1f8 1px, transparent 1px);
+    background-size: 25px 25px;
+    border: 1px solid #e1e6f0;
+    border-radius: 10px;
+}
+
+.legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.base-dot { background: #4f46e5; }
+.moving-dot { background: #f59e0b; }
+.arc-dot { background: #10b981; }
+
+.controls {
+    padding: 10px 20px 20px;
+}
+
+.section {
+    margin-top: 16px;
+}
+
+.section-title {
+    color: #66748c;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+}
+
+.slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: #4f46e5;
+}
+
+.quick-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.quick-buttons button {
+    padding: 10px;
+}
+
+.results {
+    padding: 0 20px 22px;
+}
+
+.highlight {
+    background: #eef2ff;
+    border: 1px solid #cdd5ff;
+    border-radius: 11px;
+    padding: 16px;
+}
+
+.small {
+    color: #596780;
+    font-size: 12px;
+}
+
+.angle-value {
+    font-size: 32px;
+    font-weight: 850;
+    color: #4f46e5;
+    margin-top: 3px;
+}
+
+.type {
+    font-size: 18px;
+    font-weight: 800;
+    margin-top: 4px;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+    margin-top: 12px;
+}
+
+.metric {
+    border: 1px solid #e1e6f0;
+    border-radius: 9px;
+    padding: 12px;
+}
+
+.metric-label {
+    color: #718096;
+    font-size: 11px;
+}
+
+.metric-value {
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 3px;
+}
+
+.status {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 9px;
+    background: #ecfdf5;
+    border: 1px solid #b7ebd1;
+    color: #17633f;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.learning {
+    margin-top: 20px;
+    background: white;
+    border: 1px solid #e1e6f0;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.learning h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.learning p {
+    color: #5f6d84;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.types {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.type-card {
+    border: 1px solid #e1e6f0;
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+}
+
+.type-card strong {
+    display: block;
+    font-size: 13px;
+}
+
+.type-card span {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.formula {
+    margin-top: 15px;
+    background: #eef2ff;
+    border: 1px solid #cdd5ff;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 800;
+    color: #3730a3;
+}
+
+@media(max-width:850px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .types {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #protractor {
+        height: 420px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>Measurement of Angles</h1>
+        <div class="subtitle">Class IX–X · Mathematics · Geometry</div>
+    </div>
+
+    <div class="actions">
+        <button onclick="resetActivity()">Reset</button>
+        <button class="primary" onclick="newProblem()">New Problem</button>
+    </div>
+</header>
+
+<main>
+
+<div class="grid">
+
+<section class="card">
+
+    <div class="card-head">
+        <h2>Explore with a Full Protractor</h2>
+        <p>
+            The blue strip is fixed at the baseline. Move the orange
+            strip to form different angles and read the measurement.
+        </p>
+    </div>
+
+    <div class="visual">
+
+        <svg id="protractor" viewBox="0 0 700 500">
+
+            <!-- Protractor body -->
+            <path
+                d="M100 390 A250 250 0 0 1 600 390 Z"
+                fill="#eef2ff"
+                stroke="#6366f1"
+                stroke-width="3"
+            />
+
+            <!-- Inner arc -->
+            <path
+                d="M145 390 A205 205 0 0 1 555 390"
+                fill="none"
+                stroke="#a5b4fc"
+                stroke-width="2"
+            />
+
+            <!-- Degree ticks -->
+            <g id="ticks"></g>
+
+            <!-- Baseline -->
+            <line
+                x1="100"
+                y1="390"
+                x2="600"
+                y2="390"
+                stroke="#4f46e5"
+                stroke-width="7"
+                stroke-linecap="round"
+            />
+
+            <!-- Centre -->
+            <circle
+                cx="350"
+                cy="390"
+                r="9"
+                fill="#10b981"
+                stroke="white"
+                stroke-width="3"
+            />
+
+            <!-- Moving ray -->
+            <line
+                id="movingRay"
+                x1="350"
+                y1="390"
+                x2="550"
+                y2="250"
+                stroke="#f59e0b"
+                stroke-width="7"
+                stroke-linecap="round"
+            />
+
+            <!-- Angle arc -->
+            <path
+                id="angleArc"
+                d=""
+                fill="none"
+                stroke="#10b981"
+                stroke-width="5"
+            />
+
+            <!-- Labels -->
+            <text
+                x="350"
+                y="425"
+                text-anchor="middle"
+                font-size="15"
+                font-weight="800"
+                fill="#172033">
+                Vertex O
+            </text>
+
+            <text
+                x="120"
+                y="415"
+                font-size="14"
+                font-weight="800"
+                fill="#3730a3">
+                Fixed strip
+            </text>
+
+            <text
+                id="movingLabel"
+                x="550"
+                y="240"
+                font-size="14"
+                font-weight="800"
+                fill="#b45309">
+                Moving strip
+            </text>
+
+            <text
+                x="350"
+                y="115"
+                text-anchor="middle"
+                font-size="16"
+                font-weight="800"
+                fill="#475569">
+                FULL PROTRACTOR
+            </text>
+
+        </svg>
+
+        <div class="legend">
+            <span>
+                <i class="dot base-dot"></i>
+                Fixed strip
+            </span>
+
+            <span>
+                <i class="dot moving-dot"></i>
+                Moving strip
+            </span>
+
+            <span>
+                <i class="dot arc-dot"></i>
+                Measured angle
+            </span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="card">
+
+    <div class="card-head">
+        <h2>Measure the Angle</h2>
+        <p>
+            Move the slider or choose a standard angle.
+            Observe how the angle classification changes.
+        </p>
+    </div>
+
+    <div class="controls">
+
+        <div class="section">
+
+            <div class="section-title">
+                Move the strip
+            </div>
+
+            <div class="slider-label">
+                <span>Angle</span>
+                <span id="angleSliderValue">60°</span>
+            </div>
+
+            <input
+                id="angleSlider"
+                type="range"
+                min="1"
+                max="359"
+                value="60"
+            >
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="section-title">
+                Standard angles
+            </div>
+
+            <div class="quick-buttons">
+
+                <button onclick="setAngle(45)">
+                    Acute 45°
+                </button>
+
+                <button onclick="setAngle(90)">
+                    Right 90°
+                </button>
+
+                <button onclick="setAngle(120)">
+                    Obtuse 120°
+                </button>
+
+                <button onclick="setAngle(180)">
+                    Straight 180°
+                </button>
+
+                <button onclick="setAngle(270)">
+                    Reflex 270°
+                </button>
+
+                <button onclick="setAngle(315)">
+                    Reflex 315°
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="results">
+
+        <div class="highlight">
+
+            <div class="small">
+                Measured angle
+            </div>
+
+            <div class="angle-value">
+                <span id="angleResult">60°</span>
+            </div>
+
+            <div class="type" id="angleType">
+                Acute Angle
+            </div>
+
+        </div>
+
+
+        <div class="metrics">
+
+            <div class="metric">
+                <div class="metric-label">
+                    Minimum angle
+                </div>
+                <div class="metric-value">
+                    1°
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Maximum angle
+                </div>
+                <div class="metric-value">
+                    359°
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Angle range
+                </div>
+                <div class="metric-value">
+                    0°–360°
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-label">
+                    Vertex
+                </div>
+                <div class="metric-value">
+                    O
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="status" id="status">
+            ✓ 60° is an acute angle.
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<section class="learning">
+
+    <h2>Types of Angles</h2>
+
+    <p>
+        An angle is formed when two rays meet at a common endpoint
+        called the vertex. Angles are classified according to their
+        measurement.
+    </p>
+
+    <div class="types">
+
+        <div class="type-card">
+            <strong>Acute</strong>
+            <span>0° &lt; θ &lt; 90°</span>
+        </div>
+
+        <div class="type-card">
+            <strong>Right</strong>
+            <span>θ = 90°</span>
+        </div>
+
+        <div class="type-card">
+            <strong>Obtuse</strong>
+            <span>90° &lt; θ &lt; 180°</span>
+        </div>
+
+        <div class="type-card">
+            <strong>Straight</strong>
+            <span>θ = 180°</span>
+        </div>
+
+        <div class="type-card">
+            <strong>Reflex</strong>
+            <span>180° &lt; θ &lt; 360°</span>
+        </div>
+
+    </div>
+
+    <div class="formula">
+        One complete revolution = 360°
+    </div>
+
+</section>
+
+</main>
+
+
+<script>
+
+const slider = document.getElementById("angleSlider");
+const sliderValue = document.getElementById("angleSliderValue");
+const angleResult = document.getElementById("angleResult");
+const angleType = document.getElementById("angleType");
+const status = document.getElementById("status");
+
+const movingRay = document.getElementById("movingRay");
+const angleArc = document.getElementById("angleArc");
+const movingLabel = document.getElementById("movingLabel");
+
+const ticks = document.getElementById("ticks");
+
+const cx = 350;
+const cy = 390;
+
+
+/* --------------------------------
+   Create protractor degree ticks
+-------------------------------- */
+
+function createTicks() {
+
+    for (let deg = 0; deg <= 180; deg += 10) {
+
+        const rad = (180 - deg) * Math.PI / 180;
+
+        const outerR = 245;
+        const innerR = deg % 30 === 0 ? 225 : 235;
+
+        const x1 = cx + outerR * Math.cos(rad);
+        const y1 = cy - outerR * Math.sin(rad);
+
+        const x2 = cx + innerR * Math.cos(rad);
+        const y2 = cy - innerR * Math.sin(rad);
+
+        const line = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+        );
+
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", y1);
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", y2);
+
+        line.setAttribute(
+            "stroke",
+            deg % 30 === 0 ? "#6366f1" : "#94a3b8"
+        );
+
+        line.setAttribute(
+            "stroke-width",
+            deg % 30 === 0 ? "2.5" : "1"
+        );
+
+        ticks.appendChild(line);
+
+        if (deg % 30 === 0) {
+
+            const labelR = 207;
+
+            const lx = cx + labelR * Math.cos(rad);
+            const ly = cy - labelR * Math.sin(rad);
+
+            const text = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "text"
+            );
+
+            text.setAttribute("x", lx);
+            text.setAttribute("y", ly + 5);
+            text.setAttribute("text-anchor", "middle");
+            text.setAttribute("font-size", "12");
+            text.setAttribute("font-weight", "700");
+            text.setAttribute("fill", "#475569");
+
+            text.textContent = deg + "°";
+
+            ticks.appendChild(text);
+        }
+    }
+}
+
+
+/* --------------------------------
+   Classify angle
+-------------------------------- */
+
+function classifyAngle(angle) {
+
+    if (angle < 90) {
+        return "Acute Angle";
+    }
+
+    if (angle === 90) {
+        return "Right Angle";
+    }
+
+    if (angle < 180) {
+        return "Obtuse Angle";
+    }
+
+    if (angle === 180) {
+        return "Straight Angle";
+    }
+
+    return "Reflex Angle";
+}
+
+
+/* --------------------------------
+   Draw angle
+-------------------------------- */
+
+function update() {
+
+    const angle = Number(slider.value);
+
+    sliderValue.textContent = angle + "°";
+    angleResult.textContent = angle + "°";
+
+    const type = classifyAngle(angle);
+
+    angleType.textContent = type;
+
+    status.textContent =
+        "✓ " + angle + "° is a " + type.toLowerCase() + ".";
+
+
+    /*
+        The baseline points to the right.
+
+        For angles <= 180° the ray is drawn
+        counter-clockwise from the baseline.
+
+        For reflex angles the ray returns through
+        the lower half of the circle.
+    */
+
+    const rad = -angle * Math.PI / 180;
+
+    const rayLength = 215;
+
+    const x2 = cx + rayLength * Math.cos(rad);
+    const y2 = cy + rayLength * Math.sin(rad);
+
+    movingRay.setAttribute("x2", x2);
+    movingRay.setAttribute("y2", y2);
+
+
+    movingLabel.setAttribute("x", x2 + 8);
+    movingLabel.setAttribute("y", y2 - 8);
+
+
+    /*
+        Draw the measured arc.
+    */
+
+    const arcRadius = 95;
+
+    const startRad = 0;
+    const endRad = rad;
+
+    const startX = cx + arcRadius;
+    const startY = cy;
+
+    const endX = cx + arcRadius * Math.cos(endRad);
+    const endY = cy + arcRadius * Math.sin(endRad);
+
+    const largeArc = angle > 180 ? 1 : 0;
+
+    const sweep =
+        angle > 180 ? 0 : 1;
+
+    const path =
+        "M " + startX + " " + startY +
+        " A " + arcRadius + " " + arcRadius +
+        " 0 " + largeArc + " " + sweep +
+        " " + endX + " " + endY;
+
+    angleArc.setAttribute("d", path);
+
+}
+
+
+/* --------------------------------
+   Controls
+-------------------------------- */
+
+function setAngle(value) {
+    slider.value = value;
+    update();
+}
+
+
+function resetActivity() {
+    slider.value = 60;
+    update();
+}
+
+
+function newProblem() {
+
+    const values = [
+        30,
+        45,
+        60,
+        75,
+        90,
+        110,
+        120,
+        135,
+        150,
+        180,
+        210,
+        225,
+        240,
+        270,
+        300,
+        315,
+        330
+    ];
+
+    const randomValue =
+        values[Math.floor(Math.random() * values.length)];
+
+    setAngle(randomValue);
+}
+
+
+slider.addEventListener("input", update);
+
+createTicks();
+update();
+
+</script>
+
+</body>
+</html>
