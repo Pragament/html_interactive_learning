@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factorisation of Quadratic Polynomial - EduLabs</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #eef2ff;
+      --primary-dark: #3730a3;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --tile-x2: #6366f1;
+      --tile-x: #10b981;
+      --tile-unit: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-titles h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .header-titles p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Left Side: Visual Canvas Area */
+    .stage-container {
+      position: relative;
+      background: #fafafa;
+      border: 1px dashed var(--border);
+      border-radius: 0.5rem;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(to right, #f1f5f9 1px, transparent 1px),
+                        linear-gradient(to bottom, #f1f5f9 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .algebra-rectangle {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      border: 2px solid #334155;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .tile-x2 {
+      background: var(--tile-x2);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 1.1rem;
+    }
+
+    .tile-x-vert {
+      background: var(--tile-x);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 0.9rem;
+    }
+
+    .tile-x-horiz {
+      background: var(--tile-x);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 0.9rem;
+    }
+
+    .tile-unit {
+      background: var(--tile-unit);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-size: 0.8rem;
+    }
+
+    .dimension-label {
+      position: absolute;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.25rem;
+      font-size: 0.85rem;
+      border: 1px solid #c7d2fe;
+    }
+
+    .label-top {
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .label-left {
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+
+    /* Right Side: Control Panels */
+    .controls-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .controls-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .polynomial-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .preset-btn {
+      padding: 0.5rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .preset-btn.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .slider-row {
+      margin-bottom: 1rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .result-box {
+      background: var(--primary-light);
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      text-align: center;
+      margin-top: auto;
+      border: 1px solid #c7d2fe;
+    }
+
+    .result-expression {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .result-factors {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .explanation-callout {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: #f1f5f9;
+      border-left: 4px solid var(--primary);
+      border-radius: 0.25rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #334155;
+      text-align: left;
+    }
+
+    /* Tile Legend */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .legend-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-titles">
+      <h1>Factorisation of Quadratic Polynomial</h1>
+      <p>Class IX–X • Mathematics • Algebraic Identities</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline" onclick="resetToDefault()">Reset</button>
+      <button class="btn btn-primary" onclick="randomizeExpression()">New Problem</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Section: Visual Stage -->
+    <section class="card">
+      <h2 class="card-title">Algebra Tiles Geometric Representation</h2>
+      <p class="card-desc">The total area of the rectangle equals the polynomial. The width and height are its factors.</p>
+      
+      <div class="stage-container" id="stageContainer">
+        <div class="grid-bg"></div>
+        <div id="topLabel" class="dimension-label label-top">Width: (x + 3)</div>
+        <div id="leftLabel" class="dimension-label label-left">Height: (x + 2)</div>
+        <div id="tileStage" class="algebra-rectangle"></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-box" style="background: var(--tile-x2)"></div>
+          <span>x² tile (Area = x²)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: var(--tile-x)"></div>
+          <span>x tile (Area = x)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-box" style="background: var(--tile-unit)"></div>
+          <span>1 tile (Area = 1)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Section: Controls and Results -->
+    <section class="card">
+      <h2 class="card-title">Configure Polynomial</h2>
+      <p class="card-desc">Choose a standard textbook polynomial or adjust factors p and q for (x + p)(x + q).</p>
+
+      <span class="controls-label">Select Example</span>
+      <div class="polynomial-select-grid">
+        <button class="preset-btn active" onclick="setFactors(2, 3, this)">x² + 5x + 6</button>
+        <button class="preset-btn" onclick="setFactors(1, 4, this)">x² + 5x + 4</button>
+        <button class="preset-btn" onclick="setFactors(3, 4, this)">x² + 7x + 12</button>
+        <button class="preset-btn" onclick="setFactors(2, 4, this)">x² + 6x + 8</button>
+      </div>
+
+      <div class="controls-group">
+        <span class="controls-label">Adjust Factor Dimensions</span>
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Factor Constant p:</span>
+            <span id="pVal" style="font-weight:700;">2</span>
+          </div>
+          <input type="range" id="sliderP" min="1" max="5" value="2" oninput="onSliderChange()" />
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Factor Constant q:</span>
+            <span id="qVal" style="font-weight:700;">3</span>
+          </div>
+          <input type="range" id="sliderQ" min="1" max="5" value="3" oninput="onSliderChange()" />
+        </div>
+      </div>
+
+      <div class="result-box">
+        <div class="result-expression" id="polyDisplay">x² + 5x + 6</div>
+        <div class="result-factors" id="factorDisplay">Factors: (x + 2)(x + 3)</div>
+        <div class="explanation-callout" id="explanationText">
+          Splitting middle term: 5x = 2x + 3x.<br />
+          Notice how 1 x² tile, 5 x tiles, and 6 unit tiles form a perfect rectangle with length (x + 3) and breadth (x + 2).
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let p = 2;
+    let q = 3;
+
+    function renderTiles() {
+      const stage = document.getElementById("tileStage");
+      stage.innerHTML = "";
+
+      const sizeX = 110;
+      const unitSize = 26;
+
+      stage.style.gridTemplateColumns = `${sizeX}px repeat(${q}, ${unitSize}px)`;
+      stage.style.gridTemplateRows = `${sizeX}px repeat(${p}, ${unitSize}px)`;
+
+      // 1. Top-left: x^2 tile
+      const x2 = document.createElement("div");
+      x2.className = "tile-x2";
+      x2.textContent = "x²";
+      stage.appendChild(x2);
+
+      // 2. Top-right: q horizontal x-tiles
+      for (let i = 0; i < q; i++) {
+        const xTile = document.createElement("div");
+        xTile.className = "tile-x-horiz";
+        xTile.textContent = "x";
+        stage.appendChild(xTile);
+      }
+
+      // 3. Bottom rows: p vertical x-tiles and p*q unit tiles
+      for (let r = 0; r < p; r++) {
+        const xTile = document.createElement("div");
+        xTile.className = "tile-x-vert";
+        xTile.textContent = "x";
+        stage.appendChild(xTile);
+
+        for (let c = 0; c < q; c++) {
+          const uTile = document.createElement("div");
+          uTile.className = "tile-unit";
+          uTile.textContent = "1";
+          stage.appendChild(uTile);
+        }
+      }
+
+      // Update Labels
+      document.getElementById("topLabel").textContent = `Width: (x + ${q})`;
+      document.getElementById("leftLabel").textContent = `Height: (x + ${p})`;
+
+      // Update Math text
+      const b = p + q;
+      const c = p * q;
+      document.getElementById("polyDisplay").textContent = `x² + ${b}x + ${c}`;
+      document.getElementById("factorDisplay").textContent = `Factorisation: (x + ${p})(x + ${q})`;
+      document.getElementById("explanationText").innerHTML = `
+        Middle term split: <strong>${b}x = ${p}x + ${q}x</strong>.<br />
+        Area verification: Total tiles = 1(x²) + ${b}(x) + ${c}(1) = <strong>(x + ${p})(x + ${q})</strong>.
+      `;
+
+      document.getElementById("pVal").textContent = p;
+      document.getElementById("qVal").textContent = q;
+      document.getElementById("sliderP").value = p;
+      document.getElementById("sliderQ").value = q;
+    }
+
+    function setFactors(newP, newQ, btn) {
+      p = newP;
+      q = newQ;
+      if (btn) {
+        document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      }
+      renderTiles();
+    }
+
+    function onSliderChange() {
+      p = parseInt(document.getElementById("sliderP").value, 10);
+      q = parseInt(document.getElementById("sliderQ").value, 10);
+      document.querySelectorAll(".preset-btn").forEach(b => b.classList.remove("active"));
+      renderTiles();
+    }
+
+    function resetToDefault() {
+      setFactors(2, 3, document.querySelectorAll(".preset-btn")[0]);
+    }
+
+    function randomizeExpression() {
+      const randomP = Math.floor(Math.random() * 4) + 1;
+      const randomQ = Math.floor(Math.random() * 4) + 1;
+      setFactors(randomP, randomQ, null);
+    }
+
+    // Initial render on load
+    window.addEventListener("DOMContentLoaded", () => {
+      renderTiles();
+    });
+  </script>
+</body>
+</html>
