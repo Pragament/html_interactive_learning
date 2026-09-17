@@ -1840,21 +1840,39 @@
       "subject": "Mathematics",
       "topic": "Geometry",
       "activity_name": "Triangles on the Same Base and Between Same Parallels",
-      "activity_details": "Form triangles on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
+      "activity_details": "Form triangles on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal.",
+      "activity_path": [
+        {
+          "label": "Interactive Geoboard",
+          "path": "activities/triangles-same-base/index.html"
+        }
+      ]
     },
     {
       "class": "IX-X",
       "subject": "Mathematics",
       "topic": "Geometry",
       "activity_name": "Parallelograms on the Same Base and Between Same Parallels",
-      "activity_details": "Form parallelograms on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal."
+      "activity_details": "Form parallelograms on the same base and between the same parallel lines on a geoboard. Verify that their areas are equal.",
+      "activity_path": [
+        {
+          "label": "Interactive Geoboard",
+          "path": "activities/parallelograms-same-base/index.html"
+        }
+      ]
     },
     {
       "class": "IX-X",
       "subject": "Mathematics",
       "topic": "Geometry",
       "activity_name": "Areas of Triangle, Parallelogram, and Trapezium",
-      "activity_details": "Use cut-outs of triangles and trapeziums to derive the area formulas for triangle, parallelogram, and trapezium."
+      "activity_details": "Use cut-outs of triangles and trapeziums to derive the area formulas for triangle, parallelogram, and trapezium.",
+      "activity_path": [
+        {
+          "label": "Cut & Derive",
+          "path": "activities/area-formulas/index.html"
+        }
+      ]
     },
     {
       "class": "IX-X",

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Area Formulas – Cut &amp; Derive</title>
+  <meta name="description" content="Derive area formulas for triangle, parallelogram, and trapezium by cutting and rearranging shapes into rectangles." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="badge">Class IX–X · Geometry</div>
+      <h1>Area Formulas</h1>
+      <p class="subtitle">Cut &amp; Derive — Triangle, Parallelogram &amp; Trapezium</p>
+    </header>
+
+    <div class="progress-bar-row">
+      <div class="progress-step active" id="step0" data-tab="parallelogram">
+        <div class="step-num">1</div>
+        <div class="step-lbl">Parallelogram</div>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" id="step1" data-tab="triangle">
+        <div class="step-num">2</div>
+        <div class="step-lbl">Triangle</div>
+      </div>
+      <div class="progress-line"></div>
+      <div class="progress-step" id="step2" data-tab="trapezium">
+        <div class="step-num">3</div>
+        <div class="step-lbl">Trapezium</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-parallelogram">
+      <div class="shape-stage">
+        <svg id="svgPara" viewBox="0 0 400 260" class="shape-svg" aria-label="Parallelogram cut into rectangle animation"></svg>
+      </div>
+      <div class="derive-controls">
+        <button class="derive-btn" id="cutParaBtn">✂ Cut &amp; Rearrange</button>
+        <button class="derive-btn secondary" id="resetParaBtn">↺ Reset</button>
+      </div>
+      <div class="formula-reveal" id="formulaPara">
+        <div class="formula-label">Parallelogram Area =</div>
+        <div class="formula-eq">base × height</div>
+      </div>
+      <p class="explanation" id="explainPara">A parallelogram can be cut and rearranged into a rectangle. The rectangle has the same base and height — so the area is the same!</p>
+    </div>
+
+    <div class="tab-content hidden" id="tab-triangle">
+      <div class="shape-stage">
+        <svg id="svgTri" viewBox="0 0 400 260" class="shape-svg" aria-label="Triangle doubled into parallelogram animation"></svg>
+      </div>
+      <div class="derive-controls">
+        <button class="derive-btn" id="cutTriBtn">✂ Double It!</button>
+        <button class="derive-btn secondary" id="resetTriBtn">↺ Reset</button>
+      </div>
+      <div class="formula-reveal" id="formulaTri">
+        <div class="formula-label">Triangle Area =</div>
+        <div class="formula-eq">½ × base × height</div>
+      </div>
+      <p class="explanation" id="explainTri">Two identical triangles form a parallelogram. So the triangle's area is exactly half of base × height!</p>
+    </div>
+
+    <div class="tab-content hidden" id="tab-trapezium">
+      <div class="shape-stage">
+        <svg id="svgTrap" viewBox="0 0 400 260" class="shape-svg" aria-label="Trapezium doubled into parallelogram animation"></svg>
+      </div>
+      <div class="derive-controls">
+        <button class="derive-btn" id="cutTrapBtn">✂ Double It!</button>
+        <button class="derive-btn secondary" id="resetTrapBtn">↺ Reset</button>
+      </div>
+      <div class="formula-reveal" id="formulaTrap">
+        <div class="formula-label">Trapezium Area =</div>
+        <div class="formula-eq">½ × (a + b) × height</div>
+      </div>
+      <p class="explanation" id="explainTrap">Two identical trapeziums form a parallelogram with base = (a + b). So the trapezium's area is half of (a + b) × height!</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="nav-btn" id="prevBtn" disabled>← Previous</button>
+      <button class="nav-btn" id="nextBtn">Next →</button>
+    </div>
+
+    <div class="quiz-section" id="quizSection">
+      <div class="quiz-title">📝 Quick Quiz</div>
+      <div class="quiz-item" id="q1">
+        <p>What is the area of a triangle with base 8 and height 5?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-correct="false">40</button>
+          <button class="quiz-opt" data-correct="true">20</button>
+          <button class="quiz-opt" data-correct="false">80</button>
+        </div>
+        <div class="quiz-feedback hidden"></div>
+      </div>
+      <div class="quiz-item hidden" id="q2">
+        <p>A trapezium has parallel sides of 6 and 10, and height 4. What is its area?</p>
+        <div class="quiz-opts">
+          <button class="quiz-opt" data-correct="false">60</button>
+          <button class="quiz-opt" data-correct="true">32</button>
+          <button class="quiz-opt" data-correct="false">24</button>
+        </div>
+        <div class="quiz-feedback hidden"></div>
+      </div>
+      <div class="quiz-score hidden" id="quizScore"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

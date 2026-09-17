@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parallelograms on the Same Base – Interactive Geoboard</title>
+  <meta name="description" content="Discover why parallelograms on the same base and between the same parallels always have equal areas using drag, shear, and visual proofs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="badge">Class IX–X · Geometry</div>
+      <h1>Parallelograms on the Same Base</h1>
+      <p class="subtitle">Between the Same Parallel Lines</p>
+    </header>
+
+    <div class="concept-bar">
+      <span class="concept-text">Drag the <strong>Slant slider</strong> to shear the parallelogram. The area never changes!</span>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="geoboard" aria-label="Interactive geoboard showing two parallelograms"></canvas>
+    </div>
+
+    <div class="controls-row">
+      <label class="slider-label" for="slantA">◀ Slant A ▶</label>
+      <input type="range" id="slantA" min="-120" max="120" value="0" class="slant-slider" aria-label="Slant of parallelogram A" />
+      <label class="slider-label" for="slantB">◀ Slant B ▶</label>
+      <input type="range" id="slantB" min="-120" max="120" value="60" class="slant-slider" aria-label="Slant of parallelogram B" />
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card stat-a">
+        <div class="stat-label">Parallelogram A</div>
+        <div class="stat-value" id="areaA">—</div>
+        <div class="stat-formula">base × height</div>
+      </div>
+      <div class="equals-badge" id="equalsBadge">
+        <span id="equalsSign">=</span>
+      </div>
+      <div class="stat-card stat-b">
+        <div class="stat-label">Parallelogram B</div>
+        <div class="stat-value" id="areaB">—</div>
+        <div class="stat-formula">base × height</div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-item">
+        <span class="info-key">Base:</span>
+        <span class="info-val" id="baseVal">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-key">Height:</span>
+        <span class="info-val" id="heightVal">—</span>
+      </div>
+    </div>
+
+    <button class="shear-btn" id="shearBtn">✨ Animate Shear Proof</button>
+
+    <div class="theorem-box">
+      <div class="theorem-title">📐 The Theorem</div>
+      <p>Parallelograms on the same base and between the same parallel lines have <strong>equal areas = base × height</strong>. Shearing a parallelogram does not change its area — it's like rearranging the same amount of space.</p>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">↺ Reset</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
