@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Triangles on the Same Base – Interactive Geoboard</title>
+  <meta name="description" content="Discover why triangles on the same base and between the same parallel lines always have equal areas using this interactive geoboard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="badge">Class IX–X · Geometry</div>
+      <h1>Triangles on the Same Base</h1>
+      <p class="subtitle">Between the Same Parallel Lines</p>
+    </header>
+
+    <div class="concept-bar">
+      <span class="concept-text">Move the apex of either triangle along the top line. Watch what happens to the areas!</span>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="geoboard" aria-label="Interactive geoboard showing two triangles"></canvas>
+      <div id="touch-hint" class="touch-hint">👆 Tap &amp; drag the triangle tips</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card stat-a">
+        <div class="stat-label">Triangle A Area</div>
+        <div class="stat-value" id="areaA">—</div>
+        <div class="stat-formula">½ × base × height</div>
+      </div>
+      <div class="equals-badge" id="equalsBadge">
+        <span id="equalsSign">=</span>
+      </div>
+      <div class="stat-card stat-b">
+        <div class="stat-label">Triangle B Area</div>
+        <div class="stat-value" id="areaB">—</div>
+        <div class="stat-formula">½ × base × height</div>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-item">
+        <span class="info-key">Base:</span>
+        <span class="info-val" id="baseVal">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-key">Height:</span>
+        <span class="info-val" id="heightVal">—</span>
+      </div>
+    </div>
+
+    <div id="ahaMessage" class="aha-message hidden">
+      🎉 AHA! No matter where you place the apex, the areas stay EQUAL!
+    </div>
+
+    <div class="quiz-section">
+      <div class="quiz-title">🤔 Predict Before You Move</div>
+      <p class="quiz-q">If you slide Triangle A's apex to the far left, will the area change?</p>
+      <div class="quiz-btns">
+        <button class="quiz-btn" id="qYes">Yes, it will change</button>
+        <button class="quiz-btn" id="qNo">No, it stays the same</button>
+      </div>
+      <div class="quiz-result hidden" id="quizResult"></div>
+    </div>
+
+    <div class="theorem-box">
+      <div class="theorem-title">📐 The Theorem</div>
+      <p>Triangles on the same base and between the same parallel lines have <strong>equal areas</strong>, because they all share the same base and the same perpendicular height.</p>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">↺ Reset</button>
+  </div>
+
+  <div class="aha-overlay hidden" id="ahaOverlay">
+    <div class="aha-popup">
+      <div class="aha-emoji">🎉</div>
+      <div class="aha-text">EQUAL AREAS!</div>
+      <div class="aha-sub">Great discovery!</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
