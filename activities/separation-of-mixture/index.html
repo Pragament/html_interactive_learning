@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Class VI Science: Separation of Mixture (Iron, Sand, Salt)</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-light: #38bdf8;
+      --primary-bg: #f0f9ff;
+      --accent-copper: #d97706;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --card-shadow: 0 12px 32px rgba(2, 132, 199, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f1f5f9 50%, #fef3c7 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+    }
+
+    .lab-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: var(--card-shadow);
+      max-width: 780px;
+      width: 100%;
+      padding: 22px;
+      margin: auto;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .header {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-bg);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid #bae6fd;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .subtitle {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* Stepper Header */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin: 16px 0;
+      position: relative;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: var(--border-color);
+      z-index: 1;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 2px solid var(--border-color);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .step-item.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-bg);
+    }
+
+    .step-item.completed {
+      border-color: #22c55e;
+      color: #15803d;
+      background: #dcfce7;
+    }
+
+    .lab-stage {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Interactive Flask / Dish Containers */
+    .dish-container {
+      width: 220px;
+      height: 120px;
+      background: #f1f5f9;
+      border: 3px solid #cbd5e1;
+      border-radius: 0 0 100px 100px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: inset 0 -4px 10px rgba(0,0,0,0.05);
+    }
+
+    .mixture-particles {
+      width: 100%;
+      height: 45px;
+      background: radial-gradient(circle, #475569 20%, #d97706 40%, #e2e8f0 70%);
+      position: relative;
+      transition: all 0.5s ease;
+    }
+
+    .magnet-tool {
+      font-size: 42px;
+      position: absolute;
+      top: 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      z-index: 10;
+    }
+
+    .magnet-tool.attracting {
+      top: 90px;
+    }
+
+    .iron-filings-attached {
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .magnet-tool.attracting .iron-filings-attached {
+      opacity: 1;
+    }
+
+    .funnel-setup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .funnel {
+      width: 0;
+      height: 0;
+      border-left: 50px solid transparent;
+      border-right: 50px solid transparent;
+      border-top: 60px solid #94a3b8;
+      position: relative;
+    }
+
+    .beaker {
+      width: 120px;
+      height: 100px;
+      border: 3px solid #cbd5e1;
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      background: rgba(224, 242, 254, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .beaker-liquid {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 0%;
+      background: #0284c7;
+      opacity: 0.7;
+      transition: height 0.8s ease;
+    }
+
+    .flame {
+      font-size: 32px;
+      position: absolute;
+      bottom: -10px;
+      opacity: 0;
+      animation: flicker 0.4s infinite alternate;
+    }
+
+    .flame.active {
+      opacity: 1;
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(0.95); }
+      100% { transform: scale(1.08); }
+    }
+
+    .action-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #0369a1;
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .status-card {
+      background: #ffffff;
+      border: 1px solid #bae6fd;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+
+    .status-card h5 {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .table-container {
+      margin-top: 14px;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: left;
+    }
+
+    th { background: #f8fafc; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <div class="lab-card">
+    <div class="header">
+      <span class="badge">Class VI Science • Materials</span>
+      <h1>Separation of Mixture (Iron Filings, Sand & Salt)</h1>
+      <p class="subtitle">3-Stage Lab: Magnetic Separation ➔ Filtration ➔ Evaporation.</p>
+    </div>
+
+    <div class="stepper">
+      <div class="step-item active" id="st-1">🧲 1. Magnetic Separation</div>
+      <div class="step-item" id="st-2">🧪 2. Dissolve & Filter</div>
+      <div class="step-item" id="st-3">🔥 3. Evaporation</div>
+    </div>
+
+    <div class="lab-stage" id="stage-area">
+      <!-- Stage 1 Visual -->
+      <div id="view-stage1" style="display: flex; flex-direction: column; align-items: center; position: relative;">
+        <div class="magnet-tool" id="magnet" onclick="runMagnet()">🧲<span class="iron-filings-attached">🔩🔩🔩</span></div>
+        <div class="dish-container">
+          <div class="mixture-particles" id="particles"></div>
+        </div>
+      </div>
+
+      <!-- Stage 2 Visual -->
+      <div id="view-stage2" style="display: none; flex-direction: column; align-items: center;">
+        <div class="funnel-setup">
+          <div style="font-size: 24px;">🧪 Pouring Water + Mixture</div>
+          <div class="funnel"></div>
+          <div class="beaker">
+            <div class="beaker-liquid" id="liquid-level"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3 Visual -->
+      <div id="view-stage3" style="display: none; flex-direction: column; align-items: center; position: relative;">
+        <div class="beaker" style="height: 80px;">
+          <div class="beaker-liquid" id="boil-liquid" style="height: 60%; background: #38bdf8;"></div>
+          <div id="salt-crystals" style="position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); opacity: 0; font-size: 20px;">🧂🧂🧂</div>
+        </div>
+        <div class="flame" id="flame">🔥</div>
+      </div>
+    </div>
+
+    <div class="action-controls">
+      <button class="btn btn-primary" id="btn-action" onclick="handleStep()">🧲 Run Magnetic Separation</button>
+      <button class="btn btn-secondary" onclick="resetLab()">🔄 Reset Experiment</button>
+    </div>
+
+    <div class="status-card">
+      <h5 id="status-title">Stage 1: Extract Iron Filings</h5>
+      <p id="status-desc">Click "Run Magnetic Separation" or click the Magnet to attract magnetic iron filings from the mixture.</p>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Property Used</th>
+            <th>Separation Technique</th>
+            <th>Recovered Form</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Iron Filings</strong></td>
+            <td>Magnetic Property</td>
+            <td>Magnetic Separation</td>
+            <td>Pure Iron Particles 🧲</td>
+          </tr>
+          <tr>
+            <td><strong>Sand</strong></td>
+            <td>Insoluble in Water</td>
+            <td>Filtration</td>
+            <td>Dry Sand Residue 🏜️</td>
+          </tr>
+          <tr>
+            <td><strong>Common Salt</strong></td>
+            <td>Soluble in Water</td>
+            <td>Evaporation</td>
+            <td>Salt Crystals 🧂</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let step = 1;
+
+    function handleStep() {
+      if (step === 1) {
+        runMagnet();
+      } else if (step === 2) {
+        runFiltration();
+      } else if (step === 3) {
+        runEvaporation();
+      }
+    }
+
+    function runMagnet() {
+      const magnet = document.getElementById('magnet');
+      magnet.classList.add('attracting');
+      document.getElementById('particles').style.background = '#d97706';
+
+      setTimeout(() => {
+        updateStatus('Stage 1 Complete: Iron Filings Removed!', 'Iron filings attracted by the magnet. Click "Proceed to Filtration".');
+        document.getElementById('st-1').className = 'step-item completed';
+        document.getElementById('st-2').className = 'step-item active';
+        document.getElementById('btn-action').innerText = '🧪 Proceed to Dissolve & Filter';
+        step = 2;
+      }, 1000);
+    }
+
+    function runFiltration() {
+      document.getElementById('view-stage1').style.display = 'none';
+      document.getElementById('view-stage2').style.display = 'flex';
+      
+      setTimeout(() => {
+        document.getElementById('liquid-level').style.height = '60%';
+        updateStatus('Stage 2 Complete: Sand Filtered Out!', 'Sand remains on filter paper (residue). Salt solution passes into beaker (filtrate). Click "Start Evaporation".');
+        document.getElementById('st-2').className = 'step-item completed';
+        document.getElementById('st-3').className = 'step-item active';
+        document.getElementById('btn-action').innerText = '🔥 Start Evaporation';
+        step = 3;
+      }, 800);
+    }
+
+    function runEvaporation() {
+      document.getElementById('view-stage2').style.display = 'none';
+      document.getElementById('view-stage3').style.display = 'flex';
+      document.getElementById('flame').classList.add('active');
+
+      setTimeout(() => {
+        document.getElementById('boil-liquid').style.height = '0%';
+        document.getElementById('salt-crystals').style.opacity = '1';
+        document.getElementById('flame').classList.remove('active');
+        document.getElementById('st-3').className = 'step-item completed';
+        updateStatus('Separation Completed Successfully! 🎉', 'All water evaporated leaving white salt crystals in the dish! All 3 substances separated cleanly.');
+        document.getElementById('btn-action').innerText = '✅ Mixture Fully Separated';
+        document.getElementById('btn-action').disabled = true;
+      }, 1500);
+    }
+
+    function resetLab() {
+      step = 1;
+      document.getElementById('view-stage1').style.display = 'flex';
+      document.getElementById('view-stage2').style.display = 'none';
+      document.getElementById('view-stage3').style.display = 'none';
+      
+      document.getElementById('magnet').classList.remove('attracting');
+      document.getElementById('particles').style.background = 'radial-gradient(circle, #475569 20%, #d97706 40%, #e2e8f0 70%)';
+      document.getElementById('liquid-level').style.height = '0%';
+      document.getElementById('boil-liquid').style.height = '60%';
+      document.getElementById('salt-crystals').style.opacity = '0';
+      document.getElementById('flame').classList.remove('active');
+
+      document.getElementById('st-1').className = 'step-item active';
+      document.getElementById('st-2').className = 'step-item';
+      document.getElementById('st-3').className = 'step-item';
+
+      document.getElementById('btn-action').innerText = '🧲 Run Magnetic Separation';
+      document.getElementById('btn-action').disabled = false;
+
+      updateStatus('Stage 1: Extract Iron Filings', 'Click "Run Magnetic Separation" to attract magnetic iron filings.');
+    }
+
+    function updateStatus(title, desc) {
+      document.getElementById('status-title').innerText = title;
+      document.getElementById('status-desc').innerText = desc;
+    }
+  </script>
+</body>
+</html>
