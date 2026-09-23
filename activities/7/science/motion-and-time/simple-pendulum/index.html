@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Pendulum Lab</title>
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+.container{max-width:1100px;margin:auto;padding:20px}
+header{
+    background:#173b67;color:white;border-radius:14px;padding:22px;
+    text-align:center;margin-bottom:18px;
+}
+header h1{margin:0 0 8px;font-size:30px}
+header p{margin:6px 0}
+.grid{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}
+.card{
+    background:white;border-radius:14px;padding:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.08);margin-bottom:18px;
+}
+h2{margin-top:0;color:#173b67}
+.step{margin:9px 0;padding:10px;background:#eef4fb;border-radius:8px}
+.control{margin:18px 0}
+label{font-weight:bold;display:block;margin-bottom:7px}
+input[type=range]{width:100%}
+.value{float:right;color:#173b67}
+button{
+    border:0;border-radius:9px;padding:11px 15px;margin:5px;
+    font-weight:bold;cursor:pointer;
+}
+.start{background:#198754;color:white}
+.stop{background:#dc3545;color:white}
+.reset{background:#6c757d;color:white}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+.lab{
+    height:440px;position:relative;overflow:hidden;
+    background:linear-gradient(#eaf5ff 0 70%,#dce8d3 70%);
+    border:2px solid #d6e0eb;border-radius:12px;
+}
+.table{position:absolute;bottom:0;left:0;right:0;height:90px;background:#a8794f}
+.g-clamp{position:absolute;top:25px;left:50%;transform:translateX(-50%);width:190px;height:100px}
+.clamp-top{
+    position:absolute;left:10px;top:0;width:170px;height:24px;
+    background:#414a56;border-radius:8px 8px 4px 4px;
+}
+.clamp-jaw{
+    position:absolute;top:18px;width:35px;height:55px;background:#414a56;
+}
+.jaw-left{left:18px;border-radius:4px 0 0 8px}
+.jaw-right{right:18px;border-radius:0 4px 8px 0}
+.clamp-screw{
+    position:absolute;top:42px;left:67px;width:56px;height:14px;
+    background:#69737f;border-radius:7px;
+}
+.clamp-label{
+    position:absolute;top:72px;left:0;right:0;text-align:center;
+    font-size:12px;font-weight:bold;color:#303842;
+}
+.pivot{
+    position:absolute;top:104px;left:50%;width:14px;height:14px;
+    transform:translateX(-50%);background:#111;border-radius:50%;z-index:5;
+}
+.pendulum{
+    position:absolute;top:110px;left:50%;width:2px;
+    height:245px;background:#303030;transform-origin:top center;
+    transform:rotate(0deg);z-index:3;
+}
+.bob{
+    position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+    width:36px;height:36px;border-radius:50%;background:#b33b3b;
+    border:3px solid #762525;
+}
+.angle-mark{
+    position:absolute;top:115px;left:50%;transform:translateX(-50%);
+    color:#555;font-size:13px;
+}
+.status{
+    margin-top:10px;padding:10px;border-radius:8px;
+    background:#eef4fb;text-align:center;font-weight:bold;
+}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:#f0f4f8;border-radius:9px;padding:12px;text-align:center}
+.stat strong{display:block;font-size:20px;margin-top:4px}
+.result{
+    padding:13px;border-left:5px solid #173b67;
+    background:#f5f8fc;margin:8px 0;border-radius:6px;
+}
+.formula{
+    background:#fff8df;padding:12px;border-radius:8px;
+    font-family:Georgia,serif;text-align:center;font-size:18px;margin:8px 0;
+}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-motion-and-time-simple-pendulum",
+  "order": 91,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Motion and Time",
+  "subtopic": null,
+  "title": "Simple Pendulum",
+  "description": "Suspend a bob from a G-clamp, displace and release. Measure time for 20 oscillations and calculate the time period.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="container">
+
+<header>
+    <h1>🔬 Simple Pendulum Lab</h1>
+    <p><strong>Class VII • Science • Motion and Time</strong></p>
+    <p>Suspend a bob from a G-clamp, displace and release it, measure the time for 20 oscillations, and calculate the time period.</p>
+</header>
+
+<div class="grid">
+<section>
+<div class="card">
+<h2>📋 Procedure</h2>
+<div class="step">1. Suspend the pendulum bob from the G-clamp.</div>
+<div class="step">2. Set the pendulum length.</div>
+<div class="step">3. Displace the bob using the starting angle.</div>
+<div class="step">4. Click <b>Release / Start</b>.</div>
+<div class="step">5. Measure the time taken for <b>20 complete oscillations</b>.</div>
+<div class="step">6. Calculate the time period: <b>T = total time ÷ 20</b>.</div>
+</div>
+
+<div class="card">
+<h2>⚙️ Controls</h2>
+<div class="control">
+<label for="length">Pendulum Length <span class="value" id="lengthValue">80 cm</span></label>
+<input id="length" type="range" min="40" max="150" value="80" step="5">
+</div>
+<div class="control">
+<label for="angle">Starting Displacement <span class="value" id="angleValue">20°</span></label>
+<input id="angle" type="range" min="5" max="30" value="20" step="1">
+</div>
+<button class="start" id="startBtn">▶ Release / Start</button>
+<button class="stop" id="stopBtn">⏸ Stop</button>
+<button class="reset" id="resetBtn">↻ Reset</button>
+<div class="status" id="status">Ready. Displace the bob and release it.</div>
+</div>
+
+<div class="card">
+<h2>📐 Formula</h2>
+<div class="formula">T = t / 20</div>
+<div class="formula">Theoretical: T = 2π√(L / g)</div>
+<p><b>g = 9.8 m/s²</b></p>
+</div>
+</section>
+
+<section>
+<div class="card">
+<h2>🧪 Pendulum Experiment</h2>
+<div class="lab" id="lab">
+    <div class="g-clamp">
+        <div class="clamp-top"></div>
+        <div class="clamp-jaw jaw-left"></div>
+        <div class="clamp-jaw jaw-right"></div>
+        <div class="clamp-screw"></div>
+        <div class="clamp-label">G-CLAMP</div>
+    </div>
+    <div class="pivot"></div>
+    <div class="pendulum" id="pendulum"><div class="bob"></div></div>
+    <div class="angle-mark">↔ Starting displacement</div>
+    <div class="table"></div>
+</div>
+
+<div class="stats">
+<div class="stat">Length<strong id="lengthStat">80 cm</strong></div>
+<div class="stat">Oscillations<strong id="oscillationStat">0 / 20</strong></div>
+<div class="stat">Time<strong id="timeStat">0.00 s</strong></div>
+</div>
+</div>
+
+<div class="card">
+<h2>📊 Results</h2>
+<div class="result">Measured Time for 20 Oscillations: <b id="measuredTime">—</b></div>
+<div class="result">Measured Time Period: <b id="measuredPeriod">—</b></div>
+<div class="result">Theoretical Time Period: <b id="theoreticalPeriod">—</b></div>
+</div>
+
+</section>
+</div>
+</div>
+
+<script>
+const lengthSlider=document.getElementById("length");
+const angleSlider=document.getElementById("angle");
+const lengthValue=document.getElementById("lengthValue");
+const angleValue=document.getElementById("angleValue");
+const lengthStat=document.getElementById("lengthStat");
+const oscillationStat=document.getElementById("oscillationStat");
+const timeStat=document.getElementById("timeStat");
+const measuredTime=document.getElementById("measuredTime");
+const measuredPeriod=document.getElementById("measuredPeriod");
+const theoreticalPeriod=document.getElementById("theoreticalPeriod");
+const pendulum=document.getElementById("pendulum");
+const status=document.getElementById("status");
+
+let running=false;
+let startTime=0;
+let animationId=null;
+let elapsed=0;
+let oscillations=0;
+let lastCrossing=0;
+let lastDirection=0;
+
+function theoretical(){
+    const L=Number(lengthSlider.value)/100;
+    return 2*Math.PI*Math.sqrt(L/9.8);
+}
+
+function updateValues(){
+    lengthValue.textContent=lengthSlider.value+" cm";
+    angleValue.textContent=angleSlider.value+"°";
+    lengthStat.textContent=lengthSlider.value+" cm";
+    theoreticalPeriod.textContent=theoretical().toFixed(2)+" s";
+    if(!running) setPendulum(Number(angleSlider.value));
+}
+
+function setPendulum(deg){
+    pendulum.style.height=(100+Number(lengthSlider.value)*1.45)+"px";
+    pendulum.style.transform="rotate("+deg+"deg)";
+}
+
+function resetExperiment(){
+    cancelAnimationFrame(animationId);
+    running=false;
+    elapsed=0;
+    oscillations=0;
+    lastCrossing=0;
+    lastDirection=0;
+    timeStat.textContent="0.00 s";
+    oscillationStat.textContent="0 / 20";
+    measuredTime.textContent="—";
+    measuredPeriod.textContent="—";
+    status.textContent="Ready. Displace the bob and release it.";
+    setPendulum(Number(angleSlider.value));
+}
+
+function animate(now){
+    if(!running)return;
+
+    elapsed=(now-startTime)/1000;
+    const T=theoretical();
+    const phase=(2*Math.PI*elapsed/T);
+    const maxAngle=Number(angleSlider.value);
+
+    // Real-time visual motion of the bob.
+    const currentAngle=maxAngle*Math.cos(phase);
+    setPendulum(currentAngle);
+
+    // Count a complete oscillation whenever the bob returns through
+    // the starting-side position after one full period.
+    const completed=Math.floor(elapsed/T);
+    oscillations=Math.min(completed,20);
+
+    oscillationStat.textContent=oscillations+" / 20";
+    timeStat.textContent=elapsed.toFixed(2)+" s";
+
+    if(oscillations>=20){
+        running=false;
+        measuredTime.textContent=elapsed.toFixed(2)+" s";
+        measuredPeriod.textContent=(elapsed/20).toFixed(2)+" s";
+        status.textContent="Experiment complete: 20 oscillations measured.";
+        pendulum.style.transform="rotate(0deg)";
+        return;
+    }
+
+    animationId=requestAnimationFrame(animate);
+}
+
+document.getElementById("startBtn").addEventListener("click",()=>{
+    if(running)return;
+    cancelAnimationFrame(animationId);
+    elapsed=0;
+    oscillations=0;
+    timeStat.textContent="0.00 s";
+    oscillationStat.textContent="0 / 20";
+    measuredTime.textContent="—";
+    measuredPeriod.textContent="—";
+    running=true;
+    startTime=performance.now();
+    status.textContent="Released! Measuring time for 20 oscillations...";
+    requestAnimationFrame(animate);
+});
+
+document.getElementById("stopBtn").addEventListener("click",()=>{
+    if(!running)return;
+    running=false;
+    cancelAnimationFrame(animationId);
+    status.textContent="Experiment stopped. Click Release / Start to measure again.";
+});
+
+document.getElementById("resetBtn").addEventListener("click",resetExperiment);
+
+lengthSlider.addEventListener("input",updateValues);
+angleSlider.addEventListener("input",updateValues);
+
+updateValues();
+</script>
+</body>
+</html>

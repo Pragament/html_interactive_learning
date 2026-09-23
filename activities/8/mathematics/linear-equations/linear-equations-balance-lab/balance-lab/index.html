@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear Equations Balance Lab</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: #172033;
+      background: #eef5f8;
+      min-height: 100vh;
+      padding: 18px;
+    }
+    .app {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    header, .panel {
+      background: #fff;
+      border: 1px solid #d7e3ea;
+      border-radius: 8px;
+      box-shadow: 0 10px 26px rgba(24, 39, 58, 0.08);
+    }
+    header {
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    h1, h2, p { margin: 0; }
+    h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    header p { color: #657386; margin-top: 5px; }
+    .main {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    .panel { padding: 18px; }
+    .equation {
+      font-size: clamp(1.8rem, 6vw, 3.4rem);
+      font-weight: 850;
+      text-align: center;
+      color: #12364a;
+      padding: 16px;
+      background: #edf8fb;
+      border-radius: 8px;
+      border: 1px solid #cae7ef;
+    }
+    .balance-wrap {
+      min-height: 360px;
+      display: grid;
+      align-content: end;
+      gap: 16px;
+      padding-top: 12px;
+    }
+    .beam {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #276678, #1687a7);
+      transform-origin: center;
+      transition: transform 0.25s ease;
+      box-shadow: 0 8px 18px rgba(22, 75, 95, 0.22);
+    }
+    .pans {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: end;
+    }
+    .pan {
+      min-height: 170px;
+      border: 3px solid #334155;
+      border-top: none;
+      border-radius: 0 0 32px 32px;
+      background: linear-gradient(#f9fafb, #e8eef3);
+      padding: 14px;
+      display: flex;
+      align-content: flex-end;
+      align-items: flex-end;
+      justify-content: center;
+      flex-wrap: wrap-reverse;
+      gap: 7px;
+    }
+    .block {
+      min-width: 38px;
+      height: 32px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-weight: 850;
+      color: #fff;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.16);
+    }
+    .x-block { background: #c84b31; }
+    .unit-block { background: #176b87; }
+    .right-block { background: #237a54; }
+    .fulcrum {
+      width: 0;
+      height: 0;
+      border-left: 46px solid transparent;
+      border-right: 46px solid transparent;
+      border-bottom: 92px solid #475569;
+      margin: -10px auto 0;
+    }
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 7px;
+      font-weight: 750;
+      color: #334155;
+    }
+    input[type="range"] { width: 100%; accent-color: #176b87; }
+    input[type="number"] {
+      width: 100%;
+      min-height: 42px;
+      border: 2px solid #cbd9e2;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 1.1rem;
+      font-weight: 750;
+      text-align: center;
+    }
+    .button-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      font-weight: 850;
+      background: #176b87;
+      color: #fff;
+      cursor: pointer;
+    }
+    button.secondary { background: #e8eef3; color: #12364a; }
+    .status {
+      min-height: 64px;
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff8e5;
+      border: 1px solid #f0d590;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+    .steps {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .step {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #f6f9fb;
+      border-left: 5px solid #176b87;
+      color: #405166;
+    }
+    @media (max-width: 800px) {
+      .main { grid-template-columns: 1fr; }
+      .balance-wrap { min-height: 300px; }
+    }
+    @media (max-width: 520px) {
+      body { padding: 10px; }
+      .pans { gap: 10px; }
+      .pan { min-height: 138px; padding: 9px; }
+      .block { min-width: 30px; height: 28px; font-size: 0.88rem; }
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "8-mathematics-linear-equations-linear-equations-balance-lab-balance-lab",
+  "order": 216,
+  "class": "VIII",
+  "subject": "Mathematics",
+  "topic": "Linear Equations",
+  "subtopic": "Linear Equations Balance Lab",
+  "title": "Linear Equations Balance Lab — Balance Lab",
+  "description": "Use a balance model to solve equations of the form ax + b = c by adjusting x and observing both sides.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Linear Equations Balance Lab</h1>
+        <p>Adjust x until both sides have equal value, then inspect the solving steps.</p>
+      </div>
+      <button id="newEquation">New equation</button>
+    </header>
+
+    <section class="main">
+      <div class="panel">
+        <div class="equation" id="equationText"></div>
+        <div class="balance-wrap">
+          <div class="pans">
+            <div class="pan" id="leftPan" aria-label="left side"></div>
+            <div class="pan" id="rightPan" aria-label="right side"></div>
+          </div>
+          <div class="beam" id="beam"></div>
+          <div class="fulcrum"></div>
+        </div>
+      </div>
+
+      <aside class="panel controls">
+        <label>
+          Guess x: <span id="guessText">1</span>
+          <input id="xSlider" type="range" min="0" max="12" step="1" value="1" />
+        </label>
+        <input id="xNumber" type="number" min="0" max="12" step="1" value="1" aria-label="x guess" />
+        <div class="button-row">
+          <button id="minusX" class="secondary" type="button">− x</button>
+          <button id="plusX" class="secondary" type="button">+ x</button>
+          <button id="checkAnswer" type="button">Check</button>
+        </div>
+        <div class="status" id="status"></div>
+        <div class="steps" id="steps"></div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const equations = [
+      { a: 2, b: 3, x: 4 },
+      { a: 3, b: 5, x: 3 },
+      { a: 4, b: 2, x: 2 },
+      { a: 5, b: 4, x: 1 },
+      { a: 2, b: 7, x: 5 }
+    ];
+
+    let current = equations[0];
+    let guess = 1;
+
+    const equationText = document.querySelector("#equationText");
+    const leftPan = document.querySelector("#leftPan");
+    const rightPan = document.querySelector("#rightPan");
+    const beam = document.querySelector("#beam");
+    const xSlider = document.querySelector("#xSlider");
+    const xNumber = document.querySelector("#xNumber");
+    const guessText = document.querySelector("#guessText");
+    const status = document.querySelector("#status");
+    const steps = document.querySelector("#steps");
+
+    function clampGuess(value) {
+      return Math.max(0, Math.min(12, Math.round(Number(value) || 0)));
+    }
+
+    function setGuess(value) {
+      guess = clampGuess(value);
+      xSlider.value = guess;
+      xNumber.value = guess;
+      render();
+    }
+
+    function block(text, className) {
+      const div = document.createElement("div");
+      div.className = `block ${className}`;
+      div.textContent = text;
+      return div;
+    }
+
+    function renderBlocks() {
+      leftPan.innerHTML = "";
+      rightPan.innerHTML = "";
+      for (let i = 0; i < current.a; i += 1) leftPan.append(block("x", "x-block"));
+      for (let i = 0; i < current.b; i += 1) leftPan.append(block("1", "unit-block"));
+      for (let i = 0; i < current.a * current.x + current.b; i += 1) rightPan.append(block("1", "right-block"));
+    }
+
+    function render() {
+      const right = current.a * current.x + current.b;
+      const left = current.a * guess + current.b;
+      equationText.textContent = `${current.a}x + ${current.b} = ${right}`;
+      guessText.textContent = guess;
+      renderBlocks();
+      const diff = right - left;
+      beam.style.transform = `rotate(${Math.max(-8, Math.min(8, diff * 1.3))}deg)`;
+      status.innerHTML = diff === 0
+        ? `Balanced. Your x = ${guess}.`
+        : diff > 0
+          ? `Right side is heavier by ${diff}. Increase x.`
+          : `Left side is heavier by ${Math.abs(diff)}. Decrease x.`;
+      steps.innerHTML = `
+        <div class="step">Start: ${current.a}x + ${current.b} = ${right}</div>
+        <div class="step">Subtract ${current.b} from both sides: ${current.a}x = ${right - current.b}</div>
+        <div class="step">Divide both sides by ${current.a}: x = ${current.x}</div>
+      `;
+    }
+
+    document.querySelector("#newEquation").addEventListener("click", () => {
+      const next = equations[Math.floor(Math.random() * equations.length)];
+      current = next === current ? equations[(equations.indexOf(next) + 1) % equations.length] : next;
+      setGuess(1);
+    });
+    document.querySelector("#minusX").addEventListener("click", () => setGuess(guess - 1));
+    document.querySelector("#plusX").addEventListener("click", () => setGuess(guess + 1));
+    document.querySelector("#checkAnswer").addEventListener("click", () => {
+      status.innerHTML = guess === current.x
+        ? `Correct. x = ${current.x} makes both sides equal.`
+        : `Try again. Use opposite operations: subtract ${current.b}, then divide by ${current.a}.`;
+    });
+    xSlider.addEventListener("input", (event) => setGuess(event.target.value));
+    xNumber.addEventListener("change", (event) => setGuess(event.target.value));
+    xNumber.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") setGuess(event.target.value);
+    });
+
+    render();
+  </script>
+</body>
+</html>

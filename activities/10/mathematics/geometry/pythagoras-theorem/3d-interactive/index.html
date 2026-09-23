@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📐 Pythagoras Theorem – 3D Interactive</title>
+    <style>
+        /* ── reset & layout ── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a2a3a;
+            color: #eef4f8;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #canvas-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            background: #0f1a24;
+        }
+        #canvas-container canvas { display: block; }
+
+        /* ── Overlay controls ── */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 40, 55, 0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 16px 32px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            pointer-events: auto;
+            z-index: 10;
+        }
+        .controls .slider-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .controls label {
+            font-weight: 600;
+            font-size: 16px;
+            color: #bcd4e0;
+        }
+        .controls label .side-label {
+            font-weight: 700;
+        }
+        .controls label .side-label.a { color: #e8685a; }
+        .controls label .side-label.b { color: #5ca88a; }
+        .controls input[type="range"] {
+            width: 140px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #3a5a6a;
+            border-radius: 4px;
+            outline: none;
+        }
+        .controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #6a9eb0;
+            cursor: pointer;
+            border: 2px solid #fff;
+            transition: 0.1s;
+        }
+        .controls input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        .controls .value {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        /* ── Formula panel (bottom-left) ── */
+        .formula-panel {
+            position: absolute;
+            bottom: 100px;
+            left: 30px;
+            background: rgba(20, 40, 55, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 18px 24px;
+            border: 1px solid rgba(255,255,255,0.06);
+            pointer-events: none;
+            z-index: 5;
+            font-size: 18px;
+            line-height: 1.8;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .formula-panel .theorem {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 26px;
+            font-weight: 600;
+            color: #d0e4ee;
+        }
+        .formula-panel .theorem .hl-a { color: #e8685a; }
+        .formula-panel .theorem .hl-b { color: #5ca88a; }
+        .formula-panel .theorem .hl-c { color: #6a9eb0; }
+        .formula-panel .steps {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+            font-weight: 500;
+            color: #b0c8d4;
+        }
+        .formula-panel .steps .step {
+            background: rgba(255,255,255,0.05);
+            padding: 2px 14px;
+            border-radius: 30px;
+        }
+        .formula-panel .verify {
+            margin-top: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 2px 14px;
+            border-radius: 30px;
+            display: inline-block;
+            background: rgba(90, 200, 140, 0.15);
+            color: #7acfaa;
+        }
+        .formula-panel .verify.invalid {
+            background: rgba(220, 80, 70, 0.15);
+            color: #e8685a;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 700px) {
+            .controls { 
+                padding: 12px 20px;
+                gap: 16px;
+                bottom: 20px;
+                border-radius: 30px;
+                width: 90%;
+            }
+            .controls input[type="range"] { width: 80px; }
+            .formula-panel {
+                bottom: 80px;
+                left: 16px;
+                right: 16px;
+                font-size: 15px;
+                padding: 14px 16px;
+            }
+            .formula-panel .theorem { font-size: 20px; }
+        }
+    </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-geometry-pythagoras-theorem-3d-interactive",
+  "order": 304,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": "Pythagoras Theorem",
+  "title": "Pythagoras Theorem — 3D Interactive",
+  "description": "Arrange square cut-outs to verify that a² + b² = c² in a right-angled triangle.",
+  "activityType": "simulation",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+    <!-- 3D Viewport -->
+    <div id="canvas-container"></div>
+
+    <!-- Formula panel -->
+    <div class="formula-panel" id="formulaPanel">
+        <div class="theorem">
+            <span class="hl-a">a</span>² + <span class="hl-b">b</span>² = <span class="hl-c">c</span>²
+        </div>
+        <div class="steps">
+            <span class="step"><span class="hl-a">a</span>² = <span id="a2display">9.00</span></span>
+            <span class="step"><span class="hl-b">b</span>² = <span id="b2display">16.00</span></span>
+            <span class="step"><span class="hl-c">c</span>² = <span id="c2display">25.00</span></span>
+            <span class="step"><span class="hl-c">c</span> = <span id="cDisplay">5.00</span></span>
+        </div>
+        <div class="verify" id="verifyDisplay">✅ Verified</div>
+    </div>
+
+    <!-- Controls overlay -->
+    <div class="controls">
+        <div class="slider-group">
+            <label><span class="side-label a">a</span> =</label>
+            <input type="range" id="sliderA" min="0.5" max="6" step="0.1" value="3" />
+            <span class="value" id="valA">3.0</span>
+        </div>
+        <div class="slider-group">
+            <label><span class="side-label b">b</span> =</label>
+            <input type="range" id="sliderB" min="0.5" max="6" step="0.1" value="4" />
+            <span class="value" id="valB">4.0</span>
+        </div>
+    </div>
+
+    <!-- ─── Three.js imports ─── -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.150.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.150.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        // ─── Imports ───
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        // ─── DOM refs ───
+        const container = document.getElementById('canvas-container');
+        const sliderA = document.getElementById('sliderA');
+        const sliderB = document.getElementById('sliderB');
+        const valA = document.getElementById('valA');
+        const valB = document.getElementById('valB');
+        const a2display = document.getElementById('a2display');
+        const b2display = document.getElementById('b2display');
+        const c2display = document.getElementById('c2display');
+        const cDisplay = document.getElementById('cDisplay');
+        const verifyDisplay = document.getElementById('verifyDisplay');
+
+        // ─── Scene setup ───
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0f1a24);
+
+        const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(8, 6, 10);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(container.clientWidth, container.clientHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0';
+        labelRenderer.domElement.style.left = '0';
+        labelRenderer.domElement.style.pointerEvents = 'none'; // allow clicks through to canvas
+        container.appendChild(labelRenderer.domElement);
+
+        // ─── Controls ───
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.autoRotate = false;
+        controls.target.set(0, 0, 0);
+        controls.update();
+
+        // ─── Lights ───
+        const ambient = new THREE.AmbientLight(0x404060, 0.6);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        dirLight.position.set(1, 2, 1);
+        scene.add(dirLight);
+        const backLight = new THREE.DirectionalLight(0xccddff, 0.4);
+        backLight.position.set(-1, 0.5, -1);
+        scene.add(backLight);
+
+        // ─── Helpers: grid and axes ───
+        const gridHelper = new THREE.GridHelper(14, 14, 0x4a6a7a, 0x2a4a5a);
+        gridHelper.position.z = -0.01;
+        scene.add(gridHelper);
+
+        // ─── State ───
+        let a = 3.0, b = 4.0, c = 5.0;
+
+        // ─── Groups for dynamic objects ───
+        const triangleGroup = new THREE.Group();
+        const squareGroup = new THREE.Group();
+        const labelGroup = new THREE.Group();
+        scene.add(triangleGroup);
+        scene.add(squareGroup);
+        scene.add(labelGroup);
+
+        // ─── Helper: create a square plane with border ───
+        function createSquareMesh(side, color, position, rotation, labelText) {
+            // position: Vector3, rotation: euler angles
+            const geo = new THREE.PlaneGeometry(side, side);
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                transparent: true,
+                opacity: 0.5,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.copy(position);
+            mesh.rotation.set(rotation.x, rotation.y, rotation.z);
+
+            // Border
+            const edges = new THREE.EdgesGeometry(geo);
+            const lineMat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+            const border = new THREE.LineSegments(edges, lineMat);
+            border.position.copy(position);
+            border.rotation.set(rotation.x, rotation.y, rotation.z);
+
+            const group = new THREE.Group();
+            group.add(mesh);
+            group.add(border);
+
+            // Label as CSS2D
+            const div = document.createElement('div');
+            div.textContent = labelText;
+            div.style.color = '#fff';
+            div.style.fontSize = '16px';
+            div.style.fontWeight = '600';
+            div.style.textShadow = '0 0 12px rgba(0,0,0,0.8)';
+            div.style.background = 'rgba(0,0,0,0.5)';
+            div.style.padding = '4px 12px';
+            div.style.borderRadius = '20px';
+            div.style.backdropFilter = 'blur(4px)';
+            div.style.border = '1px solid rgba(255,255,255,0.1)';
+            div.style.pointerEvents = 'none';
+            const label = new CSS2DObject(div);
+            // Position at center of square, slightly above
+            const centerPos = position.clone();
+            // For squares in XY plane, we need to adjust Z offset for label visibility
+            // We'll place labels at z=0.05 above the square
+            centerPos.z += 0.05;
+            label.position.copy(centerPos);
+
+            return { group, label };
+        }
+
+        // ─── Build scene ───
+        function buildScene() {
+            // Clear groups
+            while(triangleGroup.children.length) triangleGroup.remove(triangleGroup.children[0]);
+            while(squareGroup.children.length) squareGroup.remove(squareGroup.children[0]);
+            while(labelGroup.children.length) labelGroup.remove(labelGroup.children[0]);
+
+            c = Math.sqrt(a*a + b*b);
+
+            // ── Triangle vertices ──
+            // Right angle at origin, horizontal leg b, vertical leg a
+            const A = new THREE.Vector3(0, 0, 0);
+            const B = new THREE.Vector3(b, 0, 0);
+            const C = new THREE.Vector3(0, a, 0);
+
+            // ── Draw triangle edges ──
+            const points = [A, B, C, A];
+            const geoLine = new THREE.BufferGeometry().setFromPoints(points);
+            const lineMat = new THREE.LineBasicMaterial({ color: 0x88ccff, linewidth: 2 });
+            const triangleLine = new THREE.Line(geoLine, lineMat);
+            triangleGroup.add(triangleLine);
+
+            // ── Draw squares ──
+            // Square on side AB (horizontal leg b) – extend outward (negative Y)
+            // Vertices: (0,0,0), (b,0,0), (b,-b,0), (0,-b,0)
+            const squareB = createSquareMesh(
+                b,
+                0x5ca88a,
+                new THREE.Vector3(b/2, -b/2, 0),
+                new THREE.Euler(0, 0, 0),
+                `b = ${b.toFixed(1)}  →  b² = ${(b*b).toFixed(2)}`
+            );
+            squareGroup.add(squareB.group);
+            labelGroup.add(squareB.label);
+
+            // Square on side AC (vertical leg a) – extend outward (negative X)
+            // Vertices: (0,0,0), (0,a,0), (-a,a,0), (-a,0,0)
+            const squareA = createSquareMesh(
+                a,
+                0xe8685a,
+                new THREE.Vector3(-a/2, a/2, 0),
+                new THREE.Euler(0, 0, 0),
+                `a = ${a.toFixed(1)}  →  a² = ${(a*a).toFixed(2)}`
+            );
+            squareGroup.add(squareA.group);
+            labelGroup.add(squareA.label);
+
+            // Square on hypotenuse BC – outward direction (a, b) from the hypotenuse
+            // Hypotenuse vector from B to C: v = C - B = (-b, a, 0)
+            // Outward normal (away from origin) is (a, b) (length = c)
+            const normal = new THREE.Vector3(a, b, 0).normalize().multiplyScalar(c);
+            // The square's outer edge is obtained by shifting B and C by normal
+            const B2 = B.clone().add(normal);
+            const C2 = C.clone().add(normal);
+            // Compute center and orientation for the square plane
+            const center = new THREE.Vector3().add(B).add(C).add(B2).add(C2).multiplyScalar(0.25);
+            // The square lies in the plane defined by the hypotenuse direction and the normal.
+            // We can use a PlaneGeometry with width=c, height=c, and rotate to align with that plane.
+            // The local X axis of the plane will be the hypotenuse direction, local Y the normal.
+            const hypDir = new THREE.Vector3().subVectors(C, B).normalize();
+            const normDir = normal.clone().normalize();
+            // Create a quaternion to rotate from default (XY plane) to this plane
+            const quat = new THREE.Quaternion().setFromUnitVectors(
+                new THREE.Vector3(1, 0, 0),
+                hypDir
+            );
+            // Then rotate around the local X axis to align Y with normDir
+            // But simpler: use lookAt? We'll use Matrix4.
+            // Build a matrix: columns are Xaxis, Yaxis, Zaxis
+            const xAxis = hypDir.clone();
+            const yAxis = normDir.clone();
+            const zAxis = new THREE.Vector3().crossVectors(xAxis, yAxis).normalize();
+            // Ensure orthonormal
+            yAxis.crossVectors(zAxis, xAxis);
+            const m4 = new THREE.Matrix4();
+            m4.set(
+                xAxis.x, yAxis.x, zAxis.x, center.x,
+                xAxis.y, yAxis.y, zAxis.y, center.y,
+                xAxis.z, yAxis.z, zAxis.z, center.z,
+                0, 0, 0, 1
+            );
+            // Create square mesh
+            const geoHyp = new THREE.PlaneGeometry(c, c);
+            const matHyp = new THREE.MeshStandardMaterial({
+                color: 0x6a9eb0,
+                transparent: true,
+                opacity: 0.5,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+            });
+            const meshHyp = new THREE.Mesh(geoHyp, matHyp);
+            meshHyp.applyMatrix4(m4);
+            // Border
+            const edgesHyp = new THREE.EdgesGeometry(geoHyp);
+            const lineMatHyp = new THREE.LineBasicMaterial({ color: 0x6a9eb0 });
+            const borderHyp = new THREE.LineSegments(edgesHyp, lineMatHyp);
+            borderHyp.applyMatrix4(m4);
+            const groupHyp = new THREE.Group();
+            groupHyp.add(meshHyp);
+            groupHyp.add(borderHyp);
+            squareGroup.add(groupHyp);
+
+            // Label for hypotenuse square
+            const labelDiv = document.createElement('div');
+            labelDiv.textContent = `c = ${c.toFixed(2)}  →  c² = ${(c*c).toFixed(2)}`;
+            labelDiv.style.color = '#fff';
+            labelDiv.style.fontSize = '16px';
+            labelDiv.style.fontWeight = '600';
+            labelDiv.style.textShadow = '0 0 12px rgba(0,0,0,0.8)';
+            labelDiv.style.background = 'rgba(0,0,0,0.5)';
+            labelDiv.style.padding = '4px 12px';
+            labelDiv.style.borderRadius = '20px';
+            labelDiv.style.backdropFilter = 'blur(4px)';
+            labelDiv.style.border = '1px solid rgba(255,255,255,0.1)';
+            labelDiv.style.pointerEvents = 'none';
+            const labelHyp = new CSS2DObject(labelDiv);
+            // Position label slightly above the center of the square (along normal)
+            const labelPos = center.clone().add(normal.clone().multiplyScalar(0.1));
+            labelHyp.position.copy(labelPos);
+            labelGroup.add(labelHyp);
+
+            // ── Update formula panel ──
+            const a2 = a*a, b2 = b*b, c2 = c*c;
+            a2display.textContent = a2.toFixed(2);
+            b2display.textContent = b2.toFixed(2);
+            c2display.textContent = c2.toFixed(2);
+            cDisplay.textContent = c.toFixed(2);
+            const diff = Math.abs(a2 + b2 - c2);
+            if (diff < 0.001) {
+                verifyDisplay.textContent = `✅ Verified: ${a.toFixed(1)}² + ${b.toFixed(1)}² = ${c.toFixed(2)}²`;
+                verifyDisplay.className = 'verify';
+            } else {
+                verifyDisplay.textContent = `⚠️  Not a right triangle (a²+b² = ${(a2+b2).toFixed(2)}, c² = ${c2.toFixed(2)})`;
+                verifyDisplay.className = 'verify invalid';
+            }
+
+            // Update slider values display
+            valA.textContent = a.toFixed(1);
+            valB.textContent = b.toFixed(1);
+        }
+
+        // ─── Event listeners ───
+        sliderA.addEventListener('input', () => {
+            a = parseFloat(sliderA.value);
+            buildScene();
+        });
+        sliderB.addEventListener('input', () => {
+            b = parseFloat(sliderB.value);
+            buildScene();
+        });
+
+        // ─── Resize handler ───
+        function onResize() {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+            labelRenderer.setSize(w, h);
+        }
+        window.addEventListener('resize', onResize);
+
+        // ─── Animation loop ───
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+
+        // ─── Init ───
+        buildScene();
+        animate();
+        // Initial resize to fit container
+        setTimeout(onResize, 50);
+
+        // ─── (Optional) click on canvas to randomize ───
+        renderer.domElement.addEventListener('dblclick', () => {
+            const newA = Math.round((0.5 + Math.random() * 5.5) * 10) / 10;
+            const newB = Math.round((0.5 + Math.random() * 5.5) * 10) / 10;
+            sliderA.value = newA;
+            sliderB.value = newB;
+            a = newA; b = newB;
+            buildScene();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties of Quadrilaterals - Interactive Geometry</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f43f5e;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --focus-ring: #0284c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.5;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+
+        .header {
+            max-width: 1400px;
+            margin: 0 auto 1.5rem auto;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.25rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-purple);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .instructions {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .teacher-prompt {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .teacher-prompt strong {
+            color: var(--accent-blue);
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Shape Selector Tabs */
+        .shape-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: #273549;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #334155;
+            border-color: var(--accent-blue);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--focus-ring);
+            outline-offset: 2px;
+        }
+
+        .btn.active {
+            background-color: var(--accent-blue);
+            color: #0f172a;
+            border-color: var(--accent-blue);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .btn-correct {
+            background-color: rgba(74, 222, 128, 0.25) !important;
+            border-color: var(--accent-green) !important;
+            color: var(--accent-green) !important;
+        }
+
+        .btn-wrong {
+            background-color: rgba(244, 63, 94, 0.25) !important;
+            border-color: var(--accent-rose) !important;
+            color: var(--accent-rose) !important;
+        }
+
+        .btn-reset {
+            background-color: rgba(244, 63, 94, 0.15);
+            color: var(--accent-rose);
+            border-color: rgba(244, 63, 94, 0.3);
+        }
+
+        .btn-reset:hover {
+            background-color: rgba(244, 63, 94, 0.3);
+            border-color: var(--accent-rose);
+        }
+
+        /* Workspace & Canvas */
+        .workspace-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            max-height: 500px;
+            background-color: #0b1329;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            touch-action: none;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Visualization Toggles */
+        .toggle-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+            background: #131d31;
+            padding: 0.4rem 0.6rem;
+            border-radius: 0.4rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-label input[type="checkbox"] {
+            accent-color: var(--accent-blue);
+            width: 1rem;
+            height: 1rem;
+            cursor: pointer;
+        }
+
+        /* Property Table */
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .property-table th, .property-table td {
+            padding: 0.6rem 0.4rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .property-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+            width: 30px;
+            display: inline-block;
+        }
+
+        .status-true { color: var(--accent-green); }
+        .status-false { color: var(--accent-rose); }
+
+        /* Tabs Navigation for Modes */
+        .mode-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .mode-tab {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .mode-tab:hover {
+            color: var(--text-light);
+        }
+
+        .mode-tab.active {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .mode-section {
+            display: none;
+        }
+
+        .mode-section.active {
+            display: block;
+        }
+
+        /* Interactive Quiz / Feedback Card */
+        .quiz-card {
+            background: #131d31;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-question {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .quiz-options {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .quiz-feedback {
+            padding: 0.75rem;
+            border-radius: 0.4rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .quiz-feedback.correct {
+            display: block !important;
+            background-color: rgba(74, 222, 128, 0.15) !important;
+            color: var(--accent-green) !important;
+            border: 1px solid rgba(74, 222, 128, 0.4) !important;
+        }
+
+        .quiz-feedback.incorrect {
+            display: block !important;
+            background-color: rgba(244, 63, 94, 0.15) !important;
+            color: var(--accent-rose) !important;
+            border: 1px solid rgba(244, 63, 94, 0.4) !important;
+        }
+
+        /* Comparison Mode Styles */
+        .compare-selectors {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .compare-select {
+            flex: 1;
+            background: #131d31;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.4rem;
+            font-weight: 600;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .compare-table th, .compare-table td {
+            padding: 0.5rem 0.25rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .compare-table td:first-child, .compare-table th:first-child {
+            text-align: left;
+        }
+
+        .highlight-diff {
+            background-color: rgba(251, 191, 36, 0.1);
+        }
+
+        .score-box {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--accent-amber);
+            float: right;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.5rem; }
+            .shape-tabs .btn { flex: 1 1 40%; font-size: 0.85rem; padding: 0.5rem; }
+            .toggle-group { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-quadrilaterals",
+  "order": 224,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": null,
+  "title": "Properties of Quadrilaterals",
+  "description": "Form different quadrilaterals (parallelogram, rhombus, rectangle, square) with strips. Verify opposite sides, angles, and diagonal properties.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+    <header class="header">
+        <h1>Properties of Quadrilaterals</h1>
+        <div class="subtitle">Explore • Predict • Test • Discover</div>
+        <p class="instructions">Choose a quadrilateral, drag its vertices to explore its geometry, and observe which properties remain constant.</p>
+        <div class="teacher-prompt">
+            <strong>Teacher Prompt:</strong> Ask students to predict a property before revealing the result. Encourage them to explain what remains unchanged when the shape is manipulated.
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Column: Workspace / Canvas -->
+        <div class="card">
+            <div class="card-title">
+                <span>Interactive Geometry Canvas</span>
+                <button class="btn btn-reset" onclick="resetActivity()">Reset Shape</button>
+            </div>
+
+            <div class="shape-tabs">
+                <button class="btn active" id="btn-square" onclick="selectShape('square')">Square</button>
+                <button class="btn" id="btn-rectangle" onclick="selectShape('rectangle')">Rectangle</button>
+                <button class="btn" id="btn-parallelogram" onclick="selectShape('parallelogram')">Parallelogram</button>
+                <button class="btn" id="btn-rhombus" onclick="selectShape('rhombus')">Rhombus</button>
+                <button class="btn" id="btn-trapezium" onclick="selectShape('trapezium')">Trapezium</button>
+            </div>
+
+            <div class="workspace-container" id="canvas-container">
+                <canvas id="geoCanvas"></canvas>
+            </div>
+
+            <div class="toggle-group">
+                <label class="toggle-label"><input type="checkbox" id="chk-lengths" checked onchange="draw()"> Side Lengths</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-angles" checked onchange="draw()"> Angles</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-diagonals" checked onchange="draw()"> Diagonals</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-parallel" checked onchange="draw()"> Parallel Markers</label>
+                <label class="toggle-label"><input type="checkbox" id="chk-markers" checked onchange="draw()"> Property Indicators</label>
+            </div>
+        </div>
+
+        <!-- Right Column: Explorer / Modes -->
+        <div class="card">
+            <div class="mode-tabs">
+                <button class="mode-tab active" id="tab-props" onclick="switchMode('props')">Properties</button>
+                <button class="mode-tab" id="tab-discover" onclick="switchMode('discover')">Explore & Discover</button>
+                <button class="mode-tab" id="tab-challenge" onclick="switchMode('challenge')">Challenge Mode</button>
+                <button class="mode-tab" id="tab-compare" onclick="switchMode('compare')">Compare</button>
+            </div>
+
+            <!-- Mode 1: Property Explorer -->
+            <div id="mode-props" class="mode-section active">
+                <table class="property-table">
+                    <thead>
+                        <tr>
+                            <th>Geometric Property</th>
+                            <th style="text-align: center;">Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="property-table-body">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mode 2: Explore & Discover -->
+            <div id="mode-discover" class="mode-section">
+                <div style="margin-bottom: 0.75rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Drag the shape vertices on the left canvas and test your predictions below:
+                </div>
+                <div class="quiz-card">
+                    <div class="quiz-question" id="discover-question">Do the diagonals of this shape remain equal in length when you modify it?</div>
+                    <div class="quiz-options">
+                        <button class="btn" id="btn-discover-yes" onclick="checkPrediction(true)">YES</button>
+                        <button class="btn" id="btn-discover-no" onclick="checkPrediction(false)">NO</button>
+                    </div>
+                    <div id="discover-feedback" class="quiz-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Mode 3: Challenge Mode -->
+            <div id="mode-challenge" class="mode-section">
+                <div>
+                    <span class="score-box" id="challenge-score">Score: 0 / 0</span>
+                    <div style="font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem;" id="challenge-num">Question 1</div>
+                </div>
+                <div class="quiz-card" style="margin-top: 0.5rem;">
+                    <div class="quiz-question" id="challenge-question">Loading question...</div>
+                    <div class="quiz-options" id="challenge-options" style="flex-direction: column;">
+                        <!-- Options generated dynamically -->
+                    </div>
+                    <div id="challenge-feedback" class="quiz-feedback"></div>
+                    <button class="btn" id="btn-next-challenge" style="margin-top: 0.75rem; display: none;" onclick="nextChallenge()">Next Challenge</button>
+                </div>
+            </div>
+
+            <!-- Mode 4: Compare Mode -->
+            <div id="mode-compare" class="mode-section">
+                <div class="compare-selectors">
+                    <select id="compare-1" class="compare-select" onchange="renderComparison()">
+                        <option value="square">Square</option>
+                        <option value="rectangle" selected>Rectangle</option>
+                        <option value="parallelogram">Parallelogram</option>
+                        <option value="rhombus">Rhombus</option>
+                        <option value="trapezium">Trapezium</option>
+                    </select>
+                    <select id="compare-2" class="compare-select" onchange="renderComparison()">
+                        <option value="square">Square</option>
+                        <option value="rectangle">Rectangle</option>
+                        <option value="parallelogram" selected>Parallelogram</option>
+                        <option value="rhombus">Rhombus</option>
+                        <option value="trapezium">Trapezium</option>
+                    </select>
+                </div>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th id="comp-head-1">Shape 1</th>
+                            <th id="comp-head-2">Shape 2</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compare-table-body">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. STATE & INITIALIZATION
+           ========================================================================== */
+        const canvas = document.getElementById('geoCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasContainer = document.getElementById('canvas-container');
+
+        let currentShapeType = 'square';
+        let activePoint = null;
+        let isDragging = false;
+        const dragRadius = 15;
+
+        // Shape vertices setup
+        let pts = { A: {x:0, y:0}, B: {x:0, y:0}, C: {x:0, y:0}, D: {x:0, y:0} };
+
+        // Mathematical properties computed state
+        let geoProps = {};
+
+        // Canvas Scale Adjustments
+        let width = 0;
+        let height = 0;
+
+        /* ==========================================================================
+           2. GEOMETRY CALCULATIONS
+           ========================================================================== */
+        const dist = (p1, p2) => Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        
+        function angleBetweenThreePoints(A, B, C) {
+            const AB = dist(A, B);
+            const BC = dist(B, C);
+            const AC = dist(A, C);
+            if (AB === 0 || BC === 0) return 0;
+            const cosVal = (AB*AB + BC*BC - AC*AC) / (2 * AB * BC);
+            const clampedCos = Math.max(-1, Math.min(1, cosVal));
+            return (Math.acos(clampedCos) * 180) / Math.PI;
+        }
+
+        function isParallel(p1, p2, p3, p4, tol = 0.05) {
+            const dx1 = p2.x - p1.x, dy1 = p2.y - p1.y;
+            const dx2 = p4.x - p3.x, dy2 = p4.y - p3.y;
+            const cross = Math.abs(dx1 * dy2 - dy1 * dx2);
+            const len1 = Math.hypot(dx1, dy1);
+            const len2 = Math.hypot(dx2, dy2);
+            if (len1 === 0 || len2 === 0) return false;
+            return (cross / (len1 * len2)) < tol;
+        }
+
+        function approxEqual(v1, v2, tol = 1.0) {
+            return Math.abs(v1 - v2) < tol;
+        }
+
+        function calculateProperties() {
+            const ab = dist(pts.A, pts.B);
+            const bc = dist(pts.B, pts.C);
+            const cd = dist(pts.C, pts.D);
+            const da = dist(pts.D, pts.A);
+
+            const diagAC = dist(pts.A, pts.C);
+            const diagBD = dist(pts.B, pts.D);
+
+            const angA = angleBetweenThreePoints(pts.D, pts.A, pts.B);
+            const angB = angleBetweenThreePoints(pts.A, pts.B, pts.C);
+            const angC = angleBetweenThreePoints(pts.B, pts.C, pts.D);
+            const angD = angleBetweenThreePoints(pts.C, pts.D, pts.A);
+
+            const abParallelCD = isParallel(pts.A, pts.B, pts.D, pts.C);
+            const adParallelBC = isParallel(pts.A, pts.D, pts.B, pts.C);
+
+            const midAC = { x: (pts.A.x + pts.C.x)/2, y: (pts.A.y + pts.C.y)/2 };
+            const midBD = { x: (pts.B.x + pts.D.x)/2, y: (pts.B.y + pts.D.y)/2 };
+            const bisect = dist(midAC, midBD) < 2.0;
+
+            const diag1_vec = { x: pts.C.x - pts.A.x, y: pts.C.y - pts.A.y };
+            const diag2_vec = { x: pts.D.x - pts.B.x, y: pts.D.y - pts.B.y };
+            const dot = diag1_vec.x * diag2_vec.x + diag1_vec.y * diag2_vec.y;
+            const perpDiags = Math.abs(dot / (diagAC * diagBD)) < 0.03;
+
+            geoProps = {
+                allSidesEqual: approxEqual(ab, bc) && approxEqual(bc, cd) && approxEqual(cd, da),
+                oppSidesEqual: approxEqual(ab, cd) && approxEqual(bc, da),
+                oppSidesParallel: abParallelCD && adParallelBC,
+                onePairParallel: (abParallelCD && !adParallelBC) || (!abParallelCD && adParallelBC),
+                allAngles90: approxEqual(angA, 90) && approxEqual(angB, 90) && approxEqual(angC, 90) && approxEqual(angD, 90),
+                oppAnglesEqual: approxEqual(angA, angC) && approxEqual(angB, angD),
+                diagsEqual: approxEqual(diagAC, diagBD),
+                diagsBisect: bisect,
+                diagsPerp: perpDiags,
+                lengths: { ab, bc, cd, da, diagAC, diagBD },
+                angles: { A: angA, B: angB, C: angC, D: angD }
+            };
+
+            updatePropertyTable();
+        }
+
+        /* ==========================================================================
+           3. PRESET SHAPE GEOMETRY DEFINITIONS & CONSTRAINTS
+           ========================================================================== */
+        function initShapeDefaults(type) {
+            const cx = width / 2;
+            const cy = height / 2;
+            const s = Math.min(width, height) * 0.22;
+
+            if (type === 'square') {
+                pts.A = { x: cx - s, y: cy - s };
+                pts.B = { x: cx + s, y: cy - s };
+                pts.C = { x: cx + s, y: cy + s };
+                pts.D = { x: cx - s, y: cy + s };
+            } else if (type === 'rectangle') {
+                pts.A = { x: cx - s * 1.4, y: cy - s * 0.8 };
+                pts.B = { x: cx + s * 1.4, y: cy - s * 0.8 };
+                pts.C = { x: cx + s * 1.4, y: cy + s * 0.8 };
+                pts.D = { x: cx - s * 1.4, y: cy + s * 0.8 };
+            } else if (type === 'parallelogram') {
+                const shift = s * 0.6;
+                pts.A = { x: cx - s * 1.2 + shift, y: cy - s * 0.8 };
+                pts.B = { x: cx + s * 0.8 + shift, y: cy - s * 0.8 };
+                pts.C = { x: cx + s * 0.8 - shift, y: cy + s * 0.8 };
+                pts.D = { x: cx - s * 1.2 - shift, y: cy + s * 0.8 };
+            } else if (type === 'rhombus') {
+                pts.A = { x: cx, y: cy - s * 1.3 };
+                pts.B = { x: cx + s * 1.3, y: cy };
+                pts.C = { x: cx, y: cy + s * 1.3 };
+                pts.D = { x: cx - s * 1.3, y: cy };
+            } else if (type === 'trapezium') {
+                pts.A = { x: cx - s * 0.8, y: cy - s * 0.8 };
+                pts.B = { x: cx + s * 0.8, y: cy - s * 0.8 };
+                pts.C = { x: cx + s * 1.5, y: cy + s * 0.8 };
+                pts.D = { x: cx - s * 1.4, y: cy + s * 0.8 };
+            }
+            calculateProperties();
+        }
+
+        function applyConstraints(draggedKey, newX, newY) {
+            if (currentShapeType === 'square') {
+                const cx = width / 2;
+                const cy = height / 2;
+                const r = Math.hypot(newX - cx, newY - cy);
+                const side = r * Math.SQRT1_2;
+                pts.A = { x: cx - side, y: cy - side };
+                pts.B = { x: cx + side, y: cy - side };
+                pts.C = { x: cx + side, y: cy + side };
+                pts.D = { x: cx - side, y: cy + side };
+            } 
+            else if (currentShapeType === 'rectangle') {
+                pts[draggedKey].x = newX;
+                pts[draggedKey].y = newY;
+                if (draggedKey === 'A') {
+                    pts.B.y = newY;
+                    pts.D.x = newX;
+                } else if (draggedKey === 'B') {
+                    pts.A.y = newY;
+                    pts.C.x = newX;
+                } else if (draggedKey === 'C') {
+                    pts.D.y = newY;
+                    pts.B.x = newX;
+                } else if (draggedKey === 'D') {
+                    pts.C.y = newY;
+                    pts.A.x = newX;
+                }
+            } 
+            else if (currentShapeType === 'parallelogram') {
+                pts[draggedKey].x = newX;
+                pts[draggedKey].y = newY;
+                if (draggedKey === 'A') {
+                    pts.B.y = newY;
+                    pts.C.x = pts.B.x - (pts.A.x - pts.D.x);
+                } else if (draggedKey === 'B') {
+                    pts.A.y = newY;
+                    pts.D.x = pts.C.x - (pts.B.x - pts.A.x);
+                } else if (draggedKey === 'C') {
+                    pts.D.y = newY;
+                    pts.A.x = pts.B.x - (pts.C.x - pts.D.x);
+                } else if (draggedKey === 'D') {
+                    pts.C.y = newY;
+                    pts.B.x = pts.A.x + (pts.C.x - pts.D.x);
+                }
+            } 
+            else if (currentShapeType === 'rhombus') {
+                const cx = width / 2;
+                const cy = height / 2;
+                if (draggedKey === 'A' || draggedKey === 'C') {
+                    const distY = Math.abs(newY - cy);
+                    pts.A = { x: cx, y: cy - distY };
+                    pts.C = { x: cx, y: cy + distY };
+                } else {
+                    const distX = Math.abs(newX - cx);
+                    pts.B = { x: cx + distX, y: cy };
+                    pts.D = { x: cx - distX, y: cy };
+                }
+            } 
+            else if (currentShapeType === 'trapezium') {
+                pts[draggedKey].x = newX;
+                if (draggedKey === 'A' || draggedKey === 'B') {
+                    pts.A.y = newY;
+                    pts.B.y = newY;
+                } else {
+                    pts.C.y = newY;
+                    pts.D.y = newY;
+                }
+            }
+            calculateProperties();
+        }
+
+        /* ==========================================================================
+           4. DRAWING & RENDERING (CANVAS)
+           ========================================================================== */
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            const showLengths = document.getElementById('chk-lengths').checked;
+            const showAngles = document.getElementById('chk-angles').checked;
+            const showDiagonals = document.getElementById('chk-diagonals').checked;
+            const showParallel = document.getElementById('chk-parallel').checked;
+            const showMarkers = document.getElementById('chk-markers').checked;
+
+            if (showDiagonals) {
+                ctx.beginPath();
+                ctx.setLineDash([6, 6]);
+                ctx.strokeStyle = '#c084fc';
+                ctx.lineWidth = 2;
+                ctx.moveTo(pts.A.x, pts.A.y);
+                ctx.lineTo(pts.C.x, pts.C.y);
+                ctx.moveTo(pts.B.x, pts.B.y);
+                ctx.lineTo(pts.D.x, pts.D.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                ctx.fillStyle = '#c084fc';
+                ctx.font = '12px system-ui';
+                const midAC = { x: (pts.A.x + pts.C.x)/2, y: (pts.A.y + pts.C.y)/2 };
+                const midBD = { x: (pts.B.x + pts.D.x)/2, y: (pts.B.y + pts.D.y)/2 };
+                if (showLengths) {
+                    ctx.fillText(`d1: ${(geoProps.lengths.diagAC/30).toFixed(1)}`, midAC.x - 20, midAC.y - 10);
+                    ctx.fillText(`d2: ${(geoProps.lengths.diagBD/30).toFixed(1)}`, midBD.x + 10, midBD.y + 15);
+                }
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(pts.A.x, pts.A.y);
+            ctx.lineTo(pts.B.x, pts.B.y);
+            ctx.lineTo(pts.C.x, pts.C.y);
+            ctx.lineTo(pts.D.x, pts.D.y);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+            ctx.fill();
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            if (showParallel) {
+                if (geoProps.oppSidesParallel || geoProps.onePairParallel) {
+                    drawParallelMarker(pts.A, pts.B);
+                    drawParallelMarker(pts.D, pts.C);
+                }
+                if (geoProps.oppSidesParallel) {
+                    drawParallelMarker(pts.A, pts.D, 2);
+                    drawParallelMarker(pts.B, pts.C, 2);
+                }
+            }
+
+            if (showMarkers) {
+                if (geoProps.allSidesEqual) {
+                    drawTick(pts.A, pts.B, 1);
+                    drawTick(pts.B, pts.C, 1);
+                    drawTick(pts.C, pts.D, 1);
+                    drawTick(pts.D, pts.A, 1);
+                } else if (geoProps.oppSidesEqual) {
+                    drawTick(pts.A, pts.B, 1);
+                    drawTick(pts.C, pts.D, 1);
+                    drawTick(pts.B, pts.C, 2);
+                    drawTick(pts.D, pts.A, 2);
+                }
+            }
+
+            if (showLengths) {
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = '500 13px system-ui';
+                drawLabelOnEdge(pts.A, pts.B, (geoProps.lengths.ab / 30).toFixed(1));
+                drawLabelOnEdge(pts.B, pts.C, (geoProps.lengths.bc / 30).toFixed(1));
+                drawLabelOnEdge(pts.C, pts.D, (geoProps.lengths.cd / 30).toFixed(1));
+                drawLabelOnEdge(pts.D, pts.A, (geoProps.lengths.da / 30).toFixed(1));
+            }
+
+            if (showAngles) {
+                drawAngleArc(pts.D, pts.A, pts.B, geoProps.angles.A);
+                drawAngleArc(pts.A, pts.B, pts.C, geoProps.angles.B);
+                drawAngleArc(pts.B, pts.C, pts.D, geoProps.angles.C);
+                drawAngleArc(pts.C, pts.D, pts.A, geoProps.angles.D);
+            }
+
+            const labels = ['A', 'B', 'C', 'D'];
+            const keys = ['A', 'B', 'C', 'D'];
+            keys.forEach((key, idx) => {
+                const p = pts[key];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                ctx.fillStyle = activePoint === key ? '#fbbf24' : '#38bdf8';
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = 'bold 15px system-ui';
+                const offset = 18;
+                let lx = p.x + (p.x < width/2 ? -offset : offset);
+                let ly = p.y + (p.y < height/2 ? -offset : offset);
+                ctx.fillText(labels[idx], lx - 4, ly + 4);
+            });
+        }
+
+        function drawLabelOnEdge(p1, p2, text) {
+            const mx = (p1.x + p2.x) / 2;
+            const my = (p1.y + p2.y) / 2;
+            ctx.save();
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillRect(mx - 16, my - 10, 32, 18);
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = 'bold 11px system-ui';
+            ctx.fillText(text, mx, my);
+            ctx.restore();
+        }
+
+        function drawParallelMarker(p1, p2, count = 1) {
+            const mx = (p1.x + p2.x) / 2;
+            const my = (p1.y + p2.y) / 2;
+            const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            ctx.save();
+            ctx.translate(mx, my);
+            ctx.rotate(angle);
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < count; i++) {
+                const offset = (i - (count - 1) / 2) * 6;
+                ctx.beginPath();
+                ctx.moveTo(offset - 4, -5);
+                ctx.lineTo(offset + 2, 0);
+                ctx.lineTo(offset - 4, 5);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawTick(p1, p2, count = 1) {
+            const mx = (p1.x + p2.x) / 2;
+            const my = (p1.y + p2.y) / 2;
+            const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            ctx.save();
+            ctx.translate(mx, my);
+            ctx.rotate(angle);
+            ctx.strokeStyle = '#4ade80';
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < count; i++) {
+                const offset = (i - (count - 1) / 2) * 5;
+                ctx.beginPath();
+                ctx.moveTo(offset, -6);
+                ctx.lineTo(offset, 6);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawAngleArc(pPrev, pCurr, pNext, angleVal) {
+            const a1 = Math.atan2(pPrev.y - pCurr.y, pPrev.x - pCurr.x);
+            const a2 = Math.atan2(pNext.y - pCurr.y, pNext.x - pCurr.x);
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(pCurr.x, pCurr.y, 22, a1, a2, false);
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            const midAngle = a1 + (a2 - a1) / 2;
+            const tx = pCurr.x + Math.cos(midAngle) * 36;
+            const ty = pCurr.y + Math.sin(midAngle) * 36;
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = '11px system-ui';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`${Math.round(angleVal)}°`, tx, ty);
+            ctx.restore();
+        }
+
+        /* ==========================================================================
+           5. INTERACTION (MOUSE / TOUCH)
+           ========================================================================== */
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * (width / rect.width),
+                y: (clientY - rect.top) * (height / rect.height)
+            };
+        }
+
+        function handlePointerDown(e) {
+            const pos = getCanvasCoords(e);
+            for (let key in pts) {
+                if (dist(pos, pts[key]) < dragRadius * 2) {
+                    activePoint = key;
+                    isDragging = true;
+                    draw();
+                    break;
+                }
+            }
+        }
+
+        function handlePointerMove(e) {
+            if (!isDragging || !activePoint) return;
+            const pos = getCanvasCoords(e);
+            applyConstraints(activePoint, pos.x, pos.y);
+            draw();
+        }
+
+        function handlePointerUp() {
+            isDragging = false;
+            activePoint = null;
+            draw();
+        }
+
+        canvas.addEventListener('mousedown', handlePointerDown);
+        canvas.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerUp);
+
+        canvas.addEventListener('touchstart', (e) => { handlePointerDown(e); e.preventDefault(); }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => { handlePointerMove(e); e.preventDefault(); }, { passive: false });
+        canvas.addEventListener('touchend', handlePointerUp);
+
+        /* ==========================================================================
+           6. PROPERTY EXPLORER TABLE
+           ========================================================================== */
+        const propertyDefinitions = [
+            { key: 'oppSidesParallel', name: 'Opposite sides parallel' },
+            { key: 'oppSidesEqual', name: 'Opposite sides equal' },
+            { key: 'allSidesEqual', name: 'All sides equal' },
+            { key: 'allAngles90', name: 'All angles 90°' },
+            { key: 'oppAnglesEqual', name: 'Opposite angles equal' },
+            { key: 'diagsEqual', name: 'Diagonals equal in length' },
+            { key: 'diagsBisect', name: 'Diagonals bisect each other' },
+            { key: 'diagsPerp', name: 'Diagonals perpendicular (90°)' }
+        ];
+
+        function updatePropertyTable() {
+            const tbody = document.getElementById('property-table-body');
+            tbody.innerHTML = '';
+
+            propertyDefinitions.forEach(prop => {
+                const tr = document.createElement('tr');
+                const isTrue = geoProps[prop.key];
+                
+                tr.innerHTML = `
+                    <td>${prop.name}</td>
+                    <td style="text-align:center;">
+                        <span class="status-badge ${isTrue ? 'status-true' : 'status-false'}">
+                            ${isTrue ? '✓' : '✕'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function selectShape(type) {
+            currentShapeType = type;
+            document.querySelectorAll('.shape-tabs .btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${type}`).classList.add('active');
+            initShapeDefaults(type);
+            updateDiscoverQuestion();
+            draw();
+        }
+
+        function switchMode(modeKey) {
+            document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.mode-section').forEach(s => s.classList.remove('active'));
+
+            document.getElementById(`tab-${modeKey}`).classList.add('active');
+            document.getElementById(`mode-${modeKey}`).classList.add('active');
+
+            if (modeKey === 'compare') renderComparison();
+            if (modeKey === 'challenge' && challengeQuestions.length === 0) initChallengeMode();
+            if (modeKey === 'discover') updateDiscoverQuestion();
+        }
+
+        /* ==========================================================================
+           7. DISCOVERY MODE
+           ========================================================================== */
+        const discoveryQuestions = {
+            square: "Are all four sides always equal in a Square?",
+            rectangle: "Are the diagonals of a Rectangle always equal in length?",
+            parallelogram: "Are the opposite angles of a Parallelogram equal?",
+            rhombus: "Do the diagonals of a Rhombus meet at perpendicular (90°) angles?",
+            trapezium: "Does a Trapezium have both pairs of opposite sides parallel?"
+        };
+
+        const discoveryAnswers = {
+            square: { ans: true, exp: "Correct! By definition, a square always has four equal sides and four 90° angles." },
+            rectangle: { ans: true, exp: "Correct! The diagonals of any rectangle are always congruent (equal in length)." },
+            parallelogram: { ans: true, exp: "Correct! Opposite angles in a parallelogram are always equal." },
+            rhombus: { ans: true, exp: "Correct! The diagonals of a rhombus always intersect perpendicularly at 90°." },
+            trapezium: { ans: false, exp: "Correct! A trapezium has ONLY ONE pair of parallel sides, not both." }
+        };
+
+        function updateDiscoverQuestion() {
+            const qText = discoveryQuestions[currentShapeType];
+            document.getElementById('discover-question').innerText = qText;
+            
+            const btnYes = document.getElementById('btn-discover-yes');
+            const btnNo = document.getElementById('btn-discover-no');
+            
+            btnYes.className = 'btn';
+            btnNo.className = 'btn';
+            btnYes.disabled = false;
+            btnNo.disabled = false;
+
+            const feedbackEl = document.getElementById('discover-feedback');
+            feedbackEl.className = 'quiz-feedback';
+            feedbackEl.style.display = 'none';
+        }
+
+        function checkPrediction(userAns) {
+            const currentData = discoveryAnswers[currentShapeType];
+            const feedbackEl = document.getElementById('discover-feedback');
+            const btnYes = document.getElementById('btn-discover-yes');
+            const btnNo = document.getElementById('btn-discover-no');
+
+            const clickedBtn = userAns ? btnYes : btnNo;
+            const otherBtn = userAns ? btnNo : btnYes;
+
+            btnYes.disabled = true;
+            btnNo.disabled = true;
+
+            if (userAns === currentData.ans) {
+                clickedBtn.className = 'btn btn-correct';
+                feedbackEl.className = 'quiz-feedback correct';
+                feedbackEl.innerText = '✓ ' + currentData.exp;
+            } else {
+                clickedBtn.className = 'btn btn-wrong';
+                otherBtn.className = 'btn btn-correct';
+                feedbackEl.className = 'quiz-feedback incorrect';
+                feedbackEl.innerText = '✕ Incorrect prediction. ' + currentData.exp;
+            }
+        }
+
+        /* ==========================================================================
+           8. CHALLENGE MODE
+           ========================================================================== */
+        let challengeQuestions = [];
+        let challengeIndex = 0;
+        let score = 0;
+
+        const masterQuestions = [
+            {
+                q: "Which quadrilateral has four equal sides and four right angles?",
+                opts: ["Square", "Rectangle", "Rhombus", "Trapezium"],
+                correct: 0,
+                exp: "A square has both equal sides and four 90° right angles."
+            },
+            {
+                q: "Which quadrilateral has EXACTLY ONE pair of parallel sides?",
+                opts: ["Parallelogram", "Trapezium", "Rhombus", "Rectangle"],
+                correct: 1,
+                exp: "A trapezium/trapezoid has exactly one pair of parallel sides."
+            },
+            {
+                q: "Which quadrilateral always has perpendicular diagonals that bisect each other, but doesn't require 90° angles?",
+                opts: ["Rectangle", "Parallelogram", "Rhombus", "Trapezium"],
+                correct: 2,
+                exp: "A rhombus has four equal sides and perpendicular diagonals."
+            },
+            {
+                q: "Which statement is true for ALL rectangles?",
+                opts: ["All sides are equal", "Diagonals are perpendicular", "Diagonals are equal in length", "Only one pair of parallel sides"],
+                correct: 2,
+                exp: "Rectangles always have diagonals of equal length."
+            },
+            {
+                q: "If a parallelogram has four equal sides, it is guaranteed to be a:",
+                opts: ["Rectangle", "Rhombus", "Trapezium", "Square"],
+                correct: 1,
+                exp: "A parallelogram with all sides equal is defined as a Rhombus."
+            },
+            {
+                q: "Which property is shared by Parallelograms, Rectangles, Squares, and Rhombuses?",
+                opts: ["Diagonals are equal", "All angles are 90°", "Opposite sides are parallel", "Diagonals are perpendicular"],
+                correct: 2,
+                exp: "They belong to the parallelogram family, so opposite sides are always parallel."
+            },
+            {
+                q: "What is the sum of interior angles of any quadrilateral?",
+                opts: ["180°", "270°", "360°", "540°"],
+                correct: 2,
+                exp: "The interior angles of any quadrilateral always add up to 360°."
+            },
+            {
+                q: "Which quadrilateral's diagonals bisect each other, but are NOT necessarily equal or perpendicular?",
+                opts: ["Square", "Rectangle", "Parallelogram", "Rhombus"],
+                correct: 2,
+                exp: "General parallelograms have diagonals that bisect each other without being equal or perpendicular."
+            }
+        ];
+
+        function initChallengeMode() {
+            challengeQuestions = [...masterQuestions].sort(() => Math.random() - 0.5);
+            challengeIndex = 0;
+            score = 0;
+            displayChallenge();
+        }
+
+        function displayChallenge() {
+            if (challengeIndex >= challengeQuestions.length) {
+                document.getElementById('challenge-question').innerText = `Challenge Complete! You scored ${score} out of ${challengeQuestions.length}.`;
+                document.getElementById('challenge-options').innerHTML = '';
+                document.getElementById('btn-next-challenge').style.display = 'none';
+                return;
+            }
+
+            const q = challengeQuestions[challengeIndex];
+            document.getElementById('challenge-score').innerText = `Score: ${score} / ${challengeQuestions.length}`;
+            document.getElementById('challenge-num').innerText = `Question ${challengeIndex + 1} of ${challengeQuestions.length}`;
+            document.getElementById('challenge-question').innerText = q.q;
+
+            const optsContainer = document.getElementById('challenge-options');
+            optsContainer.innerHTML = '';
+
+            const feedbackEl = document.getElementById('challenge-feedback');
+            feedbackEl.className = 'quiz-feedback';
+            feedbackEl.style.display = 'none';
+            document.getElementById('btn-next-challenge').style.display = 'none';
+
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.style.textAlign = 'left';
+                btn.innerText = opt;
+                btn.onclick = () => checkChallengeAnswer(idx, btn);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function checkChallengeAnswer(selectedIdx, clickedBtn) {
+            const q = challengeQuestions[challengeIndex];
+            const feedbackEl = document.getElementById('challenge-feedback');
+            const optsBtns = document.getElementById('challenge-options').getElementsByTagName('button');
+
+            for (let i = 0; i < optsBtns.length; i++) {
+                optsBtns[i].disabled = true;
+                if (i === q.correct) {
+                    optsBtns[i].className = 'btn btn-correct';
+                }
+            }
+
+            if (selectedIdx === q.correct) {
+                score++;
+                feedbackEl.className = 'quiz-feedback correct';
+                feedbackEl.innerText = '✓ Correct! ' + q.exp;
+            } else {
+                clickedBtn.className = 'btn btn-wrong';
+                feedbackEl.className = 'quiz-feedback incorrect';
+                feedbackEl.innerText = `✕ Incorrect. ${q.exp}`;
+            }
+
+            document.getElementById('challenge-score').innerText = `Score: ${score} / ${challengeQuestions.length}`;
+            document.getElementById('btn-next-challenge').style.display = 'inline-flex';
+        }
+
+        function nextChallenge() {
+            challengeIndex++;
+            displayChallenge();
+        }
+
+        /* ==========================================================================
+           9. COMPARISON MODE
+           ========================================================================== */
+        const presetPropertiesMap = {
+            square: { oppParallel: true, oppEqual: true, allEqual: true, all90: true, diagsEqual: true, diagsBisect: true, diagsPerp: true },
+            rectangle: { oppParallel: true, oppEqual: true, allEqual: false, all90: true, diagsEqual: true, diagsBisect: true, diagsPerp: false },
+            parallelogram: { oppParallel: true, oppEqual: true, allEqual: false, all90: false, diagsEqual: false, diagsBisect: true, diagsPerp: false },
+            rhombus: { oppParallel: true, oppEqual: true, allEqual: true, all90: false, diagsEqual: false, diagsBisect: true, diagsPerp: true },
+            trapezium: { oppParallel: false, oppEqual: false, allEqual: false, all90: false, diagsEqual: false, diagsBisect: false, diagsPerp: false }
+        };
+
+        function renderComparison() {
+            const s1Key = document.getElementById('compare-1').value;
+            const s2Key = document.getElementById('compare-2').value;
+
+            document.getElementById('comp-head-1').innerText = s1Key.charAt(0).toUpperCase() + s1Key.slice(1);
+            document.getElementById('comp-head-2').innerText = s2Key.charAt(0).toUpperCase() + s2Key.slice(1);
+
+            const s1 = presetPropertiesMap[s1Key];
+            const s2 = presetPropertiesMap[s2Key];
+
+            const comparePropsList = [
+                { key: 'allEqual', label: 'All sides equal' },
+                { key: 'oppParallel', label: 'Opposite sides parallel' },
+                { key: 'all90', label: 'All angles 90°' },
+                { key: 'diagsEqual', label: 'Diagonals equal' },
+                { key: 'diagsPerp', label: 'Diagonals perpendicular' },
+                { key: 'diagsBisect', label: 'Diagonals bisect each other' }
+            ];
+
+            const tbody = document.getElementById('compare-table-body');
+            tbody.innerHTML = '';
+
+            comparePropsList.forEach(p => {
+                const val1 = s1[p.key];
+                const val2 = s2[p.key];
+                const isDiff = val1 !== val2;
+
+                const tr = document.createElement('tr');
+                if (isDiff) tr.className = 'highlight-diff';
+
+                tr.innerHTML = `
+                    <td>${p.label}</td>
+                    <td><span class="status-badge ${val1 ? 'status-true' : 'status-false'}">${val1 ? '✓' : '✕'}</span></td>
+                    <td><span class="status-badge ${val2 ? 'status-true' : 'status-false'}">${val2 ? '✓' : '✕'}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* ==========================================================================
+           10. RESET & LIFECYCLE
+           ========================================================================== */
+        function resetActivity() {
+            initShapeDefaults(currentShapeType);
+            initChallengeMode();
+            updateDiscoverQuestion();
+            draw();
+        }
+
+        function resizeCanvas() {
+            const rect = canvasContainer.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
+            canvas.width = width;
+            canvas.height = height;
+            initShapeDefaults(currentShapeType);
+            draw();
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        window.onload = () => {
+            resizeCanvas();
+            initChallengeMode();
+            renderComparison();
+            updateDiscoverQuestion();
+        };
+    </script>
+</body>
+</html>

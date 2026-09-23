@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Numbers — Math Lab Practical Exam | Class X</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    background:#eef3fb;color:#12203a;line-height:1.5;-webkit-text-size-adjust:100%;
+  }
+  .app-header{
+    background:linear-gradient(135deg,#1e3a8a,#2563eb 60%,#3b82f6);
+    color:#fff;padding:18px 16px;text-align:center;
+    box-shadow:0 3px 14px rgba(30,58,138,.28);
+  }
+  .app-header h1{font-size:1.18rem;letter-spacing:.6px;font-weight:700}
+  .app-header p{font-size:.82rem;opacity:.9;margin-top:3px;letter-spacing:.3px}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px 14px 70px}
+  .screen{display:none;animation:fade .25s ease}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{
+    background:#fff;border-radius:14px;padding:20px;
+    box-shadow:0 4px 18px rgba(23,58,120,.09);margin-bottom:16px;
+    border:1px solid #e2eaf7;
+  }
+  h2{font-size:1.12rem;color:#16305e;margin-bottom:10px}
+  h3{font-size:1rem;color:#16305e;margin-bottom:8px}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    font:inherit;font-weight:600;border:none;border-radius:9px;padding:11px 20px;
+    cursor:pointer;transition:.18s;font-size:.94rem;
+  }
+  .btn.primary{background:#2563eb;color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.3)}
+  .btn.primary:hover{background:#1d4ed8}
+  .btn.success{background:#15803d;color:#fff;box-shadow:0 3px 10px rgba(21,128,61,.3)}
+  .btn.success:hover{background:#12672f}
+  .btn.ghost{background:#e8effb;color:#1e3a8a;border:1px solid #c9daf5}
+  .btn.ghost:hover{background:#dbe8fa}
+  .btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+  .mini{
+    font:inherit;font-size:.82rem;font-weight:600;background:#eef4ff;color:#1e40af;
+    border:1px solid #c8daf8;border-radius:7px;padding:6px 11px;cursor:pointer;transition:.15s;
+  }
+  .mini:hover{background:#dce9ff}
+  .mini:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ---------- forms ---------- */
+  input[type=text],input[type=number],select,textarea{
+    font:inherit;border:1.5px solid #c8d6ec;border-radius:8px;padding:8px 10px;
+    background:#fbfdff;color:#12203a;outline:none;transition:.15s;max-width:100%;
+  }
+  input:focus,select:focus,textarea:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  .ans-input{width:110px;text-align:center;font-weight:700}
+  .ans-input.tiny{width:52px}
+  .ans-input.small{width:80px}
+  label{font-size:.9rem}
+
+  /* ---------- start screen ---------- */
+  .field{margin-bottom:14px}
+  .field label{display:block;font-weight:600;margin-bottom:5px;color:#1e3a8a;font-size:.88rem}
+  .field input{width:100%;max-width:340px}
+  .err{color:#b91c1c;font-size:.85rem;margin-top:8px;font-weight:600}
+  .info-list{list-style:none;font-size:.87rem;color:#3c5074;margin-top:6px}
+  .info-list li{padding:3px 0 3px 20px;position:relative}
+  .info-list li::before{content:"▸";position:absolute;left:4px;color:#2563eb}
+
+  /* ---------- exam ---------- */
+  .exam-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .student-chip{font-size:.83rem;background:#e8effb;color:#1e3a8a;padding:6px 12px;border-radius:20px;font-weight:600}
+  .progress-text{font-size:.83rem;color:#4a5f85;font-weight:700}
+  .progress-track{height:9px;background:#dbe5f5;border-radius:20px;overflow:hidden;margin-bottom:16px}
+  .progress-fill{height:100%;width:0;background:linear-gradient(90deg,#2563eb,#22c55e);border-radius:20px;transition:width .4s ease}
+
+  .prac-head{border-bottom:2px dashed #dde7f6;padding-bottom:12px;margin-bottom:14px}
+  .badge{
+    display:inline-block;background:#1e3a8a;color:#fff;font-size:.72rem;font-weight:700;
+    letter-spacing:.7px;padding:4px 11px;border-radius:20px;text-transform:uppercase;
+  }
+  .prac-head h2{margin-top:9px;font-size:1.2rem}
+  .tags{font-size:.8rem;color:#5b7096;margin-top:4px;font-weight:600}
+
+  .instructions{background:#f6faff;border-left:4px solid #2563eb;border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:16px}
+  .instructions ol{margin-left:18px;font-size:.89rem;color:#2d4166}
+  .instructions li{margin:3px 0}
+
+  .workspace{margin-bottom:14px}
+  .panel{border:1.5px solid #e0e9f7;border-radius:11px;padding:14px;margin-bottom:13px;background:#fcfdff}
+  .panel-title{font-weight:700;font-size:.92rem;color:#1e3a8a;margin-bottom:10px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr}}
+
+  .factor-line{font-size:1.1rem;font-weight:700;color:#12203a;margin-bottom:10px;word-break:break-word}
+  .factors{color:#15803d;font-weight:700}
+  .prime-btns{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+  .pbtn{
+    font:inherit;font-weight:700;width:42px;height:38px;border-radius:8px;
+    border:1.5px solid #b9d0f5;background:#eaf2ff;color:#1d4ed8;cursor:pointer;transition:.15s;
+  }
+  .pbtn:hover{background:#d5e6ff;transform:translateY(-1px)}
+  .mini-row{display:flex;gap:7px;flex-wrap:wrap}
+
+  .status{font-size:.83rem;margin-top:8px;min-height:18px;font-weight:600;color:#64748b}
+  .status.ok{color:#15803d}
+  .status.warn{color:#b45309}
+  .status.bad{color:#b91c1c}
+
+  .chk-row{display:flex;flex-wrap:wrap;gap:14px}
+  .chk{display:flex;align-items:center;gap:6px;font-weight:700;color:#1e3a8a;cursor:pointer;
+       background:#eef4ff;border:1.5px solid #cfdff9;border-radius:8px;padding:6px 12px}
+  .chk input{width:16px;height:16px;accent-color:#2563eb}
+
+  .answer-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700;color:#16305e;margin:10px 0;font-size:.95rem}
+  .hint{font-size:.8rem;color:#6b7d9c;background:#f5f8fe;border-radius:8px;padding:8px 11px;margin-top:8px}
+
+  .strip{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px;min-height:32px}
+  .mchip{
+    background:#eef4ff;border:1.5px solid #cfdff9;border-radius:7px;padding:4px 10px;
+    font-weight:700;font-size:.85rem;color:#1e40af;animation:pop .25s ease;
+  }
+  .mchip.common{background:#dcfce7;border-color:#86efac;color:#15803d}
+  @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* tree */
+  .tree-box{overflow-x:auto;padding:8px 4px}
+  .tnode{
+    display:inline-block;min-width:46px;text-align:center;padding:7px 12px;border-radius:9px;
+    font-weight:800;font-size:.95rem;background:#e8effb;border:2px solid #b9cdf0;color:#1e3a8a;
+  }
+  .tnode.clickable{background:#fff7e6;border-color:#f6c76a;color:#b45309;cursor:pointer}
+  .tnode.clickable:hover{background:#ffefd1;transform:translateY(-1px)}
+  .tnode.prime{background:#dcfce7;border-color:#6ee7a0;color:#15803d}
+  .tnode-wrap{display:flex;flex-direction:column;gap:8px}
+  .tchildren{display:flex;gap:12px;margin-left:22px;padding-left:14px;border-left:2px dashed #b9c9e6;flex-wrap:wrap}
+  .trow{display:flex;align-items:center;gap:6px;font-weight:800;color:#8aa0c4;font-size:.85rem}
+
+  .pair-chooser{margin-top:12px}
+  .pair-chooser .mini{margin:3px 5px 3px 0}
+  .pf-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-weight:700;font-size:1rem}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:8px}
+  th,td{border:1px solid #dbe5f5;padding:8px 6px;text-align:center}
+  th{background:#eef4ff;color:#1e3a8a;font-weight:700;font-size:.82rem}
+  td input{width:80px;text-align:center;font-weight:700}
+
+  .test-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:8px;font-weight:700;font-size:.9rem;color:#16305e}
+  .test-log{font-size:.85rem;font-family:ui-monospace,Consolas,monospace;color:#2d4166;background:#f6faff;
+            border-radius:8px;padding:8px 11px;max-height:130px;overflow-y:auto;min-height:20px}
+  .test-log div{padding:2px 0}
+  .test-log .hit{color:#15803d;font-weight:700}
+  .test-log .miss{color:#94a3b8}
+
+  .numcard{border:2px solid #dbe5f5;border-radius:11px;padding:13px;margin-bottom:12px;background:#fff}
+  .numcard h4{font-size:1rem;color:#1e3a8a;margin-bottom:9px}
+
+  .frac-card{border:2px solid #dbe5f5;border-radius:11px;padding:13px;margin-bottom:12px;background:#fff}
+  .frac{font-size:1.15rem;font-weight:800;color:#1e3a8a;margin-bottom:9px}
+  .frac .bar{display:inline-block;border-top:2px solid #1e3a8a;width:100%;}
+  .frac-inline{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 4px}
+  .frac-inline span:first-child{padding:0 4px}
+  .frac-inline span:last-child{border-top:2px solid #1e3a8a;padding:0 4px}
+
+  .gresult{margin-top:8px;font-size:.87rem;font-family:ui-monospace,Consolas,monospace}
+  .gresult div{padding:3px 0}
+  .gresult .ok{color:#15803d;font-weight:700}
+  .gresult .bad{color:#b91c1c;font-weight:700}
+
+  .radio-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .radio-row label{display:flex;align-items:center;gap:6px;background:#f4f8ff;border:1.5px solid #dbe5f5;
+                   border-radius:8px;padding:7px 12px;cursor:pointer;font-weight:600;font-size:.87rem;color:#1e3a8a}
+  .radio-row input{accent-color:#2563eb}
+
+  /* feedback */
+  .feedback{margin:14px 0}
+  .fb-box{border-radius:11px;padding:14px;border-left:5px solid;font-size:.89rem}
+  .fb-box.good{background:#f0fdf4;border-color:#22c55e}
+  .fb-box.part{background:#fffbeb;border-color:#f59e0b}
+  .fb-box.bad{background:#fef2f2;border-color:#ef4444}
+  .fb-head{font-weight:800;font-size:1rem;margin-bottom:7px}
+  .fb-box.good .fb-head{color:#15803d}
+  .fb-box.part .fb-head{color:#b45309}
+  .fb-box.bad .fb-head{color:#b91c1c}
+  .fb-box ul{margin:7px 0 0 18px}
+  .fb-box li{margin:3px 0}
+  .fb-note{margin-top:9px;background:rgba(255,255,255,.7);border-radius:8px;padding:9px 11px;font-size:.85rem;color:#33415c}
+
+  .actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:6px}
+
+  /* result */
+  .result-hero{text-align:center;padding:22px 16px;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-radius:14px;margin-bottom:16px}
+  .result-hero h2{color:#fff;font-size:1.3rem;margin-bottom:6px}
+  .score-big{font-size:2.6rem;font-weight:800;letter-spacing:1px;margin:8px 0}
+  .score-sub{font-size:.92rem;opacity:.92}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:16px 0}
+  @media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
+  .stat{background:#f6faff;border:1.5px solid #e0e9f7;border-radius:11px;padding:13px;text-align:center}
+  .stat .v{font-size:1.5rem;font-weight:800;color:#1e3a8a}
+  .stat .l{font-size:.78rem;color:#5b7096;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-top:3px}
+
+  .res-table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:10px}
+  .res-table th,.res-table td{border:1px solid #dbe5f5;padding:8px 7px;text-align:left}
+  .res-table th{background:#eef4ff;color:#1e3a8a;font-weight:700}
+  .res-table td.c{text-align:center}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.75rem;font-weight:800}
+  .pill.good{background:#dcfce7;color:#15803d}
+  .pill.part{background:#fef3c7;color:#b45309}
+  .pill.bad{background:#fee2e2;color:#b91c1c}
+
+  .concept-row{display:grid;grid-template-columns:200px 1fr 56px;gap:10px;align-items:center;margin:9px 0;font-size:.85rem}
+  @media(max-width:560px){.concept-row{grid-template-columns:120px 1fr 48px;font-size:.8rem}}
+  .concept-name{font-weight:700;color:#1e3a8a}
+  .bar{height:12px;background:#e5edfa;border-radius:20px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#2563eb,#22c55e);transition:width .7s ease}
+  .concept-pct{font-weight:800;color:#33415c;text-align:right}
+
+  .summary-block{background:#f6faff;border-radius:11px;padding:14px;margin-top:12px;border:1.5px solid #e0e9f7}
+  .summary-block h3{font-size:.95rem;margin-bottom:8px}
+  .summary-block ul{margin-left:18px;font-size:.87rem;color:#33415c}
+  .summary-block li{margin:4px 0}
+
+  .copy-btn{background:#0f766e;color:#fff;box-shadow:0 3px 10px rgba(15,118,110,.3)}
+  .copy-btn:hover{background:#0d5f59}
+  .copy-btn.done{background:#15803d}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-real-numbers-act1",
+  "order": 245,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Real Numbers",
+  "subtopic": null,
+  "title": "Real Numbers Math Lab",
+  "description": "Complete an interactive mathematics lab practical covering prime factorisation, HCF and LCM, the Fundamental Theorem of Arithmetic, Euclid's division algorithm, and decimal expansions of rational numbers.",
+  "activityType": "exam-practice",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>REAL NUMBERS — MATH LAB PRACTICAL EXAM</h1>
+  <p>Class X &nbsp;•&nbsp; Mathematics Laboratory &nbsp;•&nbsp; Total 50 Marks</p>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ START SCREEN ============ -->
+  <section id="screen-start" class="screen active">
+    <div class="card">
+      <h2>Ready to begin?</h2>
+      <button class="btn primary" id="startBtn">Start Exam</button>
+    </div>
+
+    <div class="card">
+      <h2>What this practical exam covers</h2>
+      <ul class="info-list">
+        <li>HCF by prime factorisation</li>
+        <li>LCM experiment with multiples</li>
+        <li>HCF × LCM investigation</li>
+        <li>Factor tree lab</li>
+        <li>Prime or composite investigation</li>
+        <li>Fundamental Theorem of Arithmetic</li>
+        <li>HCF real-life experiment</li>
+        <li>Euclid's division algorithm lab</li>
+        <li>Terminating decimal investigation</li>
+        <li>Final real-world challenge</li>
+      </ul>
+      <div class="hint" style="margin-top:12px">
+        Work through each practical like a real laboratory activity — experiment, observe,
+        then record your conclusion. Answers are revealed only after you press
+        <strong>Check Answer</strong>.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXAM SCREEN ============ -->
+  <section id="screen-exam" class="screen">
+    <div class="exam-top">
+      <div class="progress-text" id="progressText"></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="card" id="practicalCard"></div>
+  </section>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <section id="screen-result" class="screen">
+    <div id="resultCard"></div>
+  </section>
+
+</main>
+
+<script>
+"use strict";
+
+/* =========================================================
+   1. MATHEMATICAL HELPERS
+   ========================================================= */
+
+function isPrime(n){
+  if(!Number.isInteger(n) || n < 2) return false;
+  if(n % 2 === 0) return n === 2;
+  for(let i = 3; i * i <= n; i += 2) if(n % i === 0) return false;
+  return true;
+}
+
+function primeFactors(n){
+  const f = []; let m = n;
+  for(let p = 2; p * p <= m; p++){
+    while(m % p === 0){ f.push(p); m /= p; }
+  }
+  if(m > 1) f.push(m);
+  return f;
+}
+
+function gcd(a, b){
+  a = Math.abs(a); b = Math.abs(b);
+  while(b){ const t = a % b; a = b; b = t; }
+  return a;
+}
+
+function lcm(a, b){ return (a / gcd(a, b)) * b; }
+
+function primesUpTo(n){
+  const out = [];
+  for(let i = 2; i <= n; i++) if(isPrime(i)) out.push(i);
+  return out;
+}
+
+function validFactorPairs(n){
+  const out = [];
+  for(let a = 2; a * a <= n; a++){
+    if(n % a === 0) out.push([a, n / a]);
+  }
+  return out;
+}
+
+/* Long-division decimal expansion ------------------------------------ */
+function decimalExpansion(num, den){
+  const intPart = Math.floor(num / den);
+  let rem = num % den;
+  if(rem === 0) return { terminating:true, text:String(intPart) };
+
+  let digits = "";
+  const seen = new Map();
+  let terminating = true;
+  let repeatStart = -1;
+
+  while(rem !== 0){
+    if(seen.has(rem)){ terminating = false; repeatStart = seen.get(rem); break; }
+    seen.set(rem, digits.length);
+    rem *= 10;
+    digits += Math.floor(rem / den);
+    rem %= den;
+    if(digits.length > 24){ terminating = false; break; }
+  }
+
+  if(terminating){
+    return { terminating:true, text: intPart + "." + digits };
+  }
+  if(repeatStart >= 0){
+    return {
+      terminating:false,
+      text: intPart + "." + digits.slice(0, repeatStart) + "(" + digits.slice(repeatStart) + ")…"
+    };
+  }
+  return { terminating:false, text: intPart + "." + digits + "…" };
+}
+
+/* =========================================================
+   2. SMALL DOM HELPERS
+   ========================================================= */
+
+const $  = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]
+  ));
+}
+
+function num(id, root = document){
+  const el = root.querySelector("#" + id);
+  if(!el) return NaN;
+  const v = String(el.value).trim();
+  if(v === "") return NaN;
+  return Number(v);
+}
+
+/* =========================================================
+   3. GLOBAL EXAM STATE
+   ========================================================= */
+
+const state = {
+  idx: 0,
+  results: [],          // per-practical result object
+  tests: 0,             // total checks / tests performed
+  practicalTested: [],  // boolean per practical
+  finished: false
+};
+
+/* =========================================================
+   4. PRACTICAL DEFINITIONS
+   ========================================================= */
+
+const PRACTICALS = [];
+
+/* ---------------------------------------------------------
+   PRACTICAL 1 — HCF BY PRIME FACTORISATION  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 1,
+  title: "HCF by Prime Factorisation",
+  concepts: ["Prime Factorisation"],
+  max: 5,
+  instructions: [
+    "Click the prime number buttons to build the prime factorisation of 32 and of 36.",
+    "Use Undo / Clear if you want to change your working.",
+    "Tick the prime factors that are common to BOTH numbers.",
+    "Finally, write the HCF of 32 and 36."
+  ],
+  build(host, api){
+    const targets = [32, 36];
+    const factors = { 32: [], 36: [] };
+    const primes = [2, 3, 5, 7, 11, 13];
+
+    host.innerHTML = `
+      <div class="grid2">
+        ${targets.map(t => `
+          <div class="panel">
+            <div class="panel-title">Factorising ${t}</div>
+            <div class="factor-line">${t} = <span class="factors" id="fl-${t}">—</span></div>
+            <div class="prime-btns">
+              ${primes.map(p => `<button class="pbtn" data-p="${p}" data-t="${t}">${p}</button>`).join("")}
+            </div>
+            <div class="mini-row">
+              <button class="mini" data-undo="${t}">↶ Undo</button>
+              <button class="mini" data-clear="${t}">✕ Clear</button>
+            </div>
+            <div class="status" id="st-${t}"></div>
+          </div>`).join("")}
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Tick the prime factors common to both 32 and 36</div>
+        <div class="chk-row">
+          ${primes.map(p => `
+            <label class="chk"><input type="checkbox" class="cbox" value="${p}"><span>${p}</span></label>
+          `).join("")}
+        </div>
+      </div>
+
+      <div class="answer-row">HCF (32, 36) = <input type="number" id="p1-hcf" class="ans-input" inputmode="numeric" placeholder="?"></div>
+      <div class="hint">Remember: HCF = product of the <strong>common</strong> prime factors, each taken the <strong>least</strong> number of times it appears in either number.</div>
+    `;
+
+    function renderFactors(t){
+      const list = factors[t];
+      const box = host.querySelector("#fl-" + t);
+      const st  = host.querySelector("#st-" + t);
+      box.textContent = list.length ? list.join(" × ") : "—";
+      const prod = list.reduce((a, b) => a * b, 1);
+
+      st.className = "status";
+      if(!list.length){ st.textContent = ""; return; }
+
+      if(prod === t && list.every(isPrime)){
+        st.textContent = `✓ ${t} = ${list.join(" × ")} — correct prime factorisation.`;
+        st.className = "status ok";
+      } else if(prod > t){
+        st.textContent = `Product so far = ${prod}, which is more than ${t}.`;
+        st.className = "status warn";
+      } else {
+        st.textContent = `Product so far = ${prod} (we need ${t}).`;
+      }
+    }
+
+    host.addEventListener("click", (e) => {
+      if(api.isLocked()) return;
+
+      const pb = e.target.closest(".pbtn");
+      if(pb){
+        const t = Number(pb.dataset.t);
+        factors[t].push(Number(pb.dataset.p));
+        api.test();
+        renderFactors(t);
+        return;
+      }
+      const un = e.target.closest("[data-undo]");
+      if(un){ const t = Number(un.dataset.undo); factors[t].pop(); renderFactors(t); return; }
+
+      const cl = e.target.closest("[data-clear]");
+      if(cl){ const t = Number(cl.dataset.clear); factors[t] = []; renderFactors(t); return; }
+    });
+
+    renderFactors(32);
+    renderFactors(36);
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const prod32 = factors[32].reduce((a, b) => a * b, 1);
+      const prod36 = factors[36].reduce((a, b) => a * b, 1);
+      const ok32 = factors[32].length > 0 && prod32 === 32 && factors[32].every(isPrime);
+      const ok36 = factors[36].length > 0 && prod36 === 36 && factors[36].every(isPrime);
+
+      if(ok32){ marks += 1; notes.push(`✔ 32 = ${factors[32].join(" × ")}`); }
+      else notes.push(`✘ 32 should factorise as 2 × 2 × 2 × 2 × 2 = 2⁵.`);
+
+      if(ok36){ marks += 1; notes.push(`✔ 36 = ${factors[36].join(" × ")}`); }
+      else notes.push(`✘ 36 should factorise as 2 × 2 × 3 × 3 = 2² × 3².`);
+
+      const ticked = $$(".cbox", host).filter(c => c.checked).map(c => Number(c.value)).sort();
+      const commonOk = ticked.length === 1 && ticked[0] === 2;
+      if(commonOk){ marks += 1; notes.push("✔ The only prime factor common to 32 and 36 is 2."); }
+      else notes.push("✘ The common prime factor is only 2 (36 has a 3, but 32 does not).");
+
+      const hcf = num("p1-hcf", host);
+      if(hcf === 4){ marks += 2; notes.push("✔ HCF (32, 36) = 2² = 4."); }
+      else notes.push("✘ HCF = product of common primes taken the least number of times = 2² = 4.");
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            32 = 2⁵ &nbsp;and&nbsp; 36 = 2² × 3². The common prime is 2, and it appears
+            at least twice in both numbers, so HCF = 2² = <strong>4</strong>.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 2 — LCM EXPERIMENT  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 2,
+  title: "LCM Experiment — The Class Library Problem",
+  concepts: ["LCM"],
+  max: 5,
+  instructions: [
+    "Section A has 32 students and Section B has 36 students.",
+    "Books must be bought so that they can be shared equally in Section A alone OR in Section B alone.",
+    "Generate multiples of 32 and of 36 by pressing the buttons. Common multiples turn green.",
+    "Find the first common multiple and answer the questions."
+  ],
+  build(host, api){
+    const A = 32, B = 36;
+    const mulsA = [];
+    const mulsB = [];
+
+    function extend(arr, n, count){
+      for(let i = 0; i < count; i++) arr.push(n * (arr.length + 1));
+    }
+    extend(mulsA, A, 4);
+    extend(mulsB, B, 4);
+
+    host.innerHTML = `
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-title">Multiples of ${A} (Section A)</div>
+          <div class="strip" id="stripA"></div>
+          <button class="mini" id="moreA">+ Show 4 more multiples</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Multiples of ${B} (Section B)</div>
+          <div class="strip" id="stripB"></div>
+          <button class="mini" id="moreB">+ Show 4 more multiples</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Observation</div>
+        <div id="obsText" class="status">Generate more multiples until a number appears in both strips.</div>
+      </div>
+
+      <div class="answer-row">First common multiple (LCM) = <input type="number" id="p2-lcm" class="ans-input" placeholder="?"></div>
+      <div class="answer-row">Minimum number of books to buy = <input type="number" id="p2-books" class="ans-input" placeholder="?"></div>
+
+      <div class="panel">
+        <div class="panel-title">Conclusion</div>
+        <div class="radio-row" id="p2-concl">
+          <label><input type="radio" name="p2c" value="a"> It is the smallest number divisible by both 32 and 36.</label>
+          <label><input type="radio" name="p2c" value="b"> It is the largest number dividing both 32 and 36.</label>
+          <label><input type="radio" name="p2c" value="c"> It is simply 32 × 36.</label>
+        </div>
+      </div>
+    `;
+
+    function paint(){
+      const inter = mulsA.filter(v => mulsB.includes(v));
+      host.querySelector("#stripA").innerHTML =
+        mulsA.map(v => `<span class="mchip${inter.includes(v) ? " common" : ""}">${v}</span>`).join("");
+      host.querySelector("#stripB").innerHTML =
+        mulsB.map(v => `<span class="mchip${inter.includes(v) ? " common" : ""}">${v}</span>`).join("");
+
+      const obs = host.querySelector("#obsText");
+      if(inter.length){
+        obs.className = "status ok";
+        obs.textContent = `Common multiple found: ${inter.join(", ")}. The first one is the LCM.`;
+      } else {
+        obs.className = "status";
+        obs.textContent = "No common multiple yet — generate more multiples in both strips.";
+      }
+    }
+
+    host.querySelector("#moreA").addEventListener("click", () => {
+      if(api.isLocked()) return;
+      extend(mulsA, A, 4); api.test(); paint();
+    });
+    host.querySelector("#moreB").addEventListener("click", () => {
+      if(api.isLocked()) return;
+      extend(mulsB, B, 4); api.test(); paint();
+    });
+
+    paint();
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const lcmVal = num("p2-lcm", host);
+      if(lcmVal === 288){ marks += 3; notes.push("✔ LCM (32, 36) = 288."); }
+      else notes.push("✘ The first common multiple of 32 and 36 is 288.");
+
+      const books = num("p2-books", host);
+      if(books === 288){ marks += 1; notes.push("✔ 288 books can be shared equally in either section."); }
+      else notes.push("✘ The number of books must equal the LCM, i.e. 288.");
+
+      const sel = host.querySelector('input[name="p2c"]:checked');
+      if(sel && sel.value === "a"){ marks += 1; notes.push("✔ Correct conclusion about the LCM."); }
+      else notes.push("✘ The LCM is the smallest number divisible by both numbers (not the largest divisor, and not the product).");
+
+      const generated = mulsA.length + mulsB.length;
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            Multiples of 32: 32, 64, 96, 128, 160, 192, 224, 256, <strong>288</strong>…<br>
+            Multiples of 36: 36, 72, 108, 144, 180, 216, 252, <strong>288</strong>…<br>
+            LCM (32, 36) = 288, so 288 books are needed.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 3 — HCF × LCM INVESTIGATION  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 3,
+  title: "HCF × LCM Investigation",
+  concepts: ["HCF", "LCM"],
+  max: 5,
+  instructions: [
+    "Take the two positive integers 24 and 36.",
+    "Work out their HCF and their LCM.",
+    "Then work out HCF × LCM and also 24 × 36.",
+    "Compare the two products and record what you observe."
+  ],
+  build(host, api){
+    host.innerHTML = `
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-title">Step 1 — HCF and LCM</div>
+          <div class="answer-row">HCF (24, 36) = <input type="number" id="p3-hcf" class="ans-input" placeholder="?"></div>
+          <div class="answer-row">LCM (24, 36) = <input type="number" id="p3-lcm" class="ans-input" placeholder="?"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Step 2 — Two products</div>
+          <div class="answer-row">HCF × LCM = <input type="number" id="p3-prod1" class="ans-input" placeholder="?"></div>
+          <div class="answer-row">24 × 36 = <input type="number" id="p3-prod2" class="ans-input" placeholder="?"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Step 3 — Observation</div>
+        <div class="radio-row" id="p3-obs">
+          <label><input type="radio" name="p3o" value="a"> Both products are equal.</label>
+          <label><input type="radio" name="p3o" value="b"> HCF × LCM is larger.</label>
+          <label><input type="radio" name="p3o" value="c"> 24 × 36 is larger.</label>
+          <label><input type="radio" name="p3o" value="d"> There is no relationship between them.</label>
+        </div>
+        <div class="hint">Experiment: for two positive integers a and b, is HCF(a, b) × LCM(a, b) always equal to a × b?</div>
+      </div>
+    `;
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const hcf = num("p3-hcf", host);
+      const lc  = num("p3-lcm", host);
+      const pr1 = num("p3-prod1", host);
+      const pr2 = num("p3-prod2", host);
+
+      if(hcf === 12){ marks += 1; notes.push("✔ HCF (24, 36) = 12."); }
+      else notes.push("✘ HCF (24, 36) = 12 (24 = 2²×3, 36 = 2²×3², common part = 2²×3).");
+
+      if(lc === 72){ marks += 1; notes.push("✔ LCM (24, 36) = 72."); }
+      else notes.push("✘ LCM (24, 36) = 72.");
+
+      if(pr1 === 864 && pr2 === 864){ marks += 1; notes.push("✔ HCF × LCM = 12 × 72 = 864 and 24 × 36 = 864."); }
+      else notes.push("✘ HCF × LCM = 12 × 72 = 864 and 24 × 36 = 864 — the two products match.");
+
+      const sel = host.querySelector('input[name="p3o"]:checked');
+      if(sel && sel.value === "a"){ marks += 2; notes.push("✔ Correct observation: HCF × LCM = a × b."); }
+      else notes.push("✘ The experiment shows HCF × LCM = product of the two numbers.");
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            <strong>Result discovered:</strong> for any two positive integers a and b,
+            <br>HCF(a, b) × LCM(a, b) = a × b.
+            <br>Here: 12 × 72 = 864 = 24 × 36.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 4 — FACTOR TREE LAB  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 4,
+  title: "Factor Tree Lab",
+  concepts: ["Prime Factorisation"],
+  max: 5,
+  instructions: [
+    "The number 36 is the root of the factor tree.",
+    "Click any yellow (composite) node and choose a factor pair to split it.",
+    "Keep splitting until every leaf is green (a prime number).",
+    "Then write the final prime factorisation of 36."
+  ],
+  build(host, api){
+    let nextId = 0;
+    const root = { value: 36, children: null };
+    root.id = nextId++;
+
+    let selected = null;
+    let splits = 0;
+
+    host.innerHTML = `
+      <div class="panel">
+        <div class="panel-title">Factor tree for 36</div>
+        <div class="tree-box" id="treeBox"></div>
+        <div class="pair-chooser" id="pairChooser"></div>
+        <div class="status" id="treeStatus"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Write the prime factorisation</div>
+        <div class="pf-row">
+          36 =
+          <input class="ans-input tiny" id="b1" type="number" placeholder="base" disabled>
+          ^
+          <input class="ans-input tiny" id="e1" type="number" placeholder="exp" disabled>
+          ×
+          <input class="ans-input tiny" id="b2" type="number" placeholder="base" disabled>
+          ^
+          <input class="ans-input tiny" id="e2" type="number" placeholder="exp" disabled>
+          ×
+          <input class="ans-input tiny" id="b3" type="number" placeholder="base" disabled>
+          ^
+          <input class="ans-input tiny" id="e3" type="number" placeholder="exp" disabled>
+        </div>
+        <div class="hint">Use prime numbers as bases. Leave the third pair empty if it is not needed.</div>
+      </div>
+    `;
+
+    const treeBox    = host.querySelector("#treeBox");
+    const chooserBox = host.querySelector("#pairChooser");
+    const statusBox  = host.querySelector("#treeStatus");
+
+    function isComplete(node){
+      if(!node.children) return isPrime(node.value);
+      return node.children.every(isComplete);
+    }
+
+    function makeNode(node){
+      const wrap = document.createElement("div");
+      wrap.className = "tnode-wrap";
+
+      const box = document.createElement("div");
+      const leafPrime = !node.children && isPrime(node.value);
+      const clickable = !node.children && !isPrime(node.value);
+      box.className = "tnode" + (leafPrime ? " prime" : "") + (clickable ? " clickable" : "");
+      box.textContent = node.value;
+      box.dataset.id = node.id;
+      wrap.appendChild(box);
+
+      if(node.children){
+        const kids = document.createElement("div");
+        kids.className = "tchildren";
+        node.children.forEach(c => kids.appendChild(makeNode(c)));
+        wrap.appendChild(kids);
+      }
+      return wrap;
+    }
+
+    function renderTree(){
+      treeBox.innerHTML = "";
+      const row = document.createElement("div");
+      row.className = "trow";
+      row.appendChild(makeNode(root));
+      treeBox.appendChild(row);
+
+      if(isComplete(root)){
+        statusBox.className = "status ok";
+        statusBox.textContent = "✓ Every leaf is prime — the factor tree is complete! Now write the prime factorisation below.";
+        ["b1","e1","b2","e2","b3","e3"].forEach(id => {
+          const el = host.querySelector("#" + id);
+          if(el) el.disabled = false;
+        });
+        chooserBox.innerHTML = "";
+        selected = null;
+      } else {
+        statusBox.className = "status";
+        statusBox.textContent = "Click a yellow node to split it into a factor pair.";
+      }
+    }
+
+    function renderChooser(){
+      chooserBox.innerHTML = "";
+      if(selected === null) return;
+
+      const node = findNode(root, selected);
+      if(!node || node.children || isPrime(node.value)){ selected = null; return; }
+
+      const pairs = validFactorPairs(node.value);
+      const title = document.createElement("div");
+      title.className = "panel-title";
+      title.textContent = `Split ${node.value} into:`;
+      chooserBox.appendChild(title);
+
+      const row = document.createElement("div");
+      pairs.forEach(([a, b]) => {
+        const btn = document.createElement("button");
+        btn.className = "mini";
+        btn.textContent = `${a} × ${b}`;
+        btn.addEventListener("click", () => {
+          if(api.isLocked()) return;
+          const c1 = { value: a, children: null, id: nextId++ };
+          const c2 = { value: b, children: null, id: nextId++ };
+          node.children = [c1, c2];
+          splits++;
+          api.test();
+          selected = null;
+          renderTree();
+          renderChooser();
+        });
+        row.appendChild(btn);
+      });
+      chooserBox.appendChild(row);
+    }
+
+    function findNode(node, id){
+      if(node.id === id) return node;
+      if(node.children){
+        for(const c of node.children){
+          const f = findNode(c, id);
+          if(f) return f;
+        }
+      }
+      return null;
+    }
+
+    treeBox.addEventListener("click", (e) => {
+      if(api.isLocked()) return;
+      const box = e.target.closest(".tnode.clickable");
+      if(!box) return;
+      selected = Number(box.dataset.id);
+      renderChooser();
+    });
+
+    renderTree();
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      if(isComplete(root) && splits > 0){
+        marks += 3;
+        notes.push("✔ The factor tree was completed — every branch ends in a prime number.");
+      } else if(splits > 0){
+        marks += 1;
+        notes.push("△ The tree was started but not every leaf became prime.");
+      } else {
+        notes.push("✘ The factor tree was not built.");
+      }
+
+      const bases = ["b1","b2","b3"].map(id => num(id, host));
+      const exps  = ["e1","e2","e3"].map(id => num(id, host));
+
+      const pairs = [];
+      for(let i = 0; i < 3; i++){
+        if(!isNaN(bases[i]) && !isNaN(exps[i]) && exps[i] > 0){
+          pairs.push([bases[i], exps[i]]);
+        }
+      }
+
+      let ok = pairs.length > 0;
+      let product = 1;
+      pairs.forEach(([b, e]) => {
+        if(!isPrime(b)) ok = false;
+        product *= Math.pow(b, e);
+      });
+      const distinct = new Set(pairs.map(p => p[0])).size === pairs.length;
+      if(product !== 36) ok = false;
+      if(!distinct) ok = false;
+
+      if(ok){
+        marks += 2;
+        notes.push("✔ Correct prime factorisation written.");
+      } else {
+        notes.push("✘ The correct prime factorisation is 36 = 2² × 3².");
+      }
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            One possible tree: &nbsp; 36 → 4 × 9 → (2 × 2) × (3 × 3).<br>
+            Leaves: 2, 2, 3, 3 &nbsp;⇒&nbsp; 36 = 2² × 3².
+            The factor tree shows that the prime factorisation is unique.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 5 — PRIME OR COMPOSITE INVESTIGATION  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 5,
+  title: "Prime or Composite Investigation",
+  concepts: ["Prime & Composite Numbers"],
+  max: 5,
+  instructions: [
+    "Investigate each number by testing possible divisors.",
+    "Type a divisor and press Test — the result is recorded in the log.",
+    "You must test before you can classify (evidence is required!).",
+    "To call a number PRIME, you should test every prime up to its square root.",
+    "Finally, classify each number as Prime or Composite."
+  ],
+  build(host, api){
+    const numbers = [23, 91, 87];
+    const logs = {};       // n -> [{d, rem}]
+    const classes = {};    // n -> 'prime' | 'composite'
+    numbers.forEach(n => { logs[n] = []; classes[n] = null; });
+
+    host.innerHTML = numbers.map(n => `
+      <div class="numcard" data-n="${n}">
+        <h4>Number: ${n}</h4>
+        <div class="test-row">
+          Test divisor:
+          <input type="number" class="ans-input small test-input" data-n="${n}" placeholder="d">
+          <button class="mini test-btn" data-n="${n}">Test</button>
+        </div>
+        <div class="test-log" id="log-${n}">No tests yet.</div>
+        <div class="radio-row" id="cls-${n}" style="opacity:.45;pointer-events:none">
+          <label><input type="radio" name="cls${n}" value="prime"> Prime</label>
+          <label><input type="radio" name="cls${n}" value="composite"> Composite</label>
+        </div>
+      </div>
+    `).join("");
+
+    function paintLog(n){
+      const box = host.querySelector("#log-" + n);
+      const list = logs[n];
+      if(!list.length){ box.textContent = "No tests yet."; return; }
+      box.innerHTML = list.map(t => {
+        const q = Math.floor(n / t.d);
+        if(t.rem === 0){
+          return `<div class="hit">${n} ÷ ${t.d} = ${q} remainder 0 → DIVISIBLE ✓</div>`;
+        }
+        return `<div class="miss">${n} ÷ ${t.d} = ${q} remainder ${t.rem} → not divisible</div>`;
+      }).join("");
+      box.scrollTop = box.scrollHeight;
+    }
+
+    host.addEventListener("click", (e) => {
+      const btn = e.target.closest(".test-btn");
+      if(!btn || api.isLocked()) return;
+      const n = Number(btn.dataset.n);
+      const inp = host.querySelector(`.test-input[data-n="${n}"]`);
+      const d = Number(inp.value);
+
+      if(!Number.isInteger(d) || d < 2 || d >= n){
+        inp.style.borderColor = "#ef4444";
+        setTimeout(() => inp.style.borderColor = "", 900);
+        return;
+      }
+      const rem = n % d;
+      logs[n].push({ d, rem });
+      api.test();
+      paintLog(n);
+
+      const radioBox = host.querySelector("#cls-" + n);
+      radioBox.style.opacity = "1";
+      radioBox.style.pointerEvents = "auto";
+      inp.value = "";
+    });
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      numbers.forEach(n => {
+        const sel = host.querySelector(`input[name="cls${n}"]:checked`);
+        const chosen = sel ? sel.value : null;
+        classes[n] = chosen;
+        const truth = isPrime(n) ? "prime" : "composite";
+        if(chosen === truth){
+          marks += 1;
+          notes.push(`✔ ${n} is correctly classified as ${truth}.`);
+        } else {
+          notes.push(`✘ ${n} is ${truth}.`);
+        }
+      });
+
+      /* evidence check */
+      const needFor23 = primesUpTo(Math.floor(Math.sqrt(23))); // [2,3]
+      const tested23 = logs[23].map(t => t.d);
+      const evid23 = needFor23.every(p => tested23.includes(p));
+
+      const evid91 = logs[91].some(t => t.rem === 0);
+      const evid87 = logs[87].some(t => t.rem === 0);
+
+      if(evid23 && evid91 && evid87){
+        marks += 2;
+        notes.push("✔ Good experimental evidence: 23 was tested against all primes up to √23, and divisors were found for 91 and 87.");
+      } else {
+        notes.push("△ Some evidence is missing — test all primes up to √n before calling a number prime, and find an actual divisor before calling a number composite.");
+      }
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            23 → primes up to √23 ≈ 4.8 are 2 and 3; neither divides 23, so 23 is <strong>prime</strong>.<br>
+            91 = 7 × 13 → <strong>composite</strong>.<br>
+            87 = 3 × 29 → <strong>composite</strong>.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 6 — FUNDAMENTAL THEOREM OF ARITHMETIC  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 6,
+  title: "Fundamental Theorem of Arithmetic",
+  concepts: ["Fundamental Theorem of Arithmetic"],
+  max: 5,
+  instructions: [
+    "The number 13915 is displayed below.",
+    "Build its prime factorisation using the prime base and exponent boxes.",
+    "Use “+ Add factor” if you need more rows.",
+    "Then answer the question about uniqueness of the factorisation."
+  ],
+  build(host, api){
+    const TARGET = 13915;
+    const PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23];
+    let rows = 2;
+
+    function rowHTML(i){
+      return `
+        <div class="answer-row" data-row="${i}">
+          Prime: 
+          <select class="p6-base" data-row="${i}">
+            <option value="">--</option>
+            ${PRIMES.map(p => `<option value="${p}">${p}</option>`).join("")}
+          </select>
+          Exponent:
+          <input type="number" class="ans-input tiny p6-exp" data-row="${i}" min="1" value="1">
+        </div>`;
+    }
+
+    host.innerHTML = `
+      <div class="panel">
+        <div class="panel-title">Prime factorisation of ${TARGET}</div>
+        <div id="p6-rows">${rowHTML(0)}${rowHTML(1)}</div>
+        <div class="mini-row" style="margin-top:8px">
+          <button class="mini" id="p6-add">+ Add factor</button>
+          <button class="mini" id="p6-remove">− Remove last</button>
+        </div>
+        <div class="status" id="p6-live"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Question</div>
+        <p style="font-size:.9rem;color:#2d4166;margin-bottom:6px">
+          Can the positive integer ${TARGET} have a different prime factorisation,
+          apart from the order of the factors?
+        </p>
+        <div class="radio-row">
+          <label><input type="radio" name="p6u" value="yes"> Yes, it can be factorised in other ways.</label>
+          <label><input type="radio" name="p6u" value="no"> No, the prime factorisation is unique.</label>
+          <label><input type="radio" name="p6u" value="one"> Only if 1 is allowed as a factor.</label>
+        </div>
+      </div>
+    `;
+
+    function liveUpdate(){
+      const bases = $$(".p6-base", host).map(s => s.value === "" ? null : Number(s.value));
+      const exps  = $$(".p6-exp", host).map(i => Number(i.value));
+      let prod = 1, any = false;
+      bases.forEach((b, i) => {
+        if(b && exps[i] > 0){ prod *= Math.pow(b, exps[i]); any = true; }
+      });
+      const st = host.querySelector("#p6-live");
+      if(!any){ st.textContent = ""; st.className = "status"; return; }
+      if(prod === TARGET){ st.textContent = `Current value = ${prod} ✓`; st.className = "status ok"; }
+      else if(prod > TARGET){ st.textContent = `Current value = ${prod} — too big.`; st.className = "status warn"; }
+      else { st.textContent = `Current value = ${prod} (target ${TARGET}).`; st.className = "status"; }
+    }
+
+    host.querySelector("#p6-add").addEventListener("click", () => {
+      if(api.isLocked() || rows >= 4) return;
+      host.querySelector("#p6-rows").insertAdjacentHTML("beforeend", rowHTML(rows));
+      rows++; api.test();
+    });
+    host.querySelector("#p6-remove").addEventListener("click", () => {
+      if(api.isLocked() || rows <= 1) return;
+      rows--;
+      const el = host.querySelector(`[data-row="${rows}"]`);
+      if(el) el.remove();
+      liveUpdate();
+    });
+    host.addEventListener("change", liveUpdate);
+    host.addEventListener("input", liveUpdate);
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const bases = $$(".p6-base", host).map(s => s.value === "" ? null : Number(s.value));
+      const exps  = $$(".p6-exp", host).map(i => Number(i.value));
+      let prod = 1, valid = false, used = 0;
+      bases.forEach((b, i) => {
+        if(b && exps[i] > 0){ prod *= Math.pow(b, exps[i]); used++; }
+      });
+      valid = used > 0 && prod === TARGET;
+
+      if(valid){
+        marks += 3;
+        notes.push("✔ Correct prime factorisation of 13915.");
+      } else {
+        notes.push("✘ 13915 = 5 × 11² × 23.");
+      }
+
+      const sel = host.querySelector('input[name="p6u"]:checked');
+      if(sel && sel.value === "no"){
+        marks += 2;
+        notes.push("✔ Correct — the Fundamental Theorem of Arithmetic guarantees uniqueness (apart from order).");
+      } else {
+        notes.push("✘ The Fundamental Theorem of Arithmetic says every composite number has exactly one prime factorisation, apart from the order of the factors.");
+      }
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            13915 = 5 × 2783 = 5 × 11 × 253 = 5 × 11 × 11 × 23 = <strong>5 × 11² × 23</strong>.<br>
+            Every composite number can be expressed as a product of primes in exactly one way
+            (ignoring the order). This is the <em>Fundamental Theorem of Arithmetic</em>.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 7 — HCF REAL-LIFE EXPERIMENT  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 7,
+  title: "HCF Real-Life Experiment — The Seminar Rooms",
+  concepts: ["HCF"],
+  max: 5,
+  instructions: [
+    "Hindi = 60, English = 84, Mathematics = 108 participants.",
+    "Every room must have the same number of participants, all from one subject.",
+    "Experiment with different group sizes using the Test button.",
+    "Then write the maximum number of participants per room and the minimum number of rooms."
+  ],
+  build(host, api){
+    const groups = { Hindi: 60, English: 84, Mathematics: 108 };
+    let testedSizes = [];
+
+    host.innerHTML = `
+      <div class="panel">
+        <div class="panel-title">Experiment with a group size</div>
+        <div class="test-row">
+          Group size:
+          <input type="number" id="p7-size" class="ans-input small" placeholder="n">
+          <button class="mini" id="p7-test">Test</button>
+        </div>
+        <div class="gresult" id="p7-result"></div>
+      </div>
+
+      <div class="answer-row">Maximum participants per room = <input type="number" id="p7-max" class="ans-input" placeholder="?"></div>
+      <div class="answer-row">Minimum number of rooms required = <input type="number" id="p7-rooms" class="ans-input" placeholder="?"></div>
+      <div class="hint">Hint: the largest group size that divides all three numbers exactly is their HCF.</div>
+    `;
+
+    host.querySelector("#p7-test").addEventListener("click", () => {
+      if(api.isLocked()) return;
+      const n = Number(host.querySelector("#p7-size").value);
+      if(!Number.isInteger(n) || n < 2) return;
+      api.test();
+      if(!testedSizes.includes(n)) testedSizes.push(n);
+
+      let html = "";
+      let allOk = true;
+      Object.entries(groups).forEach(([sub, total]) => {
+        const ok = total % n === 0;
+        if(!ok) allOk = false;
+        html += `<div class="${ok ? "ok" : "bad"}">
+          ${total} ÷ ${n} = ${Math.floor(total / n)} groups ${ok ? "✓" : "✗ (not exact)"}
+          &nbsp;— ${sub}</div>`;
+      });
+      const box = host.querySelector("#p7-result");
+      box.innerHTML = html + (allOk
+        ? `<div class="ok" style="margin-top:6px">✓ ${n} works for all three subjects.</div>`
+        : `<div class="bad" style="margin-top:6px">✗ ${n} does not divide all three numbers.</div>`);
+    });
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const maxRoom = num("p7-max", host);
+      const rooms   = num("p7-rooms", host);
+
+      if(maxRoom === 12){ marks += 3; notes.push("✔ Maximum participants per room = 12."); }
+      else notes.push("✘ HCF(60, 84, 108) = 12, so 12 participants per room is the maximum.");
+
+      if(rooms === 21){ marks += 2; notes.push("✔ Minimum number of rooms = 5 + 7 + 9 = 21."); }
+      else notes.push("✘ Rooms needed = 60/12 + 84/12 + 108/12 = 5 + 7 + 9 = 21.");
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            60 = 2² × 3 × 5 &nbsp;|&nbsp; 84 = 2² × 3 × 7 &nbsp;|&nbsp; 108 = 2² × 3³<br>
+            Common part = 2² × 3 = <strong>12</strong> → 12 participants per room.<br>
+            Rooms = 5 + 7 + 9 = <strong>21</strong>.
+            <br><em>You tested ${testedSizes.length} different group size(s) during this experiment.</em>
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 8 — EUCLID DIVISION LAB  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 8,
+  title: "Euclid's Division Algorithm Lab",
+  concepts: ["Euclid Division Algorithm"],
+  max: 5,
+  instructions: [
+    "Use Euclid's division algorithm to find HCF(867, 255).",
+    "For each row, enter the quotient and the remainder, then press “Add this step”.",
+    "Continue until the remainder becomes zero.",
+    "Then write the HCF."
+  ],
+  build(host, api){
+    let dividend = 867;
+    let divisor  = 255;
+    const rows = [];
+    let done = false;
+
+    host.innerHTML = `
+      <div class="panel">
+        <div class="panel-title">Repeated division</div>
+        <table class="div-table">
+          <thead>
+            <tr><th>Dividend</th><th>Divisor</th><th>Quotient</th><th>Remainder</th></tr>
+          </thead>
+          <tbody id="p8-body"></tbody>
+        </table>
+        <div class="status" id="p8-status"></div>
+      </div>
+
+      <div class="answer-row">HCF (867, 255) = <input type="number" id="p8-hcf" class="ans-input" placeholder="?" disabled></div>
+    `;
+
+    const body   = host.querySelector("#p8-body");
+    const status = host.querySelector("#p8-status");
+
+    function render(){
+      body.innerHTML = rows.map(r => `
+        <tr><td>${r.dividend}</td><td>${r.divisor}</td><td>${r.q}</td><td>${r.r}</td></tr>
+      `).join("");
+
+      if(!done){
+        body.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td><strong>${dividend}</strong></td>
+            <td><strong>${divisor}</strong></td>
+            <td><input type="number" id="p8-q" placeholder="q"></td>
+            <td><input type="number" id="p8-r" placeholder="r"></td>
+          </tr>
+        `);
+        if(!host.querySelector("#p8-addbtn")){
+          const btnRow = document.createElement("div");
+          btnRow.style.marginTop = "10px";
+          btnRow.innerHTML = `<button class="mini" id="p8-addbtn">Add this step</button>`;
+          status.parentNode.insertBefore(btnRow, status);
+        }
+      } else {
+        const b = host.querySelector("#p8-addbtn");
+        if(b) b.remove();
+        host.querySelector("#p8-hcf").disabled = false;
+        status.className = "status ok";
+        status.textContent = "✓ The remainder is 0 — the division process is complete. Now write the HCF.";
+      }
+    }
+
+    host.addEventListener("click", (e) => {
+      if(e.target.id !== "p8-addbtn" || api.isLocked() || done) return;
+      const q = Number(host.querySelector("#p8-q").value);
+      const r = Number(host.querySelector("#p8-r").value);
+
+      if(!Number.isInteger(q) || !Number.isInteger(r) || r < 0 || r >= divisor ||
+         dividend !== divisor * q + r){
+        status.className = "status bad";
+        status.textContent = `That step does not fit: we need ${dividend} = ${divisor} × q + r with 0 ≤ r < ${divisor}.`;
+        return;
+      }
+
+      api.test();
+      rows.push({ dividend, divisor, q, r });
+      status.className = "status";
+      status.textContent = "";
+
+      if(r === 0){ done = true; }
+      else { dividend = divisor; divisor = r; }
+
+      render();
+    });
+
+    render();
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const correctRows = [
+        { dividend: 867, divisor: 255, q: 3, r: 102 },
+        { dividend: 255, divisor: 102, q: 2, r: 51 },
+        { dividend: 102, divisor: 51,  q: 2, r: 0 }
+      ];
+
+      let matched = 0;
+      correctRows.forEach((cr, i) => {
+        const r = rows[i];
+        if(r && r.dividend === cr.dividend && r.divisor === cr.divisor &&
+           r.q === cr.q && r.r === cr.r){
+          matched++;
+        }
+      });
+      marks += matched;
+      notes.push(matched === 3
+        ? "✔ All three division steps are correct."
+        : `△ ${matched} of the 3 division steps are correct.`);
+
+      const hcf = num("p8-hcf", host);
+      if(hcf === 51){ marks += 2; notes.push("✔ HCF (867, 255) = 51."); }
+      else notes.push("✘ The HCF is the last non-zero remainder = 51.");
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            867 = 255 × 3 + 102<br>
+            255 = 102 × 2 + 51<br>
+            102 = 51 × 2 + 0<br>
+            The last non-zero remainder is <strong>51</strong>, so HCF (867, 255) = 51.
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 9 — TERMINATING DECIMAL INVESTIGATION  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 9,
+  title: "Terminating Decimal Investigation",
+  concepts: ["Decimal Expansion"],
+  max: 5,
+  instructions: [
+    "For each fraction, tick the prime numbers that divide its (already simplified) denominator.",
+    "Predict whether the decimal expansion will terminate.",
+    "After checking, the actual decimal expansion will be shown so you can compare."
+  ],
+  build(host, api){
+    const items = [
+      { n: 13, d: 80  },
+      { n: 7,  d: 24  },
+      { n: 17, d: 125 }
+    ];
+    const PRIMES = [2, 3, 5, 7];
+
+    host.innerHTML = items.map((it, i) => `
+      <div class="frac-card">
+        <div class="frac">
+          <span class="frac-inline"><span>${it.n}</span><span>${it.d}</span></span>
+        </div>
+        <div class="panel-title">Primes dividing the denominator ${it.d}</div>
+        <div class="chk-row">
+          ${PRIMES.map(p => `
+            <label class="chk">
+              <input type="checkbox" class="dchk" data-i="${i}" value="${p}"><span>${p}</span>
+            </label>`).join("")}
+        </div>
+        <div class="panel-title" style="margin-top:11px">Prediction</div>
+        <div class="radio-row">
+          <label><input type="radio" name="pred${i}" value="term"> Terminating decimal</label>
+          <label><input type="radio" name="pred${i}" value="nonterm"> Non-terminating decimal</label>
+        </div>
+        <div class="status" id="p9-res-${i}"></div>
+      </div>
+    `).join("");
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+      let correctPrimes = 0;
+
+      items.forEach((it, i) => {
+        const truePrimes = primeFactors(it.d).filter((v, idx, a) => a.indexOf(v) === idx).sort((a, b) => a - b);
+        const ticked = $$(`.dchk[data-i="${i}"]`, host)
+          .filter(c => c.checked).map(c => Number(c.value)).sort((a, b) => a - b);
+        const primesOk = JSON.stringify(truePrimes) === JSON.stringify(ticked);
+        if(primesOk) correctPrimes++;
+
+        const sel = host.querySelector(`input[name="pred${i}"]:checked`);
+        const chosen = sel ? sel.value : null;
+        const truth = [2, 5].every(p => primeFactors(it.d).every(f => f === 2 || f === 5 || f !== p) )
+          ? null : null;
+
+        // correct rule: denominator (after simplifying) has only 2s and 5s
+        const fac = primeFactors(it.d);
+        const onlyTwoFive = fac.every(f => f === 2 || f === 5);
+        const trueAns = onlyTwoFive ? "term" : "nonterm";
+
+        if(chosen === trueAns){
+          marks += 1;
+          notes.push(`✔ ${it.n}/${it.d} — prediction correct.`);
+        } else {
+          notes.push(`✘ ${it.n}/${it.d} — the correct prediction is ${onlyTwoFive ? "terminating" : "non-terminating"}.`);
+        }
+
+        const dec = decimalExpansion(it.n, it.d);
+        const res = host.querySelector(`#p9-res-${i}`);
+        res.className = "status " + (chosen === trueAns ? "ok" : "warn");
+        res.textContent = `${it.n}/${it.d} = ${dec.text}  → ${dec.terminating ? "terminating" : "non-terminating (repeating)"}`;
+      });
+
+      if(correctPrimes === items.length){
+        marks += 2;
+        notes.push("✔ All prime factorisations of the denominators are correct.");
+      } else {
+        notes.push(`△ ${correctPrimes} of 3 denominator prime sets are correct.`);
+      }
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            <strong>Rule:</strong> a simplified fraction p/q has a terminating decimal expansion
+            if and only if the prime factorisation of q is of the form 2<sup>m</sup> × 5<sup>n</sup>.<br>
+            80 = 2⁴ × 5 → terminating (0.1625)<br>
+            24 = 2³ × 3 → non-terminating (0.291(6)…)<br>
+            125 = 5³ → terminating (0.136)
+          </div>`
+      };
+    });
+  }
+});
+
+/* ---------------------------------------------------------
+   PRACTICAL 10 — FINAL CHALLENGE  (5 marks)
+   --------------------------------------------------------- */
+PRACTICALS.push({
+  id: 10,
+  title: "Final Challenge — Choose Your Method",
+  concepts: ["HCF", "LCM"],
+  max: 5,
+  instructions: [
+    "Read both problems carefully.",
+    "Decide for yourself whether HCF or LCM is the right tool — the app will not tell you.",
+    "Write your method choice, your answer, and a short explanation of your reasoning."
+  ],
+  build(host, api){
+    host.innerHTML = `
+      <div class="panel">
+        <div class="panel-title">Part A — The two bells</div>
+        <p style="font-size:.9rem;color:#2d4166;margin-bottom:9px">
+          Two bells toll at intervals of 18 minutes and 24 minutes. They toll together at 8:00 a.m.
+          After how many minutes will they next toll together?
+        </p>
+        <div class="radio-row">
+          <label><input type="radio" name="p10mA" value="hcf"> Use HCF</label>
+          <label><input type="radio" name="p10mA" value="lcm"> Use LCM</label>
+        </div>
+        <div class="answer-row">Answer = <input type="number" id="p10-ansA" class="ans-input" placeholder="?"> minutes</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Part B — The sweet seller</div>
+        <p style="font-size:.9rem;color:#2d4166;margin-bottom:9px">
+          A sweet seller has 420 kaju barfis and 130 badam barfis. She wants to stack them so that
+          each stack has the same number of barfis and the stacks take up the least area of the tray.
+          What is the maximum number of barfis in each stack?
+        </p>
+        <div class="radio-row">
+          <label><input type="radio" name="p10mB" value="hcf"> Use HCF</label>
+          <label><input type="radio" name="p10mB" value="lcm"> Use LCM</label>
+        </div>
+        <div class="answer-row">Answer = <input type="number" id="p10-ansB" class="ans-input" placeholder="?"> barfis per stack</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Reasoning</div>
+        <textarea id="p10-reason" rows="4" style="width:100%"
+          placeholder="Explain how you decided which method to use for each part..."></textarea>
+      </div>
+    `;
+
+    api.setCheck(() => {
+      let marks = 0;
+      const notes = [];
+
+      const mA = host.querySelector('input[name="p10mA"]:checked');
+      if(mA && mA.value === "lcm"){ marks += 1; notes.push("✔ Part A needs the LCM."); }
+      else notes.push("✘ Part A needs the LCM — the bells toll together at a common multiple of 18 and 24.");
+
+      const ansA = num("p10-ansA", host);
+      if(ansA === 72){ marks += 1; notes.push("✔ 72 minutes."); }
+      else notes.push("✘ LCM(18, 24) = 72 minutes.");
+
+      const mB = host.querySelector('input[name="p10mB"]:checked');
+      if(mB && mB.value === "hcf"){ marks += 1; notes.push("✔ Part B needs the HCF."); }
+      else notes.push("✘ Part B needs the HCF — we want the largest equal stack size.");
+
+      const ansB = num("p10-ansB", host);
+      if(ansB === 10){ marks += 1; notes.push("✔ 10 barfis per stack."); }
+      else notes.push("✘ HCF(420, 130) = 10 barfis per stack.");
+
+      const reason = (host.querySelector("#p10-reason").value || "").toLowerCase();
+      const hasKeyword = /lcm|least common|lowest common|multiple/.test(reason) &&
+                         /hcf|highest common|greatest common|gcd|common factor/.test(reason);
+      if(reason.trim().length >= 15 && hasKeyword){
+        marks += 1;
+        notes.push("✔ Your reasoning clearly links each situation to the right method.");
+      } else {
+        notes.push("△ Your reasoning should mention that Part A needs a common multiple (LCM) and Part B needs a common factor (HCF).");
+      }
+
+      return {
+        marks,
+        feedback: `
+          <ul>${notes.map(n => `<li>${n}</li>`).join("")}</ul>
+          <div class="fb-note">
+            <strong>Part A:</strong> 18 = 2 × 3², 24 = 2³ × 3 → LCM = 2³ × 3² = 72 minutes.<br>
+            <strong>Part B:</strong> 420 = 2² × 3 × 5 × 7, 130 = 2 × 5 × 13 → HCF = 2 × 5 = 10 barfis per stack.
+          </div>`
+      };
+    });
+  }
+});
+
+/* =========================================================
+   5. EXAM ENGINE
+   ========================================================= */
+
+const TOTAL_MAX = PRACTICALS.reduce((s, p) => s + p.max, 0); // 50
+
+function showScreen(id){
+  $$(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function updateProgress(){
+  const pct = (state.idx / PRACTICALS.length) * 100;
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressText").textContent =
+    `Practical ${state.idx + 1} of ${PRACTICALS.length}`;
+}
+
+function renderPractical(){
+  const p = PRACTICALS[state.idx];
+  const card = document.getElementById("practicalCard");
+
+  card.innerHTML = `
+    <div class="prac-head">
+      <div class="badge">Practical ${state.idx + 1} of ${PRACTICALS.length}</div>
+      <h2>${esc(p.title)}</h2>
+      <div class="tags">Concept: ${p.concepts.join(" · ")} &nbsp;|&nbsp; Marks: ${p.max}</div>
+    </div>
+
+    <div class="instructions">
+      <ol>${p.instructions.map(i => `<li>${i}</li>`).join("")}</ol>
+    </div>
+
+    <div class="workspace" id="workspace"></div>
+    <div class="feedback" id="feedback"></div>
+
+    <div class="actions">
+      <button class="btn primary" id="checkBtn">Check Answer</button>
+      <button class="btn success" id="nextBtn" style="display:none">
+        ${state.idx === PRACTICALS.length - 1 ? "Finish Exam" : "Next Practical →"}
+      </button>
+    </div>
+  `;
+
+  const workspace = card.querySelector("#workspace");
+  const feedback  = card.querySelector("#feedback");
+  const checkBtn  = card.querySelector("#checkBtn");
+  const nextBtn   = card.querySelector("#nextBtn");
+
+  let checkFn = null;
+  let locked = false;
+
+  const api = {
+    test(n = 1){
+      state.tests += n;
+      state.practicalTested[state.idx] = true;
+    },
+    setCheck(fn){ checkFn = fn; },
+    isLocked(){ return locked; }
+  };
+
+  p.build(workspace, api);
+
+  checkBtn.addEventListener("click", () => {
+    if(locked) return;
+    if(!checkFn){
+      alert("This practical has no check function.");
+      return;
+    }
+
+    const res = checkFn();
+    locked = true;
+
+    /* lock the workspace */
+    workspace.style.pointerEvents = "none";
+    workspace.classList.add("locked");
+    $$("input,button,select,textarea", workspace).forEach(el => el.disabled = true);
+
+    /* record result */
+    const marks = Math.max(0, Math.min(p.max, res.marks));
+    const status = marks === p.max ? "Correct" : (marks > 0 ? "Partial" : "Incorrect");
+
+    state.results[state.idx] = {
+      index: state.idx,
+      id: p.id,
+      title: p.title,
+      concepts: p.concepts.slice(),
+      marks,
+      max: p.max,
+      status
+    };
+
+    /* feedback */
+    const cls = status === "Correct" ? "good" : (status === "Partial" ? "part" : "bad");
+    const icon = status === "Correct" ? "✓" : (status === "Partial" ? "◐" : "✗");
+
+    feedback.innerHTML = `
+      <div class="fb-box ${cls}">
+        <div class="fb-head">${icon} ${status} — ${marks} / ${p.max} marks</div>
+        ${res.feedback || ""}
+      </div>
+    `;
+
+    checkBtn.disabled = true;
+    checkBtn.textContent = "Answer Recorded";
+    nextBtn.style.display = "inline-block";
+
+    /* progress bar moves to completed count */
+    document.getElementById("progressFill").style.width =
+      ((state.idx + 1) / PRACTICALS.length) * 100 + "%";
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if(state.idx === PRACTICALS.length - 1){
+      finishExam();
+    } else {
+      state.idx++;
+      renderPractical();
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  updateProgress();
+}
+
+/* =========================================================
+   6. RESULT GENERATION
+   ========================================================= */
+
+function buildConceptData(){
+  const data = {};
+  PRACTICALS.forEach((p, i) => {
+    const r = state.results[i];
+    const share = p.max / p.concepts.length;
+    const earned = r ? r.marks / p.concepts.length : 0;
+    p.concepts.forEach(c => {
+      if(!data[c]) data[c] = { earned: 0, max: 0 };
+      data[c].max += share;
+      data[c].earned += earned;
+    });
+  });
+  return data;
+}
+
+function buildResultText(){
+  const total = state.results.reduce((s, r) => s + (r ? r.marks : 0), 0);
+  const pct = Math.round((total / TOTAL_MAX) * 100);
+  const conceptData = buildConceptData();
+
+  const strengths = [];
+  const practice = [];
+  Object.entries(conceptData).forEach(([c, d]) => {
+    const p = d.max ? (d.earned / d.max) * 100 : 0;
+    if(p >= 75) strengths.push(c);
+    else if(p < 60) practice.push(c);
+  });
+
+  let out = "";
+  out += "REAL NUMBERS — MATH LAB PRACTICAL RESULT\n";
+  out += "=========================================\n";
+  out += "Class: X\n";
+  out += "Topic: Real Numbers\n\n";
+  out += `Score: ${total}/${TOTAL_MAX}\n`;
+  out += `Percentage: ${pct}%\n\n`;
+  out += "Practical Results:\n";
+  PRACTICALS.forEach((p, i) => {
+    const r = state.results[i];
+    out += `${i + 1}. ${p.title} — ${r ? r.marks : 0}/${p.max} (${r ? r.status : "Not attempted"})\n`;
+  });
+  out += "\nConcept Performance:\n";
+  Object.entries(conceptData).forEach(([c, d]) => {
+    const p = d.max ? Math.round((d.earned / d.max) * 100) : 0;
+    out += `- ${c}: ${p}%\n`;
+  });
+  out += "\nStrengths:\n";
+  out += strengths.length ? strengths.map(s => "- " + s).join("\n") + "\n" : "- Keep practising!\n";
+  out += "\nNeeds Practice:\n";
+  out += practice.length ? practice.map(s => "- " + s).join("\n") + "\n" : "- None — great work!\n";
+  out += `\nExperiments Attempted: ${state.practicalTested.filter(Boolean).length}\n`;
+  out += `Total checks/tests performed: ${state.tests}\n`;
+  return out;
+}
+
+function buildResultScreen(){
+  const total = state.results.reduce((s, r) => s + (r ? r.marks : 0), 0);
+  const pct = Math.round((total / TOTAL_MAX) * 100);
+  const correct   = state.results.filter(r => r && r.status === "Correct").length;
+  const partial   = state.results.filter(r => r && r.status === "Partial").length;
+  const incorrect = PRACTICALS.length - correct - partial;
+
+  const conceptData = buildConceptData();
+  const strengths = [];
+  const practice = [];
+  Object.entries(conceptData).forEach(([c, d]) => {
+    const p = d.max ? (d.earned / d.max) * 100 : 0;
+    if(p >= 75) strengths.push(c);
+    else if(p < 60) practice.push(c);
+  });
+
+  const rows = PRACTICALS.map((p, i) => {
+    const r = state.results[i];
+    const st = r ? r.status : "Not attempted";
+    const pillCls = st === "Correct" ? "good" : (st === "Partial" ? "part" : "bad");
+    return `
+      <tr>
+        <td class="c">${i + 1}</td>
+        <td>${esc(p.title)}</td>
+        <td>${esc(p.concepts.join(" + "))}</td>
+        <td class="c"><span class="pill ${pillCls}">${st}</span></td>
+        <td class="c"><strong>${r ? r.marks : 0}</strong></td>
+        <td class="c">${p.max}</td>
+      </tr>`;
+  }).join("");
+
+  const bars = Object.entries(conceptData).map(([c, d]) => {
+    const p = d.max ? Math.round((d.earned / d.max) * 100) : 0;
+    return `
+      <div class="concept-row">
+        <div class="concept-name">${esc(c)}</div>
+        <div class="bar"><div class="bar-fill" style="width:${p}%"></div></div>
+        <div class="concept-pct">${p}%</div>
+      </div>`;
+  }).join("");
+
+  document.getElementById("resultCard").innerHTML = `
+    <div class="result-hero">
+      <h2>MATH LAB PRACTICAL — RESULT SUMMARY</h2>
+      <div class="score-big">${total} / ${TOTAL_MAX}</div>
+      <div class="score-sub">Class X</div>
+      <div class="score-sub" style="margin-top:5px;font-size:1.05rem;font-weight:700">${pct}%</div>
+      <div class="score-sub" style="margin-top:4px">Topic: Real Numbers</div>
+    </div>
+
+    <div class="card">
+      <div class="stat-grid">
+        <div class="stat"><div class="v" style="color:#15803d">${correct}</div><div class="l">Correct</div></div>
+        <div class="stat"><div class="v" style="color:#b45309">${partial}</div><div class="l">Partial</div></div>
+        <div class="stat"><div class="v" style="color:#b91c1c">${incorrect}</div><div class="l">Incorrect</div></div>
+      </div>
+
+      <h3>Activity-wise Result</h3>
+      <div style="overflow-x:auto">
+        <table class="res-table">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Practical</th>
+              <th>Concept</th>
+              <th style="width:100px">Result</th>
+              <th style="width:70px">Marks</th>
+              <th style="width:60px">Max</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Concept Performance</h3>
+      ${bars}
+
+      <div class="summary-block">
+        <h3>Student Learning Summary</h3>
+        <p style="font-size:.88rem;font-weight:700;color:#15803d;margin-bottom:5px">Strengths</p>
+        <ul>${strengths.length ? strengths.map(s => `<li>${esc(s)}</li>`).join("") : "<li>Keep experimenting — every attempt builds understanding.</li>"}</ul>
+        <p style="font-size:.88rem;font-weight:700;color:#b45309;margin:11px 0 5px">Needs Practice</p>
+        <ul>${practice.length ? practice.map(s => `<li>${esc(s)}</li>`).join("") : "<li>None — excellent consistency across all concepts.</li>"}</ul>
+      </div>
+
+      <div class="stat-grid" style="margin-top:16px">
+        <div class="stat">
+          <div class="v">${state.practicalTested.filter(Boolean).length}</div>
+          <div class="l">Experiments Attempted</div>
+        </div>
+        <div class="stat">
+          <div class="v">${state.tests}</div>
+          <div class="l">Checks / Tests Performed</div>
+        </div>
+        <div class="stat">
+          <div class="v">${pct}%</div>
+          <div class="l">Overall</div>
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:8px">
+        <button class="btn copy-btn" id="copyBtn">Copy Result Summary</button>
+        <button class="btn ghost" id="restartBtn">Restart Practical Exam</button>
+      </div>
+    </div>
+  `;
+
+  /* -------- copy to clipboard -------- */
+  const copyBtn = document.getElementById("copyBtn");
+  copyBtn.addEventListener("click", async () => {
+    const text = buildResultText();
+    const ok = await copyText(text);
+    copyBtn.textContent = ok ? "✓ Result Copied" : "Copy failed — select manually";
+    copyBtn.classList.add("done");
+    setTimeout(() => {
+      copyBtn.textContent = "Copy Result Summary";
+      copyBtn.classList.remove("done");
+    }, 2000);
+  });
+
+  /* -------- restart -------- */
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    if(confirm("Restart the practical exam? All current results will be cleared.")){
+      restartExam();
+    }
+  });
+}
+
+async function copyText(text){
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    throw new Error("Clipboard API unavailable");
+  }catch(e){
+    try{
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    }catch(err){
+      return false;
+    }
+  }
+}
+
+/* =========================================================
+   7. EXAM FLOW
+   ========================================================= */
+
+function finishExam(){
+  const unanswered = PRACTICALS.length - state.results.filter(Boolean).length;
+  const msg = unanswered > 0
+    ? `You still have ${unanswered} practical(s) not recorded. Finish the exam anyway?`
+    : "Finish the exam and view your result summary?";
+  if(!confirm(msg)) return;
+
+  state.finished = true;
+  buildResultScreen();
+  showScreen("screen-result");
+}
+
+function restartExam(){
+  state.idx = 0;
+  state.results = [];
+  state.tests = 0;
+  state.practicalTested = [];
+  state.finished = false;
+
+  document.getElementById("progressFill").style.width = "0%";
+
+  showScreen("screen-start");
+}
+
+/* =========================================================
+   8. BOOTSTRAP
+   ========================================================= */
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  state.idx = 0;
+  state.results = [];
+  state.tests = 0;
+  state.practicalTested = new Array(PRACTICALS.length).fill(false);
+  state.finished = false;
+
+  showScreen("screen-exam");
+  renderPractical();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Water Prism | Class VII Science</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f8fc;
+            color: #172033;
+            line-height: 1.5
+        }
+
+        .wrap {
+            max-width: 1150px;
+            margin: auto;
+            padding: 20px
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1769e0, #4aa3ff);
+            color: #fff;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px #0001
+        }
+
+        .hero small {
+            font-weight: 700;
+            letter-spacing: .4px
+        }
+
+        .hero h1 {
+            margin: 6px 0;
+            font-size: 32px
+        }
+
+        .hero p {
+            margin: 0;
+            max-width: 760px
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 18px 0
+        }
+
+        .tab,
+        .btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 11px 15px;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .tab {
+            background: #fff;
+            border: 1px solid #d5dfeb;
+            color: #172033
+        }
+
+        .tab.active,
+        .btn {
+            background: #1769e0;
+            color: #fff
+        }
+
+        .btn.secondary {
+            background: #e7eef7;
+            color: #26364d
+        }
+
+        .panel {
+            display: none
+        }
+
+        .panel.active {
+            display: block
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #d8e1ec;
+            border-radius: 17px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 20px #0000000a
+        }
+
+        .intro,
+        .sim {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
+
+        .info {
+            background: #eaf4ff;
+            border: 1px solid #cfe4ff;
+            padding: 16px;
+            border-radius: 13px
+        }
+
+        .warning {
+            background: #fff8e7;
+            border: 1px solid #efd27c;
+            padding: 15px;
+            border-radius: 13px
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px
+        }
+
+        .step {
+            border: 1px solid #dce4ee;
+            padding: 14px;
+            border-radius: 12px;
+            background: #fbfdff
+        }
+
+        .num {
+            display: grid;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1454ad;
+            font-weight: 800
+        }
+
+        .step p {
+            margin: 7px 0 0;
+            font-size: 14px
+        }
+
+        .scene {
+            height: 510px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            border: 1px solid #c8d7e7;
+            background: linear-gradient(#9edcff 0 73%, #c18b57 73%)
+        }
+
+        .wall {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 31%;
+            height: 73%;
+            background: repeating-linear-gradient(#fff 0 18px, #f0f2f4 19px 20px);
+            border-left: 3px solid #ccd5df
+        }
+
+        .wall span {
+            position: absolute;
+            top: 15px;
+            right: 14px;
+            background: #fff;
+            padding: 5px 8px;
+            border-radius: 7px;
+            font-weight: 700;
+            font-size: 12px
+        }
+
+        .sun {
+            position: absolute;
+            left: 34px;
+            top: 34px;
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: #ffd84d;
+            border: 4px solid #f2b900;
+            box-shadow: 0 0 25px #ffd84d99
+        }
+
+        .sunlabel {
+            position: absolute;
+            left: 27px;
+            top: 108px;
+            font-weight: 700;
+            color: #765600
+        }
+
+        .glass {
+            position: absolute;
+            left: 29%;
+            bottom: 60px;
+            width: 190px;
+            height: 265px;
+            border: 4px solid #5e88ad99;
+            border-top: 0;
+            border-radius: 0 0 30px 30px;
+            background: #ffffff33
+        }
+
+        .glass:before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            right: -5px;
+            top: -8px;
+            height: 18px;
+            border: 4px solid #5e88ad99;
+            border-radius: 50%;
+            background: #ffffff44
+        }
+
+        .water {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 70%;
+            background: #2498dc33;
+            border-top: 2px solid #2589bd66
+        }
+
+        .water span {
+            position: absolute;
+            top: 9px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: 700;
+            color: #17658e;
+            background: #ffffffaa;
+            padding: 3px 7px;
+            border-radius: 6px
+        }
+
+        .mirror {
+            position: absolute;
+            left: 50%;
+            bottom: 18px;
+            width: 140px;
+            height: 16px;
+            transform: translateX(-50%) rotate(-18deg);
+            background: linear-gradient(#fff, #8897a8, #fff);
+            border: 2px solid #586779;
+            border-radius: 5px;
+            transition: .2s
+        }
+
+        .stick {
+            position: absolute;
+            left: 50%;
+            bottom: 2px;
+            width: 6px;
+            height: 30px;
+            background: #657487;
+            transform: translateX(-50%);
+            border-radius: 4px
+        }
+
+        .beam {
+            position: absolute;
+            height: 7px;
+            background: #ffe05cdd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ffd42e99;
+            transform-origin: left center
+        }
+
+        .b1 {
+            left: 96px;
+            top: 91px;
+            width: 235px;
+            transform: rotate(20deg)
+        }
+
+        .b2 {
+            left: 415px;
+            top: 184px;
+            width: 240px;
+            transform: rotate(-13deg)
+        }
+
+        .b3 {
+            left: 640px;
+            top: 130px;
+            width: 190px;
+            transform: rotate(15deg)
+        }
+
+        .spectrum {
+            position: absolute;
+            right: 32px;
+            top: 245px;
+            width: 105px;
+            height: 140px;
+            opacity: 0;
+            transform: rotate(-7deg) scale(.7);
+            transition: .4s
+        }
+
+        .spectrum.show {
+            opacity: 1;
+            transform: rotate(-7deg) scale(1)
+        }
+
+        .band {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 18px;
+            border-radius: 3px 10px 10px 3px
+        }
+
+        .r {
+            top: 0;
+            background: #ef4444
+        }
+
+        .o {
+            top: 18px;
+            background: #f97316
+        }
+
+        .y {
+            top: 36px;
+            background: #facc15
+        }
+
+        .g {
+            top: 54px;
+            background: #22c55e
+        }
+
+        .c {
+            top: 72px;
+            background: #06b6d4
+        }
+
+        .b {
+            top: 90px;
+            background: #3b82f6
+        }
+
+        .v {
+            top: 108px;
+            background: #8b5cf6
+        }
+
+        .slabel {
+            position: absolute;
+            top: 124px;
+            left: 0;
+            background: #fff;
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700
+        }
+
+        .hint {
+            position: absolute;
+            left: 16px;
+            bottom: 15px;
+            background: #fffffff0;
+            padding: 9px 11px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            max-width: 340px
+        }
+
+        .controls label {
+            display: block;
+            font-weight: 700;
+            margin: 13px 0 6px
+        }
+
+        .controls input,
+        .controls select {
+            width: 100%
+        }
+
+        .controls select {
+            padding: 9px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #fff
+        }
+
+        .value {
+            display: flex;
+            justify-content: space-between;
+            color: #65758b;
+            font-size: 13px
+        }
+
+        .buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px
+        }
+
+        .observation {
+            margin-top: 14px;
+            padding: 13px;
+            background: #f7fafc;
+            border: 1px solid #dce5ee;
+            border-radius: 11px;
+            min-height: 70px
+        }
+
+        .ok {
+            color: #16733a;
+            font-weight: 800
+        }
+
+        .quizq {
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 13px
+        }
+
+        .opts {
+            display: grid;
+            gap: 8px
+        }
+
+        .opt {
+            text-align: left;
+            background: #fff;
+            border: 1px solid #d7e0ea;
+            border-radius: 10px;
+            padding: 11px 13px;
+            font-weight: 650;
+            cursor: pointer
+        }
+
+        .opt.correct {
+            background: #effcf3;
+            border-color: #35a853;
+            color: #176b34
+        }
+
+        .opt.wrong {
+            background: #fff1f1;
+            border-color: #e85d5d;
+            color: #9c2020
+        }
+
+        .feedback {
+            margin-top: 11px;
+            padding: 10px;
+            border-radius: 9px
+        }
+
+        .good {
+            background: #effcf3;
+            color: #176b34
+        }
+
+        .bad {
+            background: #fff1f1;
+            color: #9c2020
+        }
+
+        .score {
+            text-align: center;
+            background: #eaf4ff;
+            padding: 18px;
+            border-radius: 14px;
+            margin-top: 18px
+        }
+
+        .score strong {
+            font-size: 32px;
+            color: #1454ad
+        }
+
+        .teacher {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px
+        }
+
+        .note {
+            border-left: 4px solid #1769e0;
+            background: #f7fbff;
+            padding: 12px 14px
+        }
+
+        footer {
+            text-align: center;
+            color: #6b7a8f;
+            font-size: 13px;
+            padding: 5px 0 20px
+        }
+
+        @media(max-width:850px) {
+
+            .intro,
+            .sim,
+            .teacher {
+                grid-template-columns: 1fr
+            }
+
+            .steps {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        @media(max-width:550px) {
+            .wrap {
+                padding: 11px
+            }
+
+            .hero h1 {
+                font-size: 26px
+            }
+
+            .steps {
+                grid-template-columns: 1fr
+            }
+
+            .scene {
+                height: 460px
+            }
+
+            .glass {
+                left: 22%;
+                width: 160px;
+                height: 235px
+            }
+
+            .wall {
+                width: 29%
+            }
+
+            .b1 {
+                width: 175px
+            }
+
+            .b2 {
+                left: 300px;
+                width: 130px
+            }
+
+            .b3 {
+                left: 420px;
+                width: 100px
+            }
+        }
+    </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-light-water-prism",
+  "order": 101,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Light",
+  "subtopic": null,
+  "title": "Water Prism",
+  "description": "Place a mirror in a water-filled tumbler, reflect sunlight to a wall, and observe the spectrum.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="hero"><small>CLASS VII • SCIENCE • LIGHT</small>
+            <h1>Water Prism</h1>
+            <p>Explore how a mirror placed in water can help sunlight form a colourful spectrum on a wall.</p>
+        </header>
+        <nav class="tabs"><button class="tab active" data-tab="guide">1. Guided Activity</button><button class="tab"
+                data-tab="explore">2. Explore</button><button class="tab" data-tab="quiz">3. Quick Quiz</button><button
+                class="tab" data-tab="teacher">4. Teacher Guide</button></nav>
+        <section id="guide" class="panel active">
+            <div class="intro">
+                <div class="card">
+                    <h2>Learning goal</h2>
+                    <p>Sunlight looks white, but it contains many colours. In this activity, water and a mirror help
+                        direct the sunlight so the colours can be seen on a wall.</p>
+                    <div class="info"><b>Your task:</b> Set up the model, choose a mirror angle, and observe the result.
+                    </div>
+                </div>
+                <div class="card warning"><b>☀ Safety</b>
+                    <p>Never look directly at the Sun or into a bright reflected beam. In a real experiment, observe
+                        only the safe light spot on a wall and follow your teacher's instructions.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Follow the steps</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="num">1</div><b>Fill the tumbler</b>
+                        <p>Use a clear tumbler filled with water.</p>
+                    </div>
+                    <div class="step">
+                        <div class="num">2</div><b>Place the mirror</b>
+                        <p>Put a small mirror in the water at an angle.</p>
+                    </div>
+                    <div class="step">
+                        <div class="num">3</div><b>Let sunlight fall</b>
+                        <p>Direct sunlight onto the mirror.</p>
+                    </div>
+                    <div class="step">
+                        <div class="num">4</div><b>Observe the wall</b>
+                        <p>Look for a band of colours.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sim">
+                <div class="card">
+                    <h2>Interactive setup</h2>
+                    <div class="scene">
+                        <div class="wall"><span>Wall</span></div>
+                        <div class="sun"></div>
+                        <div class="sunlabel">Sunlight</div>
+                        <div class="glass">
+                            <div class="water" id="water"><span>Water</span></div>
+                            <div class="mirror" id="mirror"></div>
+                            <div class="stick"></div>
+                        </div>
+                        <div class="beam b1"></div>
+                        <div class="beam b2"></div>
+                        <div class="beam b3"></div>
+                        <div class="spectrum" id="spectrum"><i class="band r"></i><i class="band o"></i><i
+                                class="band y"></i><i class="band g"></i><i class="band c"></i><i class="band b"></i><i
+                                class="band v"></i><span class="slabel">Spectrum</span></div>
+                        <div class="hint" id="hint">Adjust the mirror, then press <b>Show result</b>.</div>
+                    </div>
+                </div>
+                <div class="card controls">
+                    <h2>Controls</h2><label for="angle">Mirror angle</label><input id="angle" type="range" min="-35"
+                        max="35" value="-18">
+                    <div class="value"><span>Left</span><b id="av">-18°</b><span>Right</span></div><label
+                        for="level">Water level</label><input id="level" type="range" min="40" max="85" value="70">
+                    <div class="value"><span>Low</span><b id="lv">70%</b><span>High</span></div><label
+                        for="mode">Observation</label><select id="mode">
+                        <option value="spectrum">Try for a spectrum</option>
+                        <option value="spot">Observe reflected light</option>
+                    </select>
+                    <div class="buttons"><button class="btn" id="show">Show result</button><button class="btn secondary"
+                            id="reset">Reset</button></div>
+                    <div class="observation" id="obs"><b>Waiting:</b> Set the mirror and show the result.</div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>What we learn</h2>
+                <div class="intro">
+                    <div class="info"><b>Sunlight:</b> Although it appears white, sunlight contains different colours.
+                    </div>
+                    <div class="info"><b>Spectrum:</b> When the arrangement is suitable, the colours become visible as a
+                        band on the wall.</div>
+                </div>
+            </div>
+        </section>
+        <section id="explore" class="panel">
+            <div class="card">
+                <h2>Try different setups</h2>
+                <p>Change one control at a time. Predict what will happen, then reveal the observation.</p>
+                <div class="sim">
+                    <div class="scene">
+                        <div class="wall"><span>Wall</span></div>
+                        <div class="sun"></div>
+                        <div class="sunlabel">Sunlight</div>
+                        <div class="glass">
+                            <div class="water" id="water2"><span>Water</span></div>
+                            <div class="mirror" id="mirror2"></div>
+                            <div class="stick"></div>
+                        </div>
+                        <div class="beam b1"></div>
+                        <div class="beam b2"></div>
+                        <div class="beam b3"></div>
+                        <div class="spectrum" id="spectrum2"><i class="band r"></i><i class="band o"></i><i
+                                class="band y"></i><i class="band g"></i><i class="band c"></i><i class="band b"></i><i
+                                class="band v"></i><span class="slabel">Spectrum</span></div>
+                        <div class="hint" id="hint2">Make a prediction first.</div>
+                    </div>
+                    <div class="controls"><label for="angle2">Mirror angle</label><input id="angle2" type="range"
+                            min="-35" max="35" value="-18">
+                        <div class="value"><span>Left</span><b id="av2">-18°</b><span>Right</span></div><label
+                            for="level2">Water level</label><input id="level2" type="range" min="40" max="85"
+                            value="70">
+                        <div class="value"><span>Low</span><b id="lv2">70%</b><span>High</span></div>
+                        <div class="buttons"><button class="btn" id="reveal">Reveal observation</button><button
+                                class="btn secondary" id="newsetup">New setup</button></div>
+                        <div class="observation" id="obs2"><b>Prediction:</b> Will a clear spectrum appear?</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Think</h2>
+                <ol>
+                    <li>What happens when the mirror angle changes?</li>
+                    <li>Why do we need a wall?</li>
+                    <li>Why should we observe the wall instead of looking towards the Sun?</li>
+                </ol>
+            </div>
+        </section>
+        <section id="quiz" class="panel">
+            <div class="card">
+                <h2>Quick Quiz</h2>
+                <p>Choose an answer for each question.</p>
+                <div id="quizarea"></div>
+                <div class="buttons"><button class="btn secondary" id="prev">Previous</button><button class="btn"
+                        id="next">Next</button></div>
+                <div class="score" id="score">
+                    <div>Your score</div><strong id="scorevalue">0 / 5</strong>
+                    <p id="scoremsg"></p><button class="btn" id="retry">Try again</button>
+                </div>
+            </div>
+        </section>
+        <section id="teacher" class="panel">
+            <div class="card">
+                <h2>Teacher Guide</h2>
+                <div class="teacher">
+                    <div>
+                        <h3>Suggested flow</h3>
+                        <ol>
+                            <li>Ask: “What colours do you think are present in sunlight?”</li>
+                            <li>Show the setup and ask students to predict the result.</li>
+                            <li>Demonstrate the mirror in the water and direct sunlight safely.</li>
+                            <li>Let students observe the coloured spectrum on the wall.</li>
+                            <li>Ask students to name the colours they notice.</li>
+                            <li>Use the quiz as a quick check.</li>
+                        </ol>
+                        <h3>Simple explanation</h3>
+                        <div class="note">Sunlight looks white but contains many colours. The water and mirror help
+                            arrange the light so the different colours can be seen on the wall as a spectrum.</div>
+                    </div>
+                    <div>
+                        <h3>Questions for discussion</h3>
+                        <ul>
+                            <li>What did you observe on the wall?</li>
+                            <li>Why was the mirror placed in water?</li>
+                            <li>Where did the colours appear?</li>
+                            <li>What happens if there is no sunlight?</li>
+                        </ul>
+                        <h3>Safety reminder</h3>
+                        <div class="warning">Never direct students to look at the Sun or into a reflected beam. The
+                            observation should be made on a safe surface such as a wall.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer>Class VII Science • Light • Water Prism</footer>
+    </div>
+    <script>
+        const $ = id => document.getElementById(id);
+        document.querySelectorAll('.tab').forEach(b => b.onclick = () => { document.querySelectorAll('.tab').forEach(x => x.classList.remove('active')); document.querySelectorAll('.panel').forEach(x => x.classList.remove('active')); b.classList.add('active'); $(b.dataset.tab).classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }) });
+        function bind(angle, level, mirror, water, av, lv) { function u() { av.textContent = angle.value + '°'; lv.textContent = level.value + '%'; mirror.style.transform = 'translateX(-50%) rotate(' + angle.value + 'deg)'; water.style.height = level.value + '%' } angle.oninput = u; level.oninput = u; u() } bind($('angle'), $('level'), $('mirror'), $('water'), $('av'), $('lv'));
+        $('show').onclick = () => { let a = +$('angle').value, w = +$('level').value, m = $('mode').value; if (m === 'spot') { $('spectrum').classList.remove('show'); $('obs').innerHTML = '<b class="ok">Observation:</b> The mirror redirects the incoming sunlight towards the wall.'; $('hint').textContent = 'Reflected light is directed towards the wall.' } else { $('spectrum').classList.add('show'); if (a >= -28 && a <= 5 && w >= 55) { $('obs').innerHTML = '<b class="ok">Spectrum visible:</b> A coloured band appears on the wall. This is the result we are looking for.'; $('hint').textContent = 'Good setup! Observe the coloured spectrum.' } else { $('obs').innerHTML = '<b>Try again:</b> The spectrum is not clear in this setup. Adjust the mirror angle and keep enough water.'; $('hint').textContent = 'Try a slightly different mirror angle.' } } };
+        $('reset').onclick = () => { $('angle').value = -18; $('level').value = 70; $('mode').value = 'spectrum'; $('spectrum').classList.remove('show'); $('obs').innerHTML = '<b>Waiting:</b> Set the mirror and show the result.'; $('hint').innerHTML = 'Adjust the mirror, then press <b>Show result</b>.'; $('angle').dispatchEvent(new Event('input')); };
+        bind($('angle2'), $('level2'), $('mirror2'), $('water2'), $('av2'), $('lv2'));
+        $('reveal').onclick = () => { let a = +$('angle2').value, w = +$('level2').value; $('spectrum2').classList.toggle('show', a >= -28 && a <= 5 && w >= 55); $('obs2').innerHTML = (a >= -28 && a <= 5 && w >= 55) ? '<b class="ok">Observation:</b> A clear spectrum is visible on the wall.' : '<b>Observation:</b> The spectrum is not clear. Try changing the mirror angle or water level.'; $('hint2').textContent = (a >= -28 && a <= 5 && w >= 55) ? 'Spectrum visible!' : 'Adjust the setup and try again.' };
+        $('newsetup').onclick = () => { let vals = [-32, -25, -18, -10, 0, 10, 22, 30]; $('angle2').value = vals[Math.floor(Math.random() * vals.length)]; $('level2').value = [45, 55, 65, 70, 80][Math.floor(Math.random() * 5)]; $('spectrum2').classList.remove('show'); $('obs2').innerHTML = '<b>Prediction:</b> Will a clear spectrum appear?'; $('hint2').textContent = 'New setup — make your prediction.'; $('angle2').dispatchEvent(new Event('input')) };
+        const qs = [['What is placed inside the water-filled tumbler?', ['A small mirror', 'A magnet', 'A battery', 'A compass'], 0], ['Where do we observe the colours?', ['On the wall', 'Inside the switch', 'On the Sun', 'Under the table'], 0], ['What does the coloured band represent?', ['One colour only', 'A spectrum of colours', 'Electric current', 'Sound'], 1], ['Why is a wall useful?', ['It gives a surface to see the light', 'It creates sunlight', 'It fills the tumbler', 'It moves the mirror'], 0], ['What is the safe way to observe the activity?', ['Look directly at the Sun', 'Look into the reflected beam', 'Observe the light on the wall', 'Stare into the mirror from the Sun side'], 2]]; let qi = 0, ans = Array(5).fill(null), sc = 0;
+        function render() { let q = qs[qi], a = $('quizarea'); a.innerHTML = '<div class="quizq">' + (qi + 1) + '. ' + q[0] + '</div><div class="opts"></div>'; q[1].forEach((t, i) => { let b = document.createElement('button'); b.className = 'opt'; b.textContent = t; if (ans[qi] !== null) { b.disabled = true; if (i === q[2]) b.classList.add('correct'); if (i === ans[qi] && i !== q[2]) b.classList.add('wrong') } b.onclick = () => { if (ans[qi] !== null) return; ans[qi] = i; if (i === q[2]) sc++; render() }; a.querySelector('.opts').appendChild(b) }); if (ans[qi] !== null) { let f = document.createElement('div'); f.className = 'feedback ' + (ans[qi] === q[2] ? 'good' : 'bad'); f.textContent = ans[qi] === q[2] ? '✓ Correct!' : '✗ Not quite. Review the activity and try the next question.'; a.appendChild(f) } $('prev').disabled = qi === 0; $('next').textContent = qi === 4 ? 'Finish' : 'Next' } render();
+        $('prev').onclick = () => { if (qi > 0) { qi--; render() } }; $('next').onclick = () => { if (ans[qi] === null) { let f = document.createElement('div'); f.className = 'feedback bad'; f.textContent = 'Please choose an answer first.'; $('quizarea').appendChild(f); return } if (qi < 4) { qi++; render() } else { $('quizarea').style.display = 'none'; $('prev').style.display = 'none'; $('next').style.display = 'none'; $('score').style.display = 'block'; $('scorevalue').textContent = sc + ' / 5'; $('scoremsg').textContent = sc === 5 ? 'Excellent work!' : sc >= 3 ? 'Good work! Review the activity once more.' : 'Good try! Go back to the activity and observe it again.' } }; $('retry').onclick = () => { qi = 0; ans = Array(5).fill(null); sc = 0; $('quizarea').style.display = 'block'; $('prev').style.display = 'inline-block'; $('next').style.display = 'inline-block'; $('score').style.display = 'none'; render() };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Real Numbers Explorer</title>
+<style>
+  :root {
+    --ink: #1f2430;
+    --muted: #5b6472;
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --line: #e1e5ee;
+    --primary: #3454d1;
+    --primary-dark: #24359a;
+    --primary-light: #e7ecff;
+    --accent: #d1673f;
+    --accent-light: #fdece2;
+    --good: #1f9d6e;
+    --good-light: #e3f7ee;
+    --bad: #c94c4c;
+    --bad-light: #fbe6e6;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body { padding: clamp(12px, 3vw, 28px); padding-bottom: 60px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  header.app-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    border-radius: var(--radius);
+    padding: clamp(16px, 4vw, 28px);
+    margin-bottom: 16px;
+  }
+  header.app-header h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+  }
+  header.app-header p {
+    margin: 0;
+    color: #dde3ff;
+    font-size: clamp(0.9rem, 2.3vw, 1rem);
+    max-width: 65ch;
+  }
+
+  nav.tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  nav.tabs button {
+    font: inherit;
+    font-weight: 600;
+    font-size: clamp(0.78rem, 2.4vw, 0.95rem);
+    padding: 12px 8px;
+    border-radius: 12px;
+    border: 2px solid var(--line);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    min-height: 48px;
+    transition: transform .1s ease;
+  }
+  nav.tabs button:active { transform: scale(0.97); }
+  nav.tabs button.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none; } }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(14px, 3.5vw, 22px);
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: clamp(1.05rem, 3vw, 1.3rem);
+  }
+  .card h3 {
+    margin: 18px 0 8px;
+    font-size: clamp(0.95rem, 2.6vw, 1.05rem);
+    color: var(--primary-dark);
+  }
+  .muted { color: var(--muted); }
+  .lede { color: var(--muted); font-size: 0.95rem; margin-bottom: 14px; line-height: 1.5; }
+
+  .field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 12px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+  }
+  .field input {
+    font: inherit;
+    font-size: 1.1rem;
+    width: 110px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 2px solid var(--line);
+    background: #fbfbfe;
+  }
+  #dec-p, #dec-q { width: 150px; }
+  .field input:focus { outline: none; border-color: var(--primary); }
+
+  button.btn {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 11px 18px;
+    border-radius: 10px;
+    border: 2px solid var(--primary);
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  button.btn.secondary {
+    background: #fff;
+    color: var(--primary);
+  }
+  button.btn.ghost {
+    background: #fff;
+    color: var(--muted);
+    border-color: var(--line);
+  }
+  button.btn:active { transform: scale(0.98); }
+  button.btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+  .chip {
+    font: inherit;
+    font-size: 0.82rem;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1.5px solid var(--primary-light);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .chip:hover { border-color: var(--primary); }
+
+  table.step-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: clamp(0.85rem, 2.3vw, 0.98rem);
+  }
+  table.step-table th, table.step-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  table.step-table th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+  table.step-table tr:last-child td { border-bottom: none; }
+  .mono { font-family: "Cascadia Code", "Consolas", ui-monospace, monospace; }
+
+  .result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    margin: 8px 0;
+  }
+  .result-badge.good { background: var(--good-light); color: var(--good); }
+  .result-badge.bad { background: var(--bad-light); color: var(--accent); }
+
+  .ladder-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 640px) { .ladder-wrap { grid-template-columns: 1fr; } }
+
+  .ladder-box {
+    border: 1.5px dashed var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    background: #fbfbfe;
+  }
+  .ladder-box h4 { margin: 0 0 8px; font-size: 0.95rem; }
+  table.ladder-table { border-collapse: collapse; margin: 0 auto; }
+  table.ladder-table td {
+    padding: 4px 10px;
+    font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+    font-size: 1.05rem;
+    text-align: left;
+  }
+  table.ladder-table td.prime {
+    border-right: 2px solid var(--ink);
+    text-align: right;
+    color: var(--primary-dark);
+    font-weight: 700;
+    padding-right: 10px;
+  }
+  .prime-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .prime-btns button {
+    font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    min-width: 46px;
+    min-height: 42px;
+    border-radius: 10px;
+    border: 2px solid var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .prime-btns button.finish {
+    border-color: var(--good);
+    background: var(--good-light);
+    color: var(--good);
+  }
+  .factorisation-line {
+    margin-top: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .factorisation-line sup { font-size: 0.7em; }
+
+  table.hcflcm-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.95rem; }
+  table.hcflcm-table th, table.hcflcm-table td { padding: 7px 8px; text-align: center; border-bottom: 1px solid var(--line); }
+  table.hcflcm-table td.common { background: var(--primary-light); font-weight: 700; }
+
+  .decimal-display {
+    font-family: "Cascadia Code", "Consolas", ui-monospace, monospace;
+    font-size: clamp(1.1rem, 3.2vw, 1.4rem);
+    background: #fbfbfe;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 10px 0;
+    word-break: break-all;
+    line-height: 1.6;
+  }
+  .repeat { text-decoration: overline; text-decoration-thickness: 2px; }
+  .decimal-note { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+
+  .discuss {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    color: #6b3a22;
+    margin-top: 14px;
+  }
+  .discuss strong { color: var(--accent); }
+
+  .error-msg { color: var(--bad); font-size: 0.85rem; margin: 4px 0 0; min-height: 1.1em; }
+  footer { text-align: center; color: var(--muted); font-size: 0.78rem; margin-top: 24px; }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-real-numbers-real-numbers-explorer-hcf-lcm-and-decimal-expansions-interactive",
+  "order": 300,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Real Numbers",
+  "subtopic": "Real Numbers Explorer - HCF, LCM and Decimal Expansions",
+  "title": "Real Numbers Explorer - HCF, LCM and Decimal Expansions — Interactive",
+  "description": "Three linked mini-tools for NCERT Class X Chapter 1 (Real Numbers). Students\nfind the HCF of two numbers step by step with Euclid's Division Algorithm,\nbuild a prime-factorisation ladder for two numbers to derive HCF and LCM from\nthe Fundamental Theorem of Arithmetic, and test any fraction to predict -\nbefore dividing - whether its decimal expansion terminates or repeats, based\non the prime factors of the denominator.\n\nA second, five-stage variation (Explore, Learn, Guided Practice, Challenge\nZone, Exam Practice) walks through the same HCF/LCM/prime-factorisation\nskills with a self-paced step-by-step format, a quick multiple-choice\nchallenge, and two self-contained CBSE-style case studies.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-header">
+    <h1>Real Numbers Explorer</h1>
+    <p>Class X · Mathematics · Chapter: Real Numbers — Euclid's Division Algorithm, the Fundamental Theorem of Arithmetic, and decimal expansions of rational numbers.</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-panel="euclid" class="active" type="button">HCF by Euclid's Algorithm</button>
+    <button data-panel="ladder" type="button">Prime Factor Ladder → HCF &amp; LCM</button>
+    <button data-panel="decimal" type="button">Will It Terminate?</button>
+  </nav>
+
+  <!-- ================= PANEL 1: EUCLID ================= -->
+  <section class="panel active" data-panel="euclid">
+    <div class="card">
+      <h2>Find the HCF with Euclid's Division Algorithm</h2>
+      <p class="lede">
+        Euclid's Division Lemma says: for positive integers <em>a</em> and <em>b</em>,
+        there exist unique whole numbers <em>q</em> and <em>r</em> such that
+        <strong>a = bq + r</strong>, where 0 ≤ r &lt; b. Repeat the lemma on
+        (<em>b</em>, <em>r</em>) until the remainder becomes 0 — the last non-zero
+        remainder is the HCF.
+      </p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="euc-a">a</label>
+          <input id="euc-a" type="number" min="1" max="999999999" value="225" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="euc-b">b</label>
+          <input id="euc-b" type="number" min="1" max="999999999" value="135" inputmode="numeric" />
+        </div>
+        <button class="btn" id="euc-start" type="button">Start</button>
+        <button class="btn ghost" id="euc-random" type="button">🎲 Random pair</button>
+      </div>
+      <p class="error-msg" id="euc-error"></p>
+
+      <div id="euc-output" style="display:none;">
+        <div class="btn-row">
+          <button class="btn secondary" id="euc-next" type="button">Show next step</button>
+          <button class="btn ghost" id="euc-all" type="button">Show all steps</button>
+        </div>
+        <table class="step-table">
+          <thead><tr><th>Step</th><th>a = b × q + r</th></tr></thead>
+          <tbody id="euc-rows"></tbody>
+        </table>
+        <div id="euc-result"></div>
+      </div>
+
+      <div class="discuss">
+        <strong>Try in class:</strong> Give students two numbers each. Ask them to
+        predict how many steps the algorithm will take before working it out —
+        does a bigger gap between a and b mean more steps or fewer?
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PANEL 2: LADDER ================= -->
+  <section class="panel" data-panel="ladder">
+    <div class="card">
+      <h2>Prime Factorisation Ladder</h2>
+      <p class="lede">
+        By the Fundamental Theorem of Arithmetic, every composite number can be
+        written as a product of primes in exactly one way (apart from the order
+        of the factors). Build the ladder for two numbers by picking a prime
+        that divides the number at each step — pick <em>any</em> valid prime,
+        the final factorisation always comes out the same.
+      </p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="lad-a">Number A</label>
+          <input id="lad-a" type="number" min="2" max="200000" value="96" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="lad-b">Number B</label>
+          <input id="lad-b" type="number" min="2" max="200000" value="404" inputmode="numeric" />
+        </div>
+        <button class="btn" id="lad-start" type="button">Build ladders</button>
+        <button class="btn ghost" id="lad-random" type="button">🎲 Random pair</button>
+      </div>
+      <p class="error-msg" id="lad-error"></p>
+
+      <div id="lad-output" style="display:none;">
+        <div class="ladder-wrap">
+          <div class="ladder-box">
+            <h4 id="lad-a-title">A = 96</h4>
+            <table class="ladder-table" id="lad-a-table"></table>
+            <div class="prime-btns" id="lad-a-buttons"></div>
+            <div class="factorisation-line" id="lad-a-fact"></div>
+          </div>
+          <div class="ladder-box">
+            <h4 id="lad-b-title">B = 404</h4>
+            <table class="ladder-table" id="lad-b-table"></table>
+            <div class="prime-btns" id="lad-b-buttons"></div>
+            <div class="factorisation-line" id="lad-b-fact"></div>
+          </div>
+        </div>
+
+        <div id="lad-hcflcm"></div>
+      </div>
+
+      <div class="discuss">
+        <strong>Try in class:</strong> Once both ladders are done, ask "which
+        primes appear in both lists?" before revealing the HCF row — that's the
+        whole idea of HCF by prime factorisation in one question.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PANEL 3: DECIMAL ================= -->
+  <section class="panel" data-panel="decimal">
+    <div class="card">
+      <h2>Will It Terminate?</h2>
+      <p class="lede">
+        A fraction p⁄q in lowest terms has a <strong>terminating</strong>
+        decimal expansion exactly when the prime factorisation of q contains
+        only 2s and 5s. If any other prime divides q, the decimal is
+        <strong>non-terminating and repeating</strong>. Predict first, then
+        check.
+      </p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="dec-p">Numerator</label>
+          <input id="dec-p" type="number" min="0" max="999999999999" value="3" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label for="dec-q">Denominator</label>
+          <input id="dec-q" type="number" min="1" max="999999999999" value="8" inputmode="numeric" />
+        </div>
+        <button class="btn" id="dec-start" type="button">Analyse</button>
+      </div>
+      <p class="error-msg" id="dec-error"></p>
+
+      <div class="chip-row" id="dec-presets"></div>
+
+      <div id="dec-output" style="display:none;"></div>
+
+      <div class="discuss">
+        <strong>Try in class:</strong> Show only the denominator (hide the
+        numerator) and ask students to decide terminating vs. repeating from
+        the denominator's factors alone — the numerator never matters for this
+        question, once the fraction is in lowest terms.
+      </div>
+    </div>
+  </section>
+
+  <footer>Real Numbers Explorer · HTML Interactive Learning</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- shared math helpers ---------- */
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
+  function isPrime(n) {
+    if (n < 2) return false;
+    if (n % 2 === 0) return n === 2;
+    for (let i = 3; i * i <= n; i += 2) if (n % i === 0) return false;
+    return true;
+  }
+  function primeDivisors(n) {
+    const divs = []; let x = n;
+    for (let p = 2; p * p <= x; p++) {
+      if (x % p === 0) { divs.push(p); while (x % p === 0) x = x / p; }
+    }
+    if (x > 1) divs.push(x);
+    return divs;
+  }
+  function factorize(n) {
+    const f = {}; let x = n;
+    for (let p = 2; p * p <= x; p++) { while (x % p === 0) { f[p] = (f[p] || 0) + 1; x = x / p; } }
+    if (x > 1) f[x] = (f[x] || 0) + 1;
+    return f;
+  }
+  function fmtInt(n) { return n.toLocaleString("en-IN"); }
+  function sup(n) { return n === 1 ? "" : "<sup>" + n + "</sup>"; }
+  function factString(f) {
+    const primes = Object.keys(f).map(Number).sort((a, b) => a - b);
+    if (!primes.length) return "1";
+    return primes.map(p => p + sup(f[p])).join(" × ");
+  }
+
+  function switchPanel(name) {
+    document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.dataset.panel === name));
+    document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("active", b.dataset.panel === name));
+  }
+  document.querySelectorAll("nav.tabs button").forEach(b => {
+    b.addEventListener("click", () => switchPanel(b.dataset.panel));
+  });
+
+  /* =========================================================
+     PANEL 1 — Euclid's Division Algorithm
+     ========================================================= */
+  (function euclidModule() {
+    const aInput = document.getElementById("euc-a");
+    const bInput = document.getElementById("euc-b");
+    const startBtn = document.getElementById("euc-start");
+    const randomBtn = document.getElementById("euc-random");
+    const nextBtn = document.getElementById("euc-next");
+    const allBtn = document.getElementById("euc-all");
+    const output = document.getElementById("euc-output");
+    const rowsEl = document.getElementById("euc-rows");
+    const resultEl = document.getElementById("euc-result");
+    const errorEl = document.getElementById("euc-error");
+
+    let steps = [];
+    let revealed = 0;
+
+    function buildSteps(a, b) {
+      let hi = Math.max(a, b), lo = Math.min(a, b);
+      const s = [];
+      while (lo !== 0) {
+        const q = Math.floor(hi / lo);
+        const r = hi - q * lo;
+        s.push({ a: hi, b: lo, q, r });
+        hi = lo; lo = r;
+      }
+      return s;
+    }
+
+    function renderRow(step, i) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${i + 1}</td><td class="mono">${fmtInt(step.a)} = ${fmtInt(step.b)} × ${fmtInt(step.q)} + ${fmtInt(step.r)}</td>`;
+      rowsEl.appendChild(tr);
+    }
+
+    function revealNext() {
+      if (revealed >= steps.length) return;
+      renderRow(steps[revealed], revealed);
+      revealed++;
+      if (revealed >= steps.length) {
+        const hcf = steps[steps.length - 1].b;
+        resultEl.innerHTML = `<div class="result-badge good">✓ HCF = ${fmtInt(hcf)}</div>`;
+        nextBtn.disabled = true;
+      }
+    }
+
+    function revealAll() {
+      while (revealed < steps.length) revealNext();
+    }
+
+    function start() {
+      errorEl.textContent = "";
+      const a = parseInt(aInput.value, 10);
+      const b = parseInt(bInput.value, 10);
+      if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0 || b <= 0) {
+        errorEl.textContent = "Enter two positive whole numbers.";
+        output.style.display = "none";
+        return;
+      }
+      steps = buildSteps(a, b);
+      revealed = 0;
+      rowsEl.innerHTML = "";
+      resultEl.innerHTML = "";
+      nextBtn.disabled = false;
+      output.style.display = "block";
+      revealNext();
+    }
+
+    startBtn.addEventListener("click", start);
+    nextBtn.addEventListener("click", revealNext);
+    allBtn.addEventListener("click", revealAll);
+    randomBtn.addEventListener("click", () => {
+      aInput.value = 20 + Math.floor(Math.random() * 480);
+      bInput.value = 20 + Math.floor(Math.random() * 480);
+      start();
+    });
+
+    start();
+  })();
+
+  /* =========================================================
+     PANEL 2 — Prime Factorisation Ladder
+     ========================================================= */
+  (function ladderModule() {
+    const aInput = document.getElementById("lad-a");
+    const bInput = document.getElementById("lad-b");
+    const startBtn = document.getElementById("lad-start");
+    const randomBtn = document.getElementById("lad-random");
+    const errorEl = document.getElementById("lad-error");
+    const output = document.getElementById("lad-output");
+    const hcflcmEl = document.getElementById("lad-hcflcm");
+
+    function makeLadder(original, titleEl, tableEl, buttonsEl, factEl, onComplete) {
+      const state = { original, current: original, rows: [], factors: {} };
+      titleEl.textContent = titleEl.dataset.label + " = " + fmtInt(original);
+
+      function render() {
+        tableEl.innerHTML = "";
+        state.rows.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `<td class="prime">${row.prime}</td><td>${fmtInt(row.after)}</td>`;
+          tableEl.appendChild(tr);
+        });
+        // leading row shows the starting value before any division
+        const startRow = document.createElement("tr");
+        startRow.innerHTML = `<td></td><td style="font-weight:700;">${fmtInt(original)}</td>`;
+        tableEl.prepend(startRow);
+
+        buttonsEl.innerHTML = "";
+        factEl.innerHTML = "";
+
+        if (state.current === 1) {
+          factEl.innerHTML = fmtInt(original) + " = " + factString(state.factors);
+          onComplete(state);
+          return;
+        }
+
+        const divs = primeDivisors(state.current);
+        if (divs.length === 1 && divs[0] === state.current) {
+          const btn = document.createElement("button");
+          btn.className = "finish";
+          btn.type = "button";
+          btn.textContent = state.current + " (prime) ✓";
+          btn.addEventListener("click", () => choose(state.current));
+          buttonsEl.appendChild(btn);
+        } else {
+          divs.forEach(p => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = "÷" + p;
+            btn.addEventListener("click", () => choose(p));
+            buttonsEl.appendChild(btn);
+          });
+        }
+      }
+
+      function choose(p) {
+        state.current = state.current / p;
+        state.factors[p] = (state.factors[p] || 0) + 1;
+        state.rows.push({ prime: p, after: state.current });
+        render();
+      }
+
+      render();
+      return state;
+    }
+
+    function computeHcfLcm(a, b, facA, facB) {
+      const primes = Array.from(new Set([...Object.keys(facA), ...Object.keys(facB)].map(Number))).sort((x, y) => x - y);
+      let hcf = 1, lcm = 1;
+      const rows = primes.map(p => {
+        const ea = facA[p] || 0, eb = facB[p] || 0;
+        hcf *= Math.pow(p, Math.min(ea, eb));
+        lcm *= Math.pow(p, Math.max(ea, eb));
+        return { p, ea, eb, common: ea > 0 && eb > 0 };
+      });
+
+      let html = `<h3>HCF &amp; LCM from the ladders</h3>`;
+      html += `<table class="hcflcm-table"><thead><tr><th>Prime</th><th>Power in A</th><th>Power in B</th><th>Used for</th></tr></thead><tbody>`;
+      rows.forEach(r => {
+        const cls = r.common ? "common" : "";
+        html += `<tr>
+          <td>${r.p}</td>
+          <td class="${cls}">${r.ea ? r.p + sup(r.ea) : "—"}</td>
+          <td class="${cls}">${r.eb ? r.p + sup(r.eb) : "—"}</td>
+          <td>${r.common ? "HCF (lower power)" : "LCM only (higher power)"}</td>
+        </tr>`;
+      });
+      html += `</tbody></table>`;
+      html += `<div class="result-badge good">HCF(${fmtInt(a)}, ${fmtInt(b)}) = ${fmtInt(hcf)}</div> `;
+      html += `<div class="result-badge good">LCM(${fmtInt(a)}, ${fmtInt(b)}) = ${fmtInt(lcm)}</div>`;
+      const check = hcf * lcm === a * b;
+      html += `<p class="decimal-note">${check ? "✓" : "✗"} Check: HCF × LCM = ${fmtInt(hcf * lcm)}, and A × B = ${fmtInt(a * b)}${check ? " — they match, as the theorem guarantees." : "."}</p>`;
+      hcflcmEl.innerHTML = html;
+    }
+
+    let doneA = null, doneB = null;
+
+    function start() {
+      errorEl.textContent = "";
+      const a = parseInt(aInput.value, 10);
+      const b = parseInt(bInput.value, 10);
+      if (!Number.isFinite(a) || !Number.isFinite(b) || a < 2 || b < 2) {
+        errorEl.textContent = "Enter two whole numbers, each 2 or greater.";
+        output.style.display = "none";
+        return;
+      }
+      doneA = null; doneB = null;
+      hcflcmEl.innerHTML = "";
+      output.style.display = "block";
+
+      const titleA = document.getElementById("lad-a-title");
+      const titleB = document.getElementById("lad-b-title");
+      titleA.dataset.label = "A"; titleB.dataset.label = "B";
+
+      makeLadder(a, titleA, document.getElementById("lad-a-table"), document.getElementById("lad-a-buttons"), document.getElementById("lad-a-fact"), (state) => {
+        doneA = state;
+        if (doneB) computeHcfLcm(a, b, doneA.factors, doneB.factors);
+      });
+      makeLadder(b, titleB, document.getElementById("lad-b-table"), document.getElementById("lad-b-buttons"), document.getElementById("lad-b-fact"), (state) => {
+        doneB = state;
+        if (doneA) computeHcfLcm(a, b, doneA.factors, doneB.factors);
+      });
+    }
+
+    startBtn.addEventListener("click", start);
+    randomBtn.addEventListener("click", () => {
+      aInput.value = 10 + Math.floor(Math.random() * 490);
+      bInput.value = 10 + Math.floor(Math.random() * 490);
+      start();
+    });
+
+    start();
+  })();
+
+  /* =========================================================
+     PANEL 3 — Decimal expansion classifier
+     ========================================================= */
+  (function decimalModule() {
+    const pInput = document.getElementById("dec-p");
+    const qInput = document.getElementById("dec-q");
+    const startBtn = document.getElementById("dec-start");
+    const errorEl = document.getElementById("dec-error");
+    const output = document.getElementById("dec-output");
+    const presetsEl = document.getElementById("dec-presets");
+
+    const MAX_DISPLAY_DIGITS = 60;
+    const MAX_CYCLE_SEARCH = 200000;
+
+    const presets = [
+      { label: "3⁄8", p: 3, q: 8 },
+      { label: "7⁄8", p: 7, q: 8 },
+      { label: "1⁄3", p: 1, q: 3 },
+      { label: "2⁄7", p: 2, q: 7 },
+      { label: "6⁄15", p: 6, q: 15 },
+      { label: "13⁄125", p: 13, q: 125 },
+      { label: "11⁄6", p: 11, q: 6 },
+      { label: "129 ⁄ (2²×5⁷×7⁵)", p: 129, q: 4 * 78125 * 16807 },
+    ];
+    presets.forEach(preset => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.textContent = preset.label;
+      chip.addEventListener("click", () => {
+        pInput.value = preset.p;
+        qInput.value = preset.q;
+        analyse();
+      });
+      presetsEl.appendChild(chip);
+    });
+
+    function longDivision(p, q, capDigits) {
+      let pb = BigInt(p), qb = BigInt(q);
+      const intPart = pb / qb;
+      let r = pb % qb;
+      if (r === 0n) return { intPart, digits: [], repeatStart: -1, terminating: true, truncated: false };
+      const seen = new Map();
+      const digits = [];
+      while (r !== 0n && digits.length < capDigits) {
+        const key = r.toString();
+        if (seen.has(key)) return { intPart, digits, repeatStart: seen.get(key), terminating: false, truncated: false };
+        seen.set(key, digits.length);
+        r = r * 10n;
+        digits.push(Number(r / qb));
+        r = r % qb;
+      }
+      if (r === 0n) return { intPart, digits, repeatStart: -1, terminating: true, truncated: false };
+      return { intPart, digits, repeatStart: -1, terminating: false, truncated: true };
+    }
+
+    function cycleLength(q, capSteps) {
+      // length of the repeating block = multiplicative order of 10 mod (q with all 2s and 5s removed)
+      let m = q;
+      while (m % 2 === 0) m /= 2;
+      while (m % 5 === 0) m /= 5;
+      if (m === 1) return 0;
+      let x = 10 % m, k = 1;
+      while (x !== 1 && k < capSteps) { x = (x * 10) % m; k++; }
+      return x === 1 ? k : -1; // -1 => not found within cap (extremely unlikely for classroom numbers)
+    }
+
+    function analyse() {
+      errorEl.textContent = "";
+      const pRaw = parseInt(pInput.value, 10);
+      const qRaw = parseInt(qInput.value, 10);
+      if (!Number.isFinite(pRaw) || !Number.isFinite(qRaw) || pRaw < 0 || qRaw <= 0) {
+        errorEl.textContent = "Enter a whole-number numerator and a positive whole-number denominator.";
+        output.style.display = "none";
+        return;
+      }
+
+      const g = gcd(pRaw, qRaw) || 1;
+      const sp = pRaw / g, sq = qRaw / g;
+      const facs = factorize(sq);
+      const primes = Object.keys(facs).map(Number).sort((a, b) => a - b);
+      const onlyTwoFive = primes.every(p => p === 2 || p === 5);
+      const otherPrimes = primes.filter(p => p !== 2 && p !== 5);
+
+      let html = "";
+      html += `<h3>Step 1 — simplify</h3>`;
+      html += `<p class="lede" style="margin-bottom:6px;">${fmtInt(pRaw)}⁄${fmtInt(qRaw)} in lowest terms is <strong>${fmtInt(sp)}⁄${fmtInt(sq)}</strong> (dividing by HCF = ${fmtInt(g)}).</p>`;
+
+      html += `<h3>Step 2 — factorise the denominator</h3>`;
+      html += `<p class="lede" style="margin-bottom:6px;">${fmtInt(sq)} = ${factString(facs)}</p>`;
+
+      html += `<h3>Step 3 — verdict</h3>`;
+      if (onlyTwoFive) {
+        html += `<div class="result-badge good">✓ Terminating — the denominator's only prime factors are 2 and/or 5.</div>`;
+      } else {
+        html += `<div class="result-badge bad">🔁 Non-terminating, repeating — the denominator has the extra prime factor${otherPrimes.length > 1 ? "s" : ""} ${otherPrimes.join(", ")}.</div>`;
+      }
+
+      html += `<h3>Step 4 — the actual decimal</h3>`;
+      const res = longDivision(sp, sq, MAX_DISPLAY_DIGITS);
+      let decimalHtml = res.intPart.toString();
+      if (res.terminating) {
+        if (res.digits.length) decimalHtml += "." + res.digits.join("");
+      } else if (res.truncated) {
+        const cyc = cycleLength(sq, MAX_CYCLE_SEARCH);
+        decimalHtml += "." + res.digits.join("") + "&hellip;";
+        html += `<div class="decimal-display">${decimalHtml}</div>`;
+        html += `<p class="decimal-note">The repeating block here is longer than ${MAX_DISPLAY_DIGITS} digits`
+          + (cyc > 0 ? ` (its exact length is ${fmtInt(cyc)} digits, from the theory of the multiplicative order of 10) ` : " ")
+          + `— exactly the point of the terminate/repeat test in Step 3: you can know the answer without ever finishing the division.</p>`;
+        output.innerHTML = html;
+        output.style.display = "block";
+        return;
+      } else {
+        const lead = res.digits.slice(0, res.repeatStart).join("");
+        const rep = res.digits.slice(res.repeatStart).join("");
+        decimalHtml += "." + lead + `<span class="repeat">${rep}</span>`;
+      }
+      html += `<div class="decimal-display">${decimalHtml}</div>`;
+      output.innerHTML = html;
+      output.style.display = "block";
+    }
+
+    startBtn.addEventListener("click", analyse);
+    analyse();
+  })();
+})();
+</script>
+</body>
+</html>

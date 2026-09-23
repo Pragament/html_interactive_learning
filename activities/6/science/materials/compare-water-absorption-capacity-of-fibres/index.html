@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Water Absorption Capacity of Fibres</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f7ff;
+      color: #243247;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #1769aa;
+      color: white;
+      text-align: center;
+      padding: 28px 16px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+
+    header p {
+      margin: 0;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    section {
+      background: white;
+      padding: 22px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px #183a5912;
+    }
+
+    h2 {
+      color: #1769aa;
+      margin-top: 0;
+    }
+
+    .materials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .material {
+      background: #e7f2ff;
+      padding: 8px 13px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+    }
+
+    .steps {
+      padding-left: 22px;
+    }
+
+    .experiment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .fibre-card {
+      border: 1px solid #d8e4ef;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fbfdff;
+    }
+
+    .fibre-card h3 {
+      margin-top: 0;
+      color: #245b86;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 12px 0 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #b7c8d8;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    button {
+      border: none;
+      background: #1769aa;
+      color: white;
+      padding: 11px 16px;
+      margin: 8px 6px 0 0;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0e4f84;
+    }
+
+    button.secondary {
+      background: #5d7185;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid #d5e0e9;
+      padding: 11px;
+      text-align: center;
+    }
+
+    th {
+      background: #e7f2ff;
+    }
+
+    .result {
+      background: #eaf8ef;
+      border-left: 5px solid #2f9e5b;
+      padding: 14px;
+      border-radius: 8px;
+      margin-top: 16px;
+    }
+
+    .notice {
+      background: #fff7df;
+      border-left: 5px solid #e0a321;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .quiz-question {
+      margin-bottom: 18px;
+    }
+
+    .quiz-question label {
+      font-weight: normal;
+      margin: 6px 0;
+    }
+
+    #quizResult {
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #607286;
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-materials-compare-water-absorption-capacity-of-fibres",
+  "order": 17,
+  "class": "VI",
+  "subject": "Science",
+  "topic": "Materials",
+  "subtopic": null,
+  "title": "Compare Water Absorption Capacity of Fibres",
+  "description": "Weigh dry cotton, wool, and nylon fabric pieces. Immerse in water, drip dry, and weigh wet fabric. Calculate the water absorbed per gram of fabric.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+  <header>
+    <h1>Compare Water Absorption Capacity of Fibres</h1>
+    <p>Class VI Science · Topic: Materials</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>🎯 Objective</h2>
+      <p>
+        To compare how much water cotton, wool, and nylon fabrics absorb
+        by measuring their dry and wet masses.
+      </p>
+    </section>
+
+    <section>
+      <h2>🧰 Materials Required</h2>
+      <div class="materials">
+        <span class="material">Cotton fabric</span>
+        <span class="material">Wool fabric</span>
+        <span class="material">Nylon fabric</span>
+        <span class="material">Water</span>
+        <span class="material">Beakers or bowls</span>
+        <span class="material">Balance / weighing scale</span>
+        <span class="material">Tongs or forceps</span>
+        <span class="material">Paper towels</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>📝 Procedure</h2>
+      <ol class="steps">
+        <li>Cut equal-sized pieces of cotton, wool, and nylon fabric.</li>
+        <li>Make sure each piece is dry, then measure and record its dry mass.</li>
+        <li>Immerse each fabric piece in water for the same amount of time.</li>
+        <li>Remove each piece and allow excess water to drip off for the same duration.</li>
+        <li>Measure and record the wet mass of each fabric piece.</li>
+        <li>Calculate the water absorbed per gram of dry fabric.</li>
+        <li>Compare the results to identify which fabric absorbed more water.</li>
+      </ol>
+      <div class="notice">
+        <strong>Fair test:</strong> Use equal-sized fabric pieces, the same
+        soaking time, and the same drip-drying time for all samples.
+      </div>
+    </section>
+
+    <section>
+      <h2>🧪 Enter Your Measurements</h2>
+      <p>
+        Enter the dry and wet masses in grams. The activity will calculate
+        the water absorbed per gram of dry fabric.
+      </p>
+
+      <div class="experiment-grid">
+        <div class="fibre-card">
+          <h3>🧵 Cotton</h3>
+          <label for="cottonDry">Dry mass (g)</label>
+          <input id="cottonDry" type="number" min="0.01" step="any" placeholder="e.g. 5" />
+          <label for="cottonWet">Wet mass (g)</label>
+          <input id="cottonWet" type="number" min="0" step="any" placeholder="e.g. 15" />
+        </div>
+
+        <div class="fibre-card">
+          <h3>🧶 Wool</h3>
+          <label for="woolDry">Dry mass (g)</label>
+          <input id="woolDry" type="number" min="0.01" step="any" placeholder="e.g. 5" />
+          <label for="woolWet">Wet mass (g)</label>
+          <input id="woolWet" type="number" min="0" step="any" placeholder="e.g. 12" />
+        </div>
+
+        <div class="fibre-card">
+          <h3>🪡 Nylon</h3>
+          <label for="nylonDry">Dry mass (g)</label>
+          <input id="nylonDry" type="number" min="0.01" step="any" placeholder="e.g. 5" />
+          <label for="nylonWet">Wet mass (g)</label>
+          <input id="nylonWet" type="number" min="0" step="any" placeholder="e.g. 6" />
+        </div>
+      </div>
+
+      <button onclick="calculateResults()">Calculate Results</button>
+      <button class="secondary" onclick="loadExample()">Load Example Data</button>
+      <button class="secondary" onclick="resetExperiment()">Reset</button>
+
+      <div id="errorMessage" role="alert"></div>
+      <div id="results" aria-live="polite"></div>
+    </section>
+
+    <section>
+      <h2>📊 Results Table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fibre</th>
+              <th>Dry mass (g)</th>
+              <th>Wet mass (g)</th>
+              <th>Water absorbed (g)</th>
+              <th>Water absorbed per gram (g/g)</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTable">
+            <tr>
+              <td colspan="5">Enter measurements and calculate results.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>🧠 Check Your Understanding</h2>
+
+      <div class="quiz-question">
+        <p><strong>1. How do we calculate the mass of water absorbed?</strong></p>
+        <label><input type="radio" name="q1" value="a" /> Dry mass − wet mass</label>
+        <label><input type="radio" name="q1" value="b" /> Wet mass − dry mass</label>
+        <label><input type="radio" name="q1" value="c" /> Dry mass + wet mass</label>
+      </div>
+
+      <div class="quiz-question">
+        <p><strong>2. Why should all fabric pieces be soaked for the same time?</strong></p>
+        <label><input type="radio" name="q2" value="a" /> To make the test fair</label>
+        <label><input type="radio" name="q2" value="b" /> To change their colour</label>
+        <label><input type="radio" name="q2" value="c" /> To make their dry mass equal</label>
+      </div>
+
+      <div class="quiz-question">
+        <p><strong>3. What does a higher water-absorption value indicate?</strong></p>
+        <label><input type="radio" name="q3" value="a" /> The fabric absorbed less water per gram</label>
+        <label><input type="radio" name="q3" value="b" /> The fabric absorbed more water per gram</label>
+        <label><input type="radio" name="q3" value="c" /> The fabric has no mass</label>
+      </div>
+
+      <button onclick="checkQuiz()">Check Answers</button>
+      <button class="secondary" onclick="resetQuiz()">Try Again</button>
+      <div id="quizResult" aria-live="polite"></div>
+    </section>
+
+    <section>
+      <h2>🔍 Conclusion</h2>
+      <p>
+        The fabric with the greatest calculated water absorbed per gram
+        has the highest water absorption capacity in this experiment.
+        Actual results may vary depending on the fabric, weave, thickness,
+        and experimental conditions.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Class VI Science Interactive Activity
+  </footer>
+
+  <script>
+    const fibres = [
+      { name: "Cotton", id: "cotton" },
+      { name: "Wool", id: "wool" },
+      { name: "Nylon", id: "nylon" }
+    ];
+
+    function getMeasurements() {
+      return fibres.map(fibre => ({
+        name: fibre.name,
+        dry: Number(document.getElementById(fibre.id + "Dry").value),
+        wet: Number(document.getElementById(fibre.id + "Wet").value)
+      }));
+    }
+
+    function calculateResults() {
+      const error = document.getElementById("errorMessage");
+      const results = document.getElementById("results");
+      const table = document.getElementById("resultsTable");
+
+      error.textContent = "";
+      results.innerHTML = "";
+
+      const measurements = getMeasurements();
+
+      for (const item of measurements) {
+        if (
+          !Number.isFinite(item.dry) ||
+          !Number.isFinite(item.wet) ||
+          item.dry <= 0 ||
+          item.wet < item.dry
+        ) {
+          error.textContent =
+            "Please enter valid masses. Dry mass must be greater than 0, and wet mass must be at least the dry mass.";
+          table.innerHTML =
+            '<tr><td colspan="5">Correct the measurements and calculate again.</td></tr>';
+          return;
+        }
+      }
+
+      const calculated = measurements.map(item => {
+        const absorbed = item.wet - item.dry;
+        return {
+          ...item,
+          absorbed,
+          capacity: absorbed / item.dry
+        };
+      });
+
+      table.innerHTML = calculated.map(item => `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.dry.toFixed(2)}</td>
+          <td>${item.wet.toFixed(2)}</td>
+          <td>${item.absorbed.toFixed(2)}</td>
+          <td>${item.capacity.toFixed(2)}</td>
+        </tr>
+      `).join("");
+
+      const highest = Math.max(...calculated.map(item => item.capacity));
+      const leaders = calculated
+        .filter(item => Math.abs(item.capacity - highest) < 0.000001)
+        .map(item => item.name);
+
+      results.innerHTML = `
+        <div class="result">
+          <strong>Observation:</strong>
+          ${leaders.join(" and ")} ${
+            leaders.length === 1 ? "has" : "have"
+          } the highest water absorption capacity in your measurements.
+          <br />
+          <strong>Formula:</strong>
+          Water absorbed per gram = (Wet mass − Dry mass) ÷ Dry mass
+        </div>
+      `;
+    }
+
+    function loadExample() {
+      const example = {
+        cotton: [5, 15],
+        wool: [5, 12],
+        nylon: [5, 6]
+      };
+
+      for (const [id, values] of Object.entries(example)) {
+        document.getElementById(id + "Dry").value = values[0];
+        document.getElementById(id + "Wet").value = values[1];
+      }
+
+      calculateResults();
+    }
+
+    function resetExperiment() {
+      for (const fibre of fibres) {
+        document.getElementById(fibre.id + "Dry").value = "";
+        document.getElementById(fibre.id + "Wet").value = "";
+      }
+
+      document.getElementById("errorMessage").textContent = "";
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("resultsTable").innerHTML =
+        '<tr><td colspan="5">Enter measurements and calculate results.</td></tr>';
+    }
+
+    function checkQuiz() {
+      const answers = { q1: "b", q2: "a", q3: "b" };
+      let score = 0;
+
+      for (const [question, answer] of Object.entries(answers)) {
+        const selected = document.querySelector(
+          `input[name="${question}"]:checked`
+        );
+
+        if (selected && selected.value === answer) {
+          score++;
+        }
+      }
+
+      document.getElementById("quizResult").textContent =
+        `You scored ${score} out of 3. ` +
+        (score === 3
+          ? "Excellent work!"
+          : "Review the activity and try again.");
+    }
+
+    function resetQuiz() {
+      document.querySelectorAll('.quiz-question input[type="radio"]')
+        .forEach(input => input.checked = false);
+
+      document.getElementById("quizResult").textContent = "";
+    }
+  </script>
+</body>
+</html>

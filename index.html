@@ -311,7 +311,7 @@
 
     .filter-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(145px, 1fr));
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
       gap: 12px;
       align-items: end;
     }
@@ -435,13 +435,13 @@
       font-size: 0.92rem;
     }
 
-    .variation-list {
+    .activity-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    .variation-list .launch {
+    .activity-actions .launch {
       min-height: 38px;
       font-size: 0.9rem;
     }
@@ -662,7 +662,7 @@
     <header>
       <div>
         <h1>Interactive Learning Activities</h1>
-        <p class="lede">Browse the activity catalog by class, subject, and topic, then open any available variation without leaving the catalog.</p>
+        <p class="lede">Browse independent learning activities by class, subject, topic, and subtopic, then open any available activity without leaving the catalog.</p>
       </div>
       <div class="header-actions">
         <div class="stats" aria-live="polite">
@@ -707,6 +707,10 @@
           <select id="topicFilter"></select>
         </div>
         <div class="field">
+          <label for="subtopicFilter">Subtopic</label>
+          <select id="subtopicFilter"></select>
+        </div>
+        <div class="field">
           <label for="sortSelect">Sort</label>
           <select id="sortSelect">
             <option value="name-asc">Activity A-Z</option>
@@ -729,7 +733,7 @@
       <div class="viewer-bar">
         <div class="viewer-title">
           <strong id="viewerActivity">Activity viewer</strong>
-          <span id="viewerVariation">Choose a variation to begin.</span>
+          <span id="viewerContext">Choose an activity to begin.</span>
         </div>
         <div class="viewer-actions">
           <a id="viewerExternal" class="viewer-action" href="#" target="_blank" rel="noopener">Open tab</a>
@@ -751,7 +755,7 @@
     <nav id="pagination" class="pagination" aria-label="Activity pages"></nav>
 
     <footer>
-      Interactive Learning Activities. Use filters to find an activity, then choose a variation to run it inside this page.
+      Interactive Learning Activities. Use the hierarchy filters to find and run a self-contained activity.
     </footer>
   </main>
 
@@ -812,6 +816,7 @@
       className: "all",
       subject: "all",
       topic: "all",
+      subtopic: "all",
       sort: "name-asc",
       availableOnly: true
     };
@@ -822,6 +827,7 @@
       classFilter: document.querySelector("#classFilter"),
       subjectFilter: document.querySelector("#subjectFilter"),
       topicFilter: document.querySelector("#topicFilter"),
+      subtopicFilter: document.querySelector("#subtopicFilter"),
       sortSelect: document.querySelector("#sortSelect"),
       resetBtn: document.querySelector("#resetBtn"),
       cards: document.querySelector("#cards"),
@@ -833,7 +839,7 @@
       totalCount: document.querySelector("#totalCount"),
       activityViewer: document.querySelector("#activityViewer"),
       viewerActivity: document.querySelector("#viewerActivity"),
-      viewerVariation: document.querySelector("#viewerVariation"),
+      viewerContext: document.querySelector("#viewerContext"),
       viewerExternal: document.querySelector("#viewerExternal"),
       viewerClose: document.querySelector("#viewerClose"),
       activityFrame: document.querySelector("#activityFrame"),
@@ -856,9 +862,11 @@
           className: activity.class || "Unspecified",
           subject: activity.subject || "Unspecified",
           topic: activity.topic || "Unspecified",
+          subtopic: activity.subtopic || "",
+          activityType: activity.activity_type || "exploration",
           name: activity.activity_name || "Untitled activity",
           details: activity.activity_details || "",
-          variations: normalizeActivityPaths(activity.activity_path || activity.file_path || activity.path)
+          path: activity.activity_path || activity.file_path || activity.path || ""
         }));
 
         elements.totalCount.textContent = activities.length;
@@ -907,6 +915,12 @@
         render();
       });
 
+      elements.subtopicFilter.addEventListener("change", (event) => {
+        state.subtopic = event.target.value;
+        currentPage = 1;
+        render();
+      });
+
       elements.sortSelect.addEventListener("change", (event) => {
         state.sort = event.target.value;
         currentPage = 1;
@@ -918,6 +932,7 @@
         state.className = "all";
         state.subject = "all";
         state.topic = "all";
+        state.subtopic = "all";
         state.sort = "name-asc";
         state.availableOnly = true;
         currentPage = 1;
@@ -933,10 +948,8 @@
         if (!button) return;
 
         const activity = activities.find((item) => item.id === Number(button.dataset.activityId));
-        const variation = activity?.variations[Number(button.dataset.variationIndex)];
-        if (!activity || !variation) return;
-
-        openActivity(activity, variation);
+        if (!activity || !activity.path) return;
+        openActivity(activity);
       });
 
       elements.viewerClose.addEventListener("click", () => {
@@ -962,6 +975,7 @@
       populateSelect(elements.classFilter, getOptions("className", {}), state.className, "All classes");
       populateSelect(elements.subjectFilter, getOptions("subject", { className: state.className }), state.subject, "All subjects");
       populateSelect(elements.topicFilter, getOptions("topic", { className: state.className, subject: state.subject }), state.topic, "All topics");
+      populateSelect(elements.subtopicFilter, getOptions("subtopic", { className: state.className, subject: state.subject, topic: state.topic }), state.subtopic, "All subtopics");
     }
 
     function getOptions(key, constraints) {
@@ -970,7 +984,8 @@
         if (state.availableOnly && !isAvailable(activity)) return;
         if (constraints.className && constraints.className !== "all" && activity.className !== constraints.className) return;
         if (constraints.subject && constraints.subject !== "all" && activity.subject !== constraints.subject) return;
-        values.add(activity[key]);
+        if (constraints.topic && constraints.topic !== "all" && activity.topic !== constraints.topic) return;
+        if (activity[key]) values.add(activity[key]);
       });
       return Array.from(values).sort(sortText);
     }
@@ -986,6 +1001,7 @@
         if (select === elements.classFilter) state.className = "all";
         if (select === elements.subjectFilter) state.subject = "all";
         if (select === elements.topicFilter) state.topic = "all";
+        if (select === elements.subtopicFilter) state.subtopic = "all";
       }
     }
 
@@ -1013,9 +1029,10 @@
       if (state.className !== "all" && activity.className !== state.className) return false;
       if (state.subject !== "all" && activity.subject !== state.subject) return false;
       if (state.topic !== "all" && activity.topic !== state.topic) return false;
+      if (state.subtopic !== "all" && activity.subtopic !== state.subtopic) return false;
 
       if (!state.search) return true;
-      const haystack = `${activity.name} ${activity.details} ${activity.className} ${activity.subject} ${activity.topic}`.toLowerCase();
+      const haystack = `${activity.name} ${activity.details} ${activity.className} ${activity.subject} ${activity.topic} ${activity.subtopic} ${activity.activityType}`.toLowerCase();
       return haystack.includes(state.search);
     }
 
@@ -1026,30 +1043,31 @@
       items.forEach((activity) => {
         const card = document.createElement("article");
         card.className = "activity-card";
-        const variationButtons = activity.variations.map((variation, index) => `
+        const launchButton = activity.path ? `
           <button
             class="launch"
             type="button"
             data-open-activity
             data-activity-id="${activity.id}"
-            data-variation-index="${index}"
           >
-            ${escapeHtml(variation.label)} <span aria-hidden="true">→</span>
+            Open activity <span aria-hidden="true">→</span>
           </button>
-        `).join("");
+        ` : "";
 
         card.innerHTML = `
           <div class="meta">
             <span class="pill">${escapeHtml(activity.className)}</span>
             <span class="pill">${escapeHtml(activity.subject)}</span>
             <span class="pill">${escapeHtml(activity.topic)}</span>
-            ${isAvailable(activity) ? `<span class="pill available">${activity.variations.length} ${activity.variations.length === 1 ? "variation" : "variations"}</span>` : ""}
+            ${activity.subtopic ? `<span class="pill">${escapeHtml(activity.subtopic)}</span>` : ""}
+            <span class="pill">${escapeHtml(activity.activityType)}</span>
+            ${isAvailable(activity) ? '<span class="pill available">Available</span>' : ""}
           </div>
           <h2>${escapeHtml(activity.name)}</h2>
           <p>${escapeHtml(activity.details)}</p>
           <div class="card-actions">
             ${isAvailable(activity)
-              ? `<div class="variation-list">${variationButtons}</div>`
+              ? `<div class="activity-actions">${launchButton}</div>`
               : '<span class="unavailable">No HTML activity yet</span>'}
           </div>
         `;
@@ -1131,40 +1149,15 @@
     }
 
     function isAvailable(activity) {
-      return activity.variations.length > 0;
+      return Boolean(activity.path);
     }
 
-    function normalizeActivityPaths(rawPaths) {
-      if (!rawPaths) return [];
-      const paths = Array.isArray(rawPaths) ? rawPaths : [rawPaths];
-      return paths
-        .map((entry, index) => {
-          if (typeof entry === "string") {
-            return {
-              label: index ? `Variation ${index + 1}` : "Default",
-              path: entry
-            };
-          }
-
-          if (entry && typeof entry === "object") {
-            const path = entry.path || entry.href || entry.url || "";
-            return {
-              label: entry.label || entry.name || `Variation ${index + 1}`,
-              path
-            };
-          }
-
-          return null;
-        })
-        .filter((variation) => variation && variation.path);
-    }
-
-    function openActivity(activity, variation) {
+    function openActivity(activity) {
       elements.viewerActivity.textContent = activity.name;
-      elements.viewerVariation.textContent = variation.label;
-      elements.viewerExternal.setAttribute("href", variation.path);
-      elements.activityFrame.setAttribute("title", `${activity.name} - ${variation.label}`);
-      elements.activityFrame.setAttribute("src", variation.path);
+      elements.viewerContext.textContent = activity.subtopic || activity.topic;
+      elements.viewerExternal.setAttribute("href", activity.path);
+      elements.activityFrame.setAttribute("title", activity.name);
+      elements.activityFrame.setAttribute("src", activity.path);
       elements.activityViewer.classList.add("is-open");
       elements.activityViewer.scrollIntoView({ behavior: "smooth", block: "start" });
     }

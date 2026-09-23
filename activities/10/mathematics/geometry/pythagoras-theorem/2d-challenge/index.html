@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>📐 Guess the Hypotenuse – Group Challenge</title>
+    <style>
+        /* ── Reset & base ── */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #f0f7fb 0%, #dce8ef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .app {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 28px 32px 34px;
+            box-shadow: 0 25px 50px -12px rgba(0,20,30,0.25);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        /* ── Header ── */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0b2b44, #1a5a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .badge {
+            background: #1a5a7a;
+            color: #fff;
+            font-weight: 600;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 14px;
+            background: linear-gradient(135deg, #1a5a7a, #2d8cb4);
+        }
+        .header .sub {
+            margin-left: auto;
+            font-size: 15px;
+            color: #1f4a5e;
+            background: rgba(26,90,122,0.08);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+        /* ── Grid ── */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 780px) {
+            .main-grid { grid-template-columns: 1fr; gap: 20px; }
+            .app { padding: 20px; }
+        }
+        .canvas-wrapper {
+            background: #fff;
+            border-radius: 28px;
+            padding: 12px;
+            box-shadow: 0 8px 24px rgba(0,20,30,0.06);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        .canvas-wrapper canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            border-radius: 20px;
+            background: #fafdff;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 20px 22px 22px;
+            box-shadow: 0 4px 16px rgba(0,20,30,0.06);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .slider-group + .slider-group { margin-top: 12px; }
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a4052;
+        }
+        .slider-group label .val {
+            background: #e9f2f8;
+            padding: 0 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            min-width: 44px;
+            text-align: center;
+        }
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, #c5dce8, #2d8cb4);
+            border-radius: 6px;
+            outline: none;
+        }
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a5a7a, #2d8cb4);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(26,90,122,0.3);
+            border: 2px solid #fff;
+        }
+        .slider-group .side-label { font-weight: 700; }
+        .slider-group.label-a .side-label { color: #d45c4c; }
+        .slider-group.label-b .side-label { color: #4a8c6f; }
+        .side-controls {
+            display: grid;
+            grid-template-columns: 42px minmax(86px, 1fr) 42px;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        .side-controls button {
+            width: 42px;
+            height: 38px;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26,90,122,0.16);
+            transition: 0.15s;
+        }
+        .side-controls button:hover {
+            transform: translateY(-1px);
+        }
+        .label-a .side-controls button {
+            background: linear-gradient(135deg, #b9473a, #d45c4c);
+        }
+        .label-b .side-controls button {
+            background: linear-gradient(135deg, #3f755e, #4a8c6f);
+        }
+        .side-controls input[type="number"] {
+            width: 100%;
+            height: 38px;
+            border-radius: 12px;
+            border: 2px solid #c5dce8;
+            background: #fff;
+            color: #1a4052;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+        }
+        .side-controls input[type="number"]:focus {
+            border-color: #2d8cb4;
+            box-shadow: 0 0 0 4px rgba(45,140,180,0.12);
+        }
+
+        /* ── Formula box (hint only) ── */
+        .formula-box {
+            background: #f2f8fc;
+            border-radius: 18px;
+            padding: 14px 18px 16px;
+            border-left: 4px solid #1a5a7a;
+        }
+        .formula-box .theorem {
+            font-size: 22px;
+            font-weight: 600;
+            color: #0b2b44;
+            text-align: center;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+        .formula-box .theorem .hl-a { color: #d45c4c; }
+        .formula-box .theorem .hl-b { color: #4a8c6f; }
+        .formula-box .theorem .hl-c { color: #3a7bb5; }
+        .formula-box .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px 18px;
+            font-size: 16px;
+            color: #1f4a5e;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(26,90,122,0.15);
+            margin-top: 6px;
+        }
+        .formula-box .steps .step {
+            background: #fff;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-weight: 500;
+        }
+        .formula-box .steps .step .unknown {
+            color: #b34a3a;
+            font-weight: 700;
+        }
+        .formula-box .hint {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 500;
+            color: #1a5a7a;
+            font-size: 15px;
+        }
+
+        /* ── Group guess area ── */
+        .group-guesses {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 4px;
+        }
+        @media (max-width: 600px) {
+            .group-guesses { grid-template-columns: 1fr; }
+        }
+        .guess-card {
+            background: #f8fbfd;
+            border-radius: 16px;
+            padding: 12px 14px 16px;
+            border: 1px solid rgba(26,90,122,0.08);
+            text-align: center;
+        }
+        .guess-card h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0b2b44;
+            margin-bottom: 6px;
+        }
+        .guess-card .student-label {
+            display: inline-block;
+            background: #1a5a7a;
+            color: #fff;
+            border-radius: 30px;
+            padding: 0 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .guess-card .student-label.s1 { background: #d45c4c; }
+        .guess-card .student-label.s2 { background: #4a8c6f; }
+        .guess-card .student-label.s3 { background: #3a7bb5; }
+        .guess-card input[type="number"] {
+            width: 100%;
+            padding: 8px 6px;
+            border-radius: 14px;
+            border: 2px solid #c5dce8;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            background: #fff;
+            margin: 6px 0 8px;
+            transition: 0.15s;
+        }
+        .guess-card input[type="number"]:focus {
+            border-color: #2d8cb4;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(45,140,180,0.12);
+        }
+        .guess-card .btn-group {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .guess-card button {
+            background: linear-gradient(135deg, #1a5a7a, #2d8cb4);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 3px 10px rgba(26,90,122,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex: 1;
+        }
+        .guess-card button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(26,90,122,0.2);
+        }
+        .guess-card .feedback {
+            font-weight: 600;
+            font-size: 14px;
+            min-height: 24px;
+            margin-top: 4px;
+        }
+        .guess-card .feedback.correct { color: #1f7a4a; }
+        .guess-card .feedback.close { color: #b48d2a; }
+        .guess-card .feedback.wrong { color: #b34a3a; }
+
+        /* ── Reveal button ── */
+        .reveal-area {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(26,90,122,0.15);
+        }
+        .reveal-area button {
+            background: #fff;
+            border: 2px solid #1a5a7a;
+            color: #1a5a7a;
+            font-weight: 700;
+            padding: 8px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 16px;
+        }
+        .reveal-area button:hover {
+            background: #1a5a7a;
+            color: #fff;
+        }
+        .reveal-area .answer {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0b2b44;
+            background: #e1f0f8;
+            padding: 4px 24px;
+            border-radius: 40px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* ── Responsive tweaks ── */
+        @media (max-width: 480px) {
+            .header h1 { font-size: 22px; }
+            .formula-box .theorem { font-size: 18px; }
+        }
+    </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-geometry-pythagoras-theorem-2d-challenge",
+  "order": 231,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": "Pythagoras Theorem",
+  "title": "Pythagoras Theorem — 2D Challenge",
+  "description": "Arrange square cut-outs to verify that a² + b² = c² in a right-angled triangle.",
+  "activityType": "challenge",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="app">
+    <!-- Header -->
+    <div class="header">
+        <h1>📐 Guess the Hypotenuse</h1>
+        <span class="badge">Group challenge</span>
+        <span class="sub">a² + b² = c²</span>
+    </div>
+
+    <!-- Main grid -->
+    <div class="main-grid">
+        <!-- Canvas -->
+        <div class="canvas-wrapper">
+            <canvas id="triangleCanvas" width="600" height="600"></canvas>
+        </div>
+
+        <!-- Controls & Formula -->
+        <div class="controls">
+            <!-- Sliders -->
+            <div class="card">
+                <div class="slider-group label-a">
+                    <label>
+                        <span><span class="side-label">a</span> (leg)</span>
+                        <span class="val" id="valA">3.0</span>
+                    </label>
+                    <input type="range" id="sliderA" min="0.5" max="8" step="0.1" value="3" />
+                    <div class="side-controls" aria-label="Adjust side a">
+                        <button type="button" class="step-btn" data-target="A" data-step="-0.1" aria-label="Decrease side a">−</button>
+                        <input type="number" id="numberA" min="0.5" max="8" step="0.1" value="3" aria-label="Side a value" />
+                        <button type="button" class="step-btn" data-target="A" data-step="0.1" aria-label="Increase side a">+</button>
+                    </div>
+                </div>
+                <div class="slider-group label-b">
+                    <label>
+                        <span><span class="side-label">b</span> (leg)</span>
+                        <span class="val" id="valB">4.0</span>
+                    </label>
+                    <input type="range" id="sliderB" min="0.5" max="8" step="0.1" value="4" />
+                    <div class="side-controls" aria-label="Adjust side b">
+                        <button type="button" class="step-btn" data-target="B" data-step="-0.1" aria-label="Decrease side b">−</button>
+                        <input type="number" id="numberB" min="0.5" max="8" step="0.1" value="4" aria-label="Side b value" />
+                        <button type="button" class="step-btn" data-target="B" data-step="0.1" aria-label="Increase side b">+</button>
+                    </div>
+                </div>
+                <!-- c slider is hidden – we don't show c -->
+            </div>
+
+            <!-- Formula (hint only, no c value) -->
+            <div class="formula-box" id="formulaBox">
+                <div class="theorem">
+                    <span class="hl-a">a</span>² + <span class="hl-b">b</span>² = <span class="hl-c">c</span>²
+                </div>
+                <div class="steps">
+                    <span class="step"><span class="hl-a">a</span>² = <span id="a2display">9.00</span></span>
+                    <span class="step"><span class="hl-b">b</span>² = <span id="b2display">16.00</span></span>
+                    <span class="step">a² + b² = <span id="sumDisplay">25.00</span></span>
+                    <span class="step"><span class="hl-c">c</span> = <span id="cDisplay" class="unknown">?</span></span>
+                </div>
+                <div class="hint">🔎 Use the formula to find <strong>c</strong> – then enter your guess below!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group guessing area -->
+    <div class="card" style="margin-top: 6px;">
+        <h3 style="margin-bottom: 12px; font-size: 18px; color: #0b2b44;">👥 Each student guesses <strong>c</strong></h3>
+        <div class="group-guesses">
+            <!-- Student 1 -->
+            <div class="guess-card">
+                <h4><span class="student-label s1">Student 1</span></h4>
+                <input type="number" id="guess1" step="0.01" placeholder="c = ?" />
+                <div class="btn-group">
+                    <button class="check-btn" data-student="1">Check</button>
+                </div>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+            <!-- Student 2 -->
+            <div class="guess-card">
+                <h4><span class="student-label s2">Student 2</span></h4>
+                <input type="number" id="guess2" step="0.01" placeholder="c = ?" />
+                <div class="btn-group">
+                    <button class="check-btn" data-student="2">Check</button>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+            <!-- Student 3 -->
+            <div class="guess-card">
+                <h4><span class="student-label s3">Student 3</span></h4>
+                <input type="number" id="guess3" step="0.01" placeholder="c = ?" />
+                <div class="btn-group">
+                    <button class="check-btn" data-student="3">Check</button>
+                </div>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+        </div>
+        <!-- Reveal -->
+        <div class="reveal-area">
+            <button id="revealBtn">🔍 Show answer</button>
+            <span class="answer" id="revealAnswer">?</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ─── DOM refs ───
+        const canvas = document.getElementById('triangleCanvas');
+        const ctx = canvas.getContext('2d');
+        const sliderA = document.getElementById('sliderA');
+        const sliderB = document.getElementById('sliderB');
+        const numberA = document.getElementById('numberA');
+        const numberB = document.getElementById('numberB');
+        const valA = document.getElementById('valA');
+        const valB = document.getElementById('valB');
+        const a2display = document.getElementById('a2display');
+        const b2display = document.getElementById('b2display');
+        const sumDisplay = document.getElementById('sumDisplay');
+        const cDisplay = document.getElementById('cDisplay');
+        const revealAnswer = document.getElementById('revealAnswer');
+
+        // Guess inputs & feedbacks
+        const guessInputs = {
+            1: document.getElementById('guess1'),
+            2: document.getElementById('guess2'),
+            3: document.getElementById('guess3')
+        };
+        const feedbacks = {
+            1: document.getElementById('feedback1'),
+            2: document.getElementById('feedback2'),
+            3: document.getElementById('feedback3')
+        };
+
+        // ─── State ───
+        let a = 3.0, b = 4.0, c = 5.0;
+        let revealed = false;  // whether the answer has been revealed
+
+        // ─── Helpers ───
+        function round2(v) { return Math.round(v * 100) / 100; }
+        function clampSide(v) {
+            const min = 0.5;
+            const max = 8;
+            return Math.min(max, Math.max(min, Math.round(v * 10) / 10));
+        }
+
+        function clearRevealAfterSideChange() {
+            if (!revealed) return;
+            revealed = false;
+            Object.values(feedbacks).forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+        }
+
+        function setSide(side, value) {
+            if (!Number.isFinite(value)) {
+                updateAll();
+                return;
+            }
+            const next = clampSide(value);
+            if (side === 'A') {
+                sliderA.value = next.toFixed(1);
+                numberA.value = next.toFixed(1);
+            } else {
+                sliderB.value = next.toFixed(1);
+                numberB.value = next.toFixed(1);
+            }
+            clearRevealAfterSideChange();
+            updateAll();
+        }
+
+        function updateC() {
+            c = Math.sqrt(a * a + b * b);
+            return c;
+        }
+
+        // ─── Draw triangle (c label shows "?" unless revealed) ───
+        function drawTriangle() {
+            const w = canvas.width, h = canvas.height;
+            const pad = 60;
+            ctx.clearRect(0, 0, w, h);
+
+            // Grid
+            ctx.save();
+            ctx.strokeStyle = '#eaf1f7';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 10; i++) {
+                const x = pad + (i / 10) * (w - 2 * pad);
+                ctx.beginPath();
+                ctx.moveTo(x, pad);
+                ctx.lineTo(x, h - pad);
+                ctx.stroke();
+                const y = pad + (i / 10) * (h - 2 * pad);
+                ctx.beginPath();
+                ctx.moveTo(pad, y);
+                ctx.lineTo(w - pad, y);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            const maxSide = Math.max(a, b, c);
+            const avail = Math.min(w, h) - 2 * pad;
+            const scale = (avail * 0.85) / maxSide;
+
+            const originX = pad + 20;
+            const originY = h - pad - 20;
+            const ax = originX, ay = originY - a * scale;
+            const bx = originX + b * scale, by = originY;
+
+            // Sides
+            ctx.save();
+            // a
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(ax, ay);
+            ctx.strokeStyle = '#d45c4c';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            // b
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(bx, by);
+            ctx.strokeStyle = '#4a8c6f';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            // c
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.strokeStyle = '#3a7bb5';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // Right angle marker
+            const rSize = 18;
+            ctx.strokeStyle = '#1a4052';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(originX + rSize, originY);
+            ctx.lineTo(originX + rSize, originY - rSize);
+            ctx.lineTo(originX, originY - rSize);
+            ctx.stroke();
+
+            // Labels
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#d45c4c';
+            ctx.fillText('a', originX - 36, (originY + ay) / 2);
+            ctx.fillStyle = '#4a8c6f';
+            ctx.fillText('b', (originX + bx) / 2, originY + 36);
+            // c label: show "c = ?" or the actual value if revealed
+            ctx.fillStyle = '#3a7bb5';
+            const cLabel = revealed ? `c = ${c.toFixed(2)}` : 'c = ?';
+            ctx.fillText(cLabel, (ax + bx) / 2 + 24, (ay + by) / 2 - 18);
+
+            // Dots
+            const vertices = [[originX, originY, '#1a4052'], [ax, ay, '#d45c4c'], [bx, by, '#4a8c6f']];
+            vertices.forEach(([x, y, color]) => {
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = color;
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // 90° arc
+            ctx.beginPath();
+            ctx.arc(originX, originY, 22, 0, Math.PI / 2);
+            ctx.strokeStyle = '#1a4052';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.font = '15px "Segoe UI", sans-serif';
+            ctx.fillStyle = '#1a4052';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('90°', originX + 8, originY - 6);
+
+            // Side lengths on canvas (a and b only)
+            ctx.font = '15px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = '#d45c4c';
+            ctx.fillText(a.toFixed(1), originX - 36, (originY + ay) / 2 - 10);
+            ctx.fillStyle = '#4a8c6f';
+            ctx.fillText(b.toFixed(1), (originX + bx) / 2, originY + 24);
+            // Do NOT display c length on canvas (it's either "?" or shown in label above)
+            ctx.restore();
+        }
+
+        // ─── Update UI (formula box, sliders, canvas) ───
+        function updateAll() {
+            a = parseFloat(sliderA.value);
+            b = parseFloat(sliderB.value);
+            updateC();
+
+            valA.textContent = a.toFixed(1);
+            valB.textContent = b.toFixed(1);
+            numberA.value = a.toFixed(1);
+            numberB.value = b.toFixed(1);
+
+            const a2 = a * a, b2 = b * b, sum = a2 + b2;
+            a2display.textContent = a2.toFixed(2);
+            b2display.textContent = b2.toFixed(2);
+            sumDisplay.textContent = sum.toFixed(2);
+
+            // c display: show "?" unless revealed
+            if (!revealed) {
+                cDisplay.textContent = '?';
+                cDisplay.className = 'unknown';
+            } else {
+                cDisplay.textContent = c.toFixed(2);
+                cDisplay.className = ''; // remove unknown style
+            }
+
+            // Reset reveal answer display if not revealed
+            if (!revealed) {
+                revealAnswer.textContent = '?';
+            } else {
+                revealAnswer.textContent = c.toFixed(2);
+            }
+
+            drawTriangle();
+        }
+
+        // ─── Check a guess ───
+        function checkGuess(studentId) {
+            const input = guessInputs[studentId];
+            const feedback = feedbacks[studentId];
+            const guess = parseFloat(input.value);
+            if (isNaN(guess) || guess <= 0) {
+                feedback.textContent = '⚠️ Enter a positive number';
+                feedback.className = 'feedback wrong';
+                return;
+            }
+            const correct = round2(c);
+            const diff = Math.abs(guess - correct);
+            let msg, cls;
+            if (diff < 0.005) {
+                msg = `✅ Perfect! c = ${correct.toFixed(2)}`;
+                cls = 'correct';
+            } else if (diff < 0.2) {
+                msg = `🟡 Close! c = ${correct.toFixed(2)} (off by ${diff.toFixed(2)})`;
+                cls = 'close';
+            } else {
+                msg = `❌ Not quite. c = ${correct.toFixed(2)} (you entered ${guess.toFixed(2)})`;
+                cls = 'wrong';
+            }
+            feedback.textContent = msg;
+            feedback.className = `feedback ${cls}`;
+        }
+
+        // ─── Reveal answer ───
+        function revealAnswerFunc() {
+            revealed = true;
+            cDisplay.textContent = c.toFixed(2);
+            cDisplay.className = '';
+            revealAnswer.textContent = c.toFixed(2);
+            drawTriangle(); // redraw to show c value on canvas
+        }
+
+        // ─── Event listeners ───
+        sliderA.addEventListener('input', function() {
+            setSide('A', parseFloat(this.value));
+        });
+        sliderB.addEventListener('input', function() {
+            setSide('B', parseFloat(this.value));
+        });
+        numberA.addEventListener('change', function() {
+            setSide('A', parseFloat(this.value));
+        });
+        numberB.addEventListener('change', function() {
+            setSide('B', parseFloat(this.value));
+        });
+        numberA.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') setSide('A', parseFloat(this.value));
+        });
+        numberB.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') setSide('B', parseFloat(this.value));
+        });
+        document.querySelectorAll('.step-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const slider = this.dataset.target === 'A' ? sliderA : sliderB;
+                setSide(this.dataset.target, parseFloat(slider.value) + parseFloat(this.dataset.step));
+            });
+        });
+
+        document.querySelectorAll('.check-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const student = parseInt(this.dataset.student);
+                checkGuess(student);
+            });
+        });
+
+        // Enter key on inputs
+        Object.keys(guessInputs).forEach(id => {
+            guessInputs[id].addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    checkGuess(parseInt(this.id.slice(-1)));
+                }
+            });
+        });
+
+        document.getElementById('revealBtn').addEventListener('click', revealAnswerFunc);
+
+        // ─── Click on canvas to randomize (fun) ───
+        canvas.addEventListener('click', function() {
+            if (revealed) {
+                revealed = false;
+                Object.values(feedbacks).forEach(f => { f.textContent = ''; f.className = 'feedback'; });
+            }
+            const newA = round2(0.5 + Math.random() * 7);
+            const newB = round2(0.5 + Math.random() * 7);
+            sliderA.value = newA;
+            sliderB.value = newB;
+            numberA.value = newA;
+            numberB.value = newB;
+            updateAll();
+        });
+
+        // ─── Init ───
+        updateAll();
+    })();
+</script>
+</body>
+</html>

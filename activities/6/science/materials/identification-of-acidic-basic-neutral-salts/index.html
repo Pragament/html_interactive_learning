@@ -1,0 +1,758 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Identification of Salts | Class VI Science</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f7ff;
+            color: #243247;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            margin-bottom: 22px;
+            border-radius: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+        }
+
+        h2 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            margin-bottom: 10px;
+        }
+
+        .objective {
+            background: #e8f2ff;
+            border-left: 5px solid #2563eb;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .steps {
+            padding-left: 22px;
+        }
+
+        .steps li {
+            margin-bottom: 8px;
+        }
+
+        .salt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .salt-card {
+            border: 2px solid #dbeafe;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            background: #f8fbff;
+        }
+
+        .salt-card p {
+            margin: 8px 0;
+        }
+
+        .salt-icon {
+            font-size: 45px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 11px 17px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        button:focus-visible {
+            outline: 3px solid #f59e0b;
+            outline-offset: 3px;
+        }
+
+        .test-btn {
+            background: #2563eb;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .reset-btn {
+            background: #64748b;
+            color: white;
+        }
+
+        .experiment {
+            text-align: center;
+        }
+
+        .experiment select {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .litmus-area {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .paper-box {
+            width: 150px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .paper {
+            width: 45px;
+            height: 145px;
+            margin: 12px auto;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            background: #e34b4b;
+            transition: background 0.4s;
+        }
+
+        .blue-paper {
+            background: #3478e5;
+        }
+
+        .neutral-paper {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+        }
+
+        .result {
+            background: #eff6ff;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 15px;
+            text-align: left;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h3 {
+            color: #1d4ed8;
+        }
+
+        .quiz-question {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-question label {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        .quiz-question input {
+            margin-right: 8px;
+        }
+
+        .submit-btn {
+            background: #16a34a;
+            color: white;
+        }
+
+        #quiz-result {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .observation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .observation-table th,
+        .observation-table td {
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .observation-table th {
+            background: #dbeafe;
+        }
+
+        .observation-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .acid {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .base {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .neutral {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 17px;
+            }
+
+            .observation-table th,
+            .observation-table td {
+                padding: 7px;
+                font-size: 13px;
+            }
+        }
+    </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-materials-identification-of-acidic-basic-neutral-salts",
+  "order": 15,
+  "class": "VI",
+  "subject": "Science",
+  "topic": "Materials",
+  "subtopic": null,
+  "title": "Identification of Acidic/Basic/Neutral Salts",
+  "description": "Test ferric chloride, sodium acetate, and sodium chloride solutions with red and blue litmus papers. Ferric chloride turns blue litmus red (acidic). Sodium acetate turns red litmus blue (basic). Sodium chloride shows no change (neutral).",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+
+<header>
+    <h1>🧪 Identification of Salts</h1>
+    <p>Class VI | Science | Topic: Materials</p>
+    <p>Explore acidic, basic and neutral solutions!</p>
+</header>
+
+<main class="container">
+
+    <!-- OBJECTIVE -->
+    <section class="card">
+        <h2>🎯 Learning Objective</h2>
+        <div class="objective">
+            To identify acidic, basic and neutral salt solutions
+            using red and blue litmus paper.
+        </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section class="card">
+        <h2>📘 What is Litmus Paper?</h2>
+        <p>
+            Litmus paper is an indicator used to test whether a
+            solution is acidic or basic.
+        </p>
+
+        <ul class="steps">
+            <li><strong>Red litmus:</strong> Turns blue in a basic solution.</li>
+            <li><strong>Blue litmus:</strong> Turns red in an acidic solution.</li>
+            <li><strong>Neutral solution:</strong> Neither paper changes color.</li>
+        </ul>
+    </section>
+
+    <!-- SALTS -->
+    <section class="card">
+        <h2>🧂 Salt Solutions</h2>
+
+        <div class="salt-grid">
+
+            <div class="salt-card">
+                <div class="salt-icon">🧪</div>
+                <h3>Ferric Chloride</h3>
+                <p>Formula: FeCl₃</p>
+                <p>Expected nature: Acidic</p>
+                <button class="test-btn"
+                    onclick="selectSalt('ferric')">
+                    Test Solution
+                </button>
+            </div>
+
+            <div class="salt-card">
+                <div class="salt-icon">🧪</div>
+                <h3>Sodium Acetate</h3>
+                <p>Formula: CH₃COONa</p>
+                <p>Expected nature: Basic</p>
+                <button class="test-btn"
+                    onclick="selectSalt('acetate')">
+                    Test Solution
+                </button>
+            </div>
+
+            <div class="salt-card">
+                <div class="salt-icon">🧪</div>
+                <h3>Sodium Chloride</h3>
+                <p>Formula: NaCl</p>
+                <p>Expected nature: Neutral</p>
+                <button class="test-btn"
+                    onclick="selectSalt('chloride')">
+                    Test Solution
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- EXPERIMENT -->
+    <section class="card experiment">
+        <h2>🔬 Virtual Litmus Experiment</h2>
+
+        <p>
+            Select a salt solution and observe how both litmus
+            papers respond.
+        </p>
+
+        <label for="salt-select"><strong>Select a solution:</strong></label>
+        <br>
+
+        <select id="salt-select">
+            <option value="">-- Choose a salt solution --</option>
+            <option value="ferric">Ferric Chloride (FeCl₃)</option>
+            <option value="acetate">Sodium Acetate (CH₃COONa)</option>
+            <option value="chloride">Sodium Chloride (NaCl)</option>
+        </select>
+
+        <div class="litmus-area">
+
+            <div class="paper-box">
+                <h3>Red Litmus</h3>
+                <div id="red-paper" class="paper"></div>
+                <p id="red-label">Original: Red</p>
+            </div>
+
+            <div class="paper-box">
+                <h3>Blue Litmus</h3>
+                <div id="blue-paper" class="paper blue-paper"></div>
+                <p id="blue-label">Original: Blue</p>
+            </div>
+
+        </div>
+
+        <button class="test-btn" onclick="testSolution()">
+            🧪 Test with Litmus
+        </button>
+
+        <button class="reset-btn" onclick="resetExperiment()">
+            Reset
+        </button>
+
+        <div id="result" class="result" aria-live="polite">
+            <h3 id="result-title"></h3>
+            <p id="result-description"></p>
+            <p id="result-nature"></p>
+        </div>
+    </section>
+
+    <!-- OBSERVATION TABLE -->
+    <section class="card">
+        <h2>📋 Observation Table</h2>
+
+        <p>
+            Compare the changes observed during the experiment.
+        </p>
+
+        <table class="observation-table">
+            <thead>
+                <tr>
+                    <th>Salt Solution</th>
+                    <th>Red Litmus</th>
+                    <th>Blue Litmus</th>
+                    <th>Nature</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>Ferric Chloride</td>
+                    <td>No change</td>
+                    <td>Turns red</td>
+                    <td><span class="badge acid">Acidic</span></td>
+                </tr>
+
+                <tr>
+                    <td>Sodium Acetate</td>
+                    <td>Turns blue</td>
+                    <td>No change</td>
+                    <td><span class="badge base">Basic</span></td>
+                </tr>
+
+                <tr>
+                    <td>Sodium Chloride</td>
+                    <td>No change</td>
+                    <td>No change</td>
+                    <td><span class="badge neutral">Neutral</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="card">
+        <h2>📝 Test Your Knowledge</h2>
+
+        <form id="quiz-form">
+
+            <div class="quiz-question">
+                <p><strong>1. Which solution is acidic?</strong></p>
+
+                <label>
+                    <input type="radio" name="q1" value="a">
+                    Sodium Chloride
+                </label>
+
+                <label>
+                    <input type="radio" name="q1" value="b">
+                    Ferric Chloride
+                </label>
+
+                <label>
+                    <input type="radio" name="q1" value="c">
+                    Sodium Acetate
+                </label>
+            </div>
+
+            <div class="quiz-question">
+                <p><strong>2. What happens to red litmus in a basic solution?</strong></p>
+
+                <label>
+                    <input type="radio" name="q2" value="a">
+                    It turns blue
+                </label>
+
+                <label>
+                    <input type="radio" name="q2" value="b">
+                    It turns red
+                </label>
+
+                <label>
+                    <input type="radio" name="q2" value="c">
+                    It turns green
+                </label>
+            </div>
+
+            <div class="quiz-question">
+                <p><strong>3. Which solution is neutral?</strong></p>
+
+                <label>
+                    <input type="radio" name="q3" value="a">
+                    Ferric Chloride
+                </label>
+
+                <label>
+                    <input type="radio" name="q3" value="b">
+                    Sodium Acetate
+                </label>
+
+                <label>
+                    <input type="radio" name="q3" value="c">
+                    Sodium Chloride
+                </label>
+            </div>
+
+            <div class="quiz-question">
+                <p><strong>4. What happens to blue litmus in an acidic solution?</strong></p>
+
+                <label>
+                    <input type="radio" name="q4" value="a">
+                    It turns red
+                </label>
+
+                <label>
+                    <input type="radio" name="q4" value="b">
+                    It turns blue
+                </label>
+
+                <label>
+                    <input type="radio" name="q4" value="c">
+                    It turns yellow
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Submit Quiz
+            </button>
+
+            <button type="button" class="reset-btn"
+                onclick="resetQuiz()">
+                Try Again
+            </button>
+
+        </form>
+
+        <div id="quiz-result" aria-live="polite"></div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section class="card">
+        <h2>💡 Conclusion</h2>
+
+        <p>
+            Litmus paper helps us identify the nature of a solution.
+            Ferric chloride solution is acidic, sodium acetate
+            solution is basic, and sodium chloride solution is
+            neutral.
+        </p>
+
+        <p>
+            By observing the color changes of red and blue litmus
+            paper, we can classify these solutions.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    <p>Class VI Science | Interactive Learning Activity</p>
+    <p>Learn Science by Exploring! 🌱</p>
+</footer>
+
+<script>
+    const saltData = {
+        ferric: {
+            name: "Ferric Chloride (FeCl₃)",
+            nature: "Acidic",
+            red: "red",
+            blue: "red",
+            description:
+                "Blue litmus turns red. Red litmus shows no change.",
+            explanation:
+                "Ferric chloride solution is acidic."
+        },
+
+        acetate: {
+            name: "Sodium Acetate (CH₃COONa)",
+            nature: "Basic",
+            red: "blue",
+            blue: "blue",
+            description:
+                "Red litmus turns blue. Blue litmus shows no change.",
+            explanation:
+                "Sodium acetate solution is basic."
+        },
+
+        chloride: {
+            name: "Sodium Chloride (NaCl)",
+            nature: "Neutral",
+            red: "red",
+            blue: "blue",
+            description:
+                "Neither red nor blue litmus changes color.",
+            explanation:
+                "Sodium chloride solution is neutral."
+        }
+    };
+
+    function selectSalt(salt) {
+        document.getElementById("salt-select").value = salt;
+        resetExperiment();
+
+        document.getElementById("salt-select")
+            .scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+    }
+
+    function testSolution() {
+        const selectedSalt =
+            document.getElementById("salt-select").value;
+
+        if (!selectedSalt) {
+            alert("Please select a salt solution first!");
+            return;
+        }
+
+        const data = saltData[selectedSalt];
+
+        document.getElementById("red-paper").style.background =
+            data.red === "blue" ? "#3478e5" : "#e34b4b";
+
+        document.getElementById("blue-paper").style.background =
+            data.blue === "red" ? "#e34b4b" : "#3478e5";
+
+        document.getElementById("red-label").textContent =
+            data.red === "blue"
+                ? "Changed: Blue"
+                : "No change: Red";
+
+        document.getElementById("blue-label").textContent =
+            data.blue === "red"
+                ? "Changed: Red"
+                : "No change: Blue";
+
+        document.getElementById("result-title").textContent =
+            "Result: " + data.name;
+
+        document.getElementById("result-description").textContent =
+            data.description;
+
+        document.getElementById("result-nature").textContent =
+            "Nature: " + data.explanation;
+
+        document.getElementById("result").classList.add("show");
+    }
+
+    function resetExperiment() {
+        document.getElementById("red-paper").style.background =
+            "#e34b4b";
+
+        document.getElementById("blue-paper").style.background =
+            "#3478e5";
+
+        document.getElementById("red-label").textContent =
+            "Original: Red";
+
+        document.getElementById("blue-label").textContent =
+            "Original: Blue";
+
+        document.getElementById("result").classList.remove("show");
+    }
+
+    document.getElementById("salt-select")
+        .addEventListener("change", resetExperiment);
+
+    document.getElementById("quiz-form")
+        .addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const answers = {
+                q1: "b",
+                q2: "a",
+                q3: "c",
+                q4: "a"
+            };
+
+            let score = 0;
+            let unanswered = false;
+
+            for (const question in answers) {
+                const selected =
+                    document.querySelector(
+                        `input[name="${question}"]:checked`
+                    );
+
+                if (!selected) {
+                    unanswered = true;
+                } else if (selected.value === answers[question]) {
+                    score++;
+                }
+            }
+
+            const result = document.getElementById("quiz-result");
+
+            if (unanswered) {
+                result.textContent =
+                    "Please answer all questions before submitting.";
+                result.style.color = "#b91c1c";
+                return;
+            }
+
+            result.textContent =
+                `You scored ${score} out of 4! ` +
+                (score === 4
+                    ? "Excellent work! 🎉"
+                    : "Good effort! Review the experiment and try again.");
+
+            result.style.color =
+                score === 4 ? "#15803d" : "#1d4ed8";
+        });
+
+    function resetQuiz() {
+        document.getElementById("quiz-form").reset();
+
+        document.getElementById("quiz-result").textContent = "";
+    }
+</script>
+
+</body>
+</html>

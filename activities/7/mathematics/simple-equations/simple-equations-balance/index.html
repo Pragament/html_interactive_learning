@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Balance the Equation</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:18px;font-family:"Segoe UI",system-ui,sans-serif;background:#eef5f8;color:#172033}.app{width:min(1080px,100%);margin:auto;display:grid;gap:16px}header,.panel{background:#fff;border:1px solid #d7e3ea;border-radius:8px;box-shadow:0 10px 26px #18273a14}header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}h1,p{margin:0}h1{font-size:clamp(1.6rem,4vw,2.4rem)}header p{color:#657386;margin-top:5px}.grid{display:grid;grid-template-columns:1fr .8fr;gap:16px}.panel{padding:18px}.equation{text-align:center;font-size:clamp(2rem,7vw,4rem);font-weight:900;color:#12364a;background:#edf8fb;border-radius:8px;padding:18px}.balance{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}.side{min-height:170px;border:3px solid #334155;border-top:0;border-radius:0 0 32px 32px;padding:14px;display:flex;align-content:flex-end;align-items:flex-end;justify-content:center;flex-wrap:wrap;gap:8px;background:linear-gradient(#f9fafb,#e8eef3)}.piece{padding:10px 14px;border-radius:7px;background:#176b87;color:#fff;font-weight:900}.piece.x{background:#c84b31}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chip{border:2px dashed #176b87;border-radius:8px;padding:10px 14px;background:#edf8fb;font-weight:900;cursor:grab}.drop{min-height:58px;border:2px dashed #cbd9e2;border-radius:8px;display:grid;place-items:center;color:#657386;margin-top:10px}.controls{display:grid;gap:14px}button{border:0;border-radius:8px;min-height:42px;padding:0 14px;background:#176b87;color:#fff;font-weight:850;cursor:pointer}.status,.steps{padding:12px;border-radius:8px;line-height:1.5}.status{background:#fff8e5;border:1px solid #f0d590;font-weight:650}.steps{background:#f6f9fb;border-left:5px solid #176b87}@media(max-width:780px){.grid{grid-template-columns:1fr}}
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-mathematics-simple-equations-simple-equations-balance",
+  "order": 104,
+  "class": "VII",
+  "subject": "Mathematics",
+  "topic": "Simple Equations",
+  "subtopic": null,
+  "title": "Balance the Equation",
+  "description": "Drag or select a number for x and use a balance model to solve equations such as x + 5 = 12.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body><main class="app"><header><div><h1>Balance the Equation</h1><p>Drag a number onto the answer box, then check whether the scale balances.</p></div><button id="new">New equation</button></header><section class="grid"><div class="panel"><div class="equation" id="equation"></div><div class="balance"><div class="side" id="left"></div><div class="side" id="right"></div></div></div><aside class="panel controls"><h2>Choose x</h2><div class="chips" id="chips"></div><div class="drop" id="drop">Drop your answer here</div><button id="check">Check balance</button><div class="status" id="status"></div><div class="steps" id="steps"></div></aside></section></main>
+  <script>
+    const equations=[{a:1,b:5,x:7},{a:2,b:3,x:4},{a:3,b:2,x:5},{a:2,b:7,x:3}],eq=document.querySelector("#equation"),left=document.querySelector("#left"),right=document.querySelector("#right"),chips=document.querySelector("#chips"),drop=document.querySelector("#drop"),status=document.querySelector("#status"),steps=document.querySelector("#steps");let current,guess=null;
+    function piece(text,kind=""){const d=document.createElement("div");d.className="piece "+kind;d.textContent=text;return d}
+    function render(){eq.textContent=`${current.a}x + ${current.b} = ${current.a*current.x+current.b}`;left.innerHTML="";for(let i=0;i<current.a;i++)left.append(piece("x","x"));left.append(piece("+ "+current.b));right.innerHTML="";for(let i=0;i<current.a*current.x+current.b;i++)right.append(piece("1"));chips.innerHTML="";for(let n=0;n<=10;n++){const c=document.createElement("button");c.className="chip";c.textContent=n;c.draggable=true;c.onclick=()=>select(n);c.ondragstart=e=>e.dataTransfer.setData("text/plain",n);chips.append(c)}drop.textContent=guess===null?"Drop your answer here":`Your choice: ${guess}`;status.textContent="Keep both sides equal: subtract "+current.b+" first, then divide by "+current.a+".";steps.textContent=`${current.a}x + ${current.b} = ${current.a*current.x+current.b}  →  ${current.a}x = ${current.a*current.x}  →  x = ${current.x}`}
+    function select(n){guess=n;render()}drop.ondragover=e=>e.preventDefault();drop.ondrop=e=>select(Number(e.dataTransfer.getData("text/plain")));document.querySelector("#check").onclick=()=>{status.textContent=guess===current.x?"Balanced! Correct answer: x = "+guess+".":"Not balanced yet. Follow the solving steps.";};document.querySelector("#new").onclick=()=>{current=equations[Math.floor(Math.random()*equations.length)];guess=null;render()};current=equations[0];render();
+  </script>
+</body>
+</html>

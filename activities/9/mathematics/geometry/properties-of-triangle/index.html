@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Properties of a Triangle</title>
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --error: #dc2626;
+    --error-bg: #fee2e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 18px; }
+  h1 { font-size: clamp(1.3rem, 4vw, 1.9rem); margin-bottom: 4px; color: var(--primary-dark); }
+  .subtitle { color: var(--muted); font-size: 0.95rem; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .tab-btn {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--border);
+    background: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.92rem;
+  }
+  .tab-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .tab-btn:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card h2 { margin-top: 0; font-size: 1.2rem; color: var(--primary-dark); }
+  .card > p.desc { color: var(--muted); font-size: 0.92rem; margin-top: -6px; }
+
+  .progress { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+
+  .question-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+  }
+  svg { max-width: 100%; height: auto; }
+  .svg-box { flex: 0 0 auto; width: min(320px, 90vw); }
+
+  .controls-box { flex: 1 1 260px; min-width: 220px; }
+  .prompt { font-weight: 600; margin-bottom: 12px; font-size: 1.02rem; }
+
+  input[type="number"] {
+    width: 100px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+  }
+  input[type="number"]:focus { outline: none; border-color: var(--primary); }
+
+  .choice-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .choice-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .choice-btn:hover, .choice-btn:focus-visible { border-color: var(--primary); outline: none; }
+  .choice-btn.chosen-correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .choice-btn.chosen-wrong { background: var(--error-bg); border-color: var(--error); color: var(--error); }
+
+  .action-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  button.action {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-secondary { background: #e2e8f0; color: var(--text); }
+  .btn-secondary:hover { background: #cbd5e1; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #feedback {
+    margin-top: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: none;
+    line-height: 1.5;
+  }
+  #feedback .expl { font-weight: 400; display: block; margin-top: 6px; font-size: 0.9rem; }
+  #feedback.show { display: block; }
+  #feedback.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+  #feedback.error { background: var(--error-bg); color: var(--error); border: 1px solid var(--error); }
+
+  .hidden { display: none !important; }
+  .note { font-size: 0.8rem; color: var(--muted); margin-top: 10px; text-align: center; }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-properties-of-triangle",
+  "order": 221,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": null,
+  "title": "Properties of a Triangle",
+  "description": "Form triangles with strips. Measure angles and sides to verify angle sum, exterior angle, and isosceles/equilateral properties.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Properties of a Triangle</h1>
+    <div class="subtitle">Class IX · Mathematics</div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Triangle topic sections">
+    <button class="tab-btn active" id="tab-angle" role="tab" aria-selected="true">Angle Sum Property</button>
+    <button class="tab-btn" id="tab-sides" role="tab" aria-selected="false">Sides &amp; Angles</button>
+    <button class="tab-btn" id="tab-ineq" role="tab" aria-selected="false">Triangle Inequality</button>
+  </div>
+
+  <div class="card" id="panel">
+    <!-- injected by JS -->
+  </div>
+
+  <p class="note">Triangles shown are illustrative and not drawn exactly to scale.</p>
+</div>
+
+<script>
+(function () {
+  // ---------- Data ----------
+  const angleQuestions = [
+    { a: 50, b: 60, label: ['A','B','C'] },
+    { a: 90, b: 35, label: ['A','B','C'] },
+    { a: 40, b: 40, label: ['A','B','C'] },
+    { a: 100, b: 45, label: ['A','B','C'] },
+    { a: 30, b: 70, label: ['A','B','C'] },
+  ];
+
+  // sides: [a,b,c] opposite angles [A,B,C]; question: which angle is largest
+  const sideQuestions = [
+    { sides: [5, 7, 9], askLargest: true },
+    { sides: [8, 8, 5], askLargest: false }, // ask smallest
+    { sides: [6, 10, 7], askLargest: true },
+    { sides: [12, 5, 9], askLargest: false },
+    { sides: [4, 4, 4], askLargest: true },
+  ];
+
+  const ineqQuestions = [
+    { sides: [4, 5, 9] },   // 4+5=9, not > 9 -> invalid
+    { sides: [3, 4, 5] },   // valid
+    { sides: [2, 2, 5] },   // invalid
+    { sides: [7, 8, 10] },  // valid
+    { sides: [5, 5, 10] },  // invalid (equal, not strictly greater)
+    { sides: [6, 7, 8] },   // valid
+  ];
+
+  let state = {
+    section: 'angle',
+    idx: { angle: 0, sides: 0, ineq: 0 },
+    answered: { angle: false, sides: false, ineq: false }
+  };
+
+  const panel = document.getElementById('panel');
+  const tabs = {
+    angle: document.getElementById('tab-angle'),
+    sides: document.getElementById('tab-sides'),
+    ineq: document.getElementById('tab-ineq')
+  };
+
+  Object.keys(tabs).forEach(key => {
+    tabs[key].addEventListener('click', () => switchSection(key));
+  });
+
+  function switchSection(key) {
+    state.section = key;
+    Object.keys(tabs).forEach(k => {
+      tabs[k].classList.toggle('active', k === key);
+      tabs[k].setAttribute('aria-selected', k === key ? 'true' : 'false');
+    });
+    render();
+  }
+
+  // ---------- Generic triangle SVG (fixed shape, labels change) ----------
+  function triangleSVG({ topLabel, leftLabel, rightLabel, topVal, leftVal, rightVal, sideTop, sideLeft, sideBottom, highlightVertex }) {
+    // Fixed vertex positions for a clear, readable triangle
+    const A = { x: 150, y: 30 };   // top
+    const B = { x: 30, y: 230 };   // bottom-left
+    const C = { x: 270, y: 230 };  // bottom-right
+    const vColor = v => highlightVertex === v ? '#7c3aed' : '#1e293b';
+    return `
+    <svg viewBox="0 0 300 260" role="img" aria-label="Triangle diagram">
+      <polygon points="${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}" fill="#f3e8ff" stroke="#7c3aed" stroke-width="3"/>
+      <text x="${A.x}" y="${A.y - 10}" text-anchor="middle" font-size="15" font-weight="700" fill="${vColor('A')}">${topLabel || ''}</text>
+      <text x="${B.x - 18}" y="${B.y + 10}" text-anchor="middle" font-size="15" font-weight="700" fill="${vColor('B')}">${leftLabel || ''}</text>
+      <text x="${C.x + 18}" y="${C.y + 10}" text-anchor="middle" font-size="15" font-weight="700" fill="${vColor('C')}">${rightLabel || ''}</text>
+      ${topVal !== undefined ? `<text x="${A.x}" y="${A.y + 26}" text-anchor="middle" font-size="14" fill="#334155">${topVal}</text>` : ''}
+      ${leftVal !== undefined ? `<text x="${B.x + 22}" y="${B.y - 14}" text-anchor="middle" font-size="14" fill="#334155">${leftVal}</text>` : ''}
+      ${rightVal !== undefined ? `<text x="${C.x - 22}" y="${C.y - 14}" text-anchor="middle" font-size="14" fill="#334155">${rightVal}</text>` : ''}
+      ${sideTop !== undefined ? `<text x="${(B.x+C.x)/2}" y="${B.y + 22}" text-anchor="middle" font-size="14" fill="#475569">${sideTop}</text>` : ''}
+      ${sideLeft !== undefined ? `<text x="${(A.x+B.x)/2 - 22}" y="${(A.y+B.y)/2}" text-anchor="middle" font-size="14" fill="#475569">${sideLeft}</text>` : ''}
+      ${sideBottom !== undefined ? `<text x="${(A.x+C.x)/2 + 22}" y="${(A.y+C.y)/2}" text-anchor="middle" font-size="14" fill="#475569">${sideBottom}</text>` : ''}
+    </svg>`;
+  }
+
+  // ---------- Render dispatch ----------
+  function render() {
+    if (state.section === 'angle') renderAngle();
+    else if (state.section === 'sides') renderSides();
+    else renderIneq();
+  }
+
+  // ---------- Section 1: Angle Sum Property ----------
+  function renderAngle() {
+    const i = state.idx.angle;
+    const q = angleQuestions[i];
+    const missing = 180 - q.a - q.b;
+    panel.innerHTML = `
+      <h2>Angle Sum Property of a Triangle</h2>
+      <p class="desc">The three interior angles of any triangle always add up to 180°.</p>
+      <div class="progress">Example ${i + 1} of ${angleQuestions.length}</div>
+      <div class="question-area">
+        <div class="svg-box">
+          ${triangleSVG({ topLabel: 'A', leftLabel: 'B', rightLabel: 'C', topVal: q.a + '°', leftVal: q.b + '°', rightVal: '?' })}
+        </div>
+        <div class="controls-box">
+          <div class="prompt">Angle A = ${q.a}°, Angle B = ${q.b}°. What is Angle C?</div>
+          <input type="number" id="angleInput" aria-label="Your answer for angle C in degrees" placeholder="Degrees">
+          <span>°</span>
+          <div class="action-row">
+            <button class="action btn-primary" id="checkAngle">Check Answer</button>
+            <button class="action btn-secondary" id="nextAngle">Next Example</button>
+            <button class="action btn-secondary" id="resetAngle">Reset</button>
+          </div>
+          <div id="feedback"></div>
+        </div>
+      </div>
+    `;
+    document.getElementById('checkAngle').addEventListener('click', () => {
+      const val = parseFloat(document.getElementById('angleInput').value);
+      const fb = document.getElementById('feedback');
+      if (isNaN(val)) {
+        showFeedback(fb, false, 'Enter a number for Angle C before checking.', '');
+        return;
+      }
+      if (val === missing) {
+        showFeedback(fb, true, `Correct! Angle C = ${missing}°.`,
+          `Since angles in a triangle sum to 180°: ${q.a}° + ${q.b}° + ${missing}° = 180°.`);
+      } else {
+        showFeedback(fb, false, `Not quite. Angle C = ${missing}°, not ${val}°.`,
+          `All three angles must add up to 180°, so Angle C = 180° − ${q.a}° − ${q.b}° = ${missing}°.`);
+      }
+    });
+    document.getElementById('nextAngle').addEventListener('click', () => {
+      state.idx.angle = (state.idx.angle + 1) % angleQuestions.length;
+      renderAngle();
+    });
+    document.getElementById('resetAngle').addEventListener('click', renderAngle);
+  }
+
+  // ---------- Section 2: Sides & Angles relationship ----------
+  function renderSides() {
+    const i = state.idx.sides;
+    const q = sideQuestions[i];
+    const [a, b, c] = q.sides; // a opposite A(top), b opposite B(left)... we'll map: side BC opposite A, side AC opposite B, side AB opposite C
+    // Simplify: label sides as BC(a) opposite A, CA(b) opposite B, AB(c) opposite C
+    const [sideBC, sideCA, sideAB] = q.sides;
+    const angles = { A: sideBC, B: sideCA, C: sideAB }; // larger side -> larger opposite angle
+    const sortedDesc = Object.entries(angles).sort((x, y) => y[1] - x[1]);
+    const largest = sortedDesc[0][0];
+    const smallest = sortedDesc[sortedDesc.length - 1][0];
+    const askingFor = q.askLargest ? 'largest' : 'smallest';
+    const correctAnswer = q.askLargest ? largest : smallest;
+
+    panel.innerHTML = `
+      <h2>Relationship Between Sides and Angles</h2>
+      <p class="desc">In any triangle, the longer side is always opposite the larger angle, and the shorter side is opposite the smaller angle.</p>
+      <div class="progress">Example ${i + 1} of ${sideQuestions.length}</div>
+      <div class="question-area">
+        <div class="svg-box">
+          ${triangleSVG({ topLabel: 'A', leftLabel: 'B', rightLabel: 'C', sideTop: sideBC, sideLeft: sideCA, sideBottom: sideAB })}
+        </div>
+        <div class="controls-box">
+          <div class="prompt">Side BC = ${sideBC}, Side CA = ${sideCA}, Side AB = ${sideAB}.<br>Which angle is the <strong>${askingFor}</strong>?</div>
+          <div class="choice-row" id="choiceRow">
+            <button class="choice-btn" data-choice="A">Angle A</button>
+            <button class="choice-btn" data-choice="B">Angle B</button>
+            <button class="choice-btn" data-choice="C">Angle C</button>
+          </div>
+          <div class="action-row">
+            <button class="action btn-secondary" id="nextSides">Next Example</button>
+            <button class="action btn-secondary" id="resetSides">Reset</button>
+          </div>
+          <div id="feedback"></div>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll('#choiceRow .choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const choice = btn.dataset.choice;
+        const fb = document.getElementById('feedback');
+        document.querySelectorAll('#choiceRow .choice-btn').forEach(b => {
+          b.classList.remove('chosen-correct', 'chosen-wrong');
+          b.disabled = true;
+        });
+        if (choice === correctAnswer) {
+          btn.classList.add('chosen-correct');
+          showFeedback(fb, true, `Correct! Angle ${correctAnswer} is the ${askingFor}.`,
+            `Side lengths: BC=${sideBC} (opposite A), CA=${sideCA} (opposite B), AB=${sideAB} (opposite C). The ${askingFor} side is opposite the ${askingFor} angle.`);
+        } else {
+          btn.classList.add('chosen-wrong');
+          const correctBtn = document.querySelector(`#choiceRow [data-choice="${correctAnswer}"]`);
+          if (correctBtn) correctBtn.classList.add('chosen-correct');
+          showFeedback(fb, false, `Not quite. Angle ${correctAnswer} is actually the ${askingFor}.`,
+            `Side lengths: BC=${sideBC} (opposite A), CA=${sideCA} (opposite B), AB=${sideAB} (opposite C). The ${askingFor} side is opposite the ${askingFor} angle.`);
+        }
+      });
+    });
+    document.getElementById('nextSides').addEventListener('click', () => {
+      state.idx.sides = (state.idx.sides + 1) % sideQuestions.length;
+      renderSides();
+    });
+    document.getElementById('resetSides').addEventListener('click', renderSides);
+  }
+
+  // ---------- Section 3: Triangle Inequality ----------
+  function renderIneq() {
+    const i = state.idx.ineq;
+    const q = ineqQuestions[i];
+    const [x, y, z] = q.sides.slice().sort((p, q2) => p - q2);
+    const isValid = (x + y) > z;
+
+    panel.innerHTML = `
+      <h2>Triangle Inequality</h2>
+      <p class="desc">The sum of the lengths of any two sides of a triangle must be greater than the length of the third side.</p>
+      <div class="progress">Example ${i + 1} of ${ineqQuestions.length}</div>
+      <div class="question-area">
+        <div class="svg-box">
+          ${triangleSVG({ sideTop: q.sides[0], sideLeft: q.sides[1], sideBottom: q.sides[2] })}
+        </div>
+        <div class="controls-box">
+          <div class="prompt">Can side lengths ${q.sides[0]}, ${q.sides[1]}, and ${q.sides[2]} form a triangle?</div>
+          <div class="choice-row" id="choiceRowIneq">
+            <button class="choice-btn" data-choice="yes">Yes</button>
+            <button class="choice-btn" data-choice="no">No</button>
+          </div>
+          <div class="action-row">
+            <button class="action btn-secondary" id="nextIneq">Next Example</button>
+            <button class="action btn-secondary" id="resetIneq">Reset</button>
+          </div>
+          <div id="feedback"></div>
+        </div>
+      </div>
+    `;
+    document.querySelectorAll('#choiceRowIneq .choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const choice = btn.dataset.choice === 'yes';
+        const fb = document.getElementById('feedback');
+        document.querySelectorAll('#choiceRowIneq .choice-btn').forEach(b => {
+          b.classList.remove('chosen-correct', 'chosen-wrong');
+          b.disabled = true;
+        });
+        const reason = `The two shorter sides are ${x} and ${y}; their sum is ${x + y}. The longest side is ${z}. `
+          + (isValid
+              ? `Since ${x} + ${y} = ${x+y} > ${z}, these lengths CAN form a triangle.`
+              : `Since ${x} + ${y} = ${x+y} is NOT greater than ${z}, these lengths CANNOT form a triangle.`);
+        if (choice === isValid) {
+          btn.classList.add('chosen-correct');
+          showFeedback(fb, true, 'Correct!', reason);
+        } else {
+          btn.classList.add('chosen-wrong');
+          const correctBtn = document.querySelector(`#choiceRowIneq [data-choice="${isValid ? 'yes' : 'no'}"]`);
+          if (correctBtn) correctBtn.classList.add('chosen-correct');
+          showFeedback(fb, false, `Not quite. The correct answer is "${isValid ? 'Yes' : 'No'}".`, reason);
+        }
+      });
+    });
+    document.getElementById('nextIneq').addEventListener('click', () => {
+      state.idx.ineq = (state.idx.ineq + 1) % ineqQuestions.length;
+      renderIneq();
+    });
+    document.getElementById('resetIneq').addEventListener('click', renderIneq);
+  }
+
+  // ---------- Feedback helper ----------
+  function showFeedback(fbEl, success, headline, explanation) {
+    fbEl.classList.add('show');
+    fbEl.classList.toggle('success', success);
+    fbEl.classList.toggle('error', !success);
+    fbEl.innerHTML = `${headline}${explanation ? `<span class="expl">${explanation}</span>` : ''}`;
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

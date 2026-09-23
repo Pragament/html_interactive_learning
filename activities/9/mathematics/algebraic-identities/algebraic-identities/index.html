@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Algebraic Identities Explorer</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+.header {
+    background: #1e3a5f;
+    color: white;
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 4vw, 36px);
+}
+
+.header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 18px;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 13px;
+    border: 2px solid #d5dce5;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.tab.active {
+    background: #1e3a5f;
+    color: white;
+    border-color: #1e3a5f;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.controls {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.control {
+    flex: 1;
+    min-width: 220px;
+}
+
+.control label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.value {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+}
+
+.visual-area {
+    min-height: 430px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafbfd;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+svg {
+    width: 100%;
+    max-width: 470px;
+    height: auto;
+}
+
+.math-box {
+    background: #f8fafc;
+    border-left: 5px solid #1e3a5f;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.formula {
+    font-size: clamp(18px, 3vw, 25px);
+    font-weight: bold;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.calculation {
+    line-height: 1.8;
+    font-size: 17px;
+}
+
+.success {
+    background: #ecfdf3;
+    border: 1px solid #9dd8b4;
+    color: #166534;
+}
+
+.challenge {
+    background: #fffaf0;
+    border: 1px solid #ead39b;
+}
+
+.challenge input {
+    width: 100%;
+    max-width: 180px;
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+}
+
+button.action {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 8px 5px 0 0;
+    background: #1e3a5f;
+    color: white;
+}
+
+button.action.secondary {
+    background: #64748b;
+}
+
+button.action:hover {
+    opacity: 0.9;
+}
+
+.teacher {
+    display: none;
+    background: #f1f5f9;
+    border-left: 5px solid #64748b;
+}
+
+.teacher ul {
+    line-height: 1.8;
+}
+
+.feedback {
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.legend span::before {
+    content: "";
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+    border-radius: 3px;
+    background: #dbeafe;
+}
+
+.legend span:nth-child(2)::before {
+    background: #fef3c7;
+}
+
+.legend span:nth-child(3)::before {
+    background: #dcfce7;
+}
+
+@media (max-width: 800px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-algebraic-identities-algebraic-identities",
+  "order": 232,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Algebraic Identities",
+  "subtopic": null,
+  "title": "Verification of (a+b)² and (a-b)²",
+  "description": "Arrange square and rectangular cut-outs to verify (a+b)² = a²+2ab+b² and (a-b)² = a²-2ab+b².",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+
+<header class="header">
+    <h1>Algebraic Identities Explorer</h1>
+    <p>Discover why the identities work by exploring areas, not just memorising formulas.</p>
+</header>
+
+<main class="container">
+
+    <div class="tabs">
+        <button class="tab active" onclick="changeMode('plus', this)">
+            (a + b)²
+        </button>
+
+        <button class="tab" onclick="changeMode('minus', this)">
+            (a − b)²
+        </button>
+    </div>
+
+    <section class="card">
+        <h2>1. Explore</h2>
+        <p>
+            Change the values of <strong>a</strong> and <strong>b</strong>.
+            Watch the square change and observe how its area is divided.
+        </p>
+
+        <div class="controls">
+
+            <div class="control">
+                <label for="aSlider">Value of a</label>
+                <input id="aSlider" type="range" min="2" max="10" value="6"
+                       oninput="updateActivity()">
+                <div class="value">a = <span id="aValue">6</span></div>
+            </div>
+
+            <div class="control">
+                <label for="bSlider">Value of b</label>
+                <input id="bSlider" type="range" min="1" max="5" value="2"
+                       oninput="updateActivity()">
+                <div class="value">b = <span id="bValue">2</span></div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="workspace">
+
+        <div class="card">
+            <h2>Visual Area Model</h2>
+
+            <div class="visual-area">
+                <svg id="diagram" viewBox="0 0 500 500"
+                     aria-label="Interactive algebra area model">
+                </svg>
+            </div>
+
+            <div class="legend">
+                <span>a²</span>
+                <span>ab</span>
+                <span>b²</span>
+            </div>
+        </div>
+
+        <div class="card">
+
+            <h2>2. Verify the Identity</h2>
+
+            <div class="math-box">
+                <div class="formula" id="formula"></div>
+            </div>
+
+            <div class="calculation" id="calculation"></div>
+
+            <div class="math-box success">
+                <strong>Result:</strong>
+                <div id="result"></div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="card challenge">
+
+        <h2>3. Prediction Challenge</h2>
+
+        <p id="question"></p>
+
+        <input type="number" id="answer"
+               placeholder="Enter your answer">
+
+        <br>
+
+        <button class="action" onclick="checkAnswer()">
+            Check Answer
+        </button>
+
+        <button class="action secondary" onclick="showAnswer()">
+            Reveal Answer
+        </button>
+
+        <div class="feedback" id="feedback"></div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>4. Teacher Mode</h2>
+
+        <button class="action" onclick="toggleTeacher()">
+            Show / Hide Teacher Prompts
+        </button>
+
+        <div class="teacher card" id="teacherBox">
+
+            <ul>
+                <li>
+                    Ask students what each rectangular region represents.
+                </li>
+
+                <li>
+                    Why do two regions have the value ab?
+                </li>
+
+                <li>
+                    Can students explain where the term 2ab comes from?
+                </li>
+
+                <li>
+                    Ask students to predict the result before using the formula.
+                </li>
+
+                <li>
+                    For (a−b)², ask why the middle terms are negative.
+                </li>
+            </ul>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+
+let mode = "plus";
+
+function getValues() {
+    return {
+        a: Number(document.getElementById("aSlider").value),
+        b: Number(document.getElementById("bSlider").value)
+    };
+}
+
+function changeMode(newMode, button) {
+
+    mode = newMode;
+
+    document.querySelectorAll(".tab").forEach(function(tab) {
+        tab.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    updateActivity();
+}
+
+function updateActivity() {
+
+    const values = getValues();
+    const a = values.a;
+    const b = values.b;
+
+    document.getElementById("aValue").textContent = a;
+    document.getElementById("bValue").textContent = b;
+
+    if (mode === "plus") {
+        updatePlus(a, b);
+    } else {
+        updateMinus(a, b);
+    }
+}
+
+function updatePlus(a, b) {
+
+    const a2 = a * a;
+    const ab = a * b;
+    const b2 = b * b;
+
+    const total = (a + b) * (a + b);
+
+    document.getElementById("formula").textContent =
+        "(a + b)² = a² + 2ab + b²";
+
+    document.getElementById("calculation").innerHTML =
+        "<strong>Left side:</strong><br>" +
+        `(${a} + ${b})² = ${total}<br><br>` +
+
+        "<strong>Right side:</strong><br>" +
+        `${a2} + 2(${ab}) + ${b2}<br>` +
+        `= ${a2} + ${2 * ab} + ${b2}<br>` +
+        `= ${total}`;
+
+    document.getElementById("result").textContent =
+        `${total} = ${total} ✓`;
+
+    document.getElementById("question").textContent =
+        `If a = ${a} and b = ${b}, what is the value of 2ab?`;
+
+    window.currentAnswer = 2 * ab;
+
+    drawPlus(a, b);
+}
+
+function updateMinus(a, b) {
+
+    if (b >= a) {
+        b = a - 1;
+
+        document.getElementById("bSlider").value = b;
+        document.getElementById("bValue").textContent = b;
+    }
+
+    const x = a - b;
+
+    const left = x * x;
+    const a2 = a * a;
+    const ab = a * b;
+    const b2 = b * b;
+
+    document.getElementById("formula").textContent =
+        "(a − b)² = a² − 2ab + b²";
+
+    document.getElementById("calculation").innerHTML =
+        "<strong>Left side:</strong><br>" +
+        `(${a} − ${b})² = ${left}<br><br>` +
+
+        "<strong>Right side:</strong><br>" +
+        `${a2} − 2(${ab}) + ${b2}<br>` +
+        `= ${a2} − ${2 * ab} + ${b2}<br>` +
+        `= ${left}`;
+
+    document.getElementById("result").textContent =
+        `${left} = ${left} ✓`;
+
+    document.getElementById("question").textContent =
+        `If a = ${a} and b = ${b}, what is the value of (a − b)²?`;
+
+    window.currentAnswer = left;
+
+    drawMinus(a, b);
+}
+
+function clearSVG() {
+
+    document.getElementById("diagram").innerHTML = "";
+}
+
+function addSVGElement(type, attributes) {
+
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    const element = document.createElementNS(svgNS, type);
+
+    for (let key in attributes) {
+        element.setAttribute(key, attributes[key]);
+    }
+
+    document.getElementById("diagram").appendChild(element);
+
+    return element;
+}
+
+function addText(text, x, y, size = 18) {
+
+    const element = addSVGElement("text", {
+        x: x,
+        y: y,
+        "text-anchor": "middle",
+        "font-size": size,
+        "font-weight": "600",
+        fill: "#1f2937"
+    });
+
+    element.textContent = text;
+
+    return element;
+}
+
+function drawPlus(a, b) {
+
+    clearSVG();
+
+    const scale = 28;
+
+    const x0 = 70;
+    const y0 = 55;
+
+    const side = (a + b) * scale;
+
+    addSVGElement("rect", {
+        x: x0,
+        y: y0,
+        width: side,
+        height: side,
+        fill: "#eef6ff",
+        stroke: "#1f2937",
+        "stroke-width": 3
+    });
+
+    // a²
+    addSVGElement("rect", {
+        x: x0,
+        y: y0,
+        width: a * scale,
+        height: a * scale,
+        fill: "#dbeafe",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // ab top-right
+    addSVGElement("rect", {
+        x: x0 + a * scale,
+        y: y0,
+        width: b * scale,
+        height: a * scale,
+        fill: "#fef3c7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // ab bottom-left
+    addSVGElement("rect", {
+        x: x0,
+        y: y0 + a * scale,
+        width: a * scale,
+        height: b * scale,
+        fill: "#fef3c7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // b²
+    addSVGElement("rect", {
+        x: x0 + a * scale,
+        y: y0 + a * scale,
+        width: b * scale,
+        height: b * scale,
+        fill: "#dcfce7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    addText("a²", x0 + a * scale / 2,
+            y0 + a * scale / 2 + 7);
+
+    addText("ab", x0 + a * scale + b * scale / 2,
+            y0 + a * scale / 2 + 7);
+
+    addText("ab", x0 + a * scale / 2,
+            y0 + a * scale + b * scale / 2 + 7);
+
+    addText("b²", x0 + a * scale + b * scale / 2,
+            y0 + a * scale + b * scale / 2 + 7);
+
+    addText("a + b", x0 + side / 2,
+            y0 + side + 30);
+
+    addText("a + b", x0 - 28,
+            y0 + side / 2, 16)
+        .setAttribute("transform",
+            `rotate(-90 ${x0 - 28} ${y0 + side / 2})`);
+}
+
+function drawMinus(a, b) {
+
+    clearSVG();
+
+    const x = a - b;
+
+    const scale = 30;
+
+    const x0 = 85;
+    const y0 = 60;
+
+    const side = a * scale;
+
+    /*
+       We show an a × a square divided into:
+       (a-b)²
+       b(a-b)
+       b(a-b)
+       b²
+
+       The target region is highlighted as the
+       smaller square.
+    */
+
+    addSVGElement("rect", {
+        x: x0,
+        y: y0,
+        width: side,
+        height: side,
+        fill: "#f8fafc",
+        stroke: "#1f2937",
+        "stroke-width": 3
+    });
+
+    // (a-b)^2
+    addSVGElement("rect", {
+        x: x0,
+        y: y0,
+        width: x * scale,
+        height: x * scale,
+        fill: "#dbeafe",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // horizontal strip
+    addSVGElement("rect", {
+        x: x0,
+        y: y0 + x * scale,
+        width: x * scale,
+        height: b * scale,
+        fill: "#fef3c7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // vertical strip
+    addSVGElement("rect", {
+        x: x0 + x * scale,
+        y: y0,
+        width: b * scale,
+        height: x * scale,
+        fill: "#fef3c7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    // b²
+    addSVGElement("rect", {
+        x: x0 + x * scale,
+        y: y0 + x * scale,
+        width: b * scale,
+        height: b * scale,
+        fill: "#dcfce7",
+        stroke: "#1f2937",
+        "stroke-width": 2
+    });
+
+    addText("(a−b)²",
+            x0 + x * scale / 2,
+            y0 + x * scale / 2 + 7,
+            16);
+
+    addText("b(a−b)",
+            x0 + x * scale / 2,
+            y0 + x * scale + b * scale / 2 + 6,
+            14);
+
+    addText("b(a−b)",
+            x0 + x * scale + b * scale / 2,
+            y0 + x * scale / 2 + 6,
+            14);
+
+    addText("b²",
+            x0 + x * scale + b * scale / 2,
+            y0 + x * scale + b * scale / 2 + 6,
+            14);
+
+    addText("a", x0 + side / 2, y0 + side + 30);
+}
+
+function checkAnswer() {
+
+    const input = Number(document.getElementById("answer").value);
+
+    const feedback = document.getElementById("feedback");
+
+    if (document.getElementById("answer").value === "") {
+        feedback.textContent = "Please enter an answer first.";
+        feedback.style.color = "#92400e";
+        return;
+    }
+
+    if (input === window.currentAnswer) {
+        feedback.textContent =
+            "Correct! Excellent prediction. ✓";
+        feedback.style.color = "#166534";
+    } else {
+        feedback.textContent =
+            "Not quite. Try using the area model and the values of a and b.";
+        feedback.style.color = "#b91c1c";
+    }
+}
+
+function showAnswer() {
+
+    document.getElementById("feedback").textContent =
+        `The correct answer is ${window.currentAnswer}.`;
+
+    document.getElementById("feedback").style.color = "#1e3a5f";
+}
+
+function toggleTeacher() {
+
+    const box = document.getElementById("teacherBox");
+
+    if (box.style.display === "block") {
+        box.style.display = "none";
+    } else {
+        box.style.display = "block";
+    }
+}
+
+updateActivity();
+
+</script>
+
+</body>
+</html>

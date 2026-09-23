@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test for Proteins - Class VI</title>
+  <style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --ink: #17211b;
+  --muted: #657168;
+  --cream: #f6f3ea;
+  --card: #fffdf8;
+  --green: #486653;
+  --green-dark: #314b3b;
+  --green-soft: #e6eee7;
+  --yellow: #f2c96b;
+  --border: #dfe4dc;
+  --violet: #8d5ba7;
+  --violet-light: #e8d9ed;
+  --shadow: 0 12px 35px rgba(44, 57, 47, 0.08);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(230, 238, 231, .8), transparent 28%),
+    radial-gradient(circle at 90% 20%, rgba(242, 201, 107, .13), transparent 25%),
+    var(--cream);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.app {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 38px 0 28px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 7px;
+  font-size: .72rem;
+  letter-spacing: .15em;
+  font-weight: 800;
+  color: var(--green);
+}
+
+h1, h2, h3, p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -.045em;
+  line-height: 1;
+}
+
+.subtitle {
+  color: var(--muted);
+  max-width: 650px;
+  margin-bottom: 0;
+}
+
+.progress-wrap {
+  width: 210px;
+  flex: 0 0 auto;
+}
+
+.progress-wrap span {
+  display: block;
+  text-align: right;
+  font-size: .78rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+.progress {
+  height: 7px;
+  border-radius: 99px;
+  background: #dfe4dc;
+  overflow: hidden;
+}
+
+.progress div {
+  width: 16.66%;
+  height: 100%;
+  background: var(--green);
+  border-radius: inherit;
+  transition: width .35s ease;
+}
+
+.card {
+  background: rgba(255, 253, 248, .9);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.instructions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 17px 20px;
+  margin-bottom: 18px;
+}
+
+.step-badge {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--green);
+  color: white;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.instructions h2 {
+  margin-bottom: 3px;
+  font-size: 1.05rem;
+}
+
+.instructions p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: .78fr 1.5fr;
+  gap: 18px;
+}
+
+.samples-card, .experiment-card {
+  padding: 24px;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.sample-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 20px 0 16px;
+}
+
+.sample {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 16px;
+  padding: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform .18s, border-color .18s, box-shadow .18s, background .18s;
+  color: var(--ink);
+  font-weight: 750;
+  text-align: left;
+}
+
+.sample:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(44, 57, 47, .08);
+}
+
+.sample.selected {
+  border-color: var(--green);
+  background: var(--green-soft);
+  box-shadow: 0 0 0 3px rgba(72, 102, 83, .1);
+}
+
+.food-icon {
+  font-size: 1.8rem;
+}
+
+.selected-text {
+  color: var(--muted);
+  font-size: .86rem;
+  margin-bottom: 0;
+}
+
+.selected-text strong {
+  color: var(--green-dark);
+}
+
+.experiment-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 15px;
+}
+
+.experiment-head p {
+  color: var(--muted);
+  font-size: .86rem;
+  margin-bottom: 0;
+}
+
+.ghost-btn {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.lab-area {
+  min-height: 285px;
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 20px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.tube-stage {
+  height: 245px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+}
+
+.tube-label {
+  font-size: .78rem;
+  font-weight: 800;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.test-tube {
+  position: relative;
+  width: 88px;
+  height: 178px;
+  border: 5px solid #b8c4bb;
+  border-top: 0;
+  border-radius: 0 0 40px 40px;
+  overflow: hidden;
+  background: rgba(255,255,255,.45);
+  box-shadow: inset 6px 0 12px rgba(255,255,255,.7);
+}
+
+.tube-rim {
+  position: absolute;
+  z-index: 5;
+  top: -2px;
+  left: -7px;
+  width: 90px;
+  height: 11px;
+  border: 4px solid #b8c4bb;
+  border-radius: 8px;
+  background: #f8faf8;
+}
+
+.liquid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 8%;
+  background: rgba(194, 210, 220, .55);
+  transition: height .6s ease, background .7s ease;
+}
+
+.liquid.violet {
+  background: linear-gradient(180deg, #a66bbb, #805096);
+  box-shadow: 0 0 18px rgba(141, 91, 167, .25);
+}
+
+.sample-inside {
+  position: absolute;
+  z-index: 2;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .4s, transform .4s;
+}
+
+.sample-inside.visible {
+  opacity: 1;
+  animation: settle .7s ease;
+}
+
+.sample-inside.gram { background: #c7a46b; }
+.sample-inside.pea { background: #75a85d; }
+.sample-inside.banana { background: #e4c94d; }
+
+.bubbles {
+  position: absolute;
+  inset: 30% 0 10%;
+  z-index: 3;
+  opacity: 0;
+}
+
+.bubbles.active {
+  opacity: 1;
+  background:
+    radial-gradient(circle at 25% 45%, rgba(255,255,255,.8) 0 3px, transparent 4px),
+    radial-gradient(circle at 68% 65%, rgba(255,255,255,.8) 0 2px, transparent 3px),
+    radial-gradient(circle at 45% 20%, rgba(255,255,255,.8) 0 2px, transparent 3px);
+  animation: bubbles 1s infinite alternate;
+}
+
+.tube-base {
+  width: 120px;
+  height: 12px;
+  border-radius: 50%;
+  background: #c8d0c9;
+  margin-top: 7px;
+}
+
+.controls {
+  display: grid;
+  gap: 9px;
+}
+
+.action-btn {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--ink);
+  padding: 12px 13px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 700;
+  transition: .18s ease;
+}
+
+.action-btn span {
+  color: var(--green);
+  margin-right: 5px;
+}
+
+.action-btn:not(:disabled):hover {
+  transform: translateX(3px);
+  border-color: var(--green);
+}
+
+.action-btn:disabled {
+  cursor: not-allowed;
+  opacity: .42;
+}
+
+.action-btn.done {
+  background: var(--green-soft);
+  border-color: #b7cabb;
+  color: var(--green-dark);
+}
+
+.observation {
+  display: flex;
+  gap: 12px;
+  border-radius: 15px;
+  padding: 13px 15px;
+  background: #f1f4ef;
+  margin-top: 8px;
+}
+
+.observation > span {
+  font-size: 1.2rem;
+}
+
+.observation strong {
+  font-size: .8rem;
+  color: var(--green-dark);
+}
+
+.observation p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.result-card {
+  margin-top: 18px;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.result-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 19px;
+  display: grid;
+  place-items: center;
+  font-size: 1.9rem;
+  background: var(--violet-light);
+}
+
+.result-content h2 {
+  margin-bottom: 5px;
+}
+
+.result-content > p {
+  color: var(--muted);
+  margin-bottom: 17px;
+}
+
+.answer-question {
+  border-top: 1px solid var(--border);
+  padding-top: 17px;
+}
+
+.answer-question h3 {
+  font-size: .95rem;
+  margin-bottom: 11px;
+}
+
+.answer-buttons {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.answer {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 10px 13px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.answer:hover {
+  border-color: var(--green);
+}
+
+.feedback {
+  min-height: 20px;
+  margin: 9px 0 0;
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.feedback.correct { color: #3c6c4c; }
+.feedback.wrong { color: #a34f4f; }
+
+.comparison, .quiz, .completion {
+  margin-top: 18px;
+  padding: 25px;
+}
+
+.comparison h2 {
+  margin-bottom: 4px;
+}
+
+.comparison > p {
+  color: var(--muted);
+  font-size: .88rem;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0 18px;
+}
+
+.results-table th, .results-table td {
+  text-align: left;
+  padding: 11px;
+  border-bottom: 1px solid var(--border);
+  font-size: .86rem;
+}
+
+.results-table th {
+  color: var(--muted);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.status {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 99px;
+  background: var(--violet-light);
+  color: #69457b;
+  font-weight: 800;
+}
+
+.primary-btn {
+  border: 0;
+  background: var(--green);
+  color: white;
+  padding: 12px 17px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: .18s;
+}
+
+.primary-btn:hover {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+}
+
+.quiz-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: start;
+}
+
+.quiz-top h2 {
+  margin-bottom: 0;
+}
+
+#quizCounter {
+  color: var(--muted);
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.quiz-question {
+  margin-top: 18px;
+}
+
+.quiz-question h3 {
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.quiz-options {
+  display: grid;
+  gap: 9px;
+}
+
+.quiz-option {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: .18s;
+}
+
+.quiz-option:hover {
+  border-color: var(--green);
+  transform: translateX(2px);
+}
+
+.quiz-option.correct {
+  background: var(--green-soft);
+  border-color: #9bb5a0;
+}
+
+.quiz-option.incorrect {
+  background: #f6e9e9;
+  border-color: #d8aaaa;
+}
+
+.quiz-feedback {
+  margin-top: 11px;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.next-question {
+  margin-top: 13px;
+}
+
+.completion {
+  text-align: center;
+  padding: 35px 25px;
+}
+
+.completion-icon {
+  font-size: 3rem;
+  margin-bottom: 8px;
+}
+
+.completion p {
+  color: var(--muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+footer {
+  text-align: center;
+  color: #7b857d;
+  font-size: .72rem;
+  line-height: 1.5;
+  padding: 20px 10px 0;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translate(-50%, 20px);
+  background: #1d2921;
+  color: white;
+  padding: 11px 15px;
+  border-radius: 11px;
+  font-size: .82rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s;
+  z-index: 20;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@keyframes settle {
+  0% { transform: translateX(-50%) scale(.4); }
+  70% { transform: translateX(-50%) scale(1.1); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+@keyframes bubbles {
+  from { transform: translateY(3px); }
+  to { transform: translateY(-8px); }
+}
+
+@media (max-width: 800px) {
+  .hero {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .progress-wrap {
+    width: 100%;
+  }
+
+  .progress-wrap span {
+    text-align: left;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .sample-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sample {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .app {
+    width: min(100% - 20px, 1120px);
+    padding-top: 22px;
+  }
+
+  .samples-card, .experiment-card, .comparison, .quiz, .completion, .result-card {
+    padding: 18px;
+  }
+
+  .sample-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sample {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .lab-area {
+    grid-template-columns: 1fr;
+  }
+
+  .tube-stage {
+    height: 220px;
+  }
+
+  .result-card {
+    grid-template-columns: 1fr;
+  }
+
+  .result-icon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .answer-buttons {
+    flex-direction: column;
+  }
+}
+
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-food-test-for-proteins",
+  "order": 4,
+  "class": "VI",
+  "subject": "Science",
+  "topic": "Food",
+  "subtopic": null,
+  "title": "Test for Proteins",
+  "description": "Grind gram/pea seeds and mash banana in separate test tubes. Add water, copper sulphate solution, and caustic soda. Violet color indicates the presence of proteins in the gram/pea seeds.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">CLASS VI • SCIENCE • FOOD</p>
+        <h1>🔬 Test for Proteins</h1>
+        <p class="subtitle">Perform a virtual food test and find out whether a sample contains protein.</p>
+      </div>
+      <div class="progress-wrap">
+        <span id="progressText">Step 1 of 6</span>
+        <div class="progress"><div id="progressBar"></div></div>
+      </div>
+    </header>
+
+    <section class="card instructions">
+      <div class="step-badge" id="stepBadge">1</div>
+      <div>
+        <h2 id="instructionTitle">Choose a food sample</h2>
+        <p id="instructionText">Select Gram, Pea, or Banana to begin the virtual experiment.</p>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="card samples-card">
+        <h2>1. Choose your sample</h2>
+        <div class="sample-grid">
+          <button class="sample" data-sample="Gram">
+            <span class="food-icon">🫘</span>
+            <span>Gram</span>
+          </button>
+          <button class="sample" data-sample="Pea">
+            <span class="food-icon">🟢</span>
+            <span>Pea</span>
+          </button>
+          <button class="sample" data-sample="Banana">
+            <span class="food-icon">🍌</span>
+            <span>Banana</span>
+          </button>
+        </div>
+        <p class="selected-text">Selected: <strong id="selectedSample">None</strong></p>
+      </div>
+
+      <div class="card experiment-card">
+        <div class="experiment-head">
+          <div>
+            <h2>2. Virtual experiment</h2>
+            <p>Complete each step in order.</p>
+          </div>
+          <button id="resetBtn" class="ghost-btn">↻ Reset</button>
+        </div>
+
+        <div class="lab-area">
+          <div class="tube-stage">
+            <div class="tube-label" id="tubeLabel">Select a sample</div>
+            <div class="test-tube" id="testTube">
+              <div class="tube-rim"></div>
+              <div class="liquid" id="liquid"></div>
+              <div class="sample-inside" id="sampleInside"></div>
+              <div class="bubbles" id="bubbles"></div>
+            </div>
+            <div class="tube-base"></div>
+          </div>
+
+          <div class="controls">
+            <button class="action-btn" id="grindBtn" disabled>
+              <span>①</span> Grind / Mash
+            </button>
+            <button class="action-btn" id="waterBtn" disabled>
+              <span>②</span> Add Water
+            </button>
+            <button class="action-btn" id="copperBtn" disabled>
+              <span>③</span> Add Copper Sulphate
+            </button>
+            <button class="action-btn" id="causticBtn" disabled>
+              <span>④</span> Add Caustic Soda
+            </button>
+          </div>
+        </div>
+
+        <div class="observation" id="observation">
+          <span>🔎</span>
+          <div>
+            <strong>Observation</strong>
+            <p id="observationText">Choose a sample to start the experiment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card result-card hidden" id="resultCard">
+      <div class="result-icon" id="resultIcon">🧪</div>
+      <div class="result-content">
+        <p class="eyebrow">FINAL OBSERVATION</p>
+        <h2 id="resultTitle">Result</h2>
+        <p id="resultDescription"></p>
+        <div class="answer-question">
+          <h3>Does this food sample contain protein?</h3>
+          <div class="answer-buttons">
+            <button id="yesBtn" class="answer yes">Yes, it contains protein</button>
+            <button id="noBtn" class="answer no">No, it does not</button>
+          </div>
+          <p id="answerFeedback" class="feedback"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card comparison hidden" id="comparisonCard">
+      <h2>📋 Your test results</h2>
+      <p>Test another sample to compare your observations.</p>
+      <div id="resultsTable"></div>
+      <button id="quizBtn" class="primary-btn">Take the Quick Quiz →</button>
+    </section>
+
+    <section class="card quiz hidden" id="quizCard">
+      <div class="quiz-top">
+        <div>
+          <p class="eyebrow">KNOWLEDGE CHECK</p>
+          <h2>Quick Quiz</h2>
+        </div>
+        <span id="quizCounter">Question 1 of 4</span>
+      </div>
+      <div id="quizContent"></div>
+    </section>
+
+    <section class="card completion hidden" id="completionCard">
+      <div class="completion-icon">🎉</div>
+      <h2>Experiment complete!</h2>
+      <p id="scoreText"></p>
+      <button id="restartBtn" class="primary-btn">↻ Try Again</button>
+    </section>
+
+    <footer>
+      <p>Virtual simulation for learning • In a real laboratory, chemical reagents should only be handled under teacher supervision.</p>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <script>
+const state = {
+  sample: null,
+  step: 0,
+  results: {},
+  quizIndex: 0,
+  quizScore: 0,
+  quizAnswered: false
+};
+
+// The activity describes the violet color as the positive protein test.
+// Gram and pea are protein-containing food samples; banana is used as
+// the comparison sample in this simulation.
+const sampleData = {
+  Gram: { icon: "🫘", protein: true, observation: "The solution turns violet." },
+  Pea: { icon: "🟢", protein: true, observation: "The solution turns violet." },
+  Banana: { icon: "🍌", protein: false, observation: "The solution does not show the violet protein-test color." }
+};
+
+const steps = [
+  {
+    title: "Choose a food sample",
+    text: "Select Gram, Pea, or Banana to begin the virtual experiment."
+  },
+  {
+    title: "Grind or mash the sample",
+    text: "The sample must be crushed so that it can mix properly with the reagents."
+  },
+  {
+    title: "Add water",
+    text: "Add water to the prepared food sample in the test tube."
+  },
+  {
+    title: "Add copper sulphate",
+    text: "Add copper sulphate solution to the test tube."
+  },
+  {
+    title: "Add caustic soda",
+    text: "Add caustic soda. Now observe the final color of the solution."
+  },
+  {
+    title: "Identify the result",
+    text: "A violet color indicates the presence of proteins."
+  }
+];
+
+const quiz = [
+  {
+    q: "What does a violet color indicate in this protein test?",
+    options: ["Presence of starch", "Presence of proteins", "Presence of fat", "Presence of water"],
+    answer: 1,
+    explanation: "In this activity, violet color is the positive indication for proteins."
+  },
+  {
+    q: "Which reagent is added before caustic soda?",
+    options: ["Water", "Copper sulphate solution", "Oil", "Iodine solution"],
+    answer: 1,
+    explanation: "The sequence is: sample → water → copper sulphate → caustic soda."
+  },
+  {
+    q: "Why is the food sample ground or mashed?",
+    options: ["To change its taste", "To make it colder", "To prepare it for mixing with the reagents", "To remove all nutrients"],
+    answer: 2,
+    explanation: "Grinding or mashing helps prepare the food sample for the test."
+  },
+  {
+    q: "Which observation should you look for as evidence of protein?",
+    options: ["Violet color", "Bright orange color", "Bubbles only", "No change in the test tube"],
+    answer: 0,
+    explanation: "A violet color is the observation used to identify protein in this activity."
+  }
+];
+
+const $ = (id) => document.getElementById(id);
+
+const sampleButtons = document.querySelectorAll(".sample");
+const grindBtn = $("grindBtn");
+const waterBtn = $("waterBtn");
+const copperBtn = $("copperBtn");
+const causticBtn = $("causticBtn");
+const actionButtons = [grindBtn, waterBtn, copperBtn, causticBtn];
+
+function updateProgress() {
+  const percent = ((state.step + 1) / steps.length) * 100;
+  $("progressBar").style.width = `${percent}%`;
+  $("progressText").textContent = `Step ${Math.min(state.step + 1, steps.length)} of ${steps.length}`;
+  $("stepBadge").textContent = Math.min(state.step + 1, steps.length);
+  $("instructionTitle").textContent = steps[Math.min(state.step, steps.length - 1)].title;
+  $("instructionText").textContent = steps[Math.min(state.step, steps.length - 1)].text;
+}
+
+function setObservation(text) {
+  $("observationText").textContent = text;
+}
+
+function toast(message) {
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function enableOnly(button) {
+  actionButtons.forEach(btn => btn.disabled = true);
+  if (button) button.disabled = false;
+}
+
+function selectSample(name) {
+  state.sample = name;
+  state.step = 1;
+
+  sampleButtons.forEach(btn => {
+    btn.classList.toggle("selected", btn.dataset.sample === name);
+  });
+
+  $("selectedSample").textContent = name;
+  $("tubeLabel").textContent = `${sampleData[name].icon} ${name}`;
+  $("sampleInside").className = `sample-inside ${name.toLowerCase()} visible`;
+  $("liquid").style.height = "0%";
+  $("liquid").classList.remove("violet");
+  $("bubbles").classList.remove("active");
+
+  $("resultCard").classList.add("hidden");
+  setObservation(`${name} selected. Grind or mash the sample to begin.`);
+  enableOnly(grindBtn);
+  [grindBtn, waterBtn, copperBtn, causticBtn].forEach(btn => btn.classList.remove("done"));
+
+  updateProgress();
+  window.scrollTo({ top: document.querySelector(".workspace").offsetTop - 15, behavior: "smooth" });
+}
+
+sampleButtons.forEach(btn => {
+  btn.addEventListener("click", () => selectSample(btn.dataset.sample));
+});
+
+grindBtn.addEventListener("click", () => {
+  if (!state.sample) return;
+  grindBtn.classList.add("done");
+  state.step = 2;
+  setObservation("The sample has been ground/m mashed. Now add water.");
+  enableOnly(waterBtn);
+  updateProgress();
+  toast("Sample prepared ✓");
+});
+
+waterBtn.addEventListener("click", () => {
+  waterBtn.classList.add("done");
+  $("liquid").style.height = "38%";
+  state.step = 3;
+  setObservation("Water added. Next, add copper sulphate solution.");
+  enableOnly(copperBtn);
+  updateProgress();
+  toast("Water added ✓");
+});
+
+copperBtn.addEventListener("click", () => {
+  copperBtn.classList.add("done");
+  $("liquid").style.height = "56%";
+  $("liquid").style.background = "rgba(88, 139, 186, .5)";
+  state.step = 4;
+  setObservation("Copper sulphate solution added. Now add caustic soda.");
+  enableOnly(causticBtn);
+  updateProgress();
+  toast("Copper sulphate added ✓");
+});
+
+causticBtn.addEventListener("click", () => {
+  causticBtn.classList.add("done");
+  $("liquid").style.height = "70%";
+  $("bubbles").classList.add("active");
+
+  const data = sampleData[state.sample];
+
+  setTimeout(() => {
+    $("bubbles").classList.remove("active");
+    if (data.protein) {
+      $("liquid").classList.add("violet");
+      $("liquid").style.background = "";
+    } else {
+      $("liquid").classList.remove("violet");
+      $("liquid").style.background = "rgba(211, 215, 190, .7)";
+    }
+
+    state.step = 5;
+    setObservation(data.observation);
+    updateProgress();
+    showResult(data.protein);
+  }, 800);
+});
+
+function showResult(protein) {
+  $("resultCard").classList.remove("hidden");
+  $("resultTitle").textContent = `${state.sample}: ${protein ? "Protein detected" : "No protein detected"}`;
+  $("resultDescription").textContent = protein
+    ? "The final solution has turned violet. According to this test, the sample contains proteins."
+    : "The final solution has not turned violet. According to this simulation, the sample does not give a positive protein-test result.";
+  $("resultIcon").textContent = protein ? "🟣" : "🔬";
+  $("answerFeedback").textContent = "";
+  $("answerFeedback").className = "feedback";
+
+  $("yesBtn").onclick = () => checkAnswer(protein === true, true);
+  $("noBtn").onclick = () => checkAnswer(protein === false, false);
+
+  window.scrollTo({ top: $("resultCard").offsetTop - 15, behavior: "smooth" });
+}
+
+function checkAnswer(correct, selectedYes) {
+  const feedback = $("answerFeedback");
+  if (correct) {
+    feedback.textContent = "Correct! You identified the result from the observation.";
+    feedback.className = "feedback correct";
+    toast("Correct answer ✓");
+  } else {
+    feedback.textContent = `Not quite. Look at the final observation: ${sampleData[state.sample].observation}`;
+    feedback.className = "feedback wrong";
+  }
+
+  state.results[state.sample] = {
+    protein: sampleData[state.sample].protein,
+    answered: true
+  };
+
+  renderComparison();
+
+  setTimeout(() => {
+    $("comparisonCard").classList.remove("hidden");
+    window.scrollTo({ top: $("comparisonCard").offsetTop - 15, behavior: "smooth" });
+  }, 400);
+}
+
+function renderComparison() {
+  const names = Object.keys(state.results);
+  $("resultsTable").innerHTML = `
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Sample</th>
+          <th>Observation</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${names.map(name => `
+          <tr>
+            <td>${sampleData[name].icon} <strong>${name}</strong></td>
+            <td>${sampleData[name].observation}</td>
+            <td><span class="status">${sampleData[name].protein ? "Protein present" : "No protein detected"}</span></td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
+
+$("quizBtn").addEventListener("click", () => {
+  state.quizIndex = 0;
+  state.quizScore = 0;
+  state.quizAnswered = false;
+  $("quizCard").classList.remove("hidden");
+  $("completionCard").classList.add("hidden");
+  renderQuiz();
+  window.scrollTo({ top: $("quizCard").offsetTop - 15, behavior: "smooth" });
+});
+
+function renderQuiz() {
+  const current = quiz[state.quizIndex];
+  $("quizCounter").textContent = `Question ${state.quizIndex + 1} of ${quiz.length}`;
+
+  $("quizContent").innerHTML = `
+    <div class="quiz-question">
+      <h3>${current.q}</h3>
+      <div class="quiz-options">
+        ${current.options.map((option, index) =>
+          `<button class="quiz-option" data-index="${index}">${option}</button>`
+        ).join("")}
+      </div>
+      <p class="quiz-feedback" id="quizFeedback"></p>
+      <div id="nextQuestion"></div>
+    </div>
+  `;
+
+  document.querySelectorAll(".quiz-option").forEach(button => {
+    button.addEventListener("click", () => answerQuiz(Number(button.dataset.index)));
+  });
+}
+
+function answerQuiz(selected) {
+  if (state.quizAnswered) return;
+  state.quizAnswered = true;
+
+  const current = quiz[state.quizIndex];
+  const options = document.querySelectorAll(".quiz-option");
+  const feedback = $("quizFeedback");
+
+  options.forEach((button, index) => {
+    button.disabled = true;
+    if (index === current.answer) button.classList.add("correct");
+    if (index === selected && selected !== current.answer) button.classList.add("incorrect");
+  });
+
+  if (selected === current.answer) {
+    state.quizScore++;
+    feedback.textContent = `Correct! ${current.explanation}`;
+  } else {
+    feedback.textContent = `The correct answer is "${current.options[current.answer]}". ${current.explanation}`;
+  }
+
+  const next = document.createElement("button");
+  next.className = "primary-btn next-question";
+  next.textContent = state.quizIndex === quiz.length - 1 ? "See My Score →" : "Next Question →";
+  next.addEventListener("click", () => {
+    state.quizIndex++;
+    if (state.quizIndex < quiz.length) {
+      state.quizAnswered = false;
+      renderQuiz();
+    } else {
+      showCompletion();
+    }
+  });
+  $("nextQuestion").appendChild(next);
+}
+
+function showCompletion() {
+  $("quizCard").classList.add("hidden");
+  $("completionCard").classList.remove("hidden");
+  $("scoreText").textContent = `You scored ${state.quizScore} out of ${quiz.length} in the quick quiz.`;
+  window.scrollTo({ top: $("completionCard").offsetTop - 15, behavior: "smooth" });
+}
+
+function resetExperiment() {
+  state.sample = null;
+  state.step = 0;
+  state.results = {};
+  state.quizIndex = 0;
+  state.quizScore = 0;
+  state.quizAnswered = false;
+
+  sampleButtons.forEach(btn => btn.classList.remove("selected"));
+  $("selectedSample").textContent = "None";
+  $("tubeLabel").textContent = "Select a sample";
+  $("sampleInside").className = "sample-inside";
+  $("liquid").style.height = "8%";
+  $("liquid").classList.remove("violet");
+  $("liquid").style.background = "";
+  $("bubbles").classList.remove("active");
+
+  actionButtons.forEach(btn => {
+    btn.disabled = true;
+    btn.classList.remove("done");
+  });
+
+  setObservation("Choose a sample to start the experiment.");
+  $("resultCard").classList.add("hidden");
+  $("comparisonCard").classList.add("hidden");
+  $("quizCard").classList.add("hidden");
+  $("completionCard").classList.add("hidden");
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+$("resetBtn").addEventListener("click", resetExperiment);
+$("restartBtn").addEventListener("click", resetExperiment);
+
+updateProgress();
+
+</script>
+</body>
+</html>
