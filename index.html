@@ -656,6 +656,50 @@
       font: 0.84rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
 
+    .edit-ai-options {
+      margin-top: 20px;
+      border-top: 1px solid var(--line);
+      padding-top: 18px;
+    }
+
+    .edit-ai-options h3 {
+      margin: 0 0 7px;
+      font-size: 1.05rem;
+    }
+
+    .edit-ai-options p {
+      margin-bottom: 13px;
+    }
+
+    .edit-ai-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .edit-ai-button {
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: #fff;
+      color: #9d341f;
+      font-weight: 800;
+    }
+
+    .edit-ai-button.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .edit-ai-button:hover {
+      background: #fff3ef;
+    }
+
+    .edit-ai-button.primary:hover {
+      background: #a83c26;
+    }
+
     .viewer {
       display: none;
       background: var(--panel);
@@ -884,6 +928,10 @@
         flex: 1;
       }
 
+      .edit-ai-actions {
+        display: grid;
+      }
+
       .support-links {
         display: grid;
       }
@@ -1104,6 +1152,15 @@
         </ol>
         <code id="editSourcePath" class="edit-path"></code>
         <a id="editOnGithub" class="support-link primary" href="#" target="_blank" rel="noopener">Edit on GitHub</a>
+
+        <section class="edit-ai-options" aria-labelledby="editAiTitle">
+          <h3 id="editAiTitle">Use AI to help with the activity</h3>
+          <p>Open the prompt builder with this activity’s class, subject, topic, subtopic, title, and source path filled in automatically.</p>
+          <div class="edit-ai-actions">
+            <button id="editWithAi" class="edit-ai-button primary" type="button">Build prompt to edit this activity</button>
+            <button id="createWithAi" class="edit-ai-button" type="button">Build prompt for a new related activity</button>
+          </div>
+        </section>
       </div>
     </div>
   </dialog>
@@ -1112,6 +1169,7 @@
     const pageSize = 12;
     let activities = [];
     let currentPage = 1;
+    let selectedEditActivity = null;
 
     const state = {
       search: "",
@@ -1158,7 +1216,9 @@
       editModal: document.querySelector("#editModal"),
       editActivityName: document.querySelector("#editActivityName"),
       editSourcePath: document.querySelector("#editSourcePath"),
-      editOnGithub: document.querySelector("#editOnGithub")
+      editOnGithub: document.querySelector("#editOnGithub"),
+      editWithAi: document.querySelector("#editWithAi"),
+      createWithAi: document.querySelector("#createWithAi")
     };
 
     bindSupportEvents();
@@ -1288,14 +1348,51 @@
       elements.editModal.addEventListener("click", (event) => {
         if (event.target === elements.editModal) elements.editModal.close();
       });
+
+      elements.editWithAi.addEventListener("click", () => {
+        if (selectedEditActivity) openPromptBuilderForActivity(selectedEditActivity, "edit");
+      });
+
+      elements.createWithAi.addEventListener("click", () => {
+        if (selectedEditActivity) openPromptBuilderForActivity(selectedEditActivity, "create");
+      });
     }
 
     function openEditModal(activity) {
       const encodedPath = activity.sourcePath.split("/").map(encodeURIComponent).join("/");
+      selectedEditActivity = activity;
       elements.editActivityName.textContent = activity.name;
       elements.editSourcePath.textContent = activity.sourcePath;
       elements.editOnGithub.href = `https://github.com/Pragament/html_interactive_learning/edit/main/${encodedPath}`;
       elements.editModal.showModal();
+    }
+
+    function openPromptBuilderForActivity(activity, mode) {
+      elements.editModal.close();
+      populatePromptSelect(elements.promptClass, hierarchyValues("className"), activity.className, "Choose class");
+      populatePromptSubjects(activity.subject);
+      populatePromptTopics(activity.topic);
+      populatePromptSubtopics(activity.subtopic);
+
+      if (mode === "edit") {
+        elements.promptNote.value = `Edit the existing activity "${activity.name}" at ${activity.sourcePath}. Work in this exact file, preserve its activity identity and working features, and make focused improvements instead of creating a duplicate.`;
+      } else {
+        elements.promptNote.value = `Create a new activity related to "${activity.name}". Do not overwrite ${activity.sourcePath}. Give the new activity its own unique id, order, title, and activity directory.`;
+      }
+
+      renderPromptPreviews();
+      expandPromptPreview(mode === "edit" ? 3 : 0);
+      elements.promptModal.showModal();
+    }
+
+    function expandPromptPreview(index) {
+      const preview = elements.promptList.children[index];
+      if (!preview) return;
+      const fullPrompt = preview.querySelector(".prompt-full");
+      const expandButton = preview.querySelector("[data-expand-prompt]");
+      fullPrompt.hidden = false;
+      expandButton.textContent = "Collapse";
+      expandButton.setAttribute("aria-expanded", "true");
     }
 
     function bindSupportEvents() {
