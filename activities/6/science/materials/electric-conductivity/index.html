@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electric Conductivity of Metals and Non-Metals — Class 6 Science</title>
+<style>
+  :root{
+    --bg:#f4f6fa;
+    --panel:#ffffff;
+    --ink:#16202e;
+    --muted:#5b6b80;
+    --line:#dde3ec;
+    --accent:#1f5fd0;
+    --accent-soft:#e8f0fe;
+    --good:#1e7a4b;
+    --good-soft:#e3f6ec;
+    --bad:#c0392b;
+    --bad-soft:#fdeceb;
+    --warn:#a8630a;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(16,32,58,.08),0 6px 18px rgba(16,32,58,.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:14px;}
+
+  header.top{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .crumb{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  h1{margin:6px 0 8px;font-size:1.4rem;line-height:1.25;}
+  .objective{margin:0 0 4px;color:var(--ink);font-size:.98rem;}
+  .objective strong{color:var(--accent);}
+  .howto{margin:6px 0 0;color:var(--muted);font-size:.9rem;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
+    margin-top:14px;
+  }
+  .card h2{margin:0 0 4px;font-size:1.1rem;}
+  .card .hint{margin:0 0 14px;color:var(--muted);font-size:.9rem;}
+  .stepnum{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
+    font-size:.85rem;font-weight:800;margin-right:8px;flex:none;
+  }
+  .cardtitle{display:flex;align-items:center;}
+
+  /* ---------- circuit ---------- */
+  .circuitBox{
+    background:#0f1a2b;border-radius:12px;padding:16px;margin-bottom:6px;
+  }
+  svg.scene{width:100%;height:auto;display:block;max-width:460px;margin:0 auto;}
+  .gapLabel{
+    text-align:center;color:#e8eefc;font-size:.85rem;font-weight:700;
+    margin-top:8px;letter-spacing:.02em;
+  }
+
+  #resultBox{
+    margin-top:12px;border-radius:12px;padding:14px;font-size:1rem;font-weight:600;
+    text-align:center;transition:background-color .15s ease, color .15s ease;
+    background:var(--accent-soft);color:var(--ink);
+  }
+  #resultBox.on{background:var(--good-soft);color:var(--good);}
+  #resultBox.off{background:var(--bad-soft);color:var(--bad);}
+  #resultFact{display:block;margin-top:6px;font-weight:400;font-size:.9rem;color:var(--muted);}
+  #resultBox.on #resultFact,#resultBox.off #resultFact{color:inherit;opacity:.85;}
+
+  /* ---------- material tray ---------- */
+  .tray{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;
+  }
+  .matBtn{
+    position:relative;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    padding:16px 10px 12px;border-radius:12px;border:2px solid var(--line);
+    background:#fff;cursor:pointer;font:inherit;color:var(--ink);
+    min-height:96px;justify-content:center;
+  }
+  .matBtn .ic{font-size:2rem;line-height:1;}
+  .matBtn .nm{font-weight:700;font-size:.92rem;text-align:center;}
+  .matBtn:hover{border-color:var(--accent);}
+  .matBtn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);}
+  .matBtn:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+  .tick{
+    position:absolute;top:6px;right:8px;background:var(--good);color:#fff;
+    font-size:.7rem;font-weight:800;border-radius:999px;padding:2px 6px;
+  }
+
+  /* ---------- sorting ---------- */
+  .sortIntro{font-size:.88rem;color:var(--muted);margin-bottom:10px;}
+  .sortTray{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;min-height:48px;}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:9px 14px;border-radius:999px;border:2px solid var(--line);
+    background:#fff;font:inherit;font-weight:700;font-size:.9rem;cursor:pointer;color:var(--ink);
+  }
+  .chip .ic{font-size:1.1rem;}
+  .chip[disabled]{opacity:.4;cursor:not-allowed;}
+  .chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);}
+  .chip.locked{opacity:.55;cursor:default;border-style:dashed;}
+
+  .baskets{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .basket{
+    border:2px dashed var(--line);border-radius:12px;padding:12px;min-height:110px;
+    background:#fafbfd;
+  }
+  .basket h3{margin:0 0 8px;font-size:.92rem;text-align:center;}
+  .basket.target{border-color:var(--accent);}
+  .basketList{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:24px;}
+  .basketList .placed{
+    display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:999px;
+    background:var(--good-soft);color:var(--good);font-size:.82rem;font-weight:700;
+  }
+  .basketBtn{
+    width:100%;padding:10px;border-radius:8px;border:2px solid var(--line);background:#fff;
+    font:inherit;font-weight:700;cursor:pointer;color:var(--ink);margin-top:8px;
+  }
+  .basketBtn:hover{border-color:var(--accent);}
+  .basketBtn:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+
+  #sortMsg{min-height:1.4em;text-align:center;font-weight:700;font-size:.9rem;margin-top:10px;}
+  #sortMsg.ok{color:var(--good);}
+  #sortMsg.no{color:var(--bad);}
+  #sortProgress{font-size:.85rem;color:var(--muted);font-weight:700;margin-bottom:10px;}
+
+  /* ---------- recap ---------- */
+  .q{border:2px solid var(--line);border-radius:12px;padding:14px;}
+  .q .qtext{font-weight:700;margin-bottom:12px;font-size:1rem;}
+  .choices{display:flex;gap:10px;flex-wrap:wrap;}
+  .choices button{
+    flex:1 1 40%;min-width:100px;padding:14px 8px;border-radius:10px;
+    border:2px solid var(--line);background:#fff;font-weight:800;cursor:pointer;font-size:1rem;color:var(--ink);
+  }
+  .choices button:hover:not(:disabled){border-color:var(--accent);}
+  .choices button:disabled{cursor:default;opacity:.55;}
+  .choices button.correct{background:var(--good-soft);border-color:var(--good);color:var(--good);opacity:1;}
+  .choices button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);opacity:1;}
+  .verdict{margin-top:12px;padding:12px;border-radius:10px;font-size:.9rem;display:none;}
+  .verdict.show{display:block;}
+  .verdict.ok{background:var(--good-soft);border-left:5px solid var(--good);}
+  .verdict.no{background:var(--bad-soft);border-left:5px solid var(--bad);}
+  .verdict b{display:block;margin-bottom:3px;}
+  .progress{font-size:.85rem;color:var(--muted);margin-bottom:12px;font-weight:700;}
+
+  .btn{
+    padding:12px 16px;border-radius:10px;border:2px solid var(--accent);
+    background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.95rem;
+  }
+  .btn.ghost{background:#fff;color:var(--accent);}
+  .btn:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+
+  details.teacher{margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:0 16px;box-shadow:var(--shadow);}
+  details.teacher summary{padding:14px 0;font-weight:700;cursor:pointer;color:var(--accent);list-style:none;}
+  details.teacher summary::-webkit-details-marker{display:none;}
+  details.teacher summary::before{content:"▸ ";}
+  details.teacher[open] summary::before{content:"▾ ";}
+  details.teacher .body{padding-bottom:16px;font-size:.92rem;border-top:1px solid var(--line);padding-top:12px;}
+  details.teacher ul{margin:8px 0 14px;padding-left:20px;}
+  details.teacher li{margin-bottom:6px;}
+  details.teacher h3{font-size:.95rem;margin:14px 0 4px;}
+
+  footer.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:18px 6px 6px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);
+    background:#16202e;color:#fff;padding:11px 18px;border-radius:24px;font-size:.88rem;
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;z-index:50;
+    max-width:90vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .hidden{display:none !important;}
+
+  @media (min-width:600px){
+    .tray{grid-template-columns:repeat(4,1fr);}
+  }
+  @media (min-width:760px){
+    .wrap{padding:20px;}
+    h1{font-size:1.65rem;}
+  }
+  @media (max-width:380px){
+    .baskets{grid-template-columns:1fr;}
+  }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-materials-electric-conductivity",
+  "order": 23,
+  "class": "VI",
+  "subject": "Science",
+  "topic": "Materials",
+  "subtopic": null,
+  "title": "Electric Conductivity of Metals and Non-Metals",
+  "description": "Make a simple electric circuit with a bulb. Test iron nail, zinc granules, sulphur lump, and coal piece. The bulb glows for iron and zinc (metals) but not for sulphur and coal (non-metals).",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="crumb">Class 6 · Science · Materials</div>
+    <h1>Which materials conduct electricity?</h1>
+    <p class="objective"><strong>Learning objective:</strong> find out that metals (like iron and zinc) let electric current pass through them, while non-metals (like sulphur and coal) do not.</p>
+    <p class="howto">Tap a material to test it in the circuit, then sort what you found, and finish the quick recap.</p>
+  </header>
+
+  <!-- ================= STEP 1: TEST ================= -->
+  <section class="card" aria-label="Test materials in the circuit">
+    <div class="cardtitle"><span class="stepnum">1</span><h2>Test each material</h2></div>
+    <p class="hint">Tap a material below to place it in the circuit gap and see if the bulb glows.</p>
+
+    <div class="circuitBox">
+      <svg class="scene" viewBox="0 0 460 220" role="img" aria-labelledby="sceneTitle">
+        <title id="sceneTitle">A simple circuit with a battery, a bulb, and a gap to test materials</title>
+
+        <!-- wires -->
+        <path d="M60 60 L60 30 L150 30" stroke="#8fa3bf" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M310 30 L400 30 L400 110" stroke="#8fa3bf" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M400 110 L400 190 L280 190" stroke="#8fa3bf" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path id="wireLeft"  d="M60 200 L60 110" stroke="#8fa3bf" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path id="wireGapL"  d="M60 110 L60 60"  stroke="#8fa3bf" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+        <!-- battery -->
+        <rect x="30" y="60" width="60" height="140" rx="8" fill="#34495e"/>
+        <rect x="30" y="60" width="60" height="26" rx="8" fill="#e67e22"/>
+        <text x="60" y="78"  text-anchor="middle" font-size="14" font-weight="800" fill="#fff">+</text>
+        <text x="60" y="138" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">CELL</text>
+        <text x="60" y="192" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">−</text>
+
+        <!-- gap / test slot -->
+        <rect x="150" y="8" width="160" height="44" rx="8" fill="#1b2839" stroke="#3c4d66" stroke-width="2"/>
+        <text id="gapText" x="230" y="35" text-anchor="middle" font-size="13" font-weight="700" fill="#8fa3bf">tap a material below</text>
+
+        <!-- bulb -->
+        <circle id="glow" cx="220" cy="190" r="42" fill="#ffd34d" opacity="0"/>
+        <circle id="bulb" cx="220" cy="190" r="26" fill="#2a3a52" stroke="#8fa3bf" stroke-width="3"/>
+        <path d="M209 181 L215 199 L220 181 L226 199 L232 181" stroke="#8fa3bf" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="gapLabel">Iron Nail · Zinc Granules · Sulphur Lump · Coal Piece</div>
+    </div>
+
+    <div id="resultBox" role="status" aria-live="polite">Tap a material below to begin testing.</div>
+
+    <div class="tray" id="tray"></div>
+  </section>
+
+  <!-- ================= STEP 2: SORT ================= -->
+  <section class="card" aria-label="Sort materials into conductors and insulators">
+    <div class="cardtitle"><span class="stepnum">2</span><h2>Sort what you found</h2></div>
+    <p class="sortIntro">Test a material first, then tap it here and tap the basket where it belongs.</p>
+    <div id="sortProgress">Sorted 0 of 4</div>
+
+    <div class="sortTray" id="sortTray" aria-label="Materials to sort"></div>
+
+    <div class="baskets">
+      <div class="basket" id="basketConductorBox">
+        <h3>⚡ Conductor</h3>
+        <div class="basketList" id="basketConductorList"></div>
+        <button class="basketBtn" id="basketConductorBtn" type="button">Place here</button>
+      </div>
+      <div class="basket" id="basketInsulatorBox">
+        <h3>🚫 Insulator</h3>
+        <div class="basketList" id="basketInsulatorList"></div>
+        <button class="basketBtn" id="basketInsulatorBtn" type="button">Place here</button>
+      </div>
+    </div>
+    <div id="sortMsg"></div>
+  </section>
+
+  <!-- ================= STEP 3: RECAP ================= -->
+  <section class="card" aria-label="Recap questions">
+    <div class="cardtitle"><span class="stepnum">3</span><h2>Quick recap</h2></div>
+    <p class="hint">Answer True or False based on what you just observed.</p>
+    <div class="progress" id="rProgress"></div>
+    <div id="qHolder"></div>
+    <div class="btnrow">
+      <button class="btn ghost" id="rRestart" type="button">↺ Start recap again</button>
+    </div>
+  </section>
+
+  <div class="btnrow" style="margin-top:14px;">
+    <button class="btn ghost" id="resetBtn" type="button">↺ Reset whole activity</button>
+  </div>
+
+  <!-- ================= TEACHER PANEL ================= -->
+  <details class="teacher">
+    <summary>For teachers — classroom notes</summary>
+    <div class="body">
+      <h3>Running it in class (about 10 minutes)</h3>
+      <ul>
+        <li>Project Step 1 first. Ask students to predict, before each tap, whether the bulb will glow.</li>
+        <li>This screen stands in for the real bench setup (battery, bulb, wires, and a gap to hold the test item) — use it as a warm-up or as a substitute when apparatus is not available.</li>
+        <li>Move to Step 2 only after all four materials have been tested at least once.</li>
+        <li>Step 3 is a good exit-ticket check before ending the lesson.</li>
+      </ul>
+      <h3>Discussion prompts</h3>
+      <ul>
+        <li>What is common between iron and zinc that is different from sulphur and coal?</li>
+        <li>Can you name another metal you see at home that would probably conduct electricity?</li>
+        <li>Why do electricians use plastic-covered wires instead of bare metal wires?</li>
+      </ul>
+      <h3>Notes</h3>
+      <ul>
+        <li>This activity treats coal as a poor conductor, matching the standard Class 6 bench result for a coal lump — students may later learn that graphite (a form of carbon) does conduct, which is a good extension question for stronger classes rather than a contradiction.</li>
+        <li>The activity runs entirely offline in this one file, with no internet or account needed.</li>
+      </ul>
+    </div>
+  </details>
+
+  <footer class="foot">Interactive activity · Materials · Electric conductivity of metals and non-metals</footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- data ---------- */
+  var MATERIALS = [
+    {id:"iron",     name:"Iron Nail",       icon:"🔩", type:"conductor", fact:"Iron is a metal — metals let electric current pass through them."},
+    {id:"zinc",     name:"Zinc Granules",   icon:"⚙️", type:"conductor", fact:"Zinc is also a metal, so it conducts electricity too."},
+    {id:"sulphur",  name:"Sulphur Lump",    icon:"🟡", type:"insulator", fact:"Sulphur is a non-metal — it does not conduct electricity."},
+    {id:"coal",     name:"Coal Piece",      icon:"⬛", type:"insulator", fact:"Coal is a non-metal — it does not conduct electricity."}
+  ];
+  function matById(id){
+    for (var i=0;i<MATERIALS.length;i++){ if (MATERIALS[i].id === id) return MATERIALS[i]; }
+    return null;
+  }
+
+  var RECAP = [
+    {text:"Metals like iron and zinc allow electric current to pass through them.", answer:"true",
+     explain:"True — both iron and zinc lit the bulb when tested."},
+    {text:"Sulphur and coal are good conductors of electricity.", answer:"false",
+     explain:"False — they are non-metals, and the bulb stayed dark for both."},
+    {text:"All four materials we tested conduct electricity.", answer:"false",
+     explain:"False — only the two metals, iron and zinc, conducted electricity."}
+  ];
+
+  /* ---------- state ---------- */
+  var state = {
+    currentTest: null,          // id of material currently in the gap, or null
+    tested: {},                 // id -> true once tested at least once
+    sorted: {},                 // id -> true once correctly placed
+    selectedChip: null          // id of chip selected for sorting, or null
+  };
+  var recapState = { index:0, score:0, answered:false };
+
+  /* ---------- helpers ---------- */
+  function $(id){ return document.getElementById(id); }
+  function testedCount(){
+    var n = 0;
+    for (var i=0;i<MATERIALS.length;i++){ if (state.tested[MATERIALS[i].id]) n++; }
+    return n;
+  }
+  function sortedCount(){
+    var n = 0;
+    for (var i=0;i<MATERIALS.length;i++){ if (state.sorted[MATERIALS[i].id]) n++; }
+    return n;
+  }
+  function toast(msg){
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._h);
+    t._h = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  /* ================= STEP 1: circuit + tray ================= */
+  function renderCircuit(){
+    var box = $("resultBox");
+    var gapText = $("gapText");
+    var bulb = $("bulb");
+    var glow = $("glow");
+
+    if (!state.currentTest){
+      gapText.textContent = "tap a material below";
+      bulb.setAttribute("fill", "#2a3a52");
+      glow.setAttribute("opacity", "0");
+      box.className = "";
+      box.innerHTML = "Tap a material below to begin testing.";
+      return;
+    }
+
+    var m = matById(state.currentTest);
+    gapText.textContent = m.icon + " " + m.name;
+    var conducts = (m.type === "conductor");
+
+    bulb.setAttribute("fill", conducts ? "#fff3c4" : "#2a3a52");
+    glow.setAttribute("opacity", conducts ? "0.85" : "0");
+
+    box.className = conducts ? "on" : "off";
+    box.innerHTML = "";
+    var line = document.createElement("span");
+    line.textContent = conducts
+      ? (m.icon + " " + m.name + " conducts electricity — the bulb glows!")
+      : (m.icon + " " + m.name + " does not conduct electricity — the bulb stays dark.");
+    box.appendChild(line);
+    var fact = document.createElement("span");
+    fact.id = "resultFact";
+    fact.textContent = m.fact;
+    box.appendChild(fact);
+  }
+
+  function renderTray(){
+    var tray = $("tray");
+    tray.innerHTML = "";
+    MATERIALS.forEach(function(m){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "matBtn";
+      b.setAttribute("aria-pressed", String(state.currentTest === m.id));
+      b.setAttribute("aria-label", "Test " + m.name + " in the circuit");
+
+      var ic = document.createElement("span");
+      ic.className = "ic";
+      ic.setAttribute("aria-hidden", "true");
+      ic.textContent = m.icon;
+      b.appendChild(ic);
+
+      var nm = document.createElement("span");
+      nm.className = "nm";
+      nm.textContent = m.name;
+      b.appendChild(nm);
+
+      if (state.tested[m.id]){
+        var tick = document.createElement("span");
+        tick.className = "tick";
+        tick.textContent = "Tested";
+        b.appendChild(tick);
+      }
+
+      b.addEventListener("click", function(){
+        state.currentTest = m.id;
+        state.tested[m.id] = true;
+        renderAll();
+      });
+
+      tray.appendChild(b);
+    });
+  }
+
+  /* ================= STEP 2: sorting ================= */
+  function renderSort(){
+    $("sortProgress").textContent = "Sorted " + sortedCount() + " of " + MATERIALS.length;
+
+    // tray of selectable, tested-but-not-yet-sorted chips
+    var sortTray = $("sortTray");
+    sortTray.innerHTML = "";
+    MATERIALS.forEach(function(m){
+      if (state.sorted[m.id]) return; // already placed, shown in a basket instead
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      var isTested = !!state.tested[m.id];
+      chip.disabled = !isTested;
+      chip.setAttribute("aria-pressed", String(state.selectedChip === m.id));
+      chip.setAttribute("aria-label", isTested
+        ? ("Select " + m.name + " to sort it")
+        : (m.name + " — test it in Step 1 first"));
+
+      var ic = document.createElement("span");
+      ic.className = "ic"; ic.setAttribute("aria-hidden","true"); ic.textContent = m.icon;
+      chip.appendChild(ic);
+      chip.appendChild(document.createTextNode(m.name + (isTested ? "" : " (test first)")));
+
+      chip.addEventListener("click", function(){
+        if (!isTested) return;
+        state.selectedChip = (state.selectedChip === m.id) ? null : m.id;
+        renderSort();
+      });
+      sortTray.appendChild(chip);
+    });
+
+    // baskets: rebuild placed lists
+    ["conductor","insulator"].forEach(function(type){
+      var listId = type === "conductor" ? "basketConductorList" : "basketInsulatorList";
+      var list = $(listId);
+      list.innerHTML = "";
+      MATERIALS.forEach(function(m){
+        if (state.sorted[m.id] && m.type === type){
+          var pill = document.createElement("span");
+          pill.className = "placed";
+          pill.textContent = m.icon + " " + m.name;
+          list.appendChild(pill);
+        }
+      });
+      var box = $(type === "conductor" ? "basketConductorBox" : "basketInsulatorBox");
+      box.classList.toggle("target", state.selectedChip !== null);
+    });
+  }
+
+  function tryPlace(basketType){
+    if (!state.selectedChip){
+      $("sortMsg").className = "no";
+      $("sortMsg").textContent = "Select a tested material first, then choose a basket.";
+      return;
+    }
+    var m = matById(state.selectedChip);
+    var msg = $("sortMsg");
+    if (m.type === basketType){
+      state.sorted[m.id] = true;
+      state.selectedChip = null;
+      msg.className = "ok";
+      msg.textContent = "Correct! " + m.name + " is " + (basketType === "conductor" ? "a conductor." : "an insulator.");
+      toast(m.name + " sorted correctly");
+    } else {
+      state.selectedChip = null;
+      msg.className = "no";
+      msg.textContent = "Not quite — " + m.name + " is " + (m.type === "conductor" ? "a conductor" : "an insulator") + ". Select it again and try the other basket.";
+    }
+    renderAll();
+  }
+
+  $("basketConductorBtn").addEventListener("click", function(){ tryPlace("conductor"); });
+  $("basketInsulatorBtn").addEventListener("click", function(){ tryPlace("insulator"); });
+
+  /* ================= STEP 3: recap ================= */
+  function showRecapQuestion(){
+    var q = RECAP[recapState.index];
+    $("rProgress").textContent = "Question " + (recapState.index + 1) + " of " + RECAP.length +
+                                  "  ·  correct so far: " + recapState.score;
+    recapState.answered = false;
+
+    var holder = $("qHolder");
+    holder.innerHTML = "";
+
+    var box = document.createElement("div");
+    box.className = "q";
+
+    var t = document.createElement("div");
+    t.className = "qtext";
+    t.textContent = q.text;
+    box.appendChild(t);
+
+    var ch = document.createElement("div");
+    ch.className = "choices";
+    [["true","True"],["false","False"]].forEach(function(pair){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = pair[1];
+      b.dataset.val = pair[0];
+      b.addEventListener("click", function(){ answerRecap(pair[0], ch, box, q); });
+      ch.appendChild(b);
+    });
+    box.appendChild(ch);
+
+    var v = document.createElement("div");
+    v.className = "verdict";
+    v.id = "verdict";
+    box.appendChild(v);
+
+    holder.appendChild(box);
+  }
+
+  function answerRecap(choice, ch, box, q){
+    if (recapState.answered) return;
+    recapState.answered = true;
+
+    var correct = (choice === q.answer);
+    if (correct) recapState.score++;
+
+    Array.prototype.forEach.call(ch.children, function(b){
+      b.disabled = true;
+      if (b.dataset.val === q.answer) b.classList.add("correct");
+      else if (b.dataset.val === choice) b.classList.add("wrong");
+    });
+
+    var v = $("verdict");
+    v.className = "verdict show " + (correct ? "ok" : "no");
+    v.innerHTML = "";
+    var head = document.createElement("b");
+    head.textContent = correct ? "Correct." : "Not quite.";
+    v.appendChild(head);
+    v.appendChild(document.createTextNode(q.explain));
+
+    var next = document.createElement("div");
+    next.className = "btnrow";
+    var nb = document.createElement("button");
+    nb.type = "button";
+    nb.className = "btn";
+    nb.textContent = (recapState.index < RECAP.length - 1) ? "Next question →" : "See my result";
+    nb.addEventListener("click", function(){
+      if (recapState.index < RECAP.length - 1){ recapState.index++; showRecapQuestion(); }
+      else finishRecap();
+    });
+    next.appendChild(nb);
+    box.appendChild(next);
+
+    $("rProgress").textContent = "Question " + (recapState.index + 1) + " of " + RECAP.length +
+                                  "  ·  correct so far: " + recapState.score;
+  }
+
+  function finishRecap(){
+    $("rProgress").textContent = "Finished";
+    var holder = $("qHolder");
+    holder.innerHTML = "";
+    var box = document.createElement("div");
+    box.className = "q";
+    var h = document.createElement("div");
+    h.className = "qtext";
+    h.textContent = "You got " + recapState.score + " out of " + RECAP.length + " right.";
+    box.appendChild(h);
+    var p = document.createElement("div");
+    p.style.color = "var(--muted)";
+    p.style.fontSize = ".9rem";
+    p.textContent = "Remember: metals (iron, zinc) conduct electricity. Non-metals (sulphur, coal) do not.";
+    box.appendChild(p);
+    holder.appendChild(box);
+  }
+
+  $("rRestart").addEventListener("click", function(){
+    recapState.index = 0;
+    recapState.score = 0;
+    recapState.answered = false;
+    showRecapQuestion();
+  });
+
+  /* ================= render everything together ================= */
+  function renderAll(){
+    renderCircuit();
+    renderTray();
+    renderSort();
+  }
+
+  /* ================= full reset ================= */
+  function resetAll(){
+    state.currentTest = null;
+    state.tested = {};
+    state.sorted = {};
+    state.selectedChip = null;
+
+    $("sortMsg").className = "";
+    $("sortMsg").textContent = "";
+
+    recapState.index = 0;
+    recapState.score = 0;
+    recapState.answered = false;
+
+    renderAll();
+    showRecapQuestion();
+
+    toast("Activity reset");
+  }
+  $("resetBtn").addEventListener("click", resetAll);
+
+  /* ================= start ================= */
+  renderAll();
+  showRecapQuestion();
+})();
+</script>
+</body>
+</html>

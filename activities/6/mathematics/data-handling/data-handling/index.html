@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Class VI Data Handling: Fruit Pebble Survey</title>
+  <style>
+    /* ==========================================================================
+       PURE CSS - 100% MOBILE-FRIENDLY & RESPONSIVE (ZERO EXTERNAL CDNs)
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+      max-width: 620px;
+      width: 100%;
+      padding: 20px;
+      margin: auto;
+    }
+
+    /* Header */
+    .header {
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #f0fdf4;
+      color: #166534;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 4px;
+      border: 1px solid #bbf7d0;
+    }
+
+    h1 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .total-counter {
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .total-counter span {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    .total-counter strong {
+      font-size: 18px;
+      font-weight: 900;
+      color: #4f46e5;
+    }
+
+    /* Quick toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 14px 0 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .tool-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .tool-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      touch-action: manipulation;
+      transition: all 0.15s;
+    }
+
+    .btn-sm:active {
+      transform: scale(0.96);
+      background: #e2e8f0;
+    }
+
+    .btn-sim {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      color: #4f46e5;
+    }
+
+    /* Fruit Boxes Arena */
+    .boxes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .fruit-box {
+      border-radius: 14px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.2s;
+      border: 2px solid #e2e8f0;
+      background: #ffffff;
+    }
+
+    .fruit-apple  { border-color: #fca5a5; background: #fff5f5; }
+    .fruit-banana { border-color: #fde68a; background: #fffbeb; }
+    .fruit-mango  { border-color: #fdba74; background: #fff7ed; }
+    .fruit-grapes { border-color: #d8b4fe; background: #faf5ff; }
+
+    .fruit-icon {
+      font-size: 26px;
+      margin-bottom: 2px;
+      display: inline-block;
+    }
+
+    .fruit-name {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    /* Pebble Well */
+    .pebble-pit {
+      width: 100%;
+      min-height: 52px;
+      max-height: 52px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px dashed rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+      margin: 6px 0;
+      padding: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      align-content: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .pebble-pit::-webkit-scrollbar { display: none; }
+
+    .pebble {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #718096, #2d3748);
+      box-shadow: inset -1px -1px 2px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .btn-drop {
+      width: 100%;
+      min-height: 36px;
+      border-radius: 8px;
+      border: none;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #ffffff;
+      touch-action: manipulation;
+      transition: transform 0.1s, opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn-drop:active {
+      transform: scale(0.95);
+      opacity: 0.9;
+    }
+
+    .btn-apple  { background: #ef4444; }
+    .btn-banana { background: #eab308; color: #713f12; }
+    .btn-mango  { background: #f97316; }
+    .btn-grapes { background: #a855f7; }
+
+    /* Section Tabs */
+    .view-tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #cbd5e1;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Tab Content */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Data Table */
+    .table-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      background: #f8fafc;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 700;
+      color: #475569;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .total-row {
+      background: #f8fafc;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    /* SVG Tally Mark Group */
+    .tally-group {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .tally-svg {
+      width: 28px;
+      height: 18px;
+    }
+
+    /* Bar Graph */
+    .chart-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+      background: #fafafa;
+    }
+
+    .bar-row {
+      margin-bottom: 10px;
+    }
+    .bar-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Interpretation Summary Cards */
+    .insights-card {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #166534;
+    }
+
+    .insights-title {
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .insight-item {
+      margin-bottom: 4px;
+    }
+    .insight-item strong {
+      color: #14532d;
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (< 480px)
+       ========================================================================== */
+    @media (max-width: 480px) {
+      .card {
+        padding: 16px 12px;
+        border-radius: 16px;
+      }
+
+      h1 {
+        font-size: 17px;
+      }
+
+      .boxes-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .btn-drop {
+        min-height: 38px;
+        font-size: 12px;
+      }
+
+      .pebble-pit {
+        min-height: 44px;
+        max-height: 44px;
+      }
+
+      th, td {
+        padding: 6px 8px;
+        font-size: 11px;
+      }
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-mathematics-data-handling-data-handling",
+  "order": 210,
+  "class": "VI",
+  "subject": "Mathematics",
+  "topic": "Data Handling",
+  "subtopic": null,
+  "title": "Collect, Display and Interpret Data",
+  "description": "Students drop pebbles in boxes labelled with their favourite fruits. Count and tabulate the data.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+  <div class="card">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <div class="badge">Class VI Mathematics • Data Handling</div>
+        <h1>Fruit Pebble Survey</h1>
+        <p class="subtitle">Drop pebbles in boxes to collect, display & interpret data</p>
+      </div>
+
+      <div class="total-counter">
+        <span>Total Votes</span>
+        <strong id="total-votes">0</strong>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <span class="tool-title">Drop pebbles below:</span>
+      <div class="tool-btns">
+        <button class="btn-sm btn-sim" onclick="simulateClassroomVote(20)">🎲 Add 20 Students</button>
+        <button class="btn-sm" onclick="resetData()">↺ Reset</button>
+      </div>
+    </div>
+
+    <!-- Fruit Pebble Drop Boxes (Collection Phase) -->
+    <div class="boxes-grid">
+      <!-- Apple -->
+      <div class="fruit-box fruit-apple">
+        <span class="fruit-icon">🍎</span>
+        <span class="fruit-name">Apple</span>
+        <div id="pit-apple" class="pebble-pit"></div>
+        <button class="btn-drop btn-apple" onclick="addPebble('apple')">+1 Pebble</button>
+      </div>
+
+      <!-- Banana -->
+      <div class="fruit-box fruit-banana">
+        <span class="fruit-icon">🍌</span>
+        <span class="fruit-name">Banana</span>
+        <div id="pit-banana" class="pebble-pit"></div>
+        <button class="btn-drop btn-banana" onclick="addPebble('banana')">+1 Pebble</button>
+      </div>
+
+      <!-- Mango -->
+      <div class="fruit-box fruit-mango">
+        <span class="fruit-icon">🥭</span>
+        <span class="fruit-name">Mango</span>
+        <div id="pit-mango" class="pebble-pit"></div>
+        <button class="btn-drop btn-mango" onclick="addPebble('mango')">+1 Pebble</button>
+      </div>
+
+      <!-- Grapes -->
+      <div class="fruit-box fruit-grapes">
+        <span class="fruit-icon">🍇</span>
+        <span class="fruit-name">Grapes</span>
+        <div id="pit-grapes" class="pebble-pit"></div>
+        <button class="btn-drop btn-grapes" onclick="addPebble('grapes')">+1 Pebble</button>
+      </div>
+    </div>
+
+    <!-- Tabs for Tabulate vs Graph vs Interpretation -->
+    <div class="view-tabs">
+      <button id="tab-btn-table" class="tab-btn active" onclick="switchTab('table')">📋 Frequency Table (Tally)</button>
+      <button id="tab-btn-chart" class="tab-btn" onclick="switchTab('chart')">📊 Bar Graph</button>
+      <button id="tab-btn-interpret" class="tab-btn" onclick="switchTab('interpret')">💡 Data Interpretation</button>
+    </div>
+
+    <!-- Pane 1: Frequency & Tally Table -->
+    <div id="pane-table" class="tab-pane active">
+      <div class="table-box">
+        <table>
+          <thead>
+            <tr>
+              <th>Fruit</th>
+              <th>Tally Marks (Groups of 5)</th>
+              <th style="text-align: right;">Number of Students</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td>Total</td>
+              <td>—</td>
+              <td id="table-total" style="text-align: right;">0</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pane 2: Bar Graph -->
+    <div id="pane-chart" class="tab-pane">
+      <div class="chart-box" id="chart-content"></div>
+    </div>
+
+    <!-- Pane 3: Interpretation Questions -->
+    <div id="pane-interpret" class="tab-pane">
+      <div class="insights-card">
+        <div class="insights-title">🔍 Data Analysis & Interpretation:</div>
+        <div class="insight-item" id="insight-total">Total students surveyed: <strong>0</strong></div>
+        <div class="insight-item" id="insight-max">Most popular fruit (Mode): <strong>None yet</strong></div>
+        <div class="insight-item" id="insight-min">Least popular fruit: <strong>None yet</strong></div>
+        <div class="insight-item" id="insight-diff">Difference between highest and lowest: <strong>0</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       VANILLA JAVASCRIPT LOGIC, TALLY MARKS GENERATION & SOUNDS
+       ========================================================================== */
+    const fruits = [
+      { id: 'apple',  name: 'Apple',  icon: '🍎', color: '#ef4444' },
+      { id: 'banana', name: 'Banana', icon: '🍌', color: '#eab308' },
+      { id: 'mango',  name: 'Mango',  icon: '🥭', color: '#f97316' },
+      { id: 'grapes', name: 'Grapes', icon: '🍇', color: '#a855f7' }
+    ];
+
+    let counts = { apple: 0, banana: 0, mango: 0, grapes: 0 };
+
+    // Native audio synthesizer for realistic pebble drop clicks
+    let audioCtx = null;
+    function playDropSound(freq = 420) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.8, audioCtx.currentTime + 0.06);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.07);
+      } catch (e) {}
+    }
+
+    function addPebble(fruitId) {
+      counts[fruitId]++;
+      playDropSound(520);
+      updateView();
+    }
+
+    function resetData() {
+      counts = { apple: 0, banana: 0, mango: 0, grapes: 0 };
+      playDropSound(300);
+      updateView();
+    }
+
+    function simulateClassroomVote(numStudents) {
+      const weights = ['apple', 'banana', 'mango', 'mango', 'grapes'];
+      for (let i = 0; i < numStudents; i++) {
+        const picked = weights[Math.floor(Math.random() * weights.length)];
+        counts[picked]++;
+      }
+      playDropSound(600);
+      updateView();
+    }
+
+    // Generate authentic SVG tally marks for any integer n
+    function renderTallyMarks(n) {
+      if (n === 0) return '<span style="color:#94a3b8;">None</span>';
+      let html = '';
+      const fullFives = Math.floor(n / 5);
+      const remainder = n % 5;
+
+      // Draw groups of 5 (4 vertical lines + 1 diagonal slash)
+      for (let i = 0; i < fullFives; i++) {
+        html += `
+          <span class="tally-group">
+            <svg class="tally-svg" viewBox="0 0 28 18">
+              <line x1="4" y1="2" x2="4" y2="16" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+              <line x1="9" y1="2" x2="9" y2="16" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+              <line x1="14" y1="2" x2="14" y2="16" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+              <line x1="19" y1="2" x2="19" y2="16" stroke="#475569" stroke-width="2" stroke-linecap="round"/>
+              <line x1="1" y1="15" x2="23" y2="3" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+          </span>`;
+      }
+
+      // Draw remainder (1 to 4 vertical strokes)
+      if (remainder > 0) {
+        const svgWidth = remainder * 5 + 4;
+        let lines = '';
+        for (let r = 0; r < remainder; r++) {
+          const x = 3 + r * 5;
+          lines += `<line x1="${x}" y1="2" x2="${x}" y2="16" stroke="#475569" stroke-width="2" stroke-linecap="round"/>`;
+        }
+        html += `
+          <span class="tally-group">
+            <svg style="width:${svgWidth}px; height:18px;" viewBox="0 0 ${svgWidth} 18">
+              ${lines}
+            </svg>
+          </span>`;
+      }
+      return html;
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+      document.getElementById(`pane-${tabId}`).classList.add('active');
+    }
+
+    function updateView() {
+      let total = 0;
+      let maxCount = -1;
+      let minCount = Infinity;
+      let mostFruit = [];
+      let leastFruit = [];
+
+      fruits.forEach(f => {
+        const count = counts[f.id];
+        total += count;
+
+        // Visual pebble container
+        const pit = document.getElementById(`pit-${f.id}`);
+        pit.innerHTML = '';
+        const displayPebbles = Math.min(count, 30);
+        for (let i = 0; i < displayPebbles; i++) {
+          const p = document.createElement('div');
+          p.className = 'pebble';
+          pit.appendChild(p);
+        }
+        if (count > 30) {
+          const more = document.createElement('span');
+          more.style.fontSize = '9px';
+          more.style.fontWeight = 'bold';
+          more.style.color = '#64748b';
+          more.textContent = `+${count - 30}`;
+          pit.appendChild(more);
+        }
+
+        if (count > maxCount) maxCount = count;
+        if (count < minCount) minCount = count;
+      });
+
+      document.getElementById('total-votes').textContent = total;
+      document.getElementById('table-total').textContent = total;
+
+      if (total > 0) {
+        fruits.forEach(f => {
+          if (counts[f.id] === maxCount) mostFruit.push(`${f.icon} ${f.name}`);
+          if (counts[f.id] === minCount) leastFruit.push(`${f.icon} ${f.name}`);
+        });
+      }
+
+      // Update Frequency Table
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+      fruits.forEach(f => {
+        const count = counts[f.id];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${f.icon} ${f.name}</strong></td>
+          <td>${renderTallyMarks(count)}</td>
+          <td style="text-align: right; font-weight: 800;">${count}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Update Bar Graph
+      const chartBox = document.getElementById('chart-content');
+      chartBox.innerHTML = '';
+      fruits.forEach(f => {
+        const count = counts[f.id];
+        const pct = (total === 0) ? 0 : Math.round((count / total) * 100);
+        const maxRef = Math.max(...Object.values(counts), 1);
+        const barWidthPct = Math.round((count / maxRef) * 100);
+
+        const row = document.createElement('div');
+        row.className = 'bar-row';
+        row.innerHTML = `
+          <div class="bar-meta">
+            <span>${f.icon} ${f.name}</span>
+            <span>${count} students (${pct}%)</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: ${barWidthPct}%; background: ${f.color};"></div>
+          </div>
+        `;
+        chartBox.appendChild(row);
+      });
+
+      // Update Interpretation Insights
+      document.getElementById('insight-total').innerHTML = `Total students surveyed: <strong>${total}</strong>`;
+      if (total > 0) {
+        document.getElementById('insight-max').innerHTML = `Most preferred fruit: <strong>${mostFruit.join(', ')} (${maxCount} votes)</strong>`;
+        document.getElementById('insight-min').innerHTML = `Least preferred fruit: <strong>${leastFruit.join(', ')} (${minCount} votes)</strong>`;
+        document.getElementById('insight-diff').innerHTML = `Difference between most and least: <strong>${maxCount - minCount} votes</strong>`;
+      } else {
+        document.getElementById('insight-max').innerHTML = `Most preferred fruit: <em>None yet</em>`;
+        document.getElementById('insight-min').innerHTML = `Least preferred fruit: <em>None yet</em>`;
+        document.getElementById('insight-diff').innerHTML = `Difference: <strong>0</strong>`;
+      }
+    }
+
+    // Initialize with 12 votes so students see initial data
+    simulateClassroomVote(12);
+  </script>
+</body>
+</html>

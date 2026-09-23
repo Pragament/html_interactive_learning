@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observe Moon Phases</title>
+  <meta name="description" content="Move the Moon around Earth and observe how the visible illuminated portion changes. Class VI Science Natural Phenomena lab." />
+  <meta property="og:title" content="Observe Moon Phases" />
+  <meta property="og:description" content="Move the Moon around Earth and observe how the visible illuminated portion changes." />
+  <meta property="og:type" content="website" />
+  <style>
+    /* Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-space: #070b14;
+      --bg-card: #111827;
+      --bg-card-hover: #1e293b;
+      --border-subtle: #334155;
+      --border-highlight: #60a5fa;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --sun-yellow: #facc15;
+      --sun-glow: rgba(250, 204, 21, 0.35);
+      --moon-lit: #fef08a;
+      --moon-dark: #1e293b;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --accent-amber: #fbbf24;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-space);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 3rem;
+      background-image: 
+        radial-gradient(1.5px 1.5px at 20px 30px, #ffffff99, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 70px 140px, #ffffff77, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 150px 80px, #ffffffaa, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 240px 220px, #ffffff88, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 350px 170px, #ffffff66, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 460px 310px, #ffffff99, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 580px 110px, #ffffff77, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 600px 400px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .tag-class { background: rgba(56, 189, 248, 0.15); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); }
+    .tag-topic { background: rgba(250, 204, 21, 0.15); color: var(--sun-yellow); border: 1px solid rgba(250, 204, 21, 0.3); }
+    .tag-ncert { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); border: 1px solid rgba(52, 211, 153, 0.3); }
+
+    h1 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .intro-text {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      font-weight: 500;
+      max-width: 850px;
+    }
+
+    .activity-box {
+      margin-top: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: rgba(15, 23, 42, 0.7);
+      border-left: 4px solid var(--accent-amber);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: #e2e8f0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    /* Mode & Quick Navigation Switcher */
+    .view-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 0.25rem;
+      gap: 0.25rem;
+    }
+
+    .segment-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .segment-btn.active {
+      background: var(--accent-blue);
+      color: #04101e;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-hover);
+      border-color: #475569;
+    }
+
+    .btn-primary {
+      background: #0284c7;
+      border-color: #38bdf8;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0369a1;
+    }
+
+    .btn-reset {
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-reset:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    /* Main Dual View Grid */
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 960px) {
+      .lab-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* View Cards */
+    .view-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .view-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #f1f5f9;
+    }
+
+    .view-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Interactive Space View Canvas & SVG */
+    .space-stage-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 13;
+      min-height: 380px;
+      background: radial-gradient(circle at center, #0f172a 0%, #060a12 100%);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(51, 65, 85, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+    }
+
+    #spaceCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Earth View Display */
+    .earth-view-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 380px;
+      background: radial-gradient(circle at center, #0c1222 0%, #03060c 100%);
+      border-radius: 12px;
+      border: 1px solid rgba(51, 65, 85, 0.4);
+      padding: 1.5rem 1rem;
+      position: relative;
+    }
+
+    .telescope-ring {
+      width: min(240px, 60vw);
+      height: min(240px, 60vw);
+      border-radius: 50%;
+      border: 4px solid #334155;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.9);
+      position: relative;
+      background: #050811;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #moonPhaseCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .crosshair-h, .crosshair-v {
+      position: absolute;
+      background: rgba(56, 189, 248, 0.15);
+      pointer-events: none;
+    }
+
+    .crosshair-h {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+
+    .crosshair-v {
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+
+    .earth-view-meta {
+      margin-top: 1rem;
+      text-align: center;
+      width: 100%;
+    }
+
+    .phase-badge-prominent {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .illumination-pill {
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.25rem 0.85rem;
+      border-radius: 9999px;
+      background: rgba(250, 204, 21, 0.15);
+      color: var(--sun-yellow);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .phase-explanation {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(51, 65, 85, 0.6);
+      text-align: left;
+    }
+
+    .classroom-note {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: #93c5fd;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    /* Orbit Controls Bar */
+    .controls-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .slider-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 140px;
+    }
+
+    .slider-wrap {
+      flex: 1;
+      position: relative;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #334155;
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sun-yellow);
+      border: 3px solid #0f172a;
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
+      cursor: grab;
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(1.2);
+    }
+
+    .angle-readout {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      font-variant-numeric: tabular-nums;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    /* Playback & Quick Selector Controls */
+    .playback-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .playback-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .phase-buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 860px) {
+      .phase-buttons-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .phase-buttons-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .phase-btn {
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.5rem 0.35rem;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .phase-btn:hover {
+      background: #1e293b;
+      border-color: #64748b;
+      color: #ffffff;
+    }
+
+    .phase-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-blue);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+    .phase-icon {
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    /* Observation Table Section */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    th {
+      background: #0f172a;
+      color: #94a3b8;
+      font-weight: 700;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr.active-row {
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    tr.active-row td {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .pos-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1e293b;
+      border: 1px solid #475569;
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-right: 0.5rem;
+    }
+
+    tr.active-row .pos-pill {
+      background: var(--accent-blue);
+      color: #04101e;
+      border-color: var(--accent-blue);
+    }
+
+    .btn-table-jump {
+      background: #1e293b;
+      border: 1px solid #475569;
+      color: var(--accent-blue);
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-table-jump:hover {
+      background: var(--accent-blue);
+      color: #04101e;
+    }
+
+    /* Concept Guide & Accordion */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .concept-box {
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .concept-box-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .concept-box p {
+      font-size: 0.875rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .highlight-text {
+      color: var(--sun-yellow);
+      font-weight: 600;
+    }
+
+    /* Quiz Section */
+    .quiz-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .quiz-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #334155;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      background: #0f172a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .question-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .q-num {
+      background: var(--accent-blue);
+      color: #04101e;
+      font-size: 0.75rem;
+      font-weight: 800;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .option-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      color: #e2e8f0;
+      font-size: 0.875rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #273549;
+      border-color: #64748b;
+    }
+
+    .option-btn.correct {
+      background: rgba(34, 197, 94, 0.2) !important;
+      border-color: #22c55e !important;
+      color: #86efac !important;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background: rgba(239, 68, 68, 0.2) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+    }
+
+    .question-feedback {
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .question-feedback.show-correct {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      border-left: 3px solid #22c55e;
+      color: #bbf7d0;
+    }
+
+    .question-feedback.show-wrong {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border-left: 3px solid #ef4444;
+      color: #fecaca;
+    }
+
+    .quiz-summary-box {
+      display: none;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .score-badge {
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--sun-yellow);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(51, 65, 85, 0.4);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Helper tips */
+    .drag-hint-pill {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-subtle);
+      color: #94a3b8;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 9999px;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      backdrop-filter: blur(4px);
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-natural-phenomena-observe-moon-phases",
+  "order": 57,
+  "class": "VI",
+  "subject": "Science",
+  "topic": "Natural Phenomena",
+  "subtopic": null,
+  "title": "Observe Moon Phases",
+  "description": "Use a half-painted ball. Stand at the centre of a circle as your friend moves the ball along the circle, keeping the white side facing the sun. Observe the visible white portion.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Header Section -->
+    <header>
+      <div class="badge-bar">
+        <span class="tag tag-class">Class VI Science</span>
+        <span class="tag tag-topic">Natural Phenomena</span>
+        <span class="tag tag-ncert">NCERT Lab Activity</span>
+      </div>
+      <h1>
+        <span>🌕</span> Observe Moon Phases
+      </h1>
+      <p class="intro-text">
+        Move the Moon around Earth and observe how the visible illuminated portion changes.
+      </p>
+
+      <div class="activity-box">
+        <span>🏐</span>
+        <div>
+          <strong>Class Activity:</strong> "Use a half-painted ball. Stand at the centre of a circle as your friend moves the ball along the circle, keeping the white side facing the sun. Observe the visible white portion."
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation & Controls Bar -->
+    <div class="view-toolbar">
+      <div class="segmented-control">
+        <button id="modeSpaceBtn" class="segment-btn active" title="Astronomical Sun-Earth-Moon View">
+          <span>🔭</span> Space Model
+        </button>
+        <button id="modeBallBtn" class="segment-btn" title="Classroom Half-Painted Ball Experiment">
+          <span>🏐</span> Half-Painted Ball Model
+        </button>
+      </div>
+
+      <div class="action-btn-group">
+        <button id="resetAllBtn" class="btn btn-reset" title="Reset Moon to New Moon and reset quiz">
+          <span>↺</span> Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Dual Synchronized Views: Space View & Earth View -->
+    <div class="lab-grid">
+
+      <!-- LEFT: Space View (Top-Down Orbital View) -->
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <div class="view-title">
+              <span>🛰️</span>
+              <span id="spaceViewTitle">Space View (Top-Down Orbit)</span>
+            </div>
+            <div class="view-subtitle" id="spaceViewSubtitle">
+              Looking down at Earth's North Pole. Exactly 50% of the Moon is always lit by the Sun.
+            </div>
+          </div>
+        </div>
+
+        <div class="space-stage-container" id="spaceContainer">
+          <canvas id="spaceCanvas"></canvas>
+          <div class="drag-hint-pill">
+            <span>👆</span> Drag Moon or use controls below
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Earth View (What the Student Sees) -->
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <div class="view-title">
+              <span>👀</span>
+              <span id="earthViewTitle">Earth View (What You See)</span>
+            </div>
+            <div class="view-subtitle" id="earthViewSubtitle">
+              As observed by the student standing in the center looking at the Moon.
+            </div>
+          </div>
+        </div>
+
+        <div class="earth-view-container">
+          <div class="telescope-ring">
+            <canvas id="moonPhaseCanvas" width="300" height="300"></canvas>
+            <div class="crosshair-h"></div>
+            <div class="crosshair-v"></div>
+          </div>
+
+          <div class="earth-view-meta">
+            <div id="prominentPhaseName" class="phase-badge-prominent">New Moon</div>
+            <br />
+            <div id="illuminationPill" class="illumination-pill">Illuminated Portion: 0%</div>
+
+            <div class="phase-explanation" id="phaseExplanationText">
+              The Moon is between Earth and the Sun. The sunlit half faces away from Earth, so the side facing us is in darkness. The Moon is not visible.
+            </div>
+
+            <div class="classroom-note" id="classroomBallNote">
+              <span>💡</span>
+              <span id="classroomBallNoteText">
+                In the ball experiment: Your friend is standing between you and the Sun. You see only the black-painted side of the ball!
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Orbit Interactive Controls -->
+    <div class="controls-card">
+      <div class="slider-row">
+        <div class="slider-label">Orbit Angle / Position:</div>
+        <div class="slider-wrap">
+          <input type="range" id="angleSlider" min="0" max="360" value="0" step="1" aria-label="Moon Orbit Position Angle" />
+        </div>
+        <div class="angle-readout" id="angleReadout">0°</div>
+      </div>
+
+      <div class="playback-row">
+        <div class="playback-buttons">
+          <button id="playPauseBtn" class="btn btn-primary" title="Play or Pause Moon Orbit Animation">
+            <span id="playIcon">▶</span> <span id="playText">Play Orbit</span>
+          </button>
+          <button id="stepPrevBtn" class="btn" title="Previous Phase">
+            <span>⏮</span> Prev Phase
+          </button>
+          <button id="stepNextBtn" class="btn" title="Next Phase">
+            Next Phase <span>⏭</span>
+          </button>
+        </div>
+
+        <div class="segmented-control">
+          <button class="segment-btn speed-btn" data-speed="0.5">0.5×</button>
+          <button class="segment-btn speed-btn active" data-speed="1">1×</button>
+          <button class="segment-btn speed-btn" data-speed="2">2×</button>
+        </div>
+      </div>
+
+      <!-- Quick 8 Phase Jump Buttons -->
+      <div class="phase-buttons-grid" id="phaseButtonsGrid">
+        <button class="phase-btn active" data-angle="0">
+          <span class="phase-icon">🌑</span>
+          <span>1. New Moon</span>
+        </button>
+        <button class="phase-btn" data-angle="45">
+          <span class="phase-icon">🌒</span>
+          <span>2. Waxing Crescent</span>
+        </button>
+        <button class="phase-btn" data-angle="90">
+          <span class="phase-icon">🌓</span>
+          <span>3. First Quarter</span>
+        </button>
+        <button class="phase-btn" data-angle="135">
+          <span class="phase-icon">🌔</span>
+          <span>4. Waxing Gibbous</span>
+        </button>
+        <button class="phase-btn" data-angle="180">
+          <span class="phase-icon">🌕</span>
+          <span>5. Full Moon</span>
+        </button>
+        <button class="phase-btn" data-angle="225">
+          <span class="phase-icon">🌖</span>
+          <span>6. Waning Gibbous</span>
+        </button>
+        <button class="phase-btn" data-angle="270">
+          <span class="phase-icon">🌗</span>
+          <span>7. Third Quarter</span>
+        </button>
+        <button class="phase-btn" data-angle="315">
+          <span class="phase-icon">🌘</span>
+          <span>8. Waning Crescent</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Observation Table -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📋</span> Observation Table
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+          Click any row to jump to that Moon position
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table id="observationTable">
+          <thead>
+            <tr>
+              <th>Moon Position</th>
+              <th>Observed Phase</th>
+              <th>Visible Illuminated Portion</th>
+              <th>Classroom Ball Analogy (Student View)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-phase-index="0" class="active-row">
+              <td><span class="pos-pill">1</span> Position 1 (0°)</td>
+              <td>🌑 New Moon</td>
+              <td>0% (Completely Dark)</td>
+              <td>Only unpainted (black) half visible</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(0)">Jump to 1</button></td>
+            </tr>
+            <tr data-phase-index="1">
+              <td><span class="pos-pill">2</span> Position 2 (45°)</td>
+              <td>🌒 Waxing Crescent</td>
+              <td>~25% (Thin curved sliver on right)</td>
+              <td>Small slice of white side visible on right</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(45)">Jump to 2</button></td>
+            </tr>
+            <tr data-phase-index="2">
+              <td><span class="pos-pill">3</span> Position 3 (90°)</td>
+              <td>🌓 First Quarter</td>
+              <td>50% (Exact right half illuminated)</td>
+              <td>Half white, half black (white on right)</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(90)">Jump to 3</button></td>
+            </tr>
+            <tr data-phase-index="3">
+              <td><span class="pos-pill">4</span> Position 4 (135°)</td>
+              <td>🌔 Waxing Gibbous</td>
+              <td>~75% (More than half illuminated on right)</td>
+              <td>Mostly white side visible, dark sliver on left</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(135)">Jump to 4</button></td>
+            </tr>
+            <tr data-phase-index="4">
+              <td><span class="pos-pill">5</span> Position 5 (180°)</td>
+              <td>🌕 Full Moon</td>
+              <td>100% (Complete circular disk)</td>
+              <td>Entire white painted side directly facing you</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(180)">Jump to 5</button></td>
+            </tr>
+            <tr data-phase-index="5">
+              <td><span class="pos-pill">6</span> Position 6 (225°)</td>
+              <td>🌖 Waning Gibbous</td>
+              <td>~75% (More than half illuminated on left)</td>
+              <td>Mostly white side visible, dark sliver on right</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(225)">Jump to 6</button></td>
+            </tr>
+            <tr data-phase-index="6">
+              <td><span class="pos-pill">7</span> Position 7 (270°)</td>
+              <td>🌗 Third / Last Quarter</td>
+              <td>50% (Exact left half illuminated)</td>
+              <td>Half white, half black (white on left)</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(270)">Jump to 7</button></td>
+            </tr>
+            <tr data-phase-index="7">
+              <td><span class="pos-pill">8</span> Position 8 (315°)</td>
+              <td>🌘 Waning Crescent</td>
+              <td>~25% (Thin curved sliver on left)</td>
+              <td>Small slice of white side visible on left</td>
+              <td><button class="btn-table-jump" onclick="setMoonAngle(315)">Jump to 8</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Concept Guide Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📖</span> Concept Guide (Key Scientific Learnings)
+        </div>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-box">
+          <div class="concept-box-title">
+            <span>🔦</span> 1. The Moon Produces No Light
+          </div>
+          <p>
+            Unlike the Sun and stars, the Moon is a non-luminous body. It does not produce its own light. The glowing Moon we see in the night sky is solely due to <span class="highlight-text">sunlight bouncing off its rocky surface</span> like a giant mirror.
+          </p>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-box-title">
+            <span>🌗</span> 2. Always Half-Lit in Space
+          </div>
+          <p>
+            At any given moment, <span class="highlight-text">exactly 50% of the Moon</span> is illuminated by the Sun. The side facing the Sun is always in bright daylight, while the opposite side is in dark shadow. This never changes!
+          </p>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-box-title">
+            <span>🔄</span> 3. Orbital Position Causes Phases
+          </div>
+          <p>
+            As the Moon revolves around Earth, our viewing angle changes. From Earth, we usually see only <span class="highlight-text">a portion of that illuminated half</span>. When we see all of it, it is a Full Moon; when we see none, it is a New Moon.
+          </p>
+        </div>
+
+        <div class="concept-box">
+          <div class="concept-box-title">
+            <span>🏐</span> 4. The Half-Painted Ball Analogy
+          </div>
+          <p>
+            When holding a half-painted ball facing the Sun:
+            The white painted half represents the <span class="highlight-text">sunlit hemisphere</span>. As your friend moves in a circle around you, you see different portions of the white paint, creating identical phases!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Quiz Section -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🧠</span> Quick Quiz: Test Your Understanding (5 Questions)
+        </div>
+        <div id="quizScoreText" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-blue);">
+          Score: 0 / 5
+        </div>
+      </div>
+
+      <div class="quiz-container" id="quizContainer">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFill"></div>
+        </div>
+
+        <!-- Question 1 -->
+        <div class="question-card" data-qid="1">
+          <div class="question-title">
+            <span class="q-num">1</span> Does the Moon produce its own light?
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(1, this, false)">
+              <span>A</span> Yes, the Moon produces its own bright white light.
+            </button>
+            <button class="option-btn" data-correct="true" onclick="handleQuizAnswer(1, this, true)">
+              <span>B</span> No, it reflects sunlight falling on its surface.
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(1, this, false)">
+              <span>C</span> It absorbs light during the day and glows at night.
+            </button>
+          </div>
+          <div class="question-feedback" id="feedback-1"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question-card" data-qid="2">
+          <div class="question-title">
+            <span class="q-num">2</span> Looking at the Moon from outer space, how much of it is illuminated by the Sun at any given time?
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(2, this, false)">
+              <span>A</span> Only the fraction that we can see from Earth.
+            </button>
+            <button class="option-btn" data-correct="true" onclick="handleQuizAnswer(2, this, true)">
+              <span>B</span> Exactly half (50%) of the Moon is always illuminated.
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(2, this, false)">
+              <span>C</span> 100% of the Moon is always illuminated.
+            </button>
+          </div>
+          <div class="question-feedback" id="feedback-2"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question-card" data-qid="3">
+          <div class="question-title">
+            <span class="q-num">3</span> In the classroom activity with the half-painted ball, which side must always face the Sun?
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-correct="true" onclick="handleQuizAnswer(3, this, true)">
+              <span>A</span> The white-painted side must always face the Sun.
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(3, this, false)">
+              <span>B</span> The black-painted side must always face the Sun.
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(3, this, false)">
+              <span>C</span> The ball should keep spinning randomly.
+            </button>
+          </div>
+          <div class="question-feedback" id="feedback-3"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question-card" data-qid="4">
+          <div class="question-title">
+            <span class="q-num">4</span> When the Moon is directly between the Earth and the Sun, which phase do we observe?
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(4, this, false)">
+              <span>A</span> Full Moon
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(4, this, false)">
+              <span>B</span> First Quarter
+            </button>
+            <button class="option-btn" data-correct="true" onclick="handleQuizAnswer(4, this, true)">
+              <span>C</span> New Moon (illuminated half faces away from Earth)
+            </button>
+          </div>
+          <div class="question-feedback" id="feedback-4"></div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-card" data-qid="5">
+          <div class="question-title">
+            <span class="q-num">5</span> What causes the different phases of the Moon as seen from Earth?
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(5, this, false)">
+              <span>A</span> Clouds in Earth's atmosphere covering parts of the Moon.
+            </button>
+            <button class="option-btn" data-correct="true" onclick="handleQuizAnswer(5, this, true)">
+              <span>B</span> As the Moon orbits Earth, our viewing angle changes, so we see different portions of its illuminated half.
+            </button>
+            <button class="option-btn" data-correct="false" onclick="handleQuizAnswer(5, this, false)">
+              <span>C</span> The Moon changes size as it moves closer and farther from Earth.
+            </button>
+          </div>
+          <div class="question-feedback" id="feedback-5"></div>
+        </div>
+
+        <!-- Quiz Completed Summary -->
+        <div class="quiz-summary-box" id="quizSummaryBox">
+          <div class="score-badge" id="finalScoreDisplay">5 / 5</div>
+          <h3 style="color: #ffffff; margin-bottom: 0.5rem;" id="quizBadgeTitle">Excellent Work, Junior Astronomer!</h3>
+          <p style="color: #94a3b8; margin-bottom: 1rem;" id="quizBadgeDesc">
+            You have mastered the concepts of Moon phases and the half-painted ball model.
+          </p>
+          <button class="btn btn-primary" onclick="resetQuiz()">
+            <span>↺</span> Retake Quiz
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Class VI Science • Natural Phenomena • Interactive Educational Lab</p>
+      <p style="margin-top: 0.25rem;">Designed for hands-on observation, classroom demonstrations, and student self-learning.</p>
+    </footer>
+
+  </div>
+
+  <!-- Vanilla JavaScript Logic -->
+  <script>
+    // ==========================================
+    // Phase Definitions & Educational Data
+    // ==========================================
+    const PHASES = [
+      {
+        name: "New Moon",
+        icon: "🌑",
+        angle: 0,
+        illumination: "0%",
+        fraction: 0,
+        explanation: "The Moon is between Earth and the Sun. The illuminated half is facing directly toward the Sun and away from Earth. To the observer on Earth, the Moon appears completely dark and cannot be seen.",
+        ballAnalogy: "Your friend is standing directly between you and the Sun. The white painted side faces the Sun, so only the dark side is facing you."
+      },
+      {
+        name: "Waxing Crescent",
+        icon: "🌒",
+        angle: 45,
+        illumination: "~25%",
+        fraction: 0.25,
+        explanation: "The Moon has moved a little around its orbit. From Earth, we can now see a thin crescent-shaped sliver of the illuminated half on the right side. 'Waxing' means the bright portion is growing!",
+        ballAnalogy: "Your friend has moved a quarter-step along the circle. You can now see a small sliver of the white painted side on the right."
+      },
+      {
+        name: "First Quarter",
+        icon: "🌓",
+        angle: 90,
+        illumination: "50%",
+        fraction: 0.5,
+        explanation: "The Moon is at a 90-degree angle from the Sun. We can see exactly half of the illuminated half—which looks like a half-circle on the right side. It is called 'First Quarter' because the Moon has completed one-quarter of its orbit.",
+        ballAnalogy: "Your friend is at a right angle (90°) to you. You clearly see half of the ball as white and the other half as dark."
+      },
+      {
+        name: "Waxing Gibbous",
+        icon: "🌔",
+        angle: 135,
+        illumination: "~75%",
+        fraction: 0.75,
+        explanation: "More than half of the side facing Earth is illuminated on the right side. 'Gibbous' means swollen or rounded. The lit part is still growing toward full.",
+        ballAnalogy: "Your friend is moving toward the opposite side of the circle. Most of the ball facing you is now the white painted side."
+      },
+      {
+        name: "Full Moon",
+        icon: "🌕",
+        angle: 180,
+        illumination: "100%",
+        fraction: 1.0,
+        explanation: "Earth is between the Sun and Moon. The entire illuminated half of the Moon faces Earth directly, so we see a complete, bright circular disc glowing in the night sky.",
+        ballAnalogy: "Your friend is standing opposite the Sun. The white painted side faces both the Sun and you directly—you see a full white circle!"
+      },
+      {
+        name: "Waning Gibbous",
+        icon: "🌖",
+        angle: 225,
+        illumination: "~75%",
+        fraction: 0.75,
+        explanation: "The Moon continues its orbit. The visible illuminated part begins to decrease ('Waning' means shrinking). The lit portion is now on the left side.",
+        ballAnalogy: "Your friend is past the full position. The white area visible to you is now shrinking, with darkness appearing on the right side."
+      },
+      {
+        name: "Third / Last Quarter",
+        icon: "🌗",
+        angle: 270,
+        illumination: "50%",
+        fraction: 0.5,
+        explanation: "The Moon has completed three-quarters of its orbit. We see half of the illuminated side, but now it is the left half that is bright. The right half is in shadow.",
+        ballAnalogy: "Your friend is at the opposite 90° angle. Exactly half the white side is visible, but now positioned on your left."
+      },
+      {
+        name: "Waning Crescent",
+        icon: "🌘",
+        angle: 315,
+        illumination: "~25%",
+        fraction: 0.25,
+        explanation: "Only a thin curved sliver of the illuminated half remains visible on the left side before the Moon returns to the New Moon position.",
+        ballAnalogy: "Your friend is almost back to the starting point. Only a tiny curve of the white painted side is visible on the left."
+      }
+    ];
+
+    // State Variables
+    let currentAngle = 0; // 0 to 360 degrees
+    let isPlaying = false;
+    let playSpeed = 1.0; // degrees per frame
+    let animationFrameId = null;
+    let isDraggingMoon = false;
+    let viewMode = 'space'; // 'space' or 'ball'
+
+    // DOM Elements
+    const spaceCanvas = document.getElementById('spaceCanvas');
+    const spaceCtx = spaceCanvas.getContext('2d');
+    const moonCanvas = document.getElementById('moonPhaseCanvas');
+    const moonCtx = moonCanvas.getContext('2d');
+
+    const angleSlider = document.getElementById('angleSlider');
+    const angleReadout = document.getElementById('angleReadout');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const playText = document.getElementById('playText');
+    const stepPrevBtn = document.getElementById('stepPrevBtn');
+    const stepNextBtn = document.getElementById('stepNextBtn');
+    const resetAllBtn = document.getElementById('resetAllBtn');
+
+    const prominentPhaseName = document.getElementById('prominentPhaseName');
+    const illuminationPill = document.getElementById('illuminationPill');
+    const phaseExplanationText = document.getElementById('phaseExplanationText');
+    const classroomBallNoteText = document.getElementById('classroomBallNoteText');
+
+    const modeSpaceBtn = document.getElementById('modeSpaceBtn');
+    const modeBallBtn = document.getElementById('modeBallBtn');
+    const spaceViewTitle = document.getElementById('spaceViewTitle');
+    const spaceViewSubtitle = document.getElementById('spaceViewSubtitle');
+    const earthViewTitle = document.getElementById('earthViewTitle');
+    const earthViewSubtitle = document.getElementById('earthViewSubtitle');
+
+    const phaseButtonsGrid = document.getElementById('phaseButtonsGrid');
+    const observationTable = document.getElementById('observationTable');
+
+    // ==========================================
+    // Canvas Sizing & High-DPI Support
+    // ==========================================
+    function resizeCanvases() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = spaceCanvas.parentElement.getBoundingClientRect();
+      spaceCanvas.width = rect.width * dpr;
+      spaceCanvas.height = rect.height * dpr;
+      spaceCtx.resetTransform && spaceCtx.resetTransform();
+      spaceCtx.scale(dpr, dpr);
+
+      // Moon Earth view canvas
+      moonCanvas.width = 300 * dpr;
+      moonCanvas.height = 300 * dpr;
+      moonCtx.resetTransform && moonCtx.resetTransform();
+      moonCtx.scale(dpr, dpr);
+
+      drawAll();
+    }
+
+    window.addEventListener('resize', resizeCanvases);
+
+    // ==========================================
+    // Phase Calculation Utilities
+    // ==========================================
+    function getPhaseIndex(angle) {
+      const normalized = ((angle % 360) + 360) % 360;
+      const step = 45;
+      const index = Math.round(normalized / step) % 8;
+      return index;
+    }
+
+    function calculateIlluminationPercentage(angle) {
+      const rad = (angle * Math.PI) / 180;
+      const fraction = (1 - Math.cos(rad)) / 2;
+      return Math.round(fraction * 100);
+    }
+
+    // ==========================================
+    // Drawing the Space View / Classroom View
+    // ==========================================
+    function drawSpaceView() {
+      const dpr = window.devicePixelRatio || 1;
+      const width = spaceCanvas.width / dpr;
+      const height = spaceCanvas.height / dpr;
+
+      spaceCtx.clearRect(0, 0, width, height);
+
+      const centerX = width * 0.44;
+      const centerY = height * 0.5;
+      const orbitRadius = Math.min(width * 0.32, height * 0.38, 170);
+
+      // 1. Draw Sunlight Rays from the Right
+      const sunX = width - 40;
+      const sunY = centerY;
+      const sunRadius = Math.min(width * 0.08, 48);
+
+      // Sun glow
+      const sunGrad = spaceCtx.createRadialGradient(sunX, sunY, 10, sunX, sunY, sunRadius * 1.8);
+      sunGrad.addColorStop(0, 'rgba(253, 224, 71, 1)');
+      sunGrad.addColorStop(0.5, 'rgba(250, 204, 21, 0.5)');
+      sunGrad.addColorStop(1, 'rgba(250, 204, 21, 0)');
+
+      spaceCtx.beginPath();
+      spaceCtx.arc(sunX, sunY, sunRadius * 1.8, 0, Math.PI * 2);
+      spaceCtx.fillStyle = sunGrad;
+      spaceCtx.fill();
+
+      // Sun core
+      spaceCtx.beginPath();
+      spaceCtx.arc(sunX, sunY, sunRadius, 0, Math.PI * 2);
+      spaceCtx.fillStyle = '#fde047';
+      spaceCtx.fill();
+      spaceCtx.lineWidth = 3;
+      spaceCtx.strokeStyle = '#f59e0b';
+      spaceCtx.stroke();
+
+      // Sun label
+      spaceCtx.fillStyle = '#fef08a';
+      spaceCtx.font = 'bold 12px system-ui, sans-serif';
+      spaceCtx.textAlign = 'center';
+      spaceCtx.fillText('SUN', sunX, sunY - sunRadius - 10);
+
+      // Parallel Sunlight Rays (streaming leftward toward Earth & Moon)
+      spaceCtx.strokeStyle = 'rgba(250, 204, 21, 0.25)';
+      spaceCtx.lineWidth = 2;
+      spaceCtx.setLineDash([8, 6]);
+
+      const rayYs = [centerY - 130, centerY - 90, centerY - 50, centerY, centerY + 50, centerY + 90, centerY + 130];
+      rayYs.forEach((ry) => {
+        spaceCtx.beginPath();
+        spaceCtx.moveTo(sunX - sunRadius, ry);
+        spaceCtx.lineTo(30, ry);
+        spaceCtx.stroke();
+
+        // Arrow heads pointing left
+        const arrowX = width * 0.72;
+        spaceCtx.beginPath();
+        spaceCtx.moveTo(arrowX + 8, ry - 4);
+        spaceCtx.lineTo(arrowX, ry);
+        spaceCtx.lineTo(arrowX + 8, ry + 4);
+        spaceCtx.stroke();
+      });
+
+      spaceCtx.setLineDash([]);
+
+      // Label for sunlight direction
+      spaceCtx.fillStyle = '#facc15';
+      spaceCtx.font = '11px system-ui, sans-serif';
+      spaceCtx.textAlign = 'center';
+      spaceCtx.fillText('☀️ Parallel Sunlight Rays', width * 0.72, centerY - 145);
+
+      // 2. Circular Orbit Path
+      spaceCtx.beginPath();
+      spaceCtx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
+      spaceCtx.strokeStyle = viewMode === 'ball' ? 'rgba(56, 189, 248, 0.6)' : 'rgba(148, 163, 184, 0.35)';
+      spaceCtx.lineWidth = viewMode === 'ball' ? 2.5 : 1.5;
+      if (viewMode === 'ball') {
+        spaceCtx.setLineDash([4, 4]); // Chalk circle look
+      } else {
+        spaceCtx.setLineDash([6, 6]);
+      }
+      spaceCtx.stroke();
+      spaceCtx.setLineDash([]);
+
+      if (viewMode === 'ball') {
+        spaceCtx.fillStyle = 'rgba(56, 189, 248, 0.8)';
+        spaceCtx.font = '11px system-ui, sans-serif';
+        spaceCtx.textAlign = 'center';
+        spaceCtx.fillText('⚪ Chalk Circle on Ground', centerX, centerY + orbitRadius + 24);
+      }
+
+      // 3. 8 Orbital Position Nodes
+      PHASES.forEach((p, idx) => {
+        const rad = (p.angle * Math.PI) / 180;
+        const nodeX = centerX + Math.cos(rad) * orbitRadius;
+        const nodeY = centerY - Math.sin(rad) * orbitRadius;
+
+        const isCurrentSector = getPhaseIndex(currentAngle) === idx;
+
+        // Node circle
+        spaceCtx.beginPath();
+        spaceCtx.arc(nodeX, nodeY, isCurrentSector ? 7 : 4, 0, Math.PI * 2);
+        spaceCtx.fillStyle = isCurrentSector ? '#38bdf8' : 'rgba(148, 163, 184, 0.5)';
+        spaceCtx.fill();
+
+        // Node label number
+        const labelDist = orbitRadius + (isCurrentSector ? 20 : 16);
+        const labelX = centerX + Math.cos(rad) * labelDist;
+        const labelY = centerY - Math.sin(rad) * labelDist + 4;
+
+        spaceCtx.font = isCurrentSector ? 'bold 11px system-ui, sans-serif' : '10px system-ui, sans-serif';
+        spaceCtx.fillStyle = isCurrentSector ? '#38bdf8' : '#64748b';
+        spaceCtx.textAlign = 'center';
+        spaceCtx.fillText((idx + 1).toString(), labelX, labelY);
+      });
+
+      // 4. Center Object: Earth or Student Observer
+      const earthRadius = Math.min(width * 0.065, 34);
+
+      if (viewMode === 'space') {
+        // Earth Atmosphere Glow
+        const earthGlow = spaceCtx.createRadialGradient(centerX, centerY, earthRadius * 0.7, centerX, centerY, earthRadius * 1.4);
+        earthGlow.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
+        earthGlow.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX, centerY, earthRadius * 1.4, 0, Math.PI * 2);
+        spaceCtx.fillStyle = earthGlow;
+        spaceCtx.fill();
+
+        // Earth Base (Oceans)
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX, centerY, earthRadius, 0, Math.PI * 2);
+        spaceCtx.fillStyle = '#1d4ed8';
+        spaceCtx.fill();
+
+        // Continents (Stylized green patches)
+        spaceCtx.fillStyle = '#16a34a';
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX - 8, centerY - 6, 10, 0, Math.PI * 2);
+        spaceCtx.fill();
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX + 6, centerY + 8, 8, 0, Math.PI * 2);
+        spaceCtx.fill();
+
+        // Earth day/night side: Sunlight from the right!
+        spaceCtx.save();
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX, centerY, earthRadius, Math.PI / 2, (3 * Math.PI) / 2);
+        spaceCtx.fillStyle = 'rgba(2, 6, 23, 0.75)';
+        spaceCtx.fill();
+        spaceCtx.restore();
+
+        // Label: Earth
+        spaceCtx.font = 'bold 12px system-ui, sans-serif';
+        spaceCtx.fillStyle = '#ffffff';
+        spaceCtx.textAlign = 'center';
+        spaceCtx.fillText('EARTH', centerX, centerY + earthRadius + 18);
+
+      } else {
+        // Classroom Ball Model: Student Observer standing in the center
+        spaceCtx.beginPath();
+        spaceCtx.arc(centerX, centerY, earthRadius, 0, Math.PI * 2);
+        spaceCtx.fillStyle = '#0284c7';
+        spaceCtx.fill();
+        spaceCtx.lineWidth = 2;
+        spaceCtx.strokeStyle = '#38bdf8';
+        spaceCtx.stroke();
+
+        // Student icon
+        spaceCtx.fillStyle = '#ffffff';
+        spaceCtx.font = '22px sans-serif';
+        spaceCtx.textAlign = 'center';
+        spaceCtx.textBaseline = 'middle';
+        spaceCtx.fillText('🧍', centerX, centerY);
+        spaceCtx.textBaseline = 'alphabetic';
+
+        spaceCtx.font = 'bold 12px system-ui, sans-serif';
+        spaceCtx.fillStyle = '#38bdf8';
+        spaceCtx.textAlign = 'center';
+        spaceCtx.fillText('YOU (Observer)', centerX, centerY + earthRadius + 18);
+      }
+
+      // 5. Line of Sight from Earth / Student to Moon
+      const curRad = (currentAngle * Math.PI) / 180;
+      const moonX = centerX + Math.cos(curRad) * orbitRadius;
+      const moonY = centerY - Math.sin(curRad) * orbitRadius;
+
+      spaceCtx.beginPath();
+      spaceCtx.moveTo(centerX, centerY);
+      spaceCtx.lineTo(moonX, moonY);
+      spaceCtx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+      spaceCtx.lineWidth = 1.5;
+      spaceCtx.setLineDash([3, 3]);
+      spaceCtx.stroke();
+      spaceCtx.setLineDash([]);
+
+      // Sightline "Eye" Indicator along line of sight
+      const midEyeX = centerX + Math.cos(curRad) * (earthRadius + 15);
+      const midEyeY = centerY - Math.sin(curRad) * (earthRadius + 15);
+      spaceCtx.font = '13px sans-serif';
+      spaceCtx.textAlign = 'center';
+      spaceCtx.textBaseline = 'middle';
+      spaceCtx.fillText('👁️', midEyeX, midEyeY);
+      spaceCtx.textBaseline = 'alphabetic';
+
+      // 6. The Moon or Half-Painted Ball
+      const moonRadius = 18;
+
+      // Base unlit half (Left side: from 90° to 270°)
+      spaceCtx.beginPath();
+      spaceCtx.arc(moonX, moonY, moonRadius, Math.PI / 2, (3 * Math.PI) / 2);
+      spaceCtx.fillStyle = '#0f172a'; // dark side
+      spaceCtx.fill();
+      spaceCtx.lineWidth = 1.5;
+      spaceCtx.strokeStyle = '#334155';
+      spaceCtx.stroke();
+
+      // Lit half facing Sun (Right side: from -90° to 90°)
+      spaceCtx.beginPath();
+      spaceCtx.arc(moonX, moonY, moonRadius, (3 * Math.PI) / 2, Math.PI / 2);
+      spaceCtx.fillStyle = '#fef08a'; // bright sunlight
+      spaceCtx.fill();
+      spaceCtx.lineWidth = 1.5;
+      spaceCtx.strokeStyle = '#facc15';
+      spaceCtx.stroke();
+
+      // Divider line separating day and night on Moon
+      spaceCtx.beginPath();
+      spaceCtx.moveTo(moonX, moonY - moonRadius);
+      spaceCtx.lineTo(moonX, moonY + moonRadius);
+      spaceCtx.strokeStyle = '#e2e8f0';
+      spaceCtx.lineWidth = 1.5;
+      spaceCtx.stroke();
+
+      // Draggable Highlight Ring around Moon
+      spaceCtx.beginPath();
+      spaceCtx.arc(moonX, moonY, moonRadius + 6, 0, Math.PI * 2);
+      spaceCtx.strokeStyle = isDraggingMoon ? '#38bdf8' : 'rgba(56, 189, 248, 0.4)';
+      spaceCtx.lineWidth = isDraggingMoon ? 3 : 1.5;
+      spaceCtx.stroke();
+
+      // Moon Label / Friend Label
+      spaceCtx.font = 'bold 11px system-ui, sans-serif';
+      spaceCtx.fillStyle = '#f8fafc';
+      spaceCtx.textAlign = 'center';
+      if (viewMode === 'ball') {
+        spaceCtx.fillText('Friend with Ball', moonX, moonY - moonRadius - 10);
+      } else {
+        spaceCtx.fillText('Moon', moonX, moonY - moonRadius - 10);
+      }
+
+      // Indicator on Moon showing "White side faces Sun"
+      spaceCtx.fillStyle = '#facc15';
+      spaceCtx.font = '9px system-ui, sans-serif';
+      spaceCtx.fillText('Lit Side ➔', moonX + moonRadius + 22, moonY + 3);
+    }
+
+    // ==========================================
+    // Drawing the Earth View (Telescope / Sky View)
+    // ==========================================
+    function drawEarthView() {
+      const dpr = window.devicePixelRatio || 1;
+      const width = moonCanvas.width / dpr;
+      const height = moonCanvas.height / dpr;
+
+      moonCtx.clearRect(0, 0, width, height);
+
+      const cx = width / 2;
+      const cy = height / 2;
+      const radius = 95;
+
+      // 1. Draw Starfield Background in Viewport
+      moonCtx.fillStyle = '#050914';
+      moonCtx.beginPath();
+      moonCtx.arc(cx, cy, radius + 20, 0, Math.PI * 2);
+      moonCtx.fill();
+
+      // 2. Base Dark Moon Disk
+      moonCtx.save();
+      moonCtx.beginPath();
+      moonCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      moonCtx.clip();
+
+      moonCtx.fillStyle = '#0d1527';
+      moonCtx.fill();
+
+      // Subtle craters on dark side
+      moonCtx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      moonCtx.beginPath();
+      moonCtx.arc(cx - 25, cy - 20, 18, 0, Math.PI * 2);
+      moonCtx.arc(cx + 30, cy + 25, 22, 0, Math.PI * 2);
+      moonCtx.arc(cx - 10, cy + 40, 14, 0, Math.PI * 2);
+      moonCtx.fill();
+
+      // 3. Exact Mathematical Phase Shading
+      const theta = ((currentAngle % 360) + 360) % 360;
+      const rad = (theta * Math.PI) / 180;
+      const k = -Math.cos(rad);
+
+      if (Math.abs(k - (-1)) > 0.002) {
+        moonCtx.fillStyle = '#fef08a';
+
+        moonCtx.beginPath();
+        if (theta <= 180) {
+          // WAXING: Right half is lit!
+          moonCtx.arc(cx, cy, radius, -Math.PI / 2, Math.PI / 2, false);
+          const termWidth = radius * k;
+          moonCtx.ellipse(cx, cy, Math.abs(termWidth), radius, 0, Math.PI / 2, -Math.PI / 2, k >= 0);
+        } else {
+          // WANING: Left half is lit!
+          moonCtx.arc(cx, cy, radius, -Math.PI / 2, Math.PI / 2, true);
+          const termWidth = radius * k;
+          moonCtx.ellipse(cx, cy, Math.abs(termWidth), radius, 0, Math.PI / 2, -Math.PI / 2, k < 0);
+        }
+
+        moonCtx.closePath();
+        moonCtx.fill();
+
+        // Realistic Lunar Maria / Crater patterns
+        moonCtx.save();
+        moonCtx.clip();
+
+        moonCtx.fillStyle = 'rgba(180, 160, 90, 0.28)';
+        moonCtx.beginPath();
+        moonCtx.arc(cx + 25, cy - 25, 24, 0, Math.PI * 2);
+        moonCtx.arc(cx + 40, cy - 10, 18, 0, Math.PI * 2);
+        moonCtx.arc(cx - 35, cy - 15, 30, 0, Math.PI * 2);
+        moonCtx.arc(cx - 20, cy + 20, 26, 0, Math.PI * 2);
+        moonCtx.arc(cx - 10, cy - 40, 22, 0, Math.PI * 2);
+        moonCtx.fill();
+
+        moonCtx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        moonCtx.beginPath();
+        moonCtx.arc(cx - 5, cy + 55, 6, 0, Math.PI * 2);
+        moonCtx.fill();
+
+        moonCtx.restore();
+      }
+
+      // Outer Moon Edge Ring
+      moonCtx.beginPath();
+      moonCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      moonCtx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+      moonCtx.lineWidth = 1.5;
+      moonCtx.stroke();
+
+      moonCtx.restore();
+
+      // Subtle Outer Lunar Glow
+      if (k > -0.7) {
+        const glow = moonCtx.createRadialGradient(cx, cy, radius * 0.95, cx, cy, radius * 1.25);
+        glow.addColorStop(0, 'rgba(254, 240, 138, 0.2)');
+        glow.addColorStop(1, 'rgba(254, 240, 138, 0)');
+        moonCtx.beginPath();
+        moonCtx.arc(cx, cy, radius * 1.25, 0, Math.PI * 2);
+        moonCtx.fillStyle = glow;
+        moonCtx.fill();
+      }
+
+      // Directional Label
+      moonCtx.font = '10px system-ui, sans-serif';
+      moonCtx.fillStyle = '#64748b';
+      moonCtx.textAlign = 'left';
+      moonCtx.fillText('WEST (Right)', cx + radius - 45, cy + radius + 25);
+      moonCtx.textAlign = 'right';
+      moonCtx.fillText('(Left) EAST', cx - radius + 45, cy + radius + 25);
+    }
+
+    // ==========================================
+    // Master Update & Sync Routine
+    // ==========================================
+    function updateUI() {
+      const phaseIdx = getPhaseIndex(currentAngle);
+      const phase = PHASES[phaseIdx];
+      const illumPct = calculateIlluminationPercentage(currentAngle);
+
+      prominentPhaseName.innerHTML = `${phase.icon} ${phase.name}`;
+      illuminationPill.textContent = `Visible Illuminated Portion: ${illumPct}%`;
+      phaseExplanationText.textContent = phase.explanation;
+      classroomBallNoteText.textContent = phase.ballAnalogy;
+
+      angleSlider.value = Math.round(currentAngle);
+      angleReadout.textContent = `${Math.round(currentAngle)}°`;
+
+      document.querySelectorAll('.phase-btn').forEach((btn, idx) => {
+        if (idx === phaseIdx) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      document.querySelectorAll('#observationTable tbody tr').forEach((row) => {
+        const rIdx = parseInt(row.getAttribute('data-phase-index'), 10);
+        if (rIdx === phaseIdx) {
+          row.classList.add('active-row');
+        } else {
+          row.classList.remove('active-row');
+        }
+      });
+    }
+
+    function drawAll() {
+      drawSpaceView();
+      drawEarthView();
+      updateUI();
+    }
+
+    // ==========================================
+    // User Interaction & Animation Controls
+    // ==========================================
+    function setMoonAngle(angle) {
+      currentAngle = ((angle % 360) + 360) % 360;
+      drawAll();
+    }
+
+    angleSlider.addEventListener('input', (e) => {
+      setMoonAngle(parseFloat(e.target.value));
+    });
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        playIcon.textContent = '⏸';
+        playText.textContent = 'Pause Orbit';
+        playPauseBtn.classList.remove('btn-primary');
+        playPauseBtn.style.background = '#e11d48';
+        playPauseBtn.style.borderColor = '#f43f5e';
+        lastTime = performance.now();
+        animationFrameId = requestAnimationFrame(animateOrbit);
+      } else {
+        playIcon.textContent = '▶';
+        playText.textContent = 'Play Orbit';
+        playPauseBtn.classList.add('btn-primary');
+        playPauseBtn.style.background = '';
+        playPauseBtn.style.borderColor = '';
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    }
+
+    let lastTime = 0;
+    function animateOrbit(now) {
+      if (!isPlaying) return;
+      const delta = (now - lastTime) / 1000;
+      lastTime = now;
+
+      const degreesPerSecond = 26 * playSpeed;
+      currentAngle = (currentAngle + degreesPerSecond * delta) % 360;
+
+      drawAll();
+      animationFrameId = requestAnimationFrame(animateOrbit);
+    }
+
+    playPauseBtn.addEventListener('click', togglePlay);
+
+    document.querySelectorAll('.speed-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.speed-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        playSpeed = parseFloat(btn.getAttribute('data-speed'));
+      });
+    });
+
+    stepPrevBtn.addEventListener('click', () => {
+      const idx = getPhaseIndex(currentAngle);
+      const prevIdx = (idx - 1 + 8) % 8;
+      setMoonAngle(PHASES[prevIdx].angle);
+    });
+
+    stepNextBtn.addEventListener('click', () => {
+      const idx = getPhaseIndex(currentAngle);
+      const nextIdx = (idx + 1) % 8;
+      setMoonAngle(PHASES[nextIdx].angle);
+    });
+
+    document.querySelectorAll('.phase-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetAngle = parseFloat(btn.getAttribute('data-angle'));
+        setMoonAngle(targetAngle);
+      });
+    });
+
+    resetAllBtn.addEventListener('click', () => {
+      if (isPlaying) togglePlay();
+      currentAngle = 0;
+      drawAll();
+      resetQuiz();
+    });
+
+    modeSpaceBtn.addEventListener('click', () => {
+      viewMode = 'space';
+      modeSpaceBtn.classList.add('active');
+      modeBallBtn.classList.remove('active');
+      spaceViewTitle.textContent = 'Space View (Top-Down Orbit)';
+      spaceViewSubtitle.textContent = 'Looking down at Earth\'s North Pole. Exactly 50% of the Moon is always lit by the Sun.';
+      earthViewTitle.textContent = 'Earth View (What You See)';
+      earthViewSubtitle.textContent = 'As observed by the student standing in the center looking at the Moon.';
+      drawAll();
+    });
+
+    modeBallBtn.addEventListener('click', () => {
+      viewMode = 'ball';
+      modeBallBtn.classList.add('active');
+      modeSpaceBtn.classList.remove('active');
+      spaceViewTitle.textContent = 'Classroom Ball Activity (Field View)';
+      spaceViewSubtitle.textContent = 'You stand at the center of the chalk circle while your friend holds the half-painted ball.';
+      earthViewTitle.textContent = 'Student View (What You See on the Ball)';
+      earthViewSubtitle.textContent = 'Looking at your friend\'s half-painted ball. The white side faces the Sun!';
+      drawAll();
+    });
+
+    // ==========================================
+    // Draggable Moon on Space Canvas
+    // ==========================================
+    function getCanvasCoordinates(e) {
+      const rect = spaceCanvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+        width: rect.width,
+        height: rect.height
+      };
+    }
+
+    function handleDrag(coords) {
+      const centerX = coords.width * 0.44;
+      const centerY = coords.height * 0.5;
+
+      const dx = coords.x - centerX;
+      const dy = centerY - coords.y;
+
+      let rad = Math.atan2(dy, dx);
+      if (rad < 0) rad += 2 * Math.PI;
+
+      const deg = (rad * 180) / Math.PI;
+      setMoonAngle(deg);
+    }
+
+    spaceCanvas.addEventListener('mousedown', (e) => {
+      isDraggingMoon = true;
+      if (isPlaying) togglePlay();
+      handleDrag(getCanvasCoordinates(e));
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDraggingMoon) return;
+      handleDrag(getCanvasCoordinates(e));
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDraggingMoon) {
+        isDraggingMoon = false;
+        drawAll();
+      }
+    });
+
+    // Touch Support
+    spaceCanvas.addEventListener('touchstart', (e) => {
+      isDraggingMoon = true;
+      if (isPlaying) togglePlay();
+      handleDrag(getCanvasCoordinates(e));
+      e.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDraggingMoon) return;
+      handleDrag(getCanvasCoordinates(e));
+    });
+
+    window.addEventListener('touchend', () => {
+      if (isDraggingMoon) {
+        isDraggingMoon = false;
+        drawAll();
+      }
+    });
+
+    // ==========================================
+    // Interactive Quiz Implementation
+    // ==========================================
+    const userAnswers = {};
+    const TOTAL_QUESTIONS = 5;
+
+    const quizExplanations = {
+      1: {
+        correct: "Correct! The Moon is a rocky, non-luminous body that shines by reflecting sunlight like a mirror.",
+        wrong: "Not quite. The Moon does not produce any light of its own! It only reflects sunlight falling on it."
+      },
+      2: {
+        correct: "Exactly right! In outer space, the Sun always illuminates exactly half (50%) of the Moon at all times.",
+        wrong: "Incorrect. The Sun always illuminates exactly half (50%) of the Moon in space, regardless of what we see from Earth."
+      },
+      3: {
+        correct: "Well done! The white-painted side represents the sunlit half, so it must always point toward the Sun.",
+        wrong: "Remember: The white paint represents the side illuminated by the Sun, so it must always face the Sun!"
+      },
+      4: {
+        correct: "Spot on! In the New Moon phase, the Moon is between Earth and Sun, and its lit side faces away from Earth.",
+        wrong: "Try again! When the Moon is between Earth and Sun, its dark side faces Earth, resulting in a New Moon."
+      },
+      5: {
+        correct: "Brilliant! As the Moon orbits Earth, our viewing angle changes, so we see varying amounts of the illuminated half.",
+        wrong: "Incorrect. The Moon's physical size doesn't change, nor do clouds cause phases. It is caused by our changing viewing angle of the lit half."
+      }
+    };
+
+    function handleQuizAnswer(qNum, btnElement, isCorrect) {
+      if (userAnswers[qNum] !== undefined) return;
+
+      userAnswers[qNum] = isCorrect;
+
+      const parentCard = btnElement.closest('.question-card');
+      const allButtons = parentCard.querySelectorAll('.option-btn');
+      allButtons.forEach((b) => {
+        b.disabled = true;
+        if (b.getAttribute('data-correct') === 'true') {
+          b.classList.add('correct');
+        } else if (b === btnElement && !isCorrect) {
+          b.classList.add('wrong');
+        }
+      });
+
+      const feedbackBox = document.getElementById(`feedback-${qNum}`);
+      if (isCorrect) {
+        feedbackBox.className = 'question-feedback show-correct';
+        feedbackBox.textContent = `✓ ${quizExplanations[qNum].correct}`;
+      } else {
+        feedbackBox.className = 'question-feedback show-wrong';
+        feedbackBox.textContent = `✗ ${quizExplanations[qNum].wrong}`;
+      }
+
+      updateQuizScore();
+    }
+
+    function updateQuizScore() {
+      const answeredCount = Object.keys(userAnswers).length;
+      let correctCount = 0;
+      for (const k in userAnswers) {
+        if (userAnswers[k] === true) correctCount++;
+      }
+
+      document.getElementById('quizScoreText').textContent = `Score: ${correctCount} / ${TOTAL_QUESTIONS}`;
+      document.getElementById('quizProgressFill').style.width = `${(answeredCount / TOTAL_QUESTIONS) * 100}%`;
+
+      if (answeredCount === TOTAL_QUESTIONS) {
+        const summaryBox = document.getElementById('quizSummaryBox');
+        summaryBox.style.display = 'block';
+        document.getElementById('finalScoreDisplay').textContent = `${correctCount} / ${TOTAL_QUESTIONS}`;
+
+        const badgeTitle = document.getElementById('quizBadgeTitle');
+        const badgeDesc = document.getElementById('quizBadgeDesc');
+
+        if (correctCount === 5) {
+          badgeTitle.textContent = '🌟 Perfect Score: Master Astronomer!';
+          badgeDesc.textContent = 'You thoroughly understand Moon phases, orbital geometry, and the half-painted ball experiment!';
+        } else if (correctCount >= 3) {
+          badgeTitle.textContent = '👍 Great Job, Explorer!';
+          badgeDesc.textContent = 'You have a good understanding of how sunlight and orbit positions cause the lunar phases.';
+        } else {
+          badgeTitle.textContent = '📚 Keep Exploring!';
+          badgeDesc.textContent = 'Review the Concept Guide and try moving the Moon around the orbit again to see how the visible portion changes.';
+        }
+      }
+    }
+
+    function resetQuiz() {
+      for (const k in userAnswers) delete userAnswers[k];
+
+      document.querySelectorAll('.question-card').forEach((card, idx) => {
+        const qNum = idx + 1;
+        const allButtons = card.querySelectorAll('.option-btn');
+        allButtons.forEach((b) => {
+          b.disabled = false;
+          b.classList.remove('correct', 'wrong');
+        });
+        const feedbackBox = document.getElementById(`feedback-${qNum}`);
+        if (feedbackBox) {
+          feedbackBox.className = 'question-feedback';
+          feedbackBox.textContent = '';
+        }
+      });
+
+      document.getElementById('quizSummaryBox').style.display = 'none';
+      document.getElementById('quizScoreText').textContent = `Score: 0 / ${TOTAL_QUESTIONS}`;
+      document.getElementById('quizProgressFill').style.width = '0%';
+    }
+
+    window.setMoonAngle = setMoonAngle;
+    window.handleQuizAnswer = handleQuizAnswer;
+    window.resetQuiz = resetQuiz;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvases();
+      drawAll();
+    });
+
+    setTimeout(() => {
+      resizeCanvases();
+      drawAll();
+    }, 50);
+  </script>
+</body>
+</html>

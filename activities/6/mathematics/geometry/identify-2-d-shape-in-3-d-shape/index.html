@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Class VI Geometry: Identify 2D Shapes in 3D Shapes</title>
+  <style>
+    /* ==========================================================================
+       PURE CSS - 100% MOBILE-FRIENDLY & RESPONSIVE (ZERO EXTERNAL CDNs)
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .app-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+      max-width: 620px;
+      width: 100%;
+      padding: 22px;
+      margin: auto;
+    }
+
+    /* Header */
+    .header {
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #fdf2f8;
+      color: #be185d;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 4px;
+      border: 1px solid #fbcfe8;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* 3D Objects Picker Bar */
+    .selector-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+      margin: 12px 0 6px 0;
+    }
+
+    .objects-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .obj-btn {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .obj-btn:hover {
+      border-color: #cbd5e1;
+      background: #ffffff;
+    }
+
+    .obj-btn.active {
+      background: #f0fdf4;
+      border-color: #10b981;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+    }
+
+    .obj-icon {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .obj-name {
+      font-size: 11px;
+      font-weight: 800;
+      color: #1e293b;
+    }
+
+    .obj-type {
+      font-size: 9px;
+      color: #64748b;
+    }
+
+    /* Virtual Paper Stage */
+    .paper-stage {
+      background: #fafaf9;
+      border: 2px dashed #d6d3d1;
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .stage-prompt {
+      font-size: 12px;
+      color: #78716c;
+      margin-bottom: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .drawing-area {
+      width: 170px;
+      height: 170px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG Canvas for Trace Outline */
+    .trace-svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .trace-path {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      transition: stroke-dashoffset 1.4s ease-in-out, fill 0.5s ease;
+    }
+
+    .trace-path.drawn {
+      stroke-dashoffset: 0;
+      fill: rgba(79, 70, 229, 0.08);
+    }
+
+    /* 3D Object overlay */
+    .object-overlay {
+      position: absolute;
+      z-index: 5;
+      font-size: 58px;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+      cursor: pointer;
+    }
+
+    .object-overlay.lifted {
+      transform: translateY(-55px) scale(0.85);
+      opacity: 0.65;
+    }
+
+    /* Animated Pencil */
+    .pencil {
+      position: absolute;
+      font-size: 26px;
+      z-index: 10;
+      pointer-events: none;
+      display: none;
+      transform: translate(-10px, -28px);
+    }
+
+    /* Result Card */
+    .result-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      transition: all 0.3s;
+    }
+
+    .result-info {
+      flex: 1;
+    }
+
+    .result-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #166534;
+      margin-bottom: 2px;
+    }
+
+    .result-details {
+      font-size: 11px;
+      color: #14532d;
+      line-height: 1.4;
+    }
+
+    .shape-badge {
+      background: #10b981;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Controls Bar */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      min-height: 40px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      touch-action: manipulation;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: #ffffff;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+    }
+    .btn-primary:hover {
+      background: #4338ca;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    /* ==========================================================================
+       MOBILE RESPONSIVENESS (< 480px)
+       ========================================================================== */
+    @media (max-width: 480px) {
+      .app-card {
+        padding: 16px 12px;
+        border-radius: 16px;
+      }
+
+      h1 { font-size: 16px; }
+
+      .objects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+
+      .obj-btn {
+        padding: 8px 4px;
+      }
+
+      .obj-icon { font-size: 22px; }
+
+      .paper-stage {
+        min-height: 190px;
+        padding: 12px;
+      }
+
+      .drawing-area {
+        width: 140px;
+        height: 140px;
+      }
+
+      .result-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .shape-badge {
+        align-self: flex-start;
+      }
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-mathematics-geometry-identify-2-d-shape-in-3-d-shape",
+  "order": 215,
+  "class": "VI",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": null,
+  "title": "Identify 2-D Shapes in 3-D Shapes",
+  "description": "Trace the faces of 3D objects (chalk box, bottle cap, etc.) to identify 2D shapes.",
+  "activityType": "simulation",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+  <div class="app-card">
+    <!-- Header -->
+    <div class="header">
+      <div>
+        <div class="badge">Class VI Mathematics • Geometry</div>
+        <h1>2D Shapes from 3D Objects</h1>
+        <p class="subtitle">Trace the flat faces of everyday 3D objects</p>
+      </div>
+    </div>
+
+    <!-- Object Selector -->
+    <div class="selector-label">Choose a 3D Object to Trace:</div>
+    <div class="objects-grid">
+      <!-- 1. Chalk Box -->
+      <button id="btn-chalk" class="obj-btn active" onclick="selectObject('chalk')">
+        <span class="obj-icon">📦</span>
+        <span class="obj-name">Chalk Box</span>
+        <span class="obj-type">Cube (3D)</span>
+      </button>
+
+      <!-- 2. Bottle Cap -->
+      <button id="btn-cap" class="obj-btn" onclick="selectObject('cap')">
+        <span class="obj-icon">🧴</span>
+        <span class="obj-name">Bottle Cap</span>
+        <span class="obj-type">Cylinder (3D)</span>
+      </button>
+
+      <!-- 3. Pencil Box -->
+      <button id="btn-pencilbox" class="obj-btn" onclick="selectObject('pencilbox')">
+        <span class="obj-icon">✏️</span>
+        <span class="obj-name">Pencil Box</span>
+        <span class="obj-type">Cuboid (3D)</span>
+      </button>
+
+      <!-- 4. Toy Prism / Tent -->
+      <button id="btn-tent" class="obj-btn" onclick="selectObject('tent')">
+        <span class="obj-icon">⛺</span>
+        <span class="obj-name">Camping Tent</span>
+        <span class="obj-type">Prism (3D)</span>
+      </button>
+    </div>
+
+    <!-- Virtual Tracing Paper Stage -->
+    <div class="paper-stage">
+      <div class="stage-prompt">
+        <span id="prompt-icon">✏️</span>
+        <span id="prompt-text">Tap "Trace Face Outline" to run a pencil around the base!</span>
+      </div>
+
+      <div class="drawing-area">
+        <!-- SVG Canvas for 2D Footprint -->
+        <svg class="trace-svg" viewBox="0 0 170 170">
+          <path id="shape-path" class="trace-path" d="" fill="transparent" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+        <!-- 3D Object Element -->
+        <div id="object-3d" class="object-overlay" onclick="toggleLift()">📦</div>
+
+        <!-- Animated Pencil Cursor -->
+        <div id="pencil" class="pencil">✏️</div>
+      </div>
+    </div>
+
+    <!-- Discovery / Result Box -->
+    <div id="result-box" class="result-box">
+      <div class="result-info">
+        <div id="res-title" class="result-title">Face Traced: Square</div>
+        <div id="res-desc" class="result-details">The chalk box has 6 square faces. Tracing any flat face yields a 2D Square with 4 equal sides and 4 right angles.</div>
+      </div>
+      <div id="res-badge" class="shape-badge">SQUARE</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="resetTrace()">↺ Clear Canvas</button>
+      <button id="btn-trace" class="btn btn-primary" onclick="startTracing()">✏️ Trace Face Outline</button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       VANILLA JAVASCRIPT LOGIC & AUDIO SYNTHESIS
+       ========================================================================== */
+    const objectsData = {
+      chalk: {
+        icon: '📦',
+        name: 'Chalk Box (Cube)',
+        shapeName: 'Square',
+        badge: 'SQUARE (2D)',
+        details: 'A cube has 6 flat identical square faces. Tracing its base produces a 2D Square with 4 equal sides and 4 vertices.',
+        svgPath: 'M 35 35 L 135 35 L 135 135 L 35 135 Z'
+      },
+      cap: {
+        icon: '🧴',
+        name: 'Bottle Cap (Cylinder)',
+        shapeName: 'Circle',
+        badge: 'CIRCLE (2D)',
+        details: 'A cylinder has 2 flat circular faces (top and bottom) and 1 curved face. Tracing the rim produces a 2D Circle with 0 corners.',
+        svgPath: 'M 85 25 A 60 60 0 1 1 84.9 25 Z'
+      },
+      pencilbox: {
+        icon: '✏️',
+        name: 'Pencil Box (Cuboid)',
+        shapeName: 'Rectangle',
+        badge: 'RECTANGLE (2D)',
+        details: 'A cuboid has 6 rectangular faces. Tracing the bottom face produces a 2D Rectangle with opposite sides equal and 4 right angles.',
+        svgPath: 'M 20 50 L 150 50 L 150 120 L 20 120 Z'
+      },
+      tent: {
+        icon: '⛺',
+        name: 'Camping Tent (Triangular Prism)',
+        shapeName: 'Triangle',
+        badge: 'TRIANGLE (2D)',
+        details: 'A triangular prism has 2 triangular ends and 3 rectangular sides. Tracing the front triangular flap yields a 2D Triangle with 3 sides and 3 vertices.',
+        svgPath: 'M 85 25 L 145 135 L 25 135 Z'
+      }
+    };
+
+    let currentObj = 'chalk';
+    let isTracing = false;
+
+    // Web Audio Synthesizer for pencil drawing & completion chime
+    let audioCtx = null;
+    function playSound(type) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        if (type === 'pencil') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(240, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(320, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.15);
+        } else if (type === 'chime') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+          osc.frequency.setValueAtTime(783, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.4);
+        }
+      } catch (e) {}
+    }
+
+    function selectObject(key) {
+      if (isTracing) return;
+      currentObj = key;
+
+      document.querySelectorAll('.obj-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`btn-${key}`).classList.add('active');
+
+      const data = objectsData[key];
+      const obj3D = document.getElementById('object-3d');
+      obj3D.textContent = data.icon;
+      obj3D.classList.remove('lifted');
+
+      resetTrace();
+    }
+
+    function resetTrace() {
+      const pathEl = document.getElementById('shape-path');
+      pathEl.classList.remove('drawn');
+      pathEl.setAttribute('d', '');
+
+      const obj3D = document.getElementById('object-3d');
+      obj3D.classList.remove('lifted');
+
+      document.getElementById('pencil').style.display = 'none';
+      document.getElementById('prompt-text').textContent = 'Tap "Trace Face Outline" to run a pencil around the base!';
+
+      const data = objectsData[currentObj];
+      document.getElementById('res-title').textContent = `Ready to Trace ${data.name}`;
+      document.getElementById('res-desc').textContent = 'Place the object flat on the paper and trace around its bottom surface.';
+      document.getElementById('res-badge').textContent = 'READY';
+      document.getElementById('res-badge').style.background = '#64748b';
+    }
+
+    function startTracing() {
+      if (isTracing) return;
+      isTracing = true;
+
+      const data = objectsData[currentObj];
+      const pathEl = document.getElementById('shape-path');
+      const pencil = document.getElementById('pencil');
+      const obj3D = document.getElementById('object-3d');
+
+      pencil.style.display = 'block';
+      document.getElementById('prompt-text').textContent = `Tracing the base of ${data.name}...`;
+
+      pathEl.setAttribute('d', data.svgPath);
+      pathEl.classList.remove('drawn');
+
+      playSound('pencil');
+      setTimeout(() => playSound('pencil'), 350);
+      setTimeout(() => playSound('pencil'), 700);
+
+      setTimeout(() => {
+        pathEl.classList.add('drawn');
+      }, 50);
+
+      setTimeout(() => {
+        pencil.style.display = 'none';
+        obj3D.classList.add('lifted');
+        playSound('chime');
+
+        document.getElementById('prompt-text').textContent = `Lifted the object! Revealed a 2D ${data.shapeName}!`;
+        document.getElementById('res-title').textContent = `Identified: 2D ${data.shapeName}`;
+        document.getElementById('res-desc').textContent = data.details;
+        document.getElementById('res-badge').textContent = data.badge;
+        document.getElementById('res-badge').style.background = '#10b981';
+
+        isTracing = false;
+      }, 1400);
+    }
+
+    function toggleLift() {
+      if (isTracing) return;
+      const obj3D = document.getElementById('object-3d');
+      obj3D.classList.toggle('lifted');
+    }
+
+    selectObject('chalk');
+  </script>
+</body>
+</html>

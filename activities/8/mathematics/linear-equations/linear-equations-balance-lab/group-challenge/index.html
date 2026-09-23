@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear Equations Group Challenge</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: #eef5f8;
+      color: #162033;
+      min-height: 100vh;
+      padding: 18px;
+    }
+    .app {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    header, .panel, .student {
+      background: #fff;
+      border: 1px solid #d7e3ea;
+      border-radius: 8px;
+      box-shadow: 0 10px 26px rgba(24, 39, 58, 0.08);
+    }
+    header {
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+    header p { color: #657386; margin-top: 5px; }
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .panel { padding: 18px; }
+    .equation {
+      font-size: clamp(1.9rem, 7vw, 4.4rem);
+      font-weight: 900;
+      text-align: center;
+      color: #12364a;
+      padding: 20px;
+      border-radius: 8px;
+      background: #edf8fb;
+      border: 1px solid #cae7ef;
+    }
+    .balance {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 16px;
+      align-items: end;
+    }
+    .pan {
+      min-height: 190px;
+      border: 3px solid #334155;
+      border-top: none;
+      border-radius: 0 0 34px 34px;
+      background: linear-gradient(#f9fafb, #e8eef3);
+      padding: 14px;
+      display: flex;
+      align-content: flex-end;
+      align-items: flex-end;
+      justify-content: center;
+      flex-wrap: wrap-reverse;
+      gap: 7px;
+    }
+    .block {
+      min-width: 34px;
+      height: 30px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.16);
+    }
+    .x-block { background: #c84b31; }
+    .unit-block { background: #176b87; }
+    .right-block { background: #237a54; }
+    .beam {
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #276678, #1687a7);
+      margin-top: 16px;
+      transform-origin: center;
+      transition: transform 0.2s ease;
+      box-shadow: 0 8px 18px rgba(22, 75, 95, 0.22);
+    }
+    .students {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .student {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      border-top: 6px solid #176b87;
+    }
+    .student:nth-child(2) { border-top-color: #c84b31; }
+    .student:nth-child(3) { border-top-color: #237a54; }
+    .role {
+      display: inline-block;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 3px 10px;
+      background: #edf8fb;
+      color: #176b87;
+      font-weight: 850;
+      font-size: 0.86rem;
+    }
+    input, select {
+      width: 100%;
+      min-height: 42px;
+      border: 2px solid #cbd9e2;
+      border-radius: 8px;
+      padding: 0 10px;
+      font: inherit;
+      font-weight: 750;
+      background: #fff;
+    }
+    button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      font-weight: 850;
+      background: #176b87;
+      color: #fff;
+      cursor: pointer;
+    }
+    button.secondary { background: #e8eef3; color: #12364a; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .log {
+      display: grid;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .entry {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #f6f9fb;
+      border-left: 5px solid #176b87;
+      line-height: 1.45;
+    }
+    .status {
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff8e5;
+      border: 1px solid #f0d590;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .score {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .score div {
+      background: #f7fafc;
+      border: 1px solid #d7e3ea;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 850;
+    }
+    @media (max-width: 900px) {
+      .main, .students { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      body { padding: 10px; }
+      .balance { gap: 10px; }
+      .pan { min-height: 140px; padding: 9px; }
+      .block { min-width: 28px; height: 26px; font-size: 0.85rem; }
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "8-mathematics-linear-equations-linear-equations-balance-lab-group-challenge",
+  "order": 303,
+  "class": "VIII",
+  "subject": "Mathematics",
+  "topic": "Linear Equations",
+  "subtopic": "Linear Equations Balance Lab",
+  "title": "Linear Equations Balance Lab — Group Challenge",
+  "description": "Use a balance model to solve equations of the form ax + b = c by adjusting x and observing both sides.",
+  "activityType": "challenge",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Linear Equations Group Challenge</h1>
+        <p>Three students solve one equation together: guess, choose operations, and explain the reasoning.</p>
+      </div>
+      <div class="actions">
+        <button id="newRound" type="button">New round</button>
+        <button id="resetLog" class="secondary" type="button">Clear board</button>
+      </div>
+    </header>
+
+    <section class="main">
+      <div class="panel">
+        <div class="equation" id="equationText"></div>
+        <div class="balance">
+          <div class="pan" id="leftPan" aria-label="left side"></div>
+          <div class="pan" id="rightPan" aria-label="right side"></div>
+        </div>
+        <div class="beam" id="beam"></div>
+        <div class="score">
+          <div>Guess: <span id="guessScore">0</span></div>
+          <div>Operation: <span id="operationScore">0</span></div>
+          <div>Explanation: <span id="explainScore">0</span></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Shared Reasoning Board</h2>
+        <div class="status" id="status"></div>
+        <div class="log" id="log"></div>
+      </div>
+    </section>
+
+    <section class="students">
+      <article class="student">
+        <span class="role">Student 1: Guesser</span>
+        <h3>What is x?</h3>
+        <input id="studentGuess" type="number" min="0" max="12" step="1" value="1" />
+        <button id="submitGuess" type="button">Submit guess</button>
+      </article>
+
+      <article class="student">
+        <span class="role">Student 2: Operator</span>
+        <h3>Which operation helps?</h3>
+        <select id="operationChoice">
+          <option value="subtract">Subtract the constant from both sides</option>
+          <option value="divide">Divide both sides by the coefficient of x</option>
+          <option value="add">Add the constant to both sides</option>
+          <option value="multiply">Multiply both sides by the coefficient of x</option>
+        </select>
+        <button id="submitOperation" type="button">Try operation</button>
+      </article>
+
+      <article class="student">
+        <span class="role">Student 3: Explainer</span>
+        <h3>Complete the explanation</h3>
+        <input id="explanationInput" type="text" placeholder="First subtract ..., then divide ..." />
+        <button id="submitExplanation" type="button">Share explanation</button>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const equations = [
+      { a: 2, b: 3, x: 4 },
+      { a: 3, b: 5, x: 3 },
+      { a: 4, b: 2, x: 2 },
+      { a: 5, b: 4, x: 1 },
+      { a: 2, b: 7, x: 5 }
+    ];
+
+    let current = equations[0];
+    let scores = { guess: 0, operation: 0, explain: 0 };
+
+    const equationText = document.querySelector("#equationText");
+    const leftPan = document.querySelector("#leftPan");
+    const rightPan = document.querySelector("#rightPan");
+    const beam = document.querySelector("#beam");
+    const status = document.querySelector("#status");
+    const log = document.querySelector("#log");
+    const guessInput = document.querySelector("#studentGuess");
+    const operationChoice = document.querySelector("#operationChoice");
+    const explanationInput = document.querySelector("#explanationInput");
+
+    function rightSide() {
+      return current.a * current.x + current.b;
+    }
+
+    function addEntry(text, good = true) {
+      const entry = document.createElement("div");
+      entry.className = "entry";
+      entry.style.borderLeftColor = good ? "#237a54" : "#c84b31";
+      entry.textContent = text;
+      log.prepend(entry);
+    }
+
+    function block(text, className) {
+      const div = document.createElement("div");
+      div.className = `block ${className}`;
+      div.textContent = text;
+      return div;
+    }
+
+    function renderBlocks() {
+      leftPan.innerHTML = "";
+      rightPan.innerHTML = "";
+      for (let i = 0; i < current.a; i += 1) leftPan.append(block("x", "x-block"));
+      for (let i = 0; i < current.b; i += 1) leftPan.append(block("1", "unit-block"));
+      for (let i = 0; i < rightSide(); i += 1) rightPan.append(block("1", "right-block"));
+    }
+
+    function updateScore() {
+      document.querySelector("#guessScore").textContent = scores.guess;
+      document.querySelector("#operationScore").textContent = scores.operation;
+      document.querySelector("#explainScore").textContent = scores.explain;
+    }
+
+    function render() {
+      equationText.textContent = `${current.a}x + ${current.b} = ${rightSide()}`;
+      renderBlocks();
+      updateScore();
+      const guess = Number(guessInput.value);
+      const diff = rightSide() - (current.a * guess + current.b);
+      beam.style.transform = `rotate(${Math.max(-8, Math.min(8, diff * 1.2))}deg)`;
+      status.textContent = `Goal: isolate x. For this round, x is hidden. The group must agree on the operation sequence before checking.`;
+    }
+
+    function newRound() {
+      const next = equations[Math.floor(Math.random() * equations.length)];
+      current = next === current ? equations[(equations.indexOf(next) + 1) % equations.length] : next;
+      guessInput.value = 1;
+      explanationInput.value = "";
+      log.innerHTML = "";
+      addEntry("New equation loaded. Guesser starts, Operator follows, Explainer closes the round.");
+      render();
+    }
+
+    document.querySelector("#submitGuess").addEventListener("click", () => {
+      const guess = Number(guessInput.value);
+      const correct = guess === current.x;
+      scores.guess += correct ? 2 : 0;
+      addEntry(correct
+        ? `Guesser: x = ${guess}. Correct, the balance can be equal.`
+        : `Guesser: x = ${guess}. Not yet. Compare both sides and adjust.`, correct);
+      render();
+    });
+
+    document.querySelector("#submitOperation").addEventListener("click", () => {
+      const choice = operationChoice.value;
+      const correct = choice === "subtract";
+      scores.operation += correct ? 1 : 0;
+      addEntry(correct
+        ? `Operator: first subtract ${current.b} from both sides. Good move.`
+        : `Operator: ${operationChoice.selectedOptions[0].textContent}. That does not isolate the x-term first.`, correct);
+      render();
+    });
+
+    document.querySelector("#submitExplanation").addEventListener("click", () => {
+      const text = explanationInput.value.trim().toLowerCase();
+      const hasSubtract = text.includes("subtract") || text.includes("minus");
+      const hasDivide = text.includes("divide") || text.includes("divid");
+      const correct = hasSubtract && hasDivide;
+      scores.explain += correct ? 2 : 0;
+      addEntry(correct
+        ? `Explainer: ${explanationInput.value.trim()}`
+        : `Explainer needs both ideas: subtract the constant, then divide by the coefficient.`, correct);
+      render();
+    });
+
+    document.querySelector("#newRound").addEventListener("click", newRound);
+    document.querySelector("#resetLog").addEventListener("click", () => {
+      log.innerHTML = "";
+      scores = { guess: 0, operation: 0, explain: 0 };
+      updateScore();
+      addEntry("Board cleared. Start a fresh discussion.");
+    });
+    guessInput.addEventListener("input", render);
+    guessInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") document.querySelector("#submitGuess").click();
+    });
+    explanationInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") document.querySelector("#submitExplanation").click();
+    });
+
+    addEntry("Round ready. Student 1 guesses x.");
+    render();
+  </script>
+</body>
+</html>

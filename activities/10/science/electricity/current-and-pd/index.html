@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current and Potential Difference in Series and Parallel — Class 10 Science</title>
+<style>
+  :root{
+    --bg:#f4f6fa;
+    --panel:#ffffff;
+    --ink:#16202e;
+    --muted:#5b6b80;
+    --line:#dde3ec;
+    --accent:#1f5fd0;
+    --accent-soft:#e8f0fe;
+    --good:#1e7a4b;
+    --good-soft:#e3f6ec;
+    --bad:#c0392b;
+    --bad-soft:#fdeceb;
+    --warn:#a8630a;
+    --radius:14px;
+    --shadow:0 1px 3px rgba(16,32,58,.08),0 6px 18px rgba(16,32,58,.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:14px;}
+
+  header.top{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .crumb{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;}
+  h1{margin:6px 0 8px;font-size:1.4rem;line-height:1.25;}
+  .objective{margin:0 0 4px;color:var(--ink);font-size:.98rem;}
+  .objective strong{color:var(--accent);}
+  .howto{margin:6px 0 0;color:var(--muted);font-size:.88rem;}
+
+  .card{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);
+    margin-top:14px;
+  }
+  .card h2{margin:0 0 4px;font-size:1.08rem;}
+  .card .hint{margin:0 0 12px;color:var(--muted);font-size:.88rem;}
+
+  /* -------- shared controls -------- */
+  .ctrlGrid{display:grid;grid-template-columns:1fr;gap:18px;}
+  .ctrl label{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:700;margin-bottom:8px;font-size:.95rem;}
+  .ctrl .val{font-variant-numeric:tabular-nums;color:var(--accent);font-size:1.05rem;}
+  input[type=range]{
+    width:100%;height:34px;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track{height:10px;background:#e0e6f0;border-radius:5px;}
+  input[type=range]::-moz-range-track{height:10px;background:#e0e6f0;border-radius:5px;}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:30px;height:30px;margin-top:-10px;border-radius:50%;
+    background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:26px;height:26px;border-radius:50%;background:var(--accent);
+    border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+  input[type=range]:focus-visible{outline:3px solid #ffbf47;outline-offset:4px;border-radius:6px;}
+
+  .btn{
+    padding:12px 16px;border-radius:10px;border:2px solid var(--accent);
+    background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:.95rem;
+  }
+  .btn.ghost{background:#fff;color:var(--accent);}
+  .btn.small{padding:9px 12px;font-size:.86rem;}
+  .btn:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+
+  /* -------- tabs -------- */
+  .tabs{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+  .tab{
+    flex:1 1 auto;min-width:96px;
+    padding:11px 10px;border:1px solid var(--line);background:var(--panel);
+    border-radius:10px;font-size:.9rem;font-weight:700;color:var(--muted);
+    cursor:pointer;text-align:center;
+  }
+  .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .tab:focus-visible{outline:3px solid #ffbf47;outline-offset:2px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* -------- circuit -------- */
+  .circuitBox{background:#0f1a2b;border-radius:12px;padding:14px;margin-top:6px;}
+  svg.scene{width:100%;height:auto;display:block;max-width:480px;margin:0 auto;}
+  .probe{cursor:pointer;}
+  .probe .hit{fill:transparent;stroke:none;}
+  .probe .mark{fill:#3a4a63;stroke:#8fa3bf;stroke-width:2;}
+  .probe .markLetter{fill:#e8eefc;font-size:11px;font-weight:800;text-anchor:middle;dominant-baseline:middle;pointer-events:none;}
+  .probe:hover .mark{stroke:#ffd479;}
+  .probe.active .mark{fill:var(--accent);stroke:#ffd479;stroke-width:3;}
+  .probe:focus{outline:none;}
+  .probe:focus .mark{stroke:#ffbf47;stroke-width:3;}
+  .wireLine{stroke:#8fa3bf;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+  .compLabel{fill:#e8eefc;font-size:12px;font-weight:700;text-anchor:middle;}
+  .compVal{fill:#9fd6c6;font-size:11px;font-weight:700;text-anchor:middle;}
+
+  .meterBox{
+    margin-top:12px;border-radius:12px;padding:14px;font-size:1rem;font-weight:600;
+    text-align:center;background:var(--accent-soft);color:var(--ink);min-height:1.4em;
+  }
+  .meterBox .mLabel{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em;}
+  .meterBox .mValue{font-size:1.5rem;font-variant-numeric:tabular-nums;}
+
+  .formula{
+    margin-top:12px;background:#0f1a2b;color:#e8eefc;border-radius:10px;
+    padding:12px;font-size:.88rem;line-height:1.8;overflow-x:auto;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .formula b{color:#ffd479;}
+
+  /* -------- compare -------- */
+  .compareGrid{display:grid;grid-template-columns:1fr;gap:12px;}
+  .compareCol{border:2px solid var(--line);border-radius:12px;padding:14px;}
+  .compareCol h3{margin:0 0 8px;font-size:1rem;}
+  .compareCol .big{font-size:1.6rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .compareCol .small{font-size:.85rem;color:var(--muted);margin-top:4px;}
+  .compareNote{margin-top:12px;padding:12px;border-radius:10px;background:var(--good-soft);color:var(--good);font-weight:700;font-size:.92rem;}
+
+  /* -------- predict -------- */
+  .q{border:2px solid var(--line);border-radius:12px;padding:14px;}
+  .q .qtext{font-weight:700;margin-bottom:4px;font-size:1rem;}
+  .q .qsetup{font-size:.85rem;color:var(--muted);margin-bottom:12px;}
+  .choices{display:flex;gap:8px;flex-wrap:wrap;}
+  .choices button{
+    flex:1 1 28%;min-width:96px;padding:13px 8px;border-radius:10px;
+    border:2px solid var(--line);background:#fff;font-weight:700;cursor:pointer;color:var(--ink);
+  }
+  .choices button:hover:not(:disabled){border-color:var(--accent);}
+  .choices button:disabled{cursor:default;opacity:.55;}
+  .choices button.correct{background:var(--good-soft);border-color:var(--good);color:var(--good);opacity:1;}
+  .choices button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);opacity:1;}
+  .verdict{margin-top:12px;padding:12px;border-radius:10px;font-size:.9rem;display:none;}
+  .verdict.show{display:block;}
+  .verdict.ok{background:var(--good-soft);border-left:5px solid var(--good);}
+  .verdict.no{background:var(--bad-soft);border-left:5px solid var(--bad);}
+  .verdict b{display:block;margin-bottom:3px;}
+  .progress{font-size:.85rem;color:var(--muted);margin-bottom:12px;font-weight:700;}
+
+  /* -------- table -------- */
+  table{width:100%;border-collapse:collapse;font-size:.84rem;}
+  th,td{padding:8px 6px;text-align:left;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+  th{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .tablewrap{overflow-x:auto;margin-bottom:12px;}
+  .empty{color:var(--muted);font-size:.88rem;padding:14px 0;}
+
+  details.teacher{margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:0 16px;box-shadow:var(--shadow);}
+  details.teacher summary{padding:14px 0;font-weight:700;cursor:pointer;color:var(--accent);list-style:none;}
+  details.teacher summary::-webkit-details-marker{display:none;}
+  details.teacher summary::before{content:"▸ ";}
+  details.teacher[open] summary::before{content:"▾ ";}
+  details.teacher .body{padding-bottom:16px;font-size:.92rem;border-top:1px solid var(--line);padding-top:12px;}
+  details.teacher ul{margin:8px 0 14px;padding-left:20px;}
+  details.teacher li{margin-bottom:6px;}
+  details.teacher h3{font-size:.95rem;margin:14px 0 4px;}
+
+  footer.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:18px 6px 6px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);
+    background:#16202e;color:#fff;padding:11px 18px;border-radius:24px;font-size:.88rem;
+    opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease;z-index:50;
+    max-width:90vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .hidden{display:none !important;}
+
+  @media (min-width:640px){
+    .compareGrid{grid-template-columns:1fr 1fr;}
+  }
+  @media (min-width:760px){
+    .wrap{padding:20px;}
+    h1{font-size:1.65rem;}
+  }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-science-electricity-current-and-pd",
+  "order": 198,
+  "class": "X",
+  "subject": "Science",
+  "topic": "Electricity",
+  "subtopic": null,
+  "title": "Current and PD in Series and Parallel",
+  "description": "Measure current and potential difference across resistors in series and parallel combinations.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="crumb">Class 10 · Science · Electricity</div>
+    <h1>Current and Potential Difference: Series vs Parallel</h1>
+    <p class="objective"><strong>Learning objective:</strong> find out that in a series circuit the current is the same everywhere while the voltage splits across resistors, and in a parallel circuit the voltage is the same across every branch while the current splits.</p>
+    <p class="howto">Set the resistor values and battery voltage below, then tap a wire or a resistor in each circuit to "place" a meter there and read it.</p>
+  </header>
+
+  <!-- ================= SHARED CONTROLS ================= -->
+  <section class="card" aria-label="Circuit controls">
+    <h2>Set up the circuit</h2>
+    <p class="hint">These values apply to both the series and parallel circuits below, so you can compare them fairly.</p>
+    <div class="ctrlGrid">
+      <div class="ctrl">
+        <label for="r1">Resistor R₁ <span class="val"><span id="r1Val">10</span> Ω</span></label>
+        <input type="range" id="r1" min="1" max="100" step="1" value="10" aria-label="Resistance of R1 in ohms">
+      </div>
+      <div class="ctrl">
+        <label for="r2">Resistor R₂ <span class="val"><span id="r2Val">20</span> Ω</span></label>
+        <input type="range" id="r2" min="1" max="100" step="1" value="20" aria-label="Resistance of R2 in ohms">
+      </div>
+      <div class="ctrl">
+        <label for="voltage">Battery voltage <span class="val"><span id="voltageVal">6.0</span> V</span></label>
+        <input type="range" id="voltage" min="0" max="12" step="0.5" value="6" aria-label="Battery voltage in volts">
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn ghost" id="resetBtn" type="button">↺ Reset activity</button>
+    </div>
+  </section>
+
+  <!-- ================= TABS ================= -->
+  <section class="card" aria-label="Circuit views">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-series"   aria-selected="true"  data-tab="series">Series</button>
+      <button class="tab" role="tab" id="tab-parallel" aria-selected="false" data-tab="parallel">Parallel</button>
+      <button class="tab" role="tab" id="tab-compare"  aria-selected="false" data-tab="compare">Compare</button>
+      <button class="tab" role="tab" id="tab-predict"  aria-selected="false" data-tab="predict">Predict</button>
+    </div>
+
+    <!-- ---- SERIES PANEL ---- -->
+    <div class="panel active" id="panel-series">
+      <p class="hint" style="margin-top:14px;">Tap a wire (circle, current) or a resistor bracket (voltage) to measure it.</p>
+      <div class="circuitBox">
+        <svg class="scene" id="seriesSvg" viewBox="0 0 480 260" role="img" aria-labelledby="seriesTitle">
+          <title id="seriesTitle">A series circuit with a battery and two resistors, R1 and R2</title>
+
+          <!-- wires -->
+          <path class="wireLine" d="M45 80 L45 40 L140 40"/>
+          <path class="wireLine" d="M220 40 L300 40"/>
+          <path class="wireLine" d="M380 40 L455 40 L455 220 L45 220 L45 180"/>
+
+          <!-- battery -->
+          <rect x="20" y="80" width="50" height="100" rx="7" fill="#34495e"/>
+          <rect x="20" y="80" width="50" height="26" rx="7" fill="#e67e22"/>
+          <text x="45" y="99" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">+</text>
+          <text x="45" y="203" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">−</text>
+          <text x="45" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" id="sBattVal">6.0 V</text>
+
+          <!-- R1 -->
+          <rect x="140" y="25" width="80" height="30" rx="4" fill="#1b2839" stroke="#3c4d66" stroke-width="2"/>
+          <polyline points="140,40 152,28 166,52 180,28 194,52 208,28 220,40" fill="none" stroke="#ffd479" stroke-width="2.5" stroke-linejoin="round"/>
+          <text class="compLabel" x="180" y="72">R₁</text>
+          <text class="compVal" x="180" y="86" id="sR1Val">10 Ω</text>
+
+          <!-- R2 -->
+          <rect x="300" y="25" width="80" height="30" rx="4" fill="#1b2839" stroke="#3c4d66" stroke-width="2"/>
+          <polyline points="300,40 312,28 326,52 340,28 354,52 368,28 380,40" fill="none" stroke="#ffd479" stroke-width="2.5" stroke-linejoin="round"/>
+          <text class="compLabel" x="340" y="72">R₂</text>
+          <text class="compVal" x="340" y="86" id="sR2Val">20 Ω</text>
+
+          <!-- current probes -->
+          <g class="probe" data-id="s_i_before" tabindex="0" role="button" aria-label="Measure current before R1">
+            <circle class="hit" cx="90" cy="40" r="20"/>
+            <circle class="mark" cx="90" cy="40" r="10"/>
+            <text class="markLetter" x="90" y="41">A</text>
+          </g>
+          <g class="probe" data-id="s_i_mid" tabindex="0" role="button" aria-label="Measure current between R1 and R2">
+            <circle class="hit" cx="260" cy="40" r="20"/>
+            <circle class="mark" cx="260" cy="40" r="10"/>
+            <text class="markLetter" x="260" y="41">A</text>
+          </g>
+          <g class="probe" data-id="s_i_after" tabindex="0" role="button" aria-label="Measure current after R2">
+            <circle class="hit" cx="417" cy="40" r="20"/>
+            <circle class="mark" cx="417" cy="40" r="10"/>
+            <text class="markLetter" x="417" y="41">A</text>
+          </g>
+
+          <!-- voltage probes -->
+          <g class="probe" data-id="s_v_r1" tabindex="0" role="button" aria-label="Measure voltage across R1">
+            <circle class="hit" cx="180" cy="14" r="18"/>
+            <circle class="mark" cx="180" cy="14" r="10"/>
+            <text class="markLetter" x="180" y="15">V</text>
+          </g>
+          <g class="probe" data-id="s_v_r2" tabindex="0" role="button" aria-label="Measure voltage across R2">
+            <circle class="hit" cx="340" cy="14" r="18"/>
+            <circle class="mark" cx="340" cy="14" r="10"/>
+            <text class="markLetter" x="340" y="15">V</text>
+          </g>
+          <g class="probe" data-id="s_v_batt" tabindex="0" role="button" aria-label="Measure voltage across the battery">
+            <circle class="hit" cx="45" cy="130" r="18"/>
+            <circle class="mark" cx="45" cy="130" r="10"/>
+            <text class="markLetter" x="45" y="131">V</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="meterBox" id="seriesMeter" role="status" aria-live="polite">Tap a wire (A) or a bracket (V) above to take a reading.</div>
+
+      <div class="formula" id="seriesFormula"></div>
+
+      <div class="btnrow">
+        <button class="btn small" id="seriesRecordBtn" type="button">＋ Record this reading</button>
+      </div>
+    </div>
+
+    <!-- ---- PARALLEL PANEL ---- -->
+    <div class="panel" id="panel-parallel">
+      <p class="hint" style="margin-top:14px;">Tap a wire (circle, current) or a resistor bracket (voltage) to measure it.</p>
+      <div class="circuitBox">
+        <svg class="scene" id="parallelSvg" viewBox="0 0 480 260" role="img" aria-labelledby="parallelTitle">
+          <title id="parallelTitle">A parallel circuit with a battery and two resistor branches, R1 and R2</title>
+
+          <!-- rails -->
+          <path class="wireLine" d="M45 80 L45 40 L360 40"/>
+          <path class="wireLine" d="M45 220 L45 180"/>
+          <path class="wireLine" d="M45 220 L360 220"/>
+
+          <!-- R1 branch -->
+          <path class="wireLine" d="M200 40 L200 90"/>
+          <path class="wireLine" d="M200 150 L200 220"/>
+          <rect x="185" y="90" width="30" height="60" rx="4" fill="#1b2839" stroke="#3c4d66" stroke-width="2"/>
+          <polyline points="200,90 212,102 188,114 212,126 188,138 200,150" fill="none" stroke="#ffd479" stroke-width="2.5" stroke-linejoin="round"/>
+          <text class="compLabel" x="200" y="180">R₁</text>
+          <text class="compVal" x="200" y="194" id="pR1Val">10 Ω</text>
+
+          <!-- R2 branch -->
+          <path class="wireLine" d="M320 40 L320 90"/>
+          <path class="wireLine" d="M320 150 L320 220"/>
+          <rect x="305" y="90" width="30" height="60" rx="4" fill="#1b2839" stroke="#3c4d66" stroke-width="2"/>
+          <polyline points="320,90 332,102 308,114 332,126 308,138 320,150" fill="none" stroke="#ffd479" stroke-width="2.5" stroke-linejoin="round"/>
+          <text class="compLabel" x="320" y="180">R₂</text>
+          <text class="compVal" x="320" y="194" id="pR2Val">20 Ω</text>
+
+          <!-- battery -->
+          <rect x="20" y="80" width="50" height="100" rx="7" fill="#34495e"/>
+          <rect x="20" y="80" width="50" height="26" rx="7" fill="#e67e22"/>
+          <text x="45" y="99" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">+</text>
+          <text x="45" y="203" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">−</text>
+          <text x="45" y="150" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" id="pBattVal">6.0 V</text>
+
+          <!-- current probes -->
+          <g class="probe" data-id="p_i_total" tabindex="0" role="button" aria-label="Measure total current from the battery">
+            <circle class="hit" cx="120" cy="40" r="20"/>
+            <circle class="mark" cx="120" cy="40" r="10"/>
+            <text class="markLetter" x="120" y="41">A</text>
+          </g>
+          <g class="probe" data-id="p_i_r1" tabindex="0" role="button" aria-label="Measure current through R1">
+            <circle class="hit" cx="200" cy="65" r="20"/>
+            <circle class="mark" cx="200" cy="65" r="10"/>
+            <text class="markLetter" x="200" y="66">A</text>
+          </g>
+          <g class="probe" data-id="p_i_r2" tabindex="0" role="button" aria-label="Measure current through R2">
+            <circle class="hit" cx="320" cy="65" r="20"/>
+            <circle class="mark" cx="320" cy="65" r="10"/>
+            <text class="markLetter" x="320" y="66">A</text>
+          </g>
+
+          <!-- voltage probes -->
+          <g class="probe" data-id="p_v_r1" tabindex="0" role="button" aria-label="Measure voltage across R1">
+            <circle class="hit" cx="245" cy="120" r="18"/>
+            <circle class="mark" cx="245" cy="120" r="10"/>
+            <text class="markLetter" x="245" y="121">V</text>
+          </g>
+          <g class="probe" data-id="p_v_r2" tabindex="0" role="button" aria-label="Measure voltage across R2">
+            <circle class="hit" cx="365" cy="120" r="18"/>
+            <circle class="mark" cx="365" cy="120" r="10"/>
+            <text class="markLetter" x="365" y="121">V</text>
+          </g>
+          <g class="probe" data-id="p_v_batt" tabindex="0" role="button" aria-label="Measure voltage across the battery">
+            <circle class="hit" cx="45" cy="130" r="18"/>
+            <circle class="mark" cx="45" cy="130" r="10"/>
+            <text class="markLetter" x="45" y="131">V</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="meterBox" id="parallelMeter" role="status" aria-live="polite">Tap a wire (A) or a bracket (V) above to take a reading.</div>
+
+      <div class="formula" id="parallelFormula"></div>
+
+      <div class="btnrow">
+        <button class="btn small" id="parallelRecordBtn" type="button">＋ Record this reading</button>
+      </div>
+    </div>
+
+    <!-- ---- COMPARE PANEL ---- -->
+    <div class="panel" id="panel-compare">
+      <p class="hint" style="margin-top:14px;">Same R₁, R₂ and battery voltage — which configuration draws more current from the battery?</p>
+      <div class="compareGrid">
+        <div class="compareCol">
+          <h3>Series</h3>
+          <div class="small">Total (equivalent) resistance</div>
+          <div class="big"><span id="cmpSeriesR">0</span> Ω</div>
+          <div class="small" style="margin-top:10px;">Total current from the battery</div>
+          <div class="big"><span id="cmpSeriesI">0</span> A</div>
+        </div>
+        <div class="compareCol">
+          <h3>Parallel</h3>
+          <div class="small">Total (equivalent) resistance</div>
+          <div class="big"><span id="cmpParallelR">0</span> Ω</div>
+          <div class="small" style="margin-top:10px;">Total current from the battery</div>
+          <div class="big"><span id="cmpParallelI">0</span> A</div>
+        </div>
+      </div>
+      <div class="compareNote" id="cmpNote"></div>
+      <div class="btnrow">
+        <button class="btn small" id="compareRecordBtn" type="button">＋ Record this comparison</button>
+      </div>
+    </div>
+
+    <!-- ---- PREDICT PANEL ---- -->
+    <div class="panel" id="panel-predict">
+      <p class="hint" style="margin-top:14px;">Decide what will happen <em>before</em> you see the answer.</p>
+      <div class="progress" id="pProgress"></div>
+      <div id="qHolder"></div>
+      <div class="btnrow">
+        <button class="btn ghost" id="pRestart" type="button">↺ Start these questions again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= OBSERVATION TABLE ================= -->
+  <section class="card" aria-label="Observation table">
+    <h2>Observation table</h2>
+    <p class="hint">Readings from both circuits collect here. Copy this into your practical notebook.</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Circuit</th><th>R₁ (Ω)</th><th>R₂ (Ω)</th><th>V (V)</th><th>Measured</th><th>Reading</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="tableEmpty">No readings recorded yet.</div>
+    <div class="btnrow">
+      <button class="btn ghost small" id="copyBtn" type="button">⧉ Copy table</button>
+      <button class="btn ghost small" id="clearBtn" type="button">✕ Clear table</button>
+      <button class="btn ghost small" id="printBtn" type="button">⎙ Print</button>
+    </div>
+  </section>
+
+  <!-- ================= TEACHER PANEL ================= -->
+  <details class="teacher">
+    <summary>For teachers — discussion prompts and notes</summary>
+    <div class="body">
+      <h3>Running it in class (about 15 minutes)</h3>
+      <ul>
+        <li>Project the Series tab. Ask students to predict a current reading before you tap each probe.</li>
+        <li>Move to Parallel and ask why the voltage probes all read the same value while the current probes differ.</li>
+        <li>Use Compare as the closing discussion — it is the practical reason household wiring is parallel.</li>
+        <li>Predict works well as an individual or paired check before the class discussion.</li>
+      </ul>
+      <h3>Discussion prompts</h3>
+      <ul>
+        <li>In the series circuit, why does every ammeter probe read the same value no matter where it is placed?</li>
+        <li>In the parallel circuit, why does the branch with the smaller resistance carry more current?</li>
+        <li>If one bulb fails in a series string of decorative lights, the rest go out — but not in a parallel string. Why?</li>
+        <li>For the same components, which configuration draws more total current from the battery, and why does that matter for the battery's lifetime?</li>
+      </ul>
+      <h3>Common misconceptions to watch for</h3>
+      <ul>
+        <li>Assuming current "runs out" as it passes through a resistor — in series it is unchanged everywhere.</li>
+        <li>Assuming voltage is the same everywhere in every circuit — it only holds across parallel branches, not along a series wire.</li>
+        <li>Confusing where an ammeter belongs (in the current path) with where a voltmeter belongs (across a component).</li>
+      </ul>
+      <h3>Notes on the model</h3>
+      <ul>
+        <li>Resistor sliders are limited to 1–100 Ω and voltage to 0–12 V so currents stay in a realistic, readable range.</li>
+        <li>The Compare tab always uses the same R₁, R₂ and voltage as the Series and Parallel tabs, so the comparison is fair.</li>
+        <li>Runs entirely offline in this one file — no internet connection needed in class.</li>
+      </ul>
+    </div>
+  </details>
+
+  <footer class="foot">Interactive activity · Electricity · Current and potential difference in series and parallel</footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- helpers ---------- */
+  function $(id){ return document.getElementById(id); }
+  function fmt(n, digits){
+    if (!isFinite(n)) return "0";
+    var d = (digits === undefined) ? 2 : digits;
+    return n.toFixed(d);
+  }
+  function toast(msg){
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._h);
+    t._h = setTimeout(function(){ t.classList.remove("show"); }, 1900);
+  }
+
+  /* ---------- physics ---------- */
+  function computeSeries(R1, R2, V){
+    var Rt = R1 + R2;
+    var I  = Rt > 0 ? V / Rt : 0;
+    var V1 = I * R1;
+    var V2 = I * R2;
+    return { Rt: Rt, I: I, V1: V1, V2: V2 };
+  }
+  function computeParallel(R1, R2, V){
+    var I1 = R1 > 0 ? V / R1 : 0;
+    var I2 = R2 > 0 ? V / R2 : 0;
+    var Itotal = I1 + I2;
+    var Rt = (R1 + R2) > 0 ? (R1 * R2) / (R1 + R2) : 0;
+    return { Rt: Rt, I1: I1, I2: I2, Itotal: Itotal };
+  }
+
+  /* ---------- points ---------- */
+  var SERIES_POINTS = {
+    s_i_before: { type:"current", label:"Current before R\u2081" },
+    s_i_mid:    { type:"current", label:"Current between R\u2081 and R\u2082" },
+    s_i_after:  { type:"current", label:"Current after R\u2082" },
+    s_v_r1:     { type:"voltage", label:"Voltage across R\u2081" },
+    s_v_r2:     { type:"voltage", label:"Voltage across R\u2082" },
+    s_v_batt:   { type:"voltage", label:"Voltage across the battery" }
+  };
+  var PARALLEL_POINTS = {
+    p_i_total: { type:"current", label:"Total current from the battery" },
+    p_i_r1:    { type:"current", label:"Current through R\u2081" },
+    p_i_r2:    { type:"current", label:"Current through R\u2082" },
+    p_v_r1:    { type:"voltage", label:"Voltage across R\u2081" },
+    p_v_r2:    { type:"voltage", label:"Voltage across R\u2082" },
+    p_v_batt:  { type:"voltage", label:"Voltage across the battery" }
+  };
+
+  function seriesPointValue(id, calc, voltage){
+    if (id === "s_i_before" || id === "s_i_mid" || id === "s_i_after") return calc.I;
+    if (id === "s_v_r1") return calc.V1;
+    if (id === "s_v_r2") return calc.V2;
+    if (id === "s_v_batt") return voltage;
+    return 0;
+  }
+  function parallelPointValue(id, calc, voltage){
+    if (id === "p_i_total") return calc.Itotal;
+    if (id === "p_i_r1") return calc.I1;
+    if (id === "p_i_r2") return calc.I2;
+    if (id === "p_v_r1" || id === "p_v_r2" || id === "p_v_batt") return voltage;
+    return 0;
+  }
+
+  /* ---------- state ---------- */
+  var DEFAULTS = { R1: 10, R2: 20, voltage: 6 };
+  var state = {
+    R1: DEFAULTS.R1,
+    R2: DEFAULTS.R2,
+    voltage: DEFAULTS.voltage,
+    activeTab: "series",
+    measuredSeries: null,
+    measuredParallel: null
+  };
+
+  var rows = [];
+
+  /* ---------- render ---------- */
+  function renderControls(){
+    $("r1Val").textContent = state.R1.toFixed(0);
+    $("r2Val").textContent = state.R2.toFixed(0);
+    $("voltageVal").textContent = state.voltage.toFixed(1);
+    $("r1").value = state.R1;
+    $("r2").value = state.R2;
+    $("voltage").value = state.voltage;
+  }
+
+  function renderSeries(){
+    var calc = computeSeries(state.R1, state.R2, state.voltage);
+
+    $("sR1Val").textContent = state.R1.toFixed(0) + " \u03A9";
+    $("sR2Val").textContent = state.R2.toFixed(0) + " \u03A9";
+    $("sBattVal").textContent = state.voltage.toFixed(1) + " V";
+
+    var probes = document.querySelectorAll("#seriesSvg .probe");
+    Array.prototype.forEach.call(probes, function(p){
+      p.classList.toggle("active", p.dataset.id === state.measuredSeries);
+    });
+
+    var meter = $("seriesMeter");
+    if (state.measuredSeries){
+      var def = SERIES_POINTS[state.measuredSeries];
+      var val = seriesPointValue(state.measuredSeries, calc, state.voltage);
+      var unit = def.type === "current" ? "A" : "V";
+      meter.innerHTML = "";
+      var lab = document.createElement("span");
+      lab.className = "mLabel";
+      lab.textContent = def.label;
+      var v = document.createElement("span");
+      v.className = "mValue";
+      v.textContent = fmt(val, def.type === "current" ? 3 : 2) + " " + unit;
+      meter.appendChild(lab);
+      meter.appendChild(v);
+    } else {
+      meter.textContent = "Tap a wire (A) or a bracket (V) above to take a reading.";
+    }
+
+    $("seriesFormula").innerHTML =
+      "R_total = R\u2081 + R\u2082 = " + state.R1.toFixed(0) + " + " + state.R2.toFixed(0) +
+      " = <b>" + calc.Rt.toFixed(0) + " \u03A9</b><br>" +
+      "I = V / R_total = " + state.voltage.toFixed(1) + " / " + calc.Rt.toFixed(0) +
+      " = <b>" + fmt(calc.I, 3) + " A</b> (the same everywhere)<br>" +
+      "V\u2081 = I \u00D7 R\u2081 = <b>" + fmt(calc.V1, 2) + " V</b> &nbsp; V\u2082 = I \u00D7 R\u2082 = <b>" + fmt(calc.V2, 2) + " V</b>";
+  }
+
+  function renderParallel(){
+    var calc = computeParallel(state.R1, state.R2, state.voltage);
+
+    $("pR1Val").textContent = state.R1.toFixed(0) + " \u03A9";
+    $("pR2Val").textContent = state.R2.toFixed(0) + " \u03A9";
+    $("pBattVal").textContent = state.voltage.toFixed(1) + " V";
+
+    var probes = document.querySelectorAll("#parallelSvg .probe");
+    Array.prototype.forEach.call(probes, function(p){
+      p.classList.toggle("active", p.dataset.id === state.measuredParallel);
+    });
+
+    var meter = $("parallelMeter");
+    if (state.measuredParallel){
+      var def = PARALLEL_POINTS[state.measuredParallel];
+      var val = parallelPointValue(state.measuredParallel, calc, state.voltage);
+      var unit = def.type === "current" ? "A" : "V";
+      meter.innerHTML = "";
+      var lab = document.createElement("span");
+      lab.className = "mLabel";
+      lab.textContent = def.label;
+      var v = document.createElement("span");
+      v.className = "mValue";
+      v.textContent = fmt(val, def.type === "current" ? 3 : 2) + " " + unit;
+      meter.appendChild(lab);
+      meter.appendChild(v);
+    } else {
+      meter.textContent = "Tap a wire (A) or a bracket (V) above to take a reading.";
+    }
+
+    $("parallelFormula").innerHTML =
+      "1 / R_total = 1/R\u2081 + 1/R\u2082 &nbsp;&rArr;&nbsp; R_total = <b>" + fmt(calc.Rt, 2) + " \u03A9</b><br>" +
+      "I\u2081 = V / R\u2081 = " + state.voltage.toFixed(1) + " / " + state.R1.toFixed(0) +
+      " = <b>" + fmt(calc.I1, 3) + " A</b> &nbsp; I\u2082 = V / R\u2082 = <b>" + fmt(calc.I2, 3) + " A</b><br>" +
+      "I_total = I\u2081 + I\u2082 = <b>" + fmt(calc.Itotal, 3) + " A</b> (voltage is " + state.voltage.toFixed(1) + " V across every branch)";
+  }
+
+  function renderCompare(){
+    var sc = computeSeries(state.R1, state.R2, state.voltage);
+    var pc = computeParallel(state.R1, state.R2, state.voltage);
+
+    $("cmpSeriesR").textContent = sc.Rt.toFixed(0);
+    $("cmpSeriesI").textContent = fmt(sc.I, 3);
+    $("cmpParallelR").textContent = fmt(pc.Rt, 2);
+    $("cmpParallelI").textContent = fmt(pc.Itotal, 3);
+
+    var note = $("cmpNote");
+    if (pc.Itotal > sc.I + 1e-9){
+      note.textContent = "For these same two resistors, the parallel combination has a lower total resistance (" +
+        fmt(pc.Rt,2) + " \u03A9 vs " + sc.Rt.toFixed(0) + " \u03A9), so it draws more current from the battery (" +
+        fmt(pc.Itotal,3) + " A vs " + fmt(sc.I,3) + " A).";
+    } else if (Math.abs(pc.Itotal - sc.I) <= 1e-9){
+      note.textContent = "Right now both configurations draw the same current from the battery.";
+    } else {
+      note.textContent = "For these values, the series configuration draws more current from the battery.";
+    }
+  }
+
+  function renderAll(){
+    renderControls();
+    renderSeries();
+    renderParallel();
+    renderCompare();
+  }
+
+  /* ---------- controls ---------- */
+  ["r1","r2","voltage"].forEach(function(id){
+    $(id).addEventListener("input", function(e){
+      var n = parseFloat(e.target.value);
+      if (isNaN(n)) return;
+      if (id === "r1") state.R1 = n;
+      else if (id === "r2") state.R2 = n;
+      else state.voltage = n;
+      renderAll();
+    });
+  });
+
+  /* ---------- probe selection ---------- */
+  function selectProbe(tab, id){
+    if (tab === "series") state.measuredSeries = id;
+    else state.measuredParallel = id;
+    renderAll();
+  }
+  function attachProbes(svgId, tab){
+    var svg = $(svgId);
+    svg.addEventListener("click", function(e){
+      var g = e.target.closest(".probe");
+      if (!g) return;
+      selectProbe(tab, g.dataset.id);
+    });
+    svg.addEventListener("keydown", function(e){
+      if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
+      var g = e.target.closest(".probe");
+      if (!g) return;
+      e.preventDefault();
+      selectProbe(tab, g.dataset.id);
+    });
+  }
+  attachProbes("seriesSvg", "series");
+  attachProbes("parallelSvg", "parallel");
+
+  /* ---------- tabs ---------- */
+  function setTab(next){
+    state.activeTab = next;
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
+      b.setAttribute("aria-selected", String(b.dataset.tab === next));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".panel"), function(p){
+      p.classList.toggle("active", p.id === "panel-" + next);
+    });
+    if (next === "predict" && !predictState.started){
+      showQuestion();
+    }
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
+    b.addEventListener("click", function(){ setTab(b.dataset.tab); });
+  });
+
+  /* ---------- observation table ---------- */
+  function drawTable(){
+    var tb = $("tbody");
+    tb.innerHTML = "";
+    rows.forEach(function(r, i){
+      var tr = document.createElement("tr");
+      [i+1, r.circuit, r.R1, r.R2, r.V, r.measured, r.reading].forEach(function(v){
+        var td = document.createElement("td");
+        td.textContent = v;
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    $("tableEmpty").style.display = rows.length ? "none" : "block";
+  }
+  function addRow(circuit, measured, reading){
+    rows.push({
+      circuit: circuit,
+      R1: state.R1.toFixed(0),
+      R2: state.R2.toFixed(0),
+      V: state.voltage.toFixed(1),
+      measured: measured,
+      reading: reading
+    });
+    drawTable();
+  }
+
+  $("seriesRecordBtn").addEventListener("click", function(){
+    if (!state.measuredSeries){ toast("Tap a wire or a bracket in the circuit first."); return; }
+    var calc = computeSeries(state.R1, state.R2, state.voltage);
+    var def = SERIES_POINTS[state.measuredSeries];
+    var val = seriesPointValue(state.measuredSeries, calc, state.voltage);
+    var unit = def.type === "current" ? "A" : "V";
+    addRow("Series", def.label, fmt(val, def.type === "current" ? 3 : 2) + " " + unit);
+    toast("Reading recorded");
+  });
+  $("parallelRecordBtn").addEventListener("click", function(){
+    if (!state.measuredParallel){ toast("Tap a wire or a bracket in the circuit first."); return; }
+    var calc = computeParallel(state.R1, state.R2, state.voltage);
+    var def = PARALLEL_POINTS[state.measuredParallel];
+    var val = parallelPointValue(state.measuredParallel, calc, state.voltage);
+    var unit = def.type === "current" ? "A" : "V";
+    addRow("Parallel", def.label, fmt(val, def.type === "current" ? 3 : 2) + " " + unit);
+    toast("Reading recorded");
+  });
+  $("compareRecordBtn").addEventListener("click", function(){
+    var sc = computeSeries(state.R1, state.R2, state.voltage);
+    var pc = computeParallel(state.R1, state.R2, state.voltage);
+    addRow("Compare", "Total current (series)", fmt(sc.I, 3) + " A");
+    addRow("Compare", "Total current (parallel)", fmt(pc.Itotal, 3) + " A");
+    toast("Comparison recorded");
+  });
+
+  $("clearBtn").addEventListener("click", function(){
+    if (!rows.length){ toast("Table is already empty"); return; }
+    rows = []; drawTable(); toast("Table cleared");
+  });
+  $("printBtn").addEventListener("click", function(){ window.print(); });
+  $("copyBtn").addEventListener("click", function(){
+    if (!rows.length){ toast("Nothing to copy yet"); return; }
+    var txt = "No.\tCircuit\tR1 (ohm)\tR2 (ohm)\tV (V)\tMeasured\tReading\n";
+    rows.forEach(function(r,i){
+      txt += (i+1)+"\t"+r.circuit+"\t"+r.R1+"\t"+r.R2+"\t"+r.V+"\t"+r.measured+"\t"+r.reading+"\n";
+    });
+    copyText(txt);
+  });
+  function copyText(txt){
+    var done = function(){ toast("Table copied"); };
+    var fail = function(){ toast("Could not copy — select the table and copy manually"); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done).catch(function(){ legacy(txt, done, fail); });
+    } else { legacy(txt, done, fail); }
+  }
+  function legacy(txt, done, fail){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = txt;
+      ta.setAttribute("readonly","");
+      ta.style.position = "fixed"; ta.style.top = "-1000px";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      ok ? done() : fail();
+    } catch(e){ fail(); }
+  }
+
+  /* ---------- predict mode ---------- */
+  var QUESTIONS = [
+    {
+      mode: "series",
+      from: { R1:10, R2:20, voltage:6 },
+      to:   { R2:40 },
+      probe: "s_i_before",
+      text: "In the SERIES circuit, R\u2082 is increased from 20 \u03A9 to 40 \u03A9. What happens to the current through R\u2081?",
+      answer: "decrease",
+      why: "In a series circuit the same current flows through every part. Increasing R\u2082 raises the total resistance, and by I = V / R_total that reduces the current everywhere, including through R\u2081."
+    },
+    {
+      mode: "series",
+      from: { R1:10, R2:20, voltage:6 },
+      to:   { R2:40 },
+      probe: "s_v_r1",
+      text: "In the SERIES circuit, R\u2082 is increased from 20 \u03A9 to 40 \u03A9 (battery voltage unchanged). What happens to the voltage across R\u2081?",
+      answer: "decrease",
+      why: "Since the current through R\u2081 falls (R_total went up), and V\u2081 = I \u00D7 R\u2081, the voltage across R\u2081 falls too, even though R\u2081 itself did not change."
+    },
+    {
+      mode: "parallel",
+      from: { R1:10, R2:20, voltage:6 },
+      to:   { R2:40 },
+      probe: "p_i_r1",
+      text: "In the PARALLEL circuit, R\u2082 is increased from 20 \u03A9 to 40 \u03A9 (R\u2081 and the battery unchanged). What happens to the current through R\u2081?",
+      answer: "same",
+      why: "In a parallel circuit, each branch has the full battery voltage across it on its own. Current through R\u2081 depends only on V and R\u2081 (I\u2081 = V / R\u2081), so changing R\u2082 does not affect it at all."
+    },
+    {
+      mode: "parallel",
+      from: { R1:10, R2:20, voltage:6 },
+      to:   { R2:40 },
+      probe: "p_i_total",
+      text: "In the PARALLEL circuit, R\u2082 is increased from 20 \u03A9 to 40 \u03A9. What happens to the TOTAL current drawn from the battery?",
+      answer: "decrease",
+      why: "Total current is I\u2081 + I\u2082. I\u2081 stays the same, but I\u2082 falls because R\u2082 is larger, so the total falls."
+    }
+  ];
+  var COMPARE_QUESTION = {
+    text: "For the SAME R\u2081, R\u2082 and battery voltage, which configuration draws more total current from the battery?",
+    choices: [["series","Series"],["parallel","Parallel"],["same","Both the same"]],
+    answer: "parallel",
+    why: "A parallel combination always has a lower equivalent resistance than a series combination of the same two resistors, so by I = V / R_total it always draws more current from the battery."
+  };
+
+  var predictState = { index: 0, score: 0, answered: false, started: false, onCompare: false };
+
+  function applyPatch(base, patch){
+    return { R1: patch.R1 !== undefined ? patch.R1 : base.R1,
+             R2: patch.R2 !== undefined ? patch.R2 : base.R2,
+             voltage: patch.voltage !== undefined ? patch.voltage : base.voltage };
+  }
+
+  function setSharedState(vals){
+    state.R1 = vals.R1;
+    state.R2 = vals.R2;
+    state.voltage = vals.voltage;
+    renderAll();
+  }
+
+  function showQuestion(){
+    predictState.started = true;
+    var total = QUESTIONS.length + 1;
+    if (predictState.index >= QUESTIONS.length){
+      showCompareQuestion();
+      return;
+    }
+    var q = QUESTIONS[predictState.index];
+    predictState.onCompare = false;
+    $("pProgress").textContent = "Question " + (predictState.index + 1) + " of " + total +
+                                  "  \u00B7  correct so far: " + predictState.score;
+    predictState.answered = false;
+
+    setSharedState(q.from);
+    if (q.mode === "series"){ state.measuredSeries = q.probe; } else { state.measuredParallel = q.probe; }
+    renderAll();
+
+    var holder = $("qHolder");
+    holder.innerHTML = "";
+    var box = document.createElement("div");
+    box.className = "q";
+
+    var t = document.createElement("div");
+    t.className = "qtext";
+    t.textContent = q.text;
+    box.appendChild(t);
+
+    var setup = document.createElement("div");
+    setup.className = "qsetup";
+    setup.textContent = "Starting values: R\u2081 = " + q.from.R1 + " \u03A9, R\u2082 = " + q.from.R2 +
+                        " \u03A9, battery = " + q.from.voltage + " V (" + q.mode + " circuit). Check the " +
+                        (q.mode === "series" ? "Series" : "Parallel") + " tab to see it before you answer.";
+    box.appendChild(setup);
+
+    var ch = document.createElement("div");
+    ch.className = "choices";
+    [["increase","\u25B2 Increase"],["decrease","\u25BC Decrease"],["same","= Stay the same"]].forEach(function(pair){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = pair[1];
+      b.dataset.val = pair[0];
+      b.addEventListener("click", function(){ answerQuestion(pair[0], ch, box, q); });
+      ch.appendChild(b);
+    });
+    box.appendChild(ch);
+
+    var v = document.createElement("div");
+    v.className = "verdict";
+    v.id = "verdict";
+    box.appendChild(v);
+
+    holder.appendChild(box);
+  }
+
+  function showCompareQuestion(){
+    predictState.onCompare = true;
+    var total = QUESTIONS.length + 1;
+    $("pProgress").textContent = "Question " + total + " of " + total +
+                                  "  \u00B7  correct so far: " + predictState.score;
+    predictState.answered = false;
+
+    setSharedState({ R1:10, R2:20, voltage:6 });
+
+    var holder = $("qHolder");
+    holder.innerHTML = "";
+    var box = document.createElement("div");
+    box.className = "q";
+
+    var t = document.createElement("div");
+    t.className = "qtext";
+    t.textContent = COMPARE_QUESTION.text;
+    box.appendChild(t);
+
+    var setup = document.createElement("div");
+    setup.className = "qsetup";
+    setup.textContent = "R\u2081 = 10 \u03A9, R\u2082 = 20 \u03A9, battery = 6 V — check the Compare tab if you like.";
+    box.appendChild(setup);
+
+    var ch = document.createElement("div");
+    ch.className = "choices";
+    COMPARE_QUESTION.choices.forEach(function(pair){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = pair[1];
+      b.dataset.val = pair[0];
+      b.addEventListener("click", function(){ answerCompareQuestion(pair[0], ch, box); });
+      ch.appendChild(b);
+    });
+    box.appendChild(ch);
+
+    var v = document.createElement("div");
+    v.className = "verdict";
+    v.id = "verdict";
+    box.appendChild(v);
+
+    holder.appendChild(box);
+  }
+
+  function answerQuestion(choice, ch, box, q){
+    if (predictState.answered) return;
+    predictState.answered = true;
+
+    var beforeVals = q.from;
+    var beforeCalc = q.mode === "series" ? computeSeries(beforeVals.R1, beforeVals.R2, beforeVals.voltage)
+                                          : computeParallel(beforeVals.R1, beforeVals.R2, beforeVals.voltage);
+    var beforeVal = q.mode === "series" ? seriesPointValue(q.probe, beforeCalc, beforeVals.voltage)
+                                         : parallelPointValue(q.probe, beforeCalc, beforeVals.voltage);
+
+    var afterVals = applyPatch(q.from, q.to);
+    setSharedState(afterVals);
+    if (q.mode === "series"){ state.measuredSeries = q.probe; } else { state.measuredParallel = q.probe; }
+    renderAll();
+
+    var afterCalc = q.mode === "series" ? computeSeries(afterVals.R1, afterVals.R2, afterVals.voltage)
+                                         : computeParallel(afterVals.R1, afterVals.R2, afterVals.voltage);
+    var afterVal = q.mode === "series" ? seriesPointValue(q.probe, afterCalc, afterVals.voltage)
+                                        : parallelPointValue(q.probe, afterCalc, afterVals.voltage);
+
+    var unit = (q.probe.indexOf("_i_") !== -1) ? "A" : "V";
+    var digits = unit === "A" ? 3 : 2;
+
+    var correct = (choice === q.answer);
+    if (correct) predictState.score++;
+
+    Array.prototype.forEach.call(ch.children, function(b){
+      b.disabled = true;
+      if (b.dataset.val === q.answer) b.classList.add("correct");
+      else if (b.dataset.val === choice) b.classList.add("wrong");
+    });
+
+    var v = $("verdict");
+    v.className = "verdict show " + (correct ? "ok" : "no");
+    v.innerHTML = "";
+    var head = document.createElement("b");
+    head.textContent = correct ? "Correct." : "Not quite.";
+    v.appendChild(head);
+    v.appendChild(document.createTextNode(q.why + " It went from " + fmt(beforeVal, digits) + " " + unit +
+      " to " + fmt(afterVal, digits) + " " + unit + "."));
+
+    var next = document.createElement("div");
+    next.className = "btnrow";
+    var nb = document.createElement("button");
+    nb.type = "button";
+    nb.className = "btn";
+    nb.textContent = "Next question \u2192";
+    nb.addEventListener("click", function(){
+      predictState.index++;
+      showQuestion();
+    });
+    next.appendChild(nb);
+    box.appendChild(next);
+
+    var total = QUESTIONS.length + 1;
+    $("pProgress").textContent = "Question " + (predictState.index + 1) + " of " + total +
+                                  "  \u00B7  correct so far: " + predictState.score;
+  }
+
+  function answerCompareQuestion(choice, ch, box){
+    if (predictState.answered) return;
+    predictState.answered = true;
+
+    var sc = computeSeries(10, 20, 6);
+    var pc = computeParallel(10, 20, 6);
+
+    var correct = (choice === COMPARE_QUESTION.answer);
+    if (correct) predictState.score++;
+
+    Array.prototype.forEach.call(ch.children, function(b){
+      b.disabled = true;
+      if (b.dataset.val === COMPARE_QUESTION.answer) b.classList.add("correct");
+      else if (b.dataset.val === choice) b.classList.add("wrong");
+    });
+
+    var v = $("verdict");
+    v.className = "verdict show " + (correct ? "ok" : "no");
+    v.innerHTML = "";
+    var head = document.createElement("b");
+    head.textContent = correct ? "Correct." : "Not quite.";
+    v.appendChild(head);
+    v.appendChild(document.createTextNode(COMPARE_QUESTION.why + " Series draws " + fmt(sc.I,3) +
+      " A here, parallel draws " + fmt(pc.Itotal,3) + " A."));
+
+    var next = document.createElement("div");
+    next.className = "btnrow";
+    var nb = document.createElement("button");
+    nb.type = "button";
+    nb.className = "btn";
+    nb.textContent = "See my result";
+    nb.addEventListener("click", finishPredict);
+    next.appendChild(nb);
+    box.appendChild(next);
+
+    var total = QUESTIONS.length + 1;
+    $("pProgress").textContent = "Question " + total + " of " + total +
+                                  "  \u00B7  correct so far: " + predictState.score;
+  }
+
+  function finishPredict(){
+    var total = QUESTIONS.length + 1;
+    $("pProgress").textContent = "Finished";
+    var holder = $("qHolder");
+    holder.innerHTML = "";
+    var box = document.createElement("div");
+    box.className = "q";
+    var h = document.createElement("div");
+    h.className = "qtext";
+    h.textContent = "You got " + predictState.score + " out of " + total + " right.";
+    box.appendChild(h);
+    var p = document.createElement("div");
+    p.className = "qsetup";
+    p.textContent = "Series: current is the same everywhere, voltage splits across resistors. Parallel: voltage is the same across every branch, current splits. Parallel always draws more total current for the same resistors.";
+    box.appendChild(p);
+    holder.appendChild(box);
+  }
+
+  $("pRestart").addEventListener("click", function(){
+    predictState.index = 0;
+    predictState.score = 0;
+    predictState.answered = false;
+    predictState.onCompare = false;
+    showQuestion();
+  });
+
+  /* ---------- reset ---------- */
+  function resetAll(){
+    state.R1 = DEFAULTS.R1;
+    state.R2 = DEFAULTS.R2;
+    state.voltage = DEFAULTS.voltage;
+    state.measuredSeries = null;
+    state.measuredParallel = null;
+
+    predictState.index = 0;
+    predictState.score = 0;
+    predictState.answered = false;
+    predictState.onCompare = false;
+    predictState.started = false;
+
+    setTab("series");
+    renderAll();
+
+    toast("Activity reset");
+  }
+  $("resetBtn").addEventListener("click", resetAll);
+
+  /* ---------- start ---------- */
+  drawTable();
+  renderAll();
+  setTab("series");
+})();
+</script>
+</body>
+</html>

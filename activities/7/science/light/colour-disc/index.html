@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class VII Science - Newton's Colour Disc</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background: #f1f5f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+    }
+    h2 {
+      font-size: 20px;
+      color: #1e293b;
+      margin-bottom: 4px;
+    }
+    p.subtitle {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    p.activity-details {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    canvas {
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      cursor: grab;
+      margin-bottom: 16px;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    .status-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .status-title {
+      font-weight: bold;
+      color: #0f172a;
+    }
+    .status-text {
+      color: #475569;
+      margin-top: 4px;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .slider-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #334155;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-top: 6px;
+      cursor: pointer;
+    }
+    .btn-group {
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      flex: 1;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn-spin {
+      background: #4f46e5;
+      color: white;
+    }
+    .btn-spin:hover {
+      background: #4338ca;
+    }
+    .btn-stop {
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .btn-stop:hover {
+      background: #cbd5e1;
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-light-colour-disc",
+  "order": 100,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Light",
+  "subtopic": null,
+  "title": "Colour Disc",
+  "description": "Divide a circular disc into 7 colours, rotate rapidly, and observe it appearing white.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Colour Disc</h2>
+    <p class="subtitle">Class VII Science</p>
+    <p class="activity-details">Activity: Divide a circular disc into 7 colours, rotate rapidly, and observe it appearing white.</p>
+    <!-- Interactive Disc Canvas -->
+    <canvas id="discCanvas" width="220" height="220"></canvas>
+
+    <!-- Live Observation Status -->
+    <div class="status-box">
+      <div class="status-title" id="statusTitle">Speed: 0 RPM (At Rest)</div>
+      <div class="status-text" id="statusDesc">All 7 colors (VIBGYOR) are clearly separated.</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="slider-row">
+        <span>Rotation Speed:</span>
+        <strong id="rpmText">0 RPM</strong>
+      </div>
+      <input type="range" id="speedSlider" min="0" max="1800" step="10" value="0">
+
+      <div class="btn-group">
+        <button class="btn-spin" onclick="spinRapidly()">⚡ Spin Rapidly</button>
+        <button class="btn-stop" onclick="stopDisc()">⏹ Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('discCanvas');
+    const ctx = canvas.getContext('2d');
+    const speedSlider = document.getElementById('speedSlider');
+    const rpmText = document.getElementById('rpmText');
+    const statusTitle = document.getElementById('statusTitle');
+    const statusDesc = document.getElementById('statusDesc');
+
+    // 7 Spectral Colours (VIBGYOR)
+    const colors = [
+      { name: 'Violet', hex: '#8F00FF' },
+      { name: 'Indigo', hex: '#4B0082' },
+      { name: 'Blue',   hex: '#0066FF' },
+      { name: 'Green',  hex: '#00B050' },
+      { name: 'Yellow', hex: '#FFD700' },
+      { name: 'Orange', hex: '#FF7F00' },
+      { name: 'Red',    hex: '#FF0000' }
+    ];
+
+    let angle = 0;
+    let currentRpm = 0;
+    let targetRpm = 0;
+    let lastTime = performance.now();
+
+    // Draw the 7-colour sectors
+    function drawDisc(cx, cy, r) {
+      const sectorAngle = (2 * Math.PI) / 7;
+      colors.forEach((col, i) => {
+        ctx.fillStyle = col.hex;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, i * sectorAngle, (i + 1) * sectorAngle);
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      // Center pivot pin
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 7, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    // Animation & Persistence of Vision loop
+    function animate(time) {
+      const dt = (time - lastTime) / 1000;
+      lastTime = time;
+
+      // Smooth acceleration / deceleration
+      currentRpm += (targetRpm - currentRpm) * Math.min(1, 4 * dt);
+
+      // Rotate angle based on RPM
+      const angularSpeed = (currentRpm * 2 * Math.PI) / 60;
+      angle += angularSpeed * dt;
+
+      // Update text
+      const roundedRpm = Math.round(currentRpm);
+      rpmText.textContent = `${roundedRpm} RPM`;
+
+      // Update visual observation notes
+      if (roundedRpm < 150) {
+        statusTitle.textContent = `Speed: ${roundedRpm} RPM (Slow)`;
+        statusDesc.textContent = "Images clear: Eyes easily distinguish all 7 separate colors.";
+      } else if (roundedRpm < 600) {
+        statusTitle.textContent = `Speed: ${roundedRpm} RPM (Blurring)`;
+        statusDesc.textContent = "Motion blur: Colors begin streaking together.";
+      } else {
+        statusTitle.textContent = `Speed: ${roundedRpm} RPM (Rapid Spin)`;
+        statusDesc.textContent = "Persistence of Vision active! Disc appears off-white.";
+      }
+
+      // Render Disc
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = 100;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+      ctx.translate(-cx, -cy);
+      drawDisc(cx, cy, radius);
+      ctx.restore();
+
+      // Simulate human eye blending (Persistence of Vision: images overlap into white)
+      if (currentRpm > 80) {
+        const whiteOpacity = Math.min(0.92, Math.pow(currentRpm / 750, 1.6));
+        ctx.fillStyle = `rgba(235, 235, 230, ${whiteOpacity})`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Controls
+    speedSlider.addEventListener('input', (e) => {
+      targetRpm = parseFloat(e.target.value);
+    });
+
+    function spinRapidly() {
+      targetRpm = 1200;
+      speedSlider.value = 1200;
+    }
+
+    function stopDisc() {
+      targetRpm = 0;
+      speedSlider.value = 0;
+    }
+
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

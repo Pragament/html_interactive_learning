@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadratic Factorisation | Algebra Tiles</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f5f7fb;
+        color: #1f2937;
+    }
+
+    header {
+        background: #182848;
+        color: white;
+        padding: 24px 30px;
+    }
+
+    header h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+    }
+
+    header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 24px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        background: #e5e7eb;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .tab.active {
+        background: #182848;
+        color: white;
+    }
+
+    .panel {
+        background: white;
+        border-radius: 14px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+
+    .controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .control {
+        background: #f8fafc;
+        padding: 16px;
+        border-radius: 10px;
+    }
+
+    .control label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    input[type="range"] {
+        width: 100%;
+    }
+
+    .value {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .equation {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        padding: 20px;
+        background: #eef2ff;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .workspace {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 20px;
+    }
+
+    .tile-area {
+        min-height: 390px;
+        border: 2px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 20px;
+        background: #fafafa;
+    }
+
+    .tile-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 20px 5px;
+    }
+
+    .tile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        font-weight: bold;
+        border: 2px solid rgba(0,0,0,0.18);
+        user-select: none;
+    }
+
+    .x2 {
+        width: 90px;
+        height: 90px;
+        background: #dbeafe;
+        color: #1e3a8a;
+    }
+
+    .x {
+        width: 90px;
+        height: 38px;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .one {
+        width: 38px;
+        height: 38px;
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .negative {
+        filter: saturate(0.7);
+        opacity: 0.65;
+    }
+
+    .legend {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 14px;
+    }
+
+    .legend-box {
+        width: 22px;
+        height: 22px;
+        border: 1px solid #777;
+        border-radius: 3px;
+    }
+
+    .result-box {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+    .factor-result {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+        padding: 18px;
+        background: #ecfdf5;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .steps {
+        line-height: 1.8;
+    }
+
+    .step {
+        padding: 10px;
+        margin-bottom: 8px;
+        background: white;
+        border-left: 4px solid #182848;
+        border-radius: 5px;
+    }
+
+    .challenge {
+        background: #fff7ed;
+        border-left: 5px solid #f97316;
+    }
+
+    .challenge input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        margin: 8px 0;
+        font-size: 16px;
+    }
+
+    button.action {
+        background: #182848;
+        color: white;
+        border: none;
+        padding: 11px 18px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-right: 8px;
+    }
+
+    button.action:hover {
+        opacity: 0.9;
+    }
+
+    button.secondary {
+        background: #64748b;
+    }
+
+    .feedback {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 7px;
+        font-weight: bold;
+        display: none;
+    }
+
+    .feedback.correct {
+        display: block;
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .feedback.wrong {
+        display: block;
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .teacher {
+        display: none;
+    }
+
+    .teacher.visible {
+        display: block;
+    }
+
+    .teacher ul {
+        line-height: 1.8;
+    }
+
+    .explanation {
+        line-height: 1.7;
+    }
+
+    @media (max-width: 850px) {
+        .controls,
+        .workspace {
+            grid-template-columns: 1fr;
+        }
+
+        header h1 {
+            font-size: 23px;
+        }
+
+        .equation {
+            font-size: 21px;
+        }
+    }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-algebraic-identities-quadratic-factorisation",
+  "order": 234,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Algebraic Identities",
+  "subtopic": null,
+  "title": "Factorisation of Quadratic Polynomial",
+  "description": "Use algebraic tiles (x², x, 1) to factorise expressions like x²+5x+6, x²-x-6, 2x²-7x+6.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+
+<header>
+    <h1>Factorisation of Quadratic Polynomials</h1>
+    <p>Explore quadratic expressions using an interactive algebra-tile model.</p>
+</header>
+
+<div class="container">
+
+    <div class="tabs">
+        <button class="tab active" onclick="showStudent()">Student Mode</button>
+        <button class="tab" onclick="showTeacher()">Teacher Mode</button>
+    </div>
+
+    <section id="studentMode">
+
+        <div class="panel">
+            <h2>1. Build the Quadratic</h2>
+
+            <p class="explanation">
+                A quadratic polynomial can be written as:
+                <strong>ax² + bx + c</strong>.
+                Adjust the coefficients and observe how the algebra tiles change.
+            </p>
+
+            <div class="controls">
+
+                <div class="control">
+                    <label for="a">Coefficient of x² (a)</label>
+                    <input id="a" type="range" min="1" max="4" value="1"
+                           oninput="updateActivity()">
+                    <div class="value" id="aValue">1</div>
+                </div>
+
+                <div class="control">
+                    <label for="b">Coefficient of x (b)</label>
+                    <input id="b" type="range" min="-8" max="8" value="5"
+                           oninput="updateActivity()">
+                    <div class="value" id="bValue">5</div>
+                </div>
+
+                <div class="control">
+                    <label for="c">Constant (c)</label>
+                    <input id="c" type="range" min="-12" max="12" value="6"
+                           oninput="updateActivity()">
+                    <div class="value" id="cValue">6</div>
+                </div>
+
+            </div>
+
+            <div class="equation" id="equation">
+                x² + 5x + 6
+            </div>
+        </div>
+
+        <div class="workspace">
+
+            <div class="panel">
+                <h2>2. Algebra Tiles</h2>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-box x2"></div>
+                        x² tile
+                    </div>
+
+                    <div class="legend-item">
+                        <div class="legend-box x"></div>
+                        x tile
+                    </div>
+
+                    <div class="legend-item">
+                        <div class="legend-box one"></div>
+                        1 tile
+                    </div>
+                </div>
+
+                <div class="tile-area">
+                    <div id="tileGrid" class="tile-grid"></div>
+                </div>
+
+                <p>
+                    <strong>Idea:</strong> factorisation rearranges these tiles
+                    into a rectangle whose side lengths represent the factors.
+                </p>
+            </div>
+
+            <div class="panel">
+                <h2>3. Factorisation</h2>
+
+                <div class="result-box">
+
+                    <div class="factor-result" id="factorResult">
+                        (x + 2)(x + 3)
+                    </div>
+
+                    <div class="steps" id="steps"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel challenge">
+            <h2>4. Prediction Challenge</h2>
+
+            <p>
+                Before looking at the answer, predict the two factors.
+            </p>
+
+            <p>
+                For the current polynomial:
+                <strong id="challengeEquation">x² + 5x + 6</strong>
+            </p>
+
+            <input
+                id="answer1"
+                type="text"
+                placeholder="First factor, e.g. x + 2">
+
+            <input
+                id="answer2"
+                type="text"
+                placeholder="Second factor, e.g. x + 3">
+
+            <button class="action" onclick="checkAnswer()">Check Answer</button>
+            <button class="action secondary" onclick="revealAnswer()">Reveal Answer</button>
+
+            <div id="feedback" class="feedback"></div>
+        </div>
+
+        <div class="panel">
+            <h2>5. Verify by Multiplication</h2>
+
+            <p id="verification">
+                (x + 2)(x + 3)
+                = x² + 3x + 2x + 6
+                = x² + 5x + 6
+            </p>
+
+            <p>
+                This shows that the factors multiply back to the original
+                quadratic polynomial.
+            </p>
+        </div>
+
+    </section>
+
+    <section id="teacherMode" class="teacher">
+
+        <div class="panel">
+            <h2>Teacher Mode</h2>
+
+            <p>
+                Use the following questions while demonstrating the activity.
+            </p>
+
+            <ul>
+                <li>
+                    What does the x² tile represent?
+                </li>
+
+                <li>
+                    Why are there b x-tiles and c unit tiles?
+                </li>
+
+                <li>
+                    Which pair of numbers has a product equal to c?
+                </li>
+
+                <li>
+                    How does the sum of the factor pair relate to b?
+                </li>
+
+                <li>
+                    What happens when the constant term is negative?
+                </li>
+
+                <li>
+                    Can every quadratic polynomial be factorised using
+                    integer factors?
+                </li>
+            </ul>
+
+            <h3>Suggested Classroom Activity</h3>
+
+            <ol>
+                <li>Set the polynomial to x² + 5x + 6.</li>
+                <li>Ask students to identify the x², x and unit tiles.</li>
+                <li>Ask students to find two numbers whose product is 6.</li>
+                <li>Ask which pair adds to 5.</li>
+                <li>Use the tiles to form a rectangle.</li>
+                <li>Connect the rectangle dimensions with (x+2)(x+3).</li>
+                <li>Verify the result by expanding the factors.</li>
+            </ol>
+
+            <h3>Learning Check</h3>
+
+            <p>
+                Ask students to explain factorisation in their own words
+                instead of only giving the final factors.
+            </p>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+
+let currentFactors = null;
+
+function getValues() {
+    return {
+        a: Number(document.getElementById("a").value),
+        b: Number(document.getElementById("b").value),
+        c: Number(document.getElementById("c").value)
+    };
+}
+
+function formatTerm(coefficient, variable, first = false) {
+
+    if (coefficient === 0) {
+        return "";
+    }
+
+    let absValue = Math.abs(coefficient);
+    let coefficientText = "";
+
+    if (variable === "x²" || variable === "x") {
+        coefficientText = absValue === 1 ? "" : absValue;
+    } else {
+        coefficientText = absValue;
+    }
+
+    let term = coefficientText + variable;
+
+    if (first) {
+        return coefficient < 0 ? "-" + term : term;
+    }
+
+    return coefficient < 0 ? " - " + term : " + " + term;
+}
+
+function polynomial(a, b, c) {
+
+    let result = "";
+
+    if (a !== 0) {
+        result += formatTerm(a, "x²", true);
+    }
+
+    if (b !== 0) {
+        result += formatTerm(b, "x");
+    }
+
+    if (c !== 0) {
+        result += formatTerm(c, "");
+    }
+
+    if (result === "") {
+        result = "0";
+    }
+
+    return result;
+}
+
+function findFactors(a, b, c) {
+
+    if (a !== 1) {
+        return null;
+    }
+
+    for (let i = -Math.abs(c); i <= Math.abs(c); i++) {
+
+        if (i === 0) {
+            continue;
+        }
+
+        if (c % i !== 0) {
+            continue;
+        }
+
+        let j = c / i;
+
+        if (i + j === b) {
+            return [i, j];
+        }
+    }
+
+    return null;
+}
+
+function factorText(factor) {
+
+    if (factor >= 0) {
+        return "(x + " + factor + ")";
+    }
+
+    return "(x - " + Math.abs(factor) + ")";
+}
+
+function createTile(type, value, negative = false) {
+
+    const tile = document.createElement("div");
+
+    tile.classList.add("tile", type);
+
+    if (negative) {
+        tile.classList.add("negative");
+    }
+
+    if (type === "x2") {
+        tile.textContent = "x²";
+    }
+    else if (type === "x") {
+        tile.textContent = "x";
+    }
+    else {
+        tile.textContent = "1";
+    }
+
+    return tile;
+}
+
+function drawTiles(a, b, c) {
+
+    const grid = document.getElementById("tileGrid");
+
+    grid.innerHTML = "";
+
+    for (let i = 0; i < Math.abs(a); i++) {
+        grid.appendChild(createTile("x2", i, a < 0));
+    }
+
+    for (let i = 0; i < Math.abs(b); i++) {
+        grid.appendChild(createTile("x", i, b < 0));
+    }
+
+    for (let i = 0; i < Math.abs(c); i++) {
+        grid.appendChild(createTile("one", i, c < 0));
+    }
+}
+
+function updateActivity() {
+
+    const {a, b, c} = getValues();
+
+    document.getElementById("aValue").textContent = a;
+    document.getElementById("bValue").textContent = b;
+    document.getElementById("cValue").textContent = c;
+
+    const expression = polynomial(a, b, c);
+
+    document.getElementById("equation").textContent = expression;
+    document.getElementById("challengeEquation").textContent = expression;
+
+    drawTiles(a, b, c);
+
+    currentFactors = findFactors(a, b, c);
+
+    updateFactorResult(a, b, c);
+}
+
+function updateFactorResult(a, b, c) {
+
+    const result = document.getElementById("factorResult");
+    const steps = document.getElementById("steps");
+    const verification = document.getElementById("verification");
+
+    if (currentFactors === null) {
+
+        result.textContent = "Integer factorisation not available";
+
+        steps.innerHTML = `
+            <div class="step">
+                For the selected values, this activity cannot find
+                integer factors of the form (x + p)(x + q).
+            </div>
+
+            <div class="step">
+                Try changing the coefficients and look for a quadratic
+                whose factor pair can be found using integers.
+            </div>
+        `;
+
+        verification.textContent =
+            "Choose a factorisable quadratic to see the verification.";
+
+        return;
+    }
+
+    const p = currentFactors[0];
+    const q = currentFactors[1];
+
+    const first = factorText(p);
+    const second = factorText(q);
+
+    result.textContent = first + second;
+
+    steps.innerHTML = `
+        <div class="step">
+            Step 1: Find two numbers whose product is
+            <strong>${c}</strong>.
+        </div>
+
+        <div class="step">
+            Step 2: The numbers are
+            <strong>${p}</strong> and <strong>${q}</strong>.
+        </div>
+
+        <div class="step">
+            Step 3: Their sum is
+            <strong>${p + q}</strong>, which matches the coefficient
+            of x.
+        </div>
+
+        <div class="step">
+            Step 4: Therefore,
+            <strong>${expressionForFactor(p, q)}</strong>.
+        </div>
+    `;
+
+    verification.innerHTML = `
+        <strong>${first}${second}</strong>
+        = x² ${signedTerm(p + q, "x")} ${signedTerm(p * q, "")}
+        = <strong>${polynomial(a, b, c)}</strong>
+    `;
+}
+
+function expressionForFactor(p, q) {
+
+    return factorText(p) + factorText(q);
+}
+
+function signedTerm(value, variable) {
+
+    if (value === 0) {
+        return "";
+    }
+
+    const abs = Math.abs(value);
+
+    let term;
+
+    if (variable === "x") {
+        term = (abs === 1 ? "" : abs) + "x";
+    }
+    else {
+        term = abs;
+    }
+
+    return value > 0 ? "+ " + term : "- " + term;
+}
+
+function normalizeAnswer(text) {
+
+    return text
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/−/g, "-")
+        .replace(/[()]/g, "");
+}
+
+function checkAnswer() {
+
+    const feedback = document.getElementById("feedback");
+
+    if (currentFactors === null) {
+
+        feedback.className = "feedback wrong";
+        feedback.textContent =
+            "Choose a factorisable quadratic first.";
+
+        return;
+    }
+
+    const answer1 =
+        normalizeAnswer(document.getElementById("answer1").value);
+
+    const answer2 =
+        normalizeAnswer(document.getElementById("answer2").value);
+
+    const expected1 =
+        normalizeAnswer(factorText(currentFactors[0]));
+
+    const expected2 =
+        normalizeAnswer(factorText(currentFactors[1]));
+
+    const correctOrder =
+        (answer1 === expected1 && answer2 === expected2);
+
+    const reverseOrder =
+        (answer1 === expected2 && answer2 === expected1);
+
+    if (correctOrder || reverseOrder) {
+
+        feedback.className = "feedback correct";
+        feedback.textContent =
+            "Correct! The two factors multiply to the original quadratic.";
+
+    } else {
+
+        feedback.className = "feedback wrong";
+        feedback.textContent =
+            "Not quite. Look for two numbers whose product is c and whose sum is b.";
+    }
+}
+
+function revealAnswer() {
+
+    const feedback = document.getElementById("feedback");
+
+    if (currentFactors === null) {
+
+        feedback.className = "feedback wrong";
+        feedback.textContent =
+            "There is no integer factorisation for the current values.";
+
+        return;
+    }
+
+    feedback.className = "feedback correct";
+
+    feedback.textContent =
+        "Answer: " +
+        factorText(currentFactors[0]) +
+        factorText(currentFactors[1]);
+}
+
+function showStudent() {
+
+    document.getElementById("studentMode").style.display = "block";
+    document.getElementById("teacherMode").classList.remove("visible");
+
+    document.querySelectorAll(".tab")[0].classList.add("active");
+    document.querySelectorAll(".tab")[1].classList.remove("active");
+}
+
+function showTeacher() {
+
+    document.getElementById("studentMode").style.display = "none";
+    document.getElementById("teacherMode").classList.add("visible");
+
+    document.querySelectorAll(".tab")[0].classList.remove("active");
+    document.querySelectorAll(".tab")[1].classList.add("active");
+}
+
+updateActivity();
+
+</script>
+
+</body>
+</html>

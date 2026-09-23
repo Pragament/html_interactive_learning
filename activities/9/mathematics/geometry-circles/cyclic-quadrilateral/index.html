@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#087f8c">
+<title>Cyclic Quadrilateral | Interactive Activity</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --primary: #087f8c;
+    --primary-dark: #05636d;
+    --primary-light: #e8f8fa;
+    --accent: #f39c12;
+    --danger: #d64545;
+    --success: #16803c;
+    --text: #1f2937;
+    --muted: #64748b;
+    --border: #d9e2e8;
+    --bg: #f4f7fb;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #087f8c, #075d67);
+    color: white;
+    text-align: center;
+    padding: 28px 16px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(24px, 4vw, 34px);
+    line-height: 1.2;
+}
+
+header p {
+    margin: 8px 0 0;
+    opacity: 0.92;
+    font-size: clamp(14px, 2vw, 17px);
+}
+
+.container {
+    width: min(1150px, calc(100% - 30px));
+    margin: 0 auto;
+    padding: 24px 0 40px;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 18px;
+    padding: clamp(18px, 3vw, 28px);
+    margin-bottom: 20px;
+    box-shadow: 0 6px 22px rgba(15, 23, 42, 0.07);
+}
+
+.card h2 {
+    margin: 0 0 15px;
+    color: var(--primary);
+    font-size: clamp(20px, 3vw, 25px);
+}
+
+.theorem {
+    background: var(--primary-light);
+    border-left: 5px solid var(--primary);
+    border-radius: 10px;
+    padding: 18px;
+    font-size: clamp(16px, 2.2vw, 19px);
+}
+
+.theorem strong {
+    color: var(--primary-dark);
+}
+
+.workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: 24px;
+    align-items: center;
+}
+
+.diagram-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+#diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 360px;
+    background: #fbfdff;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    touch-action: none;
+    user-select: none;
+}
+
+.circle {
+    fill: #eefbfd;
+    stroke: var(--primary);
+    stroke-width: 5;
+}
+
+.quadrilateral {
+    fill: rgba(8, 127, 140, 0.08);
+    stroke: var(--danger);
+    stroke-width: 5;
+    stroke-linejoin: round;
+}
+
+.diagonal {
+    stroke: #94a3b8;
+    stroke-width: 2;
+    stroke-dasharray: 8 7;
+}
+
+.vertex {
+    fill: var(--primary);
+    stroke: white;
+    stroke-width: 4;
+    cursor: grab;
+    touch-action: none;
+}
+
+.vertex:hover {
+    r: 15;
+}
+
+.vertex:active {
+    cursor: grabbing;
+}
+
+.vertex-label {
+    font-size: 23px;
+    font-weight: bold;
+    fill: #172033;
+    pointer-events: none;
+}
+
+.angle-arc {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 5;
+}
+
+.drag-help {
+    margin-top: 12px;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+.angle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.angle-box {
+    background: #f5fafb;
+    border: 1px solid #d8eef1;
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+}
+
+.angle-name {
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.angle-value {
+    font-size: clamp(26px, 4vw, 34px);
+    font-weight: bold;
+    color: var(--primary);
+    line-height: 1.2;
+    margin-top: 5px;
+}
+
+.sum-box {
+    margin-top: 16px;
+    background: var(--primary-light);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+}
+
+.sum-title {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.sum-value {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.control {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.control label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.control-value {
+    color: var(--primary);
+}
+
+input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+    accent-color: var(--primary);
+    height: 6px;
+}
+
+.observation {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.observation-step {
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.observation-step:last-child {
+    border-bottom: none;
+}
+
+.success {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+button {
+    border: none;
+    background: var(--primary);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.secondary-button {
+    background: #64748b;
+}
+
+.quiz-question {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 14px;
+}
+
+.quiz-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: white;
+    color: var(--text);
+    border: 1px solid var(--border);
+    margin: 9px 0;
+}
+
+.quiz-option:hover {
+    background: var(--primary-light);
+}
+
+#feedback {
+    min-height: 24px;
+    margin-top: 14px;
+    font-weight: bold;
+}
+
+.status {
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 10px;
+    background: #ecfdf3;
+    color: var(--success);
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+
+    #diagram {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: min(100% - 18px, 1150px);
+        padding-top: 12px;
+    }
+
+    .card {
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 14px;
+    }
+
+    .workspace {
+        gap: 16px;
+    }
+
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .angle-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #diagram {
+        min-height: 250px;
+        border-radius: 12px;
+    }
+
+    .drag-help {
+        font-size: 13px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 380px) {
+    .angle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .angle-box {
+        padding: 12px;
+    }
+}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-circles-cyclic-quadrilateral",
+  "order": 238,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry (Circles)",
+  "subtopic": null,
+  "title": "Cyclic Quadrilateral",
+  "description": "Form a cyclic quadrilateral on a circular board. Measure opposite angles and verify their sum is 180°.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+
+<header>
+    <h1>Cyclic Quadrilateral</h1>
+    <p>Interactive Mathematics Activity • Class IX–X</p>
+</header>
+
+<div class="container">
+
+    <section class="card">
+        <h2>Learning Objective</h2>
+
+        <div class="theorem">
+            <strong>Theorem:</strong>
+            In a cyclic quadrilateral, the sum of each pair of
+            opposite angles is <strong>180°</strong>.
+        </div>
+
+        <p>
+            A quadrilateral is called a
+            <strong>cyclic quadrilateral</strong> when all four of
+            its vertices lie on the same circle.
+        </p>
+    </section>
+
+    <section class="card">
+
+        <h2>Explore the Cyclic Quadrilateral</h2>
+
+        <div class="workspace">
+
+            <div class="diagram-wrapper">
+
+                <svg
+                    id="diagram"
+                    viewBox="0 0 700 560"
+                    aria-label="Interactive cyclic quadrilateral"
+                >
+
+                    <circle
+                        class="circle"
+                        cx="350"
+                        cy="280"
+                        r="220"
+                    />
+
+                    <line
+                        id="diagonalAC"
+                        class="diagonal"
+                    />
+
+                    <line
+                        id="diagonalBD"
+                        class="diagonal"
+                    />
+
+                    <polygon
+                        id="quadrilateral"
+                        class="quadrilateral"
+                    />
+
+                    <path
+                        id="arcA"
+                        class="angle-arc"
+                    />
+
+                    <path
+                        id="arcB"
+                        class="angle-arc"
+                    />
+
+                    <path
+                        id="arcC"
+                        class="angle-arc"
+                    />
+
+                    <path
+                        id="arcD"
+                        class="angle-arc"
+                    />
+
+                    <circle
+                        id="pointA"
+                        class="vertex"
+                        r="12"
+                    />
+
+                    <circle
+                        id="pointB"
+                        class="vertex"
+                        r="12"
+                    />
+
+                    <circle
+                        id="pointC"
+                        class="vertex"
+                        r="12"
+                    />
+
+                    <circle
+                        id="pointD"
+                        class="vertex"
+                        r="12"
+                    />
+
+                    <text id="labelA" class="vertex-label">A</text>
+                    <text id="labelB" class="vertex-label">B</text>
+                    <text id="labelC" class="vertex-label">C</text>
+                    <text id="labelD" class="vertex-label">D</text>
+
+                </svg>
+
+                <div class="drag-help">
+                    👆 Drag any vertex around the circle.
+                    Watch the angles change!
+                </div>
+
+            </div>
+
+            <div>
+
+                <h2>Live Measurements</h2>
+
+                <div class="angle-grid">
+
+                    <div class="angle-box">
+                        <div class="angle-name">∠A</div>
+                        <div class="angle-value">
+                            <span id="angleA">70</span>°
+                        </div>
+                    </div>
+
+                    <div class="angle-box">
+                        <div class="angle-name">∠B</div>
+                        <div class="angle-value">
+                            <span id="angleB">110</span>°
+                        </div>
+                    </div>
+
+                    <div class="angle-box">
+                        <div class="angle-name">∠C</div>
+                        <div class="angle-value">
+                            <span id="angleC">70</span>°
+                        </div>
+                    </div>
+
+                    <div class="angle-box">
+                        <div class="angle-name">∠D</div>
+                        <div class="angle-value">
+                            <span id="angleD">110</span>°
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="sum-box">
+                    <div class="sum-title">
+                        Opposite angles A and C
+                    </div>
+
+                    <div class="sum-value">
+                        <span id="sumAC">180</span>°
+                    </div>
+                </div>
+
+                <div class="sum-box">
+                    <div class="sum-title">
+                        Opposite angles B and D
+                    </div>
+
+                    <div class="sum-value">
+                        <span id="sumBD">180</span>°
+                    </div>
+                </div>
+
+                <div class="status" id="theoremStatus">
+                    ✓ The theorem is verified!
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Fine-Tune the Vertices</h2>
+
+        <p>
+            You can also use the controls below to move the points
+            around the circle.
+        </p>
+
+        <div class="control-grid">
+
+            <div class="control">
+                <label>
+                    Vertex A
+                    <span class="control-value">
+                        <span id="aPosition">45</span>°
+                    </span>
+                </label>
+
+                <input
+                    id="sliderA"
+                    type="range"
+                    min="0"
+                    max="359"
+                    value="45"
+                >
+            </div>
+
+            <div class="control">
+                <label>
+                    Vertex B
+                    <span class="control-value">
+                        <span id="bPosition">135</span>°
+                    </span>
+                </label>
+
+                <input
+                    id="sliderB"
+                    type="range"
+                    min="0"
+                    max="359"
+                    value="135"
+                >
+            </div>
+
+            <div class="control">
+                <label>
+                    Vertex C
+                    <span class="control-value">
+                        <span id="cPosition">225</span>°
+                    </span>
+                </label>
+
+                <input
+                    id="sliderC"
+                    type="range"
+                    min="0"
+                    max="359"
+                    value="225"
+                >
+            </div>
+
+            <div class="control">
+                <label>
+                    Vertex D
+                    <span class="control-value">
+                        <span id="dPosition">315</span>°
+                    </span>
+                </label>
+
+                <input
+                    id="sliderD"
+                    type="range"
+                    min="0"
+                    max="359"
+                    value="315"
+                >
+            </div>
+
+        </div>
+
+        <div class="button-row">
+            <button onclick="resetActivity()">
+                ↻ Reset Activity
+            </button>
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>What Do You Observe?</h2>
+
+        <div class="observation">
+
+            <div class="observation-step">
+                <strong>Step 1:</strong>
+                All four vertices A, B, C and D lie on the same circle.
+            </div>
+
+            <div class="observation-step">
+                <strong>Step 2:</strong>
+                Therefore, ABCD is a cyclic quadrilateral.
+            </div>
+
+            <div class="observation-step">
+                <strong>Step 3:</strong>
+                Move any vertex around the circle.
+            </div>
+
+            <div class="observation-step">
+                <strong>Step 4:</strong>
+                The individual angles change.
+            </div>
+
+            <div class="observation-step">
+                <strong>Step 5:</strong>
+                The opposite angles always add up to 180°.
+            </div>
+
+            <p class="success">
+                ✓ ∠A + ∠C = 180°
+                <br>
+                ✓ ∠B + ∠D = 180°
+            </p>
+
+        </div>
+
+    </section>
+
+    <section class="card">
+
+        <h2>Quick Check</h2>
+
+        <div class="quiz-question" id="quizQuestion">
+            One angle of a cyclic quadrilateral is 70°.
+            What is its opposite angle?
+        </div>
+
+        <button
+            class="quiz-option"
+            onclick="checkAnswer(0)"
+            id="option0"
+        >
+            70°
+        </button>
+
+        <button
+            class="quiz-option"
+            onclick="checkAnswer(1)"
+            id="option1"
+        >
+            110°
+        </button>
+
+        <button
+            class="quiz-option"
+            onclick="checkAnswer(2)"
+            id="option2"
+        >
+            90°
+        </button>
+
+        <button
+            class="quiz-option"
+            onclick="checkAnswer(3)"
+            id="option3"
+        >
+            120°
+        </button>
+
+        <div id="feedback"></div>
+
+        <button
+            class="secondary-button"
+            onclick="newQuestion()"
+        >
+            New Question
+        </button>
+
+    </section>
+
+</div>
+
+<script>
+
+const svg = document.getElementById("diagram");
+
+const center = {
+    x: 350,
+    y: 280
+};
+
+const radius = 220;
+
+let vertices = {
+    A: 45,
+    B: 135,
+    C: 225,
+    D: 315
+};
+
+const initialVertices = {
+    A: 45,
+    B: 135,
+    C: 225,
+    D: 315
+};
+
+function pointFromAngle(angle) {
+
+    const radians = angle * Math.PI / 180;
+
+    return {
+        x: center.x + radius * Math.sin(radians),
+        y: center.y - radius * Math.cos(radians)
+    };
+}
+
+function calculateAngle(A, B, C) {
+
+    const BA = {
+        x: A.x - B.x,
+        y: A.y - B.y
+    };
+
+    const BC = {
+        x: C.x - B.x,
+        y: C.y - B.y
+    };
+
+    const dot =
+        BA.x * BC.x +
+        BA.y * BC.y;
+
+    const magnitudeBA =
+        Math.sqrt(BA.x * BA.x + BA.y * BA.y);
+
+    const magnitudeBC =
+        Math.sqrt(BC.x * BC.x + BC.y * BC.y);
+
+    let cosine =
+        dot / (magnitudeBA * magnitudeBC);
+
+    cosine = Math.max(-1, Math.min(1, cosine));
+
+    return Math.acos(cosine) * 180 / Math.PI;
+}
+
+function updateDiagram() {
+
+    const A = pointFromAngle(vertices.A);
+    const B = pointFromAngle(vertices.B);
+    const C = pointFromAngle(vertices.C);
+    const D = pointFromAngle(vertices.D);
+
+    const points = { A, B, C, D };
+
+    document
+        .getElementById("quadrilateral")
+        .setAttribute(
+            "points",
+            `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y} ${D.x},${D.y}`
+        );
+
+    const diagonalAC =
+        document.getElementById("diagonalAC");
+
+    diagonalAC.setAttribute("x1", A.x);
+    diagonalAC.setAttribute("y1", A.y);
+    diagonalAC.setAttribute("x2", C.x);
+    diagonalAC.setAttribute("y2", C.y);
+
+    const diagonalBD =
+        document.getElementById("diagonalBD");
+
+    diagonalBD.setAttribute("x1", B.x);
+    diagonalBD.setAttribute("y1", B.y);
+    diagonalBD.setAttribute("x2", D.x);
+    diagonalBD.setAttribute("y2", D.y);
+
+    for (const name of ["A", "B", "C", "D"]) {
+
+        const point = points[name];
+
+        const circle =
+            document.getElementById("point" + name);
+
+        circle.setAttribute("cx", point.x);
+        circle.setAttribute("cy", point.y);
+
+        updateLabel(name, point);
+    }
+
+    const angleA =
+        calculateAngle(D, A, B);
+
+    const angleB =
+        calculateAngle(A, B, C);
+
+    const angleC =
+        calculateAngle(B, C, D);
+
+    const angleD =
+        calculateAngle(C, D, A);
+
+    document.getElementById("angleA").textContent =
+        Math.round(angleA);
+
+    document.getElementById("angleB").textContent =
+        Math.round(angleB);
+
+    document.getElementById("angleC").textContent =
+        Math.round(angleC);
+
+    document.getElementById("angleD").textContent =
+        Math.round(angleD);
+
+    const sumAC = angleA + angleC;
+    const sumBD = angleB + angleD;
+
+    document.getElementById("sumAC").textContent =
+        Math.round(sumAC);
+
+    document.getElementById("sumBD").textContent =
+        Math.round(sumBD);
+
+    const verified =
+        Math.abs(sumAC - 180) < 1.5 &&
+        Math.abs(sumBD - 180) < 1.5;
+
+    const status =
+        document.getElementById("theoremStatus");
+
+    if (verified) {
+
+        status.textContent =
+            "✓ Opposite angles add up to 180° — Theorem verified!";
+
+        status.style.background = "#ecfdf3";
+        status.style.color = "#16803c";
+
+    } else {
+
+        status.textContent =
+            "Move the vertices to form a convex cyclic quadrilateral.";
+
+        status.style.background = "#fff7ed";
+        status.style.color = "#b45309";
+    }
+
+    document.getElementById("sliderA").value =
+        vertices.A;
+
+    document.getElementById("sliderB").value =
+        vertices.B;
+
+    document.getElementById("sliderC").value =
+        vertices.C;
+
+    document.getElementById("sliderD").value =
+        vertices.D;
+
+    document.getElementById("aPosition").textContent =
+        Math.round(vertices.A);
+
+    document.getElementById("bPosition").textContent =
+        Math.round(vertices.B);
+
+    document.getElementById("cPosition").textContent =
+        Math.round(vertices.C);
+
+    document.getElementById("dPosition").textContent =
+        Math.round(vertices.D);
+
+    drawAngleArc("arcA", D, A, B, angleA);
+    drawAngleArc("arcB", A, B, C, angleB);
+    drawAngleArc("arcC", B, C, D, angleC);
+    drawAngleArc("arcD", C, D, A, angleD);
+}
+
+function updateLabel(name, point) {
+
+    const label =
+        document.getElementById("label" + name);
+
+    let dx = 12;
+    let dy = -12;
+
+    if (point.x < center.x) {
+        dx = -28;
+    }
+
+    if (point.y > center.y) {
+        dy = 28;
+    }
+
+    label.setAttribute(
+        "x",
+        point.x + dx
+    );
+
+    label.setAttribute(
+        "y",
+        point.y + dy
+    );
+}
+
+function drawAngleArc(id, P1, vertex, P2, angle) {
+
+    const v1 = {
+        x: P1.x - vertex.x,
+        y: P1.y - vertex.y
+    };
+
+    const v2 = {
+        x: P2.x - vertex.x,
+        y: P2.y - vertex.y
+    };
+
+    const len1 =
+        Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+
+    const len2 =
+        Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+
+    const unit1 = {
+        x: v1.x / len1,
+        y: v1.y / len1
+    };
+
+    const unit2 = {
+        x: v2.x / len2,
+        y: v2.y / len2
+    };
+
+    const arcRadius = 30;
+
+    const start = {
+        x: vertex.x + unit1.x * arcRadius,
+        y: vertex.y + unit1.y * arcRadius
+    };
+
+    const end = {
+        x: vertex.x + unit2.x * arcRadius,
+        y: vertex.y + unit2.y * arcRadius
+    };
+
+    const largeArc =
+        angle > 180 ? 1 : 0;
+
+    const path =
+        `M ${start.x} ${start.y}
+         A ${arcRadius} ${arcRadius}
+         0 ${largeArc} 1
+         ${end.x} ${end.y}`;
+
+    document
+        .getElementById(id)
+        .setAttribute("d", path);
+}
+
+document.getElementById("sliderA")
+    .addEventListener("input", function () {
+
+        vertices.A = Number(this.value);
+        updateDiagram();
+    });
+
+document.getElementById("sliderB")
+    .addEventListener("input", function () {
+
+        vertices.B = Number(this.value);
+        updateDiagram();
+    });
+
+document.getElementById("sliderC")
+    .addEventListener("input", function () {
+
+        vertices.C = Number(this.value);
+        updateDiagram();
+    });
+
+document.getElementById("sliderD")
+    .addEventListener("input", function () {
+
+        vertices.D = Number(this.value);
+        updateDiagram();
+    });
+
+let draggingVertex = null;
+
+for (const name of ["A", "B", "C", "D"]) {
+
+    const element =
+        document.getElementById("point" + name);
+
+    element.addEventListener(
+        "pointerdown",
+        function (event) {
+
+            event.preventDefault();
+
+            draggingVertex = name;
+
+            element.setPointerCapture(
+                event.pointerId
+            );
+        }
+    );
+
+    element.addEventListener(
+        "pointermove",
+        function (event) {
+
+            if (draggingVertex !== name) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const point =
+                getSVGPoint(event);
+
+            let dx =
+                point.x - center.x;
+
+            let dy =
+                point.y - center.y;
+
+            let angle =
+                Math.atan2(dx, -dy)
+                * 180 / Math.PI;
+
+            if (angle < 0) {
+                angle += 360;
+            }
+
+            vertices[name] =
+                Math.round(angle);
+
+            updateDiagram();
+        }
+    );
+
+    element.addEventListener(
+        "pointerup",
+        function () {
+
+            draggingVertex = null;
+        }
+    );
+
+    element.addEventListener(
+        "pointercancel",
+        function () {
+
+            draggingVertex = null;
+        }
+    );
+}
+
+function getSVGPoint(event) {
+
+    const rect =
+        svg.getBoundingClientRect();
+
+    return {
+        x:
+            (event.clientX - rect.left)
+            * 700 / rect.width,
+
+        y:
+            (event.clientY - rect.top)
+            * 560 / rect.height
+    };
+}
+
+function resetActivity() {
+
+    vertices = {
+        A: initialVertices.A,
+        B: initialVertices.B,
+        C: initialVertices.C,
+        D: initialVertices.D
+    };
+
+    updateDiagram();
+
+    document.getElementById("feedback").textContent = "";
+}
+
+let quizAnswer = 1;
+
+function newQuestion() {
+
+    const angle =
+        Math.floor(Math.random() * 61) + 40;
+
+    const correct =
+        180 - angle;
+
+    quizAnswer =
+        Math.floor(Math.random() * 4);
+
+    let options = [];
+
+    options[quizAnswer] = correct;
+
+    let used = new Set([correct]);
+
+    for (let i = 0; i < 4; i++) {
+
+        if (i === quizAnswer) {
+            continue;
+        }
+
+        let value;
+
+        do {
+            value =
+                Math.floor(
+                    Math.random() * 121
+                ) + 30;
+
+        } while (used.has(value));
+
+        used.add(value);
+
+        options[i] = value;
+    }
+
+    document.getElementById("quizQuestion").textContent =
+        `One angle of a cyclic quadrilateral is ${angle}°. What is its opposite angle?`;
+
+    for (let i = 0; i < 4; i++) {
+
+        document.getElementById("option" + i)
+            .textContent =
+            options[i] + "°";
+    }
+
+    document.getElementById("feedback").textContent = "";
+}
+
+function checkAnswer(option) {
+
+    const feedback =
+        document.getElementById("feedback");
+
+    if (option === quizAnswer) {
+
+        feedback.textContent =
+            "✓ Correct! Opposite angles of a cyclic quadrilateral add up to 180°.";
+
+        feedback.style.color =
+            "#16803c";
+
+    } else {
+
+        feedback.textContent =
+            "✗ Not quite. Remember: opposite angles are supplementary and add up to 180°.";
+
+        feedback.style.color =
+            "#d64545";
+    }
+}
+
+updateDiagram();
+newQuestion();
+
+</script>
+
+</body>
+</html>

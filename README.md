@@ -1,183 +1,178 @@
-# HTML Interactive Learning1
+# HTML Interactive Learning
 
-Interactive, browser-based classroom activities for school learning. The root
-homepage reads the generated `list.json` catalog and opens available activity
-variations inside a responsive iframe.
+Self-contained, browser-based learning activities for school students. The
+homepage builds its catalog from metadata embedded directly in each activity's
+HTML file.
 
-## Ideas
-Refer below links for Ideas
-- https://ncert.nic.in/science-laboratory-manual.php?ln=en
-- https://ncert.nic.in/school-kits-and-lab-manual.php?ln=en
-- https://cbseacademic.nic.in/web_material/QuestionBank/ClassX/MathsX.pdf
+## Content hierarchy
 
-## Contributing Activities
+Every interactive experience is an independent activity. Metadata no longer
+lives in a shared `activity.md` file.
 
-Most activity folders are still missing an HTML implementation. Pick one whose
-`activity.md` has no `paths` list, then build a self-contained `index.html` in
-the same folder.
-
-Good activities should be useful for both teachers and students:
-
-- Make the core concept visible, manipulable, or playful.
-- Give teachers a clear way to guide discussion, demonstration, or group work.
-- Give students something to try, predict, test, compare, or explain.
-- Keep instructions short and on-screen controls obvious.
-- Work well on phones, tablets, and classroom PCs.
-- Prefer creative interaction over static notes: simulations, quizzes, puzzles,
-  drag-and-drop tasks, visual experiments, games, or guided investigations.
-- Keep the activity lightweight and runnable with plain HTML/CSS/JavaScript.
-
-## Project Structure
+A topic-level activity can cover an entire topic and its subtopics:
 
 ```text
-.
-├── index.html
-├── list.json                         # generated locally; ignored by Git
-├── scripts/
-│   └── generate_catalog.rb
-└── activities/
-    ├── food-detectives/
-    │   ├── activity.md
-    │   └── index.html
-    └── pythagoras/
-        ├── activity.md
-        ├── index.html
-        └── 3d/
-            └── index.html
+activities/{class}/{subject}/{topic}/{activity}/index.html
 ```
 
-## Activity Metadata
+A subtopic-level activity focuses on one part of a topic:
 
-Each activity is described by an `activity.md` file beside its HTML file. The
-YAML front matter supplies catalog fields, while the Markdown body supplies the
-activity description.
-
-```markdown
----
-order: 1
-class: VI
-subject: Science
-topic: Food
-title: Example Activity
-paths:
-  - label: Interactive
-    path: index.html
----
-
-Describe what learners do and what concept the activity demonstrates.
+```text
+activities/{class}/{subject}/{topic}/{subtopic}/{activity}/index.html
 ```
 
-Paths are relative to `activity.md`, so the usual path is simply `index.html`.
-For multiple variations, add more entries:
+Example:
 
-```yaml
-paths:
-  - label: 2D Challenge
-    path: index.html
-  - label: 3D Interactive
-    path: 3d/index.html
+```text
+activities/
+└── 10/
+    └── mathematics/
+        └── similar-triangles/
+            ├── complete-topic-explorer/
+            │   └── index.html
+            ├── shadows/
+            │   ├── shadow-laboratory/
+            │   │   └── index.html
+            │   └── tower-height-exam-practice/
+            │       └── index.html
+            └── pond-survey/
+                └── pond-case-study/
+                    └── index.html
 ```
 
-Use short, student-friendly labels. External `https://` paths are also
-supported. Do not edit or commit `list.json`; it is generated from all
-`activity.md` files.
+Use lowercase kebab-case for every directory. Class directories use numbers
+such as `6`, `7`, and `10`; display names such as `VI`, `VII`, and `X` remain in
+metadata.
 
-## Local Build and Preview
+## One self-contained HTML file
 
-Ruby is the only build requirement. From the repository root, generate the
-catalog and start a local web server:
+An activity directory contains exactly one `index.html`. Its metadata, CSS,
+HTML, and JavaScript all live in that file. Do not add separate `.css`, `.js`,
+`activity.md`, or manifest files.
+
+Avoid external runtime dependencies. An activity should continue to work when
+opened without network access.
+
+## Embedded activity metadata
+
+Place exactly one JSON metadata block inside `<head>`:
+
+```html
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-similar-triangles-shadows-shadow-laboratory",
+  "order": 247,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Similar Triangles",
+  "subtopic": "Shadows",
+  "title": "Interactive Shadow Laboratory",
+  "description": "Explore similar triangles by changing tower height and the Sun angle.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+```
+
+For a topic-level activity, set `subtopic` to `null` and omit the subtopic
+directory from its path.
+
+### Required fields
+
+| Field | Purpose |
+| --- | --- |
+| `schemaVersion` | Metadata schema version; currently `1` |
+| `id` | Repository-wide stable activity identifier |
+| `order` | Repository-wide unique catalog order |
+| `class` | Display value such as `VI` or `X` |
+| `subject` | Display subject name |
+| `topic` | Display topic name |
+| `subtopic` | Display subtopic name, or `null` for topic-level activities |
+| `title` | Student-facing activity name |
+| `description` | What learners do and understand |
+| `activityType` | Kind of learning experience |
+| `status` | `active` or `planned` |
+
+Recommended activity types are `exploration`, `guided-practice`,
+`exam-practice`, `simulation`, `game`, `challenge`, `assessment`, and
+`demonstration`.
+
+An `active` activity receives a launch path in `list.json`. A `planned` activity
+remains searchable in the full catalog but is not launchable.
+
+## Topic and subtopic rules
+
+- One activity HTML produces exactly one catalog record.
+- Multiple activities may share the same topic and subtopic.
+- Topic-level activities may combine every subtopic in that topic.
+- The folder hierarchy and metadata taxonomy must agree.
+- The activity directory name is its lowercase kebab-case slug.
+- Activity IDs and orders must be unique.
+- Keep languages, modes, and difficulty controls inside the same activity when
+  they belong to one learner experience. Create another activity only when the
+  learner experience is genuinely different.
+
+## Building the catalog
+
+`list.json` is generated and ignored by Git. Ruby is the only build
+requirement:
 
 ```sh
 ruby scripts/generate_catalog.rb
 python3 -m http.server 8000
 ```
 
-Open `http://127.0.0.1:8000/`. Run the generator again whenever an
-`activity.md` file changes, then refresh the browser.
+Open `http://127.0.0.1:8000/`.
 
-To validate metadata without changing the catalog:
+Validate all metadata, paths, IDs, orders, and single-file requirements without
+writing the catalog:
 
 ```sh
 ruby scripts/generate_catalog.rb --validate
 ```
 
-To regenerate and verify the catalog locally:
+Verify that an existing generated catalog is current:
 
 ```sh
-ruby scripts/generate_catalog.rb
 ruby scripts/generate_catalog.rb --check
 ```
 
-Pull requests generate the catalog to validate all metadata and local paths.
-After a change reaches `main`, GitHub Actions generates `list.json` inside a
-GitHub Pages artifact and deploys that artifact. The generated file is never
-committed to Git.
+The generator derives whether an activity is topic-level or subtopic-level from
+the directory depth and checks it against the embedded metadata.
 
-## GitHub Pages Deployment
+## Creating an activity
 
-The repository must use **GitHub Actions** as its Pages publishing source. An
-administrator can select it under **Settings → Pages → Build and deployment →
-Source**. The `Deploy GitHub Pages` workflow then builds and publishes the site
-on every push to `main`; no generated catalog commit is required.
+1. Choose its class, subject, topic, and optional subtopic.
+2. Check for an existing open or closed GitHub issue covering the same idea.
+3. Create the kebab-case hierarchy and `index.html`.
+4. Add the embedded metadata block.
+5. Keep all CSS and JavaScript inside the HTML.
+6. Design useful interaction: prediction, manipulation, observation, feedback,
+   explanation, or practice—not only static notes.
+7. Test phone, tablet, and desktop layouts.
+8. Run the catalog validator and preview the homepage.
 
-## Suggested Workflow
+## Pull requests
 
-1. Choose an `activity.md` file that has no `paths` list.
-2. Plan the learner experience: what should the student notice, do, and discuss?
-3. Add `index.html` beside that metadata file.
-4. Add a `paths` entry to `activity.md`.
-5. Build and test the activity at phone, tablet, and desktop widths.
-6. Build and run a local server from the project root:
+Before opening a pull request, run:
 
 ```sh
-ruby scripts/generate_catalog.rb
-python3 -m http.server 8000
+ruby scripts/generate_catalog.rb --validate
+git diff --check
 ```
 
-Then open `http://127.0.0.1:8000/` and confirm the homepage can filter, find,
-and launch your activity.
+In the pull request, include the class, subject, topic, optional subtopic,
+activity type, and a short description of what students interact with.
 
-## Fork and Pull Request
+## Deployment
 
-Contributions are welcome through pull requests.
+GitHub Pages must use **GitHub Actions** as its publishing source. The deployment
+workflow generates `list.json`, packages the repository, and deploys the result.
+The generated catalog is never committed.
 
-Before starting, please create a GitHub issue for the activity you want to build,
-or comment on an existing issue to claim it. Mention the class, subject, topic,
-and activity name from `activity.md`. This helps contributors avoid working on the
-same activity at the same time.
+## Reference ideas
 
-1. Fork this repository to your own GitHub account.
-2. Clone your fork locally.
-3. Create or claim a GitHub issue for the activity.
-4. Create a new branch for your activity:
-
-```sh
-git checkout -b add-my-activity
-```
-
-5. Add the activity files and update `activity.md`.
-6. Test the homepage and the activity locally.
-7. Commit your changes with a clear message:
-
-```sh
-git add activities/my-activity/
-git commit -m "Add interactive activity for my topic"
-```
-
-8. Push your branch to your fork:
-
-```sh
-git push origin add-my-activity
-```
-
-9. Open a pull request against the main repository.
-
-In your pull request, briefly mention the class, subject, topic, activity name,
-what students do in the activity, and any variations you added.
-
-## Design Notes
-
-Design for real classrooms. A teacher may be projecting the activity to a class,
-while students may be using small screens in groups. Make controls large enough,
-feedback immediate, and text readable. Be creative, but keep the learning goal
-clear.
+- https://ncert.nic.in/science-laboratory-manual.php?ln=en
+- https://ncert.nic.in/school-kits-and-lab-manual.php?ln=en
+- https://cbseacademic.nic.in/web_material/QuestionBank/ClassX/MathsX.pdf

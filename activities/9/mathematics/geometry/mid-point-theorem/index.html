@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mid-point Theorem</title>
+<style>
+  :root {
+    --primary: #0f766e;
+    --primary-dark: #0b5a54;
+    --accent: #ea580c;
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+    --error: #dc2626;
+    --error-bg: #fee2e2;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 18px; }
+  h1 { font-size: clamp(1.3rem, 4vw, 1.9rem); margin-bottom: 4px; color: var(--primary-dark); }
+  .subtitle { color: var(--muted); font-size: 0.95rem; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card h2 { margin-top: 0; font-size: 1.2rem; color: var(--primary-dark); }
+  .card p.desc { color: var(--muted); font-size: 0.92rem; margin-top: -6px; }
+
+  .instructions ol { line-height: 1.6; padding-left: 20px; margin: 8px 0; }
+  .instructions strong { color: var(--primary-dark); }
+
+  .explore-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .svg-box { flex: 0 0 auto; width: min(360px, 92vw); }
+  svg { max-width: 100%; height: auto; }
+
+  .side-line { stroke: #94a3b8; stroke-width: 4; cursor: pointer; }
+  .side-line.selected { stroke: #7c3aed; stroke-width: 5; }
+  .side-line.third { stroke: var(--accent); stroke-width: 5; }
+  .side-hit { stroke: transparent; stroke-width: 18; cursor: pointer; }
+  .side-group:focus-visible .side-line { stroke: var(--primary); stroke-width: 6; }
+  .side-group { outline: none; }
+
+  .mn-line { stroke: var(--primary); stroke-width: 4; stroke-dasharray: 0; opacity: 0; transition: opacity 0.3s; }
+  .mn-line.shown { opacity: 1; }
+  .tick { stroke: var(--primary-dark); stroke-width: 3; opacity: 0; transition: opacity 0.3s; }
+  .tick.shown { opacity: 1; }
+  .tick.third-tick { stroke: var(--accent); }
+
+  .dot { fill: #fff; stroke: #94a3b8; stroke-width: 2; r: 5; opacity: 0; transition: opacity 0.3s; }
+  .dot.shown { opacity: 1; stroke: var(--primary); }
+  .dot-label { font-size: 13px; font-weight: 700; fill: var(--primary-dark); opacity: 0; transition: opacity 0.3s; }
+  .dot-label.shown { opacity: 1; }
+
+  .vertex-label { font-size: 15px; font-weight: 700; fill: var(--text); }
+
+  .status-panel { flex: 1 1 240px; min-width: 220px; }
+  .step-msg {
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.92rem;
+    margin-bottom: 12px;
+    min-height: 44px;
+  }
+  .relation-box {
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: none;
+  }
+  .relation-box.shown { display: block; }
+
+  .action-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  button.action {
+    padding: 10px 18px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-secondary { background: #e2e8f0; color: var(--text); }
+  .btn-secondary:hover { background: #cbd5e1; }
+
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-top: 12px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 14px; height: 4px; border-radius: 2px; display: inline-block; }
+
+  .progress { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+  .prompt { font-weight: 600; margin-bottom: 12px; font-size: 1.02rem; }
+  input[type="number"] {
+    width: 100px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+  }
+  input[type="number"]:focus { outline: none; border-color: var(--primary); }
+  .choice-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+  .choice-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-align: left;
+  }
+  .choice-btn:hover, .choice-btn:focus-visible { border-color: var(--primary); outline: none; }
+  .choice-btn.chosen-correct { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .choice-btn.chosen-wrong { background: var(--error-bg); border-color: var(--error); color: var(--error); }
+  .choice-btn:disabled { cursor: default; }
+
+  #quizFeedback, #exploreHint {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: none;
+    line-height: 1.5;
+  }
+  #quizFeedback .expl { font-weight: 400; display: block; margin-top: 6px; font-size: 0.9rem; }
+  #quizFeedback.show, #exploreHint.show { display: block; }
+  #quizFeedback.success, #exploreHint.success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+  #quizFeedback.error, #exploreHint.error { background: var(--error-bg); color: var(--error); border: 1px solid var(--error); }
+
+  .note { font-size: 0.8rem; color: var(--muted); margin-top: 6px; text-align: center; }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-mid-point-theorem",
+  "order": 222,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": null,
+  "title": "Mid-point Theorem",
+  "description": "Form a triangle, fix a strip at the mid-points of two sides. Verify that it is parallel to the third side and half its length.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Mid-point Theorem</h1>
+    <div class="subtitle">Class IX · Mathematics · Triangles</div>
+  </header>
+
+  <div class="card instructions">
+    <p><strong>The Mid-point Theorem:</strong> If a line segment joins the mid-points of two sides of a triangle, then it is parallel to the third side, and its length is half the length of the third side.</p>
+    <ol>
+      <li>Click on <strong>two sides</strong> of the triangle below to select them.</li>
+      <li>Click <strong>"Mark Midpoints"</strong> to place points M and N at the exact middle of each selected side.</li>
+      <li>Click <strong>"Draw Segment MN"</strong> to join the two mid-points.</li>
+      <li>Click <strong>"Compare with Third Side"</strong> to see that MN is parallel to the remaining side.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Explore the Triangle</h2>
+    <p class="desc">Triangle ABC — select two sides to begin.</p>
+    <div class="explore-area">
+      <div class="svg-box">
+        <svg id="triSvg" viewBox="0 0 300 270" role="img" aria-label="Interactive triangle diagram">
+          <!-- built by JS -->
+        </svg>
+        <div class="legend">
+          <span><span class="swatch" style="background:#7c3aed;"></span> Selected sides</span>
+          <span><span class="swatch" style="background:var(--accent);"></span> Third side</span>
+          <span><span class="swatch" style="background:var(--primary);"></span> Segment MN</span>
+        </div>
+      </div>
+      <div class="status-panel">
+        <div class="step-msg" id="stepMsg" aria-live="polite">Click two sides of the triangle to select them.</div>
+        <div class="relation-box" id="relationBox">MN ∥ Third side, and MN = ½ × Third side</div>
+        <div class="action-row">
+          <button class="action btn-primary" id="markMidBtn" disabled>Mark Midpoints</button>
+          <button class="action btn-primary" id="drawMnBtn" disabled>Draw Segment MN</button>
+          <button class="action btn-primary" id="compareBtn" disabled>Compare with Third Side</button>
+        </div>
+        <div class="action-row">
+          <button class="action btn-secondary" id="resetExploreBtn">Reset Diagram</button>
+        </div>
+        <div id="exploreHint" role="alert"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Practice Questions</h2>
+    <p class="desc">M and N are always the mid-points of two sides of triangle ABC.</p>
+    <div class="progress" id="quizProgress"></div>
+    <div id="quizBody"></div>
+  </div>
+
+  <p class="note">Diagram is illustrative and not drawn exactly to scale.</p>
+</div>
+
+<script>
+(function () {
+  // ---------------- Explore diagram ----------------
+  const A = { x: 150, y: 30 };
+  const B = { x: 30, y: 230 };
+  const C = { x: 270, y: 230 };
+  const V = { A, B, C };
+  const sides = {
+    AB: ['A', 'B'],
+    BC: ['B', 'C'],
+    CA: ['C', 'A']
+  };
+
+  let selected = [];      // e.g. ['AB','CA']
+  let step = 0;           // 0 = selecting sides, 1 = midpoints marked, 2 = MN drawn, 3 = compared
+
+  const svg = document.getElementById('triSvg');
+  const stepMsg = document.getElementById('stepMsg');
+  const relationBox = document.getElementById('relationBox');
+  const exploreHint = document.getElementById('exploreHint');
+  const markMidBtn = document.getElementById('markMidBtn');
+  const drawMnBtn = document.getElementById('drawMnBtn');
+  const compareBtn = document.getElementById('compareBtn');
+  const resetExploreBtn = document.getElementById('resetExploreBtn');
+
+  function mid(p1, p2) {
+    return { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+  }
+
+  function buildSvg() {
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+
+    // triangle fill
+    const poly = document.createElementNS(ns, 'polygon');
+    poly.setAttribute('points', `${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
+    poly.setAttribute('fill', '#f0fdfa');
+    svg.appendChild(poly);
+
+    // sides
+    Object.keys(sides).forEach(key => {
+      const [p1k, p2k] = sides[key];
+      const p1 = V[p1k], p2 = V[p2k];
+      const g = document.createElementNS(ns, 'g');
+      g.setAttribute('class', 'side-group');
+      g.setAttribute('tabindex', '0');
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', 'Side ' + key);
+      g.id = 'sidegroup-' + key;
+
+      const hit = document.createElementNS(ns, 'line');
+      hit.setAttribute('x1', p1.x); hit.setAttribute('y1', p1.y);
+      hit.setAttribute('x2', p2.x); hit.setAttribute('y2', p2.y);
+      hit.setAttribute('class', 'side-hit');
+
+      const vis = document.createElementNS(ns, 'line');
+      vis.setAttribute('x1', p1.x); vis.setAttribute('y1', p1.y);
+      vis.setAttribute('x2', p2.x); vis.setAttribute('y2', p2.y);
+      vis.setAttribute('class', 'side-line');
+      vis.id = 'side-' + key;
+
+      g.appendChild(hit);
+      g.appendChild(vis);
+      g.addEventListener('click', () => onSideClick(key));
+      g.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSideClick(key); }
+      });
+      svg.appendChild(g);
+    });
+
+    // MN line (hidden initially)
+    const mnLine = document.createElementNS(ns, 'line');
+    mnLine.setAttribute('class', 'mn-line');
+    mnLine.id = 'mnLine';
+    svg.appendChild(mnLine);
+
+    // dots for M and N
+    ['M', 'N'].forEach(label => {
+      const dot = document.createElementNS(ns, 'circle');
+      dot.setAttribute('class', 'dot');
+      dot.id = 'dot-' + label;
+      svg.appendChild(dot);
+      const txt = document.createElementNS(ns, 'text');
+      txt.setAttribute('class', 'dot-label');
+      txt.id = 'dotlabel-' + label;
+      txt.textContent = label;
+      svg.appendChild(txt);
+    });
+
+    // vertex labels
+    const vertexPositions = { A: { x: A.x, y: A.y - 12 }, B: { x: B.x - 14, y: B.y + 8 }, C: { x: C.x + 14, y: C.y + 8 } };
+    Object.keys(vertexPositions).forEach(key => {
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('class', 'vertex-label');
+      t.setAttribute('x', vertexPositions[key].x);
+      t.setAttribute('y', vertexPositions[key].y);
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = key;
+      svg.appendChild(t);
+    });
+
+    // parallel tick marks (hidden initially), placed near midpoints of MN and third side
+    const tickMN = document.createElementNS(ns, 'line');
+    tickMN.setAttribute('class', 'tick');
+    tickMN.id = 'tickMN';
+    svg.appendChild(tickMN);
+    const tickThird = document.createElementNS(ns, 'line');
+    tickThird.setAttribute('class', 'tick third-tick');
+    tickThird.id = 'tickThird';
+    svg.appendChild(tickThird);
+  }
+
+  function onSideClick(key) {
+    if (step !== 0) {
+      showHint('You already have a diagram in progress. Click "Reset Diagram" to choose different sides.', false);
+      return;
+    }
+    if (selected.includes(key)) {
+      selected = selected.filter(s => s !== key);
+    } else {
+      if (selected.length >= 2) {
+        showHint('Two sides are already selected. Click a selected side to deselect it first.', false);
+        return;
+      }
+      selected.push(key);
+    }
+    updateSideStyles();
+    updateStepMessage();
+  }
+
+  function updateSideStyles() {
+    Object.keys(sides).forEach(key => {
+      const el = document.getElementById('side-' + key);
+      el.classList.toggle('selected', selected.includes(key));
+      el.classList.remove('third');
+    });
+    markMidBtn.disabled = selected.length !== 2;
+  }
+
+  function getThirdSide() {
+    return Object.keys(sides).find(k => !selected.includes(k));
+  }
+
+  function updateStepMessage() {
+    if (selected.length === 0) {
+      stepMsg.textContent = 'Click two sides of the triangle to select them.';
+    } else if (selected.length === 1) {
+      stepMsg.textContent = `Side ${selected[0]} selected. Click one more side.`;
+    } else {
+      stepMsg.textContent = `Sides ${selected[0]} and ${selected[1]} selected. Now click "Mark Midpoints".`;
+    }
+  }
+
+  function markMidpoints() {
+    if (selected.length !== 2) return;
+    const [k1, k2] = selected;
+    const [p1a, p1b] = sides[k1].map(k => V[k]);
+    const [p2a, p2b] = sides[k2].map(k => V[k]);
+    const M = mid(p1a, p1b);
+    const N = mid(p2a, p2b);
+
+    placeDot('M', M);
+    placeDot('N', N);
+
+    step = 1;
+    stepMsg.textContent = `M is the mid-point of side ${k1}. N is the mid-point of side ${k2}. Now draw the segment joining them.`;
+    markMidBtn.disabled = true;
+    drawMnBtn.disabled = false;
+    window._mnPoints = { M, N };
+  }
+
+  function placeDot(label, point) {
+    const dot = document.getElementById('dot-' + label);
+    dot.setAttribute('cx', point.x);
+    dot.setAttribute('cy', point.y);
+    dot.classList.add('shown');
+    const txt = document.getElementById('dotlabel-' + label);
+    txt.setAttribute('x', point.x + (label === 'M' ? -14 : 14));
+    txt.setAttribute('y', point.y - 8);
+    txt.classList.add('shown');
+  }
+
+  function drawMN() {
+    if (!window._mnPoints) return;
+    const { M, N } = window._mnPoints;
+    const line = document.getElementById('mnLine');
+    line.setAttribute('x1', M.x); line.setAttribute('y1', M.y);
+    line.setAttribute('x2', N.x); line.setAttribute('y2', N.y);
+    line.classList.add('shown');
+
+    step = 2;
+    stepMsg.textContent = 'Segment MN has been drawn. Now compare it with the third side of the triangle.';
+    drawMnBtn.disabled = true;
+    compareBtn.disabled = false;
+  }
+
+  function compareWithThird() {
+    const thirdKey = getThirdSide();
+    const thirdEl = document.getElementById('side-' + thirdKey);
+    thirdEl.classList.add('third');
+
+    // draw small parallel tick marks near the midpoints of MN and the third side
+    const { M, N } = window._mnPoints;
+    const [t1, t2] = sides[thirdKey].map(k => V[k]);
+    drawTick('tickMN', M, N);
+    drawTick('tickThird', t1, t2);
+    document.getElementById('tickMN').classList.add('shown');
+    document.getElementById('tickThird').classList.add('shown');
+
+    relationBox.textContent = `MN ∥ ${thirdKey}, and MN = ½ × ${thirdKey}`;
+    relationBox.classList.add('shown');
+
+    step = 3;
+    stepMsg.textContent = `Notice that MN never touches side ${thirdKey}, no matter how far you extend either line — they are parallel. MN is also exactly half the length of ${thirdKey}.`;
+    compareBtn.disabled = true;
+  }
+
+  function drawTick(id, p1, p2) {
+    // small perpendicular tick at the midpoint of the given segment, to visually mark "equal direction"
+    const m = mid(p1, p2);
+    const dx = p2.x - p1.x, dy = p2.y - p1.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len, ny = dx / len; // perpendicular unit vector
+    const el = document.getElementById(id);
+    el.setAttribute('x1', m.x - nx * 7);
+    el.setAttribute('y1', m.y - ny * 7);
+    el.setAttribute('x2', m.x + nx * 7);
+    el.setAttribute('y2', m.y + ny * 7);
+  }
+
+  function showHint(msg, success) {
+    exploreHint.textContent = msg;
+    exploreHint.classList.add('show');
+    exploreHint.classList.toggle('success', success);
+    exploreHint.classList.toggle('error', !success);
+  }
+
+  function resetExplore() {
+    selected = [];
+    step = 0;
+    window._mnPoints = null;
+    buildSvg();
+    updateSideStyles();
+    updateStepMessage();
+    markMidBtn.disabled = true;
+    drawMnBtn.disabled = true;
+    compareBtn.disabled = true;
+    relationBox.classList.remove('shown');
+    exploreHint.classList.remove('show');
+  }
+
+  markMidBtn.addEventListener('click', markMidpoints);
+  drawMnBtn.addEventListener('click', drawMN);
+  compareBtn.addEventListener('click', compareWithThird);
+  resetExploreBtn.addEventListener('click', resetExplore);
+
+  resetExplore();
+
+  // ---------------- Practice quiz ----------------
+  const questions = [
+    { type: 'length', bc: 8 },
+    { type: 'truefalse', bc: 10, statement: 'MN is parallel to BC.', answer: true },
+    { type: 'length', bc: 14 },
+    { type: 'conclusion' },
+    { type: 'length', bc: 9 },
+    { type: 'truefalse', bc: 12, statement: 'MN is exactly the same length as BC.', answer: false },
+  ];
+  let qIdx = 0;
+
+  const quizProgress = document.getElementById('quizProgress');
+  const quizBody = document.getElementById('quizBody');
+
+  function renderQuiz() {
+    const q = questions[qIdx];
+    quizProgress.textContent = `Question ${qIdx + 1} of ${questions.length}`;
+    if (q.type === 'length') {
+      quizBody.innerHTML = `
+        <div class="prompt">M and N are the mid-points of sides AB and AC of triangle ABC.<br>If BC = ${q.bc} units, what is the length of MN?</div>
+        <input type="number" id="lenInput" aria-label="Length of MN in units" placeholder="units" step="any">
+        <div class="action-row">
+          <button class="action btn-primary" id="checkQuiz">Check Answer</button>
+          <button class="action btn-secondary" id="nextQuiz">Next Question</button>
+          <button class="action btn-secondary" id="resetQuiz">Reset</button>
+        </div>
+        <div id="quizFeedback"></div>
+      `;
+      document.getElementById('checkQuiz').addEventListener('click', () => {
+        const val = parseFloat(document.getElementById('lenInput').value);
+        const correct = q.bc / 2;
+        const fb = document.getElementById('quizFeedback');
+        if (isNaN(val)) { showQuizFeedback(fb, false, 'Enter a number before checking.', ''); return; }
+        if (Math.abs(val - correct) < 1e-9) {
+          showQuizFeedback(fb, true, `Correct! MN = ${correct} units.`,
+            `By the Mid-point Theorem, MN is always half the length of BC: MN = ½ × ${q.bc} = ${correct}.`);
+        } else {
+          showQuizFeedback(fb, false, `Not quite. MN = ${correct} units, not ${val}.`,
+            `The Mid-point Theorem states MN = ½ × BC. Since BC = ${q.bc}, MN = ½ × ${q.bc} = ${correct}.`);
+        }
+      });
+    } else if (q.type === 'truefalse') {
+      quizBody.innerHTML = `
+        <div class="prompt">M and N are the mid-points of sides AB and AC of triangle ABC (BC = ${q.bc} units).<br>True or False: <em>${q.statement}</em></div>
+        <div class="choice-row" id="tfRow">
+          <button class="choice-btn" data-choice="true">True</button>
+          <button class="choice-btn" data-choice="false">False</button>
+        </div>
+        <div class="action-row">
+          <button class="action btn-secondary" id="nextQuiz">Next Question</button>
+          <button class="action btn-secondary" id="resetQuiz">Reset</button>
+        </div>
+        <div id="quizFeedback"></div>
+      `;
+      document.querySelectorAll('#tfRow .choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const choice = btn.dataset.choice === 'true';
+          const fb = document.getElementById('quizFeedback');
+          document.querySelectorAll('#tfRow .choice-btn').forEach(b => { b.classList.remove('chosen-correct', 'chosen-wrong'); b.disabled = true; });
+          const explanation = 'By the Mid-point Theorem, the segment joining the mid-points of two sides of a triangle is always parallel to the third side, and its length is always exactly half the third side\'s length — never equal to it (unless the triangle is degenerate, which is not a valid triangle).';
+          if (choice === q.answer) {
+            btn.classList.add('chosen-correct');
+            showQuizFeedback(fb, true, 'Correct!', explanation);
+          } else {
+            btn.classList.add('chosen-wrong');
+            const correctBtn = document.querySelector(`#tfRow [data-choice="${q.answer}"]`);
+            if (correctBtn) correctBtn.classList.add('chosen-correct');
+            showQuizFeedback(fb, false, `Not quite. The correct answer is "${q.answer ? 'True' : 'False'}".`, explanation);
+          }
+        });
+      });
+    } else if (q.type === 'conclusion') {
+      const options = [
+        { id: 'a', text: 'MN is parallel to BC, and MN = ½ × BC.', correct: true },
+        { id: 'b', text: 'MN is perpendicular to BC.', correct: false },
+        { id: 'c', text: 'MN is equal in length to BC.', correct: false },
+        { id: 'd', text: 'MN and BC have no special relationship.', correct: false },
+      ];
+      quizBody.innerHTML = `
+        <div class="prompt">M and N are the mid-points of sides AB and AC of triangle ABC.<br>Which statement correctly describes the relationship between MN and BC?</div>
+        <div class="choice-row" id="conclRow" style="flex-direction:column; align-items:stretch;">
+          ${options.map(o => `<button class="choice-btn" data-choice="${o.id}">${o.text}</button>`).join('')}
+        </div>
+        <div class="action-row">
+          <button class="action btn-secondary" id="nextQuiz">Next Question</button>
+          <button class="action btn-secondary" id="resetQuiz">Reset</button>
+        </div>
+        <div id="quizFeedback"></div>
+      `;
+      document.querySelectorAll('#conclRow .choice-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const opt = options.find(o => o.id === btn.dataset.choice);
+          const fb = document.getElementById('quizFeedback');
+          document.querySelectorAll('#conclRow .choice-btn').forEach(b => { b.classList.remove('chosen-correct', 'chosen-wrong'); b.disabled = true; });
+          const explanation = 'The Mid-point Theorem states that the segment joining the mid-points of two sides of a triangle is parallel to the third side and exactly half its length.';
+          if (opt.correct) {
+            btn.classList.add('chosen-correct');
+            showQuizFeedback(fb, true, 'Correct!', explanation);
+          } else {
+            btn.classList.add('chosen-wrong');
+            const correctBtn = document.querySelector('#conclRow [data-choice="a"]');
+            if (correctBtn) correctBtn.classList.add('chosen-correct');
+            showQuizFeedback(fb, false, 'Not quite.', explanation);
+          }
+        });
+      });
+    }
+    document.getElementById('nextQuiz').addEventListener('click', () => {
+      qIdx = (qIdx + 1) % questions.length;
+      renderQuiz();
+    });
+    document.getElementById('resetQuiz').addEventListener('click', renderQuiz);
+  }
+
+  function showQuizFeedback(fbEl, success, headline, explanation) {
+    fbEl.classList.add('show');
+    fbEl.classList.toggle('success', success);
+    fbEl.classList.toggle('error', !success);
+    fbEl.innerHTML = `${headline}${explanation ? `<span class="expl">${explanation}</span>` : ''}`;
+  }
+
+  renderQuiz();
+})();
+</script>
+</body>
+</html>

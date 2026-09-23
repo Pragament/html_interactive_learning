@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integer Number Line Game</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:18px;font-family:"Segoe UI",system-ui,sans-serif;background:#eef5f8;color:#172033}
+    .app{width:min(1120px,100%);margin:auto;display:grid;gap:16px}header,.panel{background:#fff;border:1px solid #d7e3ea;border-radius:8px;box-shadow:0 10px 26px #18273a14}
+    header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}h1,h2,p{margin:0}h1{font-size:clamp(1.6rem,4vw,2.4rem)}header p{color:#657386;margin-top:5px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.panel{padding:18px}.problem{font-size:clamp(2rem,7vw,4rem);font-weight:900;text-align:center;padding:18px;background:#edf8fb;border-radius:8px;color:#12364a}
+    .numberline{position:relative;margin:50px 12px 32px;height:5px;background:#176b87}.tick{position:absolute;top:-9px;width:2px;height:23px;background:#176b87}.tick span{position:absolute;top:27px;left:50%;transform:translateX(-50%);font-weight:700;color:#405166}.marker{position:absolute;top:-34px;transform:translateX(-50%);background:#c84b31;color:#fff;border-radius:50%;width:34px;height:34px;display:grid;place-items:center;font-weight:900}
+    .controls{display:grid;gap:14px}.answer{font-size:1.4rem;width:100%;min-height:46px;padding:0 12px;border:2px solid #cbd9e2;border-radius:8px;text-align:center}
+    button{border:0;border-radius:8px;min-height:42px;padding:0 14px;background:#176b87;color:#fff;font-weight:850;cursor:pointer}.secondary{background:#e8eef3;color:#12364a}.row{display:flex;gap:9px;flex-wrap:wrap}.status{padding:12px;border-radius:8px;background:#fff8e5;border:1px solid #f0d590;line-height:1.45;font-weight:650}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-mathematics-integers-integers-number-line",
+  "order": 102,
+  "class": "VII",
+  "subject": "Mathematics",
+  "topic": "Integers",
+  "subtopic": null,
+  "title": "Integer Number Line Game",
+  "description": "Move a character left or right on a number line to solve integer addition and subtraction problems.",
+  "activityType": "game",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+  <main class="app"><header><div><h1>Integer Number Line Game</h1><p>Move the character to solve addition and subtraction with integers.</p></div><button id="new">New problem</button></header>
+    <section class="grid"><div class="panel"><div class="problem" id="problem"></div><div class="numberline" id="line"></div><p id="hint" style="text-align:center;color:#657386"></p></div>
+      <aside class="panel controls"><label>Where should the character land?<input class="answer" id="answer" type="number"></label><div class="row"><button id="left" class="secondary">← Move left</button><button id="right" class="secondary">Move right →</button><button id="check">Check</button></div><div class="status" id="status"></div></aside>
+    </section>
+  </main>
+  <script>
+    const line=document.querySelector("#line"),problem=document.querySelector("#problem"),answer=document.querySelector("#answer"),status=document.querySelector("#status"),hint=document.querySelector("#hint");
+    let current={start:0,change:0},position=0; const min=-10,max=10;
+    function make(){const start=Math.floor(Math.random()*13)-6,change=Math.floor(Math.random()*11)-5;current={start,change};position=start;answer.value="";status.textContent="Start at "+start+". Use the buttons or enter the final position.";render()}
+    function render(){problem.textContent=`${current.start} ${current.change<0?"−":"+"} ${Math.abs(current.change)}`;line.innerHTML="";for(let n=min;n<=max;n++){const tick=document.createElement("div");tick.className="tick";tick.style.left=((n-min)/(max-min)*100)+"%";tick.innerHTML=`<span>${n}</span>`;line.append(tick)}const marker=document.createElement("div");marker.className="marker";marker.textContent="●";marker.style.left=((position-min)/(max-min)*100)+"%";line.append(marker);hint.textContent=`Start at ${current.start}; ${Math.abs(current.change)} steps ${current.change<0?"left":"right"}.`}
+    function move(delta){position=Math.max(min,Math.min(max,position+delta));render()}
+    document.querySelector("#left").onclick=()=>move(-1);document.querySelector("#right").onclick=()=>move(1);
+    document.querySelector("#check").onclick=()=>{const expected=current.start+current.change;const guess=Number(answer.value||position);status.textContent=guess===expected?`Correct! ${current.start} ${current.change<0?"−":"+"} ${Math.abs(current.change)} = ${expected}.`:`Not yet. Count ${Math.abs(current.change)} steps ${current.change<0?"left":"right"} from ${current.start}.`};
+    document.querySelector("#new").onclick=make;make();
+  </script>
+</body>
+</html>

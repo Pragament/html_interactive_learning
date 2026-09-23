@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Real Numbers — Guided Path</title>
+<style>
+  :root {
+    --ink: #1f2430; --muted: #5b6472; --bg: #f6f7fb; --card: #ffffff; --line: #e1e5ee;
+    --primary: #3454d1; --primary-dark: #24359a; --primary-light: #e7ecff;
+    --accent: #d1673f; --accent-light: #fdece2;
+    --good: #1f9d6e; --good-light: #e3f7ee;
+    --bad: #c94c4c; --bad-light: #fbe6e6;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+  body { padding: clamp(12px, 3vw, 28px); padding-bottom: 60px; }
+  .wrap { max-width: 900px; margin: 0 auto; }
+
+  header.app-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border-radius: var(--radius); padding: clamp(16px, 4vw, 28px); margin-bottom: 16px; }
+  header.app-header h1 { margin: 0 0 6px; font-size: clamp(1.25rem, 4vw, 1.7rem); }
+  header.app-header p { margin: 0; color: #dde3ff; font-size: clamp(0.88rem, 2.3vw, 1rem); max-width: 68ch; }
+
+  nav.tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 16px; }
+  @media (max-width: 700px) { nav.tabs { grid-template-columns: repeat(3, 1fr); } }
+  nav.tabs button { font: inherit; font-weight: 600; font-size: clamp(0.7rem, 2.1vw, 0.86rem); padding: 10px 6px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); color: var(--muted); cursor: pointer; min-height: 46px; }
+  nav.tabs button.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade .2s ease; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(14px, 3.5vw, 22px); margin-bottom: 16px; }
+  .card h2 { margin: 0 0 8px; font-size: clamp(1.05rem, 3vw, 1.3rem); }
+  .card h3 { margin: 16px 0 8px; font-size: clamp(0.95rem, 2.6vw, 1.05rem); color: var(--primary-dark); }
+  .lede { color: var(--muted); font-size: 0.95rem; line-height: 1.55; margin-bottom: 12px; }
+  .muted { color: var(--muted); }
+
+  .field-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-bottom: 12px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field label { font-size: 0.76rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+  .field input { font: inherit; font-size: 1.05rem; width: 120px; padding: 9px 11px; border-radius: 10px; border: 2px solid var(--line); background: #fbfbfe; }
+  .field input:focus { outline: none; border-color: var(--primary); }
+
+  button.btn { font: inherit; font-weight: 600; font-size: 0.9rem; padding: 10px 16px; border-radius: 10px; border: 2px solid var(--primary); background: var(--primary); color: #fff; cursor: pointer; min-height: 42px; }
+  button.btn.secondary { background: #fff; color: var(--primary); }
+  button.btn.ghost { background: #fff; color: var(--muted); border-color: var(--line); }
+  button.btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+
+  table.ladder-table { border-collapse: collapse; margin: 10px auto; }
+  table.ladder-table td { padding: 3px 10px; font-family: "Cascadia Code","Consolas",ui-monospace,monospace; font-size: 1.05rem; text-align: left; }
+  table.ladder-table td.prime { border-right: 2px solid var(--ink); text-align: right; color: var(--primary-dark); font-weight: 700; padding-right: 10px; }
+  .fact-line { text-align: center; font-weight: 700; font-size: 1.05rem; margin-top: 8px; }
+  .fact-line sup { font-size: .7em; }
+
+  .result-badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; padding: 9px 15px; border-radius: 10px; font-size: 1rem; margin: 6px 6px 6px 0; }
+  .result-badge.good { background: var(--good-light); color: var(--good); }
+  .result-badge.bad { background: var(--bad-light); color: var(--accent); }
+
+  .step { padding: 10px 12px; border-left: 4px solid var(--primary); background: #f8fafc; margin: 8px 0; border-radius: 0 10px 10px 0; font-size: 0.95rem; }
+  .step b { color: var(--primary-dark); }
+
+  .feedback { padding: 10px 12px; border-radius: 10px; margin-top: 8px; font-size: 0.9rem; }
+  .feedback.correct { background: var(--good-light); color: #166534; }
+  .feedback.incorrect { background: var(--bad-light); color: #8a2a2a; }
+  .feedback.info { background: var(--primary-light); color: var(--primary-dark); }
+
+  ul.tidy { margin: 0 0 8px 20px; padding: 0; }
+  ul.tidy li { margin-bottom: 4px; font-size: 0.95rem; }
+
+  .quiz-q { font-weight: 600; margin-bottom: 10px; font-size: 1rem; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+  .quiz-opt { text-align: left; padding: 10px 14px; border-radius: 10px; border: 2px solid var(--line); background: #fbfbfe; cursor: pointer; font: inherit; font-size: 0.95rem; }
+  .quiz-opt:hover { border-color: var(--primary); }
+  .quiz-opt.correct { border-color: var(--good); background: var(--good-light); }
+  .quiz-opt.incorrect { border-color: var(--bad); background: var(--bad-light); }
+  .quiz-opt:disabled { cursor: default; }
+  .progress-bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 10px 0; }
+  .progress-fill { height: 100%; background: var(--good); transition: width .3s; }
+  .score-line { font-weight: 700; color: var(--primary-dark); }
+
+  .case-study { border: 1.5px dashed var(--line); border-radius: 12px; padding: 14px; margin-bottom: 16px; background: #fbfbfe; }
+  .case-study h4 { margin: 0 0 6px; color: var(--primary-dark); }
+  .case-study p.scenario { font-size: 0.94rem; margin-bottom: 10px; }
+  .number-lab { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin: 14px 0 18px; background: #fff; }
+  .number-lab h5 { margin: 0 0 6px; color: var(--primary-dark); font-size: 0.98rem; }
+  .number-lab label { display: block; margin: 12px 0 7px; color: var(--primary-dark); font-weight: 700; }
+  .number-lab input[type="range"] { width: 100%; }
+  .number-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin-top: 12px; }
+  .number-result { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: #fbfbfe; font-size: 0.9rem; line-height: 1.45; }
+  .number-result strong { display: block; color: var(--primary-dark); }
+  .number-verdict { padding: 10px 12px; border-radius: 10px; margin: 10px 0 0; font-weight: 700; }
+  .number-verdict.good { color: #166534; background: var(--good-light); }
+  .number-verdict.try { color: #8a4a21; background: var(--accent-light); }
+  .case-prompt { margin: 9px 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+  .case-progress { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 6px 0 10px; }
+  .case-progress .progress-bar { flex: 1; margin: 0; }
+  .case-status { color: var(--primary-dark); font-size: 0.86rem; font-weight: 700; white-space: nowrap; }
+  .case-result { font-weight: 700; }
+  .language-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; }
+  .language-picker label { color: var(--primary-dark); font-weight: 700; }
+  .language-picker select { font: inherit; min-height: 42px; padding: 7px 10px; border: 2px solid var(--primary); border-radius: 10px; background: #fff; color: var(--primary-dark); }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.78rem; margin-top: 24px; }
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-real-numbers-real-numbers-explorer-hcf-lcm-and-decimal-expansions-guided-explore-learn-practice",
+  "order": 305,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Real Numbers",
+  "subtopic": "Real Numbers Explorer - HCF, LCM and Decimal Expansions",
+  "title": "Real Numbers Explorer - HCF, LCM and Decimal Expansions — Guided: Explore, Learn & Practice",
+  "description": "Three linked mini-tools for NCERT Class X Chapter 1 (Real Numbers). Students\nfind the HCF of two numbers step by step with Euclid's Division Algorithm,\nbuild a prime-factorisation ladder for two numbers to derive HCF and LCM from\nthe Fundamental Theorem of Arithmetic, and test any fraction to predict -\nbefore dividing - whether its decimal expansion terminates or repeats, based\non the prime factors of the denominator.\n\nA second, five-stage variation (Explore, Learn, Guided Practice, Challenge\nZone, Exam Practice) walks through the same HCF/LCM/prime-factorisation\nskills with a self-paced step-by-step format, a quick multiple-choice\nchallenge, and two self-contained CBSE-style case studies.",
+  "activityType": "guided-practice",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="app-header">
+    <h1>Real Numbers — Guided Path</h1>
+    <p>Class X · Mathematics · A five-stage walk through HCF, LCM and prime factorisation: explore freely, learn the rules, practise step by step, then test yourself.</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-panel="explore" class="active" type="button">Explore</button>
+    <button data-panel="learn" type="button">Learn</button>
+    <button data-panel="practice" type="button">Guided Practice</button>
+    <button data-panel="challenge" type="button">Challenge Zone</button>
+    <button data-panel="exam" type="button">Exam Practice</button>
+  </nav>
+
+  <!-- ================= EXPLORE ================= -->
+  <section class="panel active" data-panel="explore">
+    <div class="card">
+      <h2>Factorisation Explorer</h2>
+      <p class="lede">Type any whole number and instantly see its prime-factorisation ladder. Add a second number to compare HCF and LCM.</p>
+      <div class="field-row">
+        <div class="field"><label for="ex-a">Number A</label><input id="ex-a" type="number" min="2" max="1000000" value="60" /></div>
+        <div class="field"><label for="ex-b">Number B (optional)</label><input id="ex-b" type="number" min="2" max="1000000" value="" placeholder="e.g. 84" /></div>
+        <button class="btn" id="ex-go" type="button">Explore</button>
+      </div>
+      <p class="feedback" id="ex-error" style="display:none;"></p>
+      <div id="ex-output"></div>
+    </div>
+    <div class="card">
+      <h3>Try this in class</h3>
+      <p class="lede" style="margin-bottom:0;">Ask students to explore two numbers that share no common factor besides 1 (e.g. 8 and 15). What happens to the HCF? What do they notice about the LCM compared to the product of the two numbers?</p>
+    </div>
+  </section>
+
+  <!-- ================= LEARN ================= -->
+  <section class="panel" data-panel="learn">
+    <div class="card">
+      <h2>What is prime factorisation?</h2>
+      <p class="lede"><strong>Prime number:</strong> exactly two factors — 1 and itself (2, 3, 5, 7, 11, …). <strong>Composite number:</strong> more than two factors (4, 6, 8, 9, 10, …). 1 is neither.</p>
+      <p class="lede" style="margin-bottom:0;"><strong>Fundamental Theorem of Arithmetic:</strong> every composite number can be written as a product of primes in exactly one way, apart from the order of the factors.</p>
+    </div>
+    <div class="card">
+      <h3>Worked example — factorise 36</h3>
+      <div class="step"><b>Step 1:</b> 36 = 4 × 9</div>
+      <div class="step"><b>Step 2:</b> 4 = 2 × 2, and 9 = 3 × 3</div>
+      <div class="step"><b>Step 3:</b> 36 = 2 × 2 × 3 × 3 = 2² × 3²</div>
+      <p class="lede" style="margin:8px 0 0;"><strong>Check:</strong> 2² × 3² = 4 × 9 = 36 ✓</p>
+    </div>
+    <div class="card">
+      <h3>Finding HCF and LCM from prime factors</h3>
+      <p class="lede"><strong>HCF</strong> = product of the <em>lowest</em> power of every prime <em>common</em> to both numbers.<br/><strong>LCM</strong> = product of the <em>highest</em> power of <em>every</em> prime that appears in either number.</p>
+      <p class="lede">Example: 12 = 2² × 3 and 18 = 2 × 3².</p>
+      <ul class="tidy">
+        <li>HCF = 2¹ × 3¹ = 6 (lowest shared powers)</li>
+        <li>LCM = 2² × 3² = 36 (highest powers overall)</li>
+      </ul>
+      <p class="lede" style="margin-bottom:0;"><strong>Useful identity (two numbers only):</strong> HCF(a, b) × LCM(a, b) = a × b. Check: 6 × 36 = 216 = 12 × 18 ✓. This identity does <em>not</em> extend to three or more numbers.</p>
+    </div>
+    <div class="card">
+      <h3>Common mistakes</h3>
+      <ul class="tidy">
+        <li>Treating 1 as a prime number — it isn't.</li>
+        <li>Stopping a split too early, e.g. writing 4 instead of 2 × 2.</li>
+        <li>For LCM, forgetting a prime that appears in only one of the numbers.</li>
+        <li>Mixing up HCF (smallest shared power) with LCM (largest overall power).</li>
+        <li>Applying HCF × LCM = product to three or more numbers — it only holds for exactly two.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= GUIDED PRACTICE ================= -->
+  <section class="panel" data-panel="practice">
+    <div class="card">
+      <h2>Guided Practice — HCF and LCM of 24 and 36</h2>
+      <p class="lede">Work through each step. Type your answer and check it before moving on.</p>
+      <div id="prac-steps"></div>
+      <p class="feedback" id="prac-feedback" style="display:none;"></p>
+      <div class="btn-row">
+        <button class="btn ghost" id="prac-hint" type="button">Hint</button>
+        <button class="btn ghost" id="prac-solution" type="button">Show full solution</button>
+        <button class="btn secondary" id="prac-restart" type="button">Start again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHALLENGE ZONE ================= -->
+  <section class="panel" data-panel="challenge">
+    <div class="card">
+      <h2>Challenge Zone</h2>
+      <p class="lede">Eight quick questions, fresh numbers every attempt. No reference material needed.</p>
+      <div class="progress-bar"><div class="progress-fill" id="chal-progress" style="width:0%"></div></div>
+      <p class="score-line" id="chal-score">Question 0 of 0</p>
+      <div id="chal-area"></div>
+      <div class="btn-row"><button class="btn secondary" id="chal-restart" type="button">Start again</button></div>
+    </div>
+  </section>
+
+  <!-- ================= EXAM PRACTICE ================= -->
+  <section class="panel" data-panel="exam">
+    <div class="card">
+      <h2 id="exam-heading">Exam Practice</h2>
+      <p class="lede" id="exam-intro">Experiment with the numbers in each scenario, then answer its CBSE board-style questions. Incorrect choices stay retryable for learning; your first attempt is recorded for exam practice.</p>
+      <div class="language-picker">
+        <label for="exam-language" id="language-label">Preferred language</label>
+        <select id="exam-language">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+          <option value="te">తెలుగు</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="case-study">
+      <h4 id="case1-title">Case Study 1 — Story-book Drive</h4>
+      <p class="scenario" id="case1-scenario">A school is buying story-books to distribute equally and completely among the students of two sections of Class X, either to Section A alone or to Section B alone, without any books left over. Section A has <strong>32</strong> students and Section B has <strong>40</strong> students.</p>
+      <div class="number-lab">
+        <h5 id="books-experiment-title">Experiment A — Find a book stock that works for both sections</h5>
+        <label for="book-stock"><span id="books-stock-label">Books in stock</span>: <output id="book-stock-out">40</output></label>
+        <input id="book-stock" type="range" min="40" max="320" step="8" value="40" />
+        <div class="number-results">
+          <div class="number-result"><strong id="section-a-label">Section A · 32 students</strong><span id="books-a-result"></span></div>
+          <div class="number-result"><strong id="section-b-label">Section B · 40 students</strong><span id="books-b-result"></span></div>
+        </div>
+        <p id="book-stock-verdict" class="number-verdict try"></p>
+
+        <h5 id="sections-experiment-title" style="margin-top:18px;">Experiment B — Test equal group sizes</h5>
+        <label for="section-group-size"><span id="students-group-label">Students per group</span>: <output id="section-group-size-out">1</output></label>
+        <input id="section-group-size" type="range" min="1" max="20" step="1" value="1" />
+        <div class="number-results">
+          <div class="number-result"><strong id="section-a-short">Section A</strong><span id="groups-a-result"></span></div>
+          <div class="number-result"><strong id="section-b-short">Section B</strong><span id="groups-b-result"></span></div>
+        </div>
+        <p id="section-group-verdict" class="number-verdict try"></p>
+        <p class="case-prompt" id="case1-prompt">Find the smallest positive stock that divides evenly between either section, and the largest group size that divides both sections.</p>
+      </div>
+      <div id="exam1-area"></div>
+      <div class="btn-row"><button class="btn secondary" id="exam1-reset" type="button">Reset case study</button></div>
+    </div>
+
+    <div class="case-study">
+      <h4 id="case2-title">Case Study 2 — Cultural Fest Clubs</h4>
+      <p class="scenario" id="case2-scenario">For a cultural fest, students sign up for three clubs: Dance has <strong>72</strong> members, Music has <strong>90</strong> members, and Art has <strong>126</strong> members. The organisers want to split each club into smaller groups of equal size, using the same group size across all three clubs, with no student left out.</p>
+      <div class="number-lab">
+        <h5 id="clubs-experiment-title">Experiment — Test one group size across all clubs</h5>
+        <label for="club-group-size"><span id="clubs-group-label">Students per group</span>: <output id="club-group-size-out">1</output></label>
+        <input id="club-group-size" type="range" min="1" max="36" step="1" value="1" />
+        <div class="number-results">
+          <div class="number-result"><strong id="dance-label">Dance · 72</strong><span id="dance-result"></span></div>
+          <div class="number-result"><strong id="music-label">Music · 90</strong><span id="music-result"></span></div>
+          <div class="number-result"><strong id="art-label">Art · 126</strong><span id="art-result"></span></div>
+        </div>
+        <p id="club-group-verdict" class="number-verdict try"></p>
+        <p class="case-prompt" id="case2-prompt">Which group sizes leave no remainder for all three clubs? Find the largest one.</p>
+      </div>
+      <div id="exam2-area"></div>
+      <div class="btn-row"><button class="btn secondary" id="exam2-reset" type="button">Reset case study</button></div>
+    </div>
+  </section>
+
+  <footer>Real Numbers — Guided Path · HTML Interactive Learning</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- shared math ---------- */
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a, b] = [b, a % b]; } return a; }
+  function lcm(a, b) { return (a / gcd(a, b)) * b; }
+  function primeDivisors(n) {
+    const divs = []; let x = n;
+    for (let p = 2; p * p <= x; p++) { if (x % p === 0) { divs.push(p); while (x % p === 0) x /= p; } }
+    if (x > 1) divs.push(x);
+    return divs;
+  }
+  function factorize(n) {
+    const f = {}; let x = n;
+    for (let p = 2; p * p <= x; p++) { while (x % p === 0) { f[p] = (f[p] || 0) + 1; x /= p; } }
+    if (x > 1) f[x] = (f[x] || 0) + 1;
+    return f;
+  }
+  function fmtInt(n) { return n.toLocaleString("en-IN"); }
+  function sup(n) { return n === 1 ? "" : "<sup>" + n + "</sup>"; }
+  function factString(f) {
+    const primes = Object.keys(f).map(Number).sort((a, b) => a - b);
+    if (!primes.length) return "1";
+    return primes.map(p => p + sup(f[p])).join(" × ");
+  }
+  function buildLadderHTML(n) {
+    let cur = n; const rows = [];
+    while (cur > 1) {
+      const divs = primeDivisors(cur);
+      const p = divs[0];
+      rows.push(p);
+      cur = cur / p;
+    }
+    let html = '<table class="ladder-table">';
+    html += `<tr><td></td><td style="font-weight:700;">${fmtInt(n)}</td></tr>`;
+    let running = n;
+    rows.forEach(p => {
+      running = running / p;
+      html += `<tr><td class="prime">${p}</td><td>${fmtInt(running)}</td></tr>`;
+    });
+    html += "</table>";
+    return html;
+  }
+
+  function switchPanel(name) {
+    document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.dataset.panel === name));
+    document.querySelectorAll("nav.tabs button").forEach(b => b.classList.toggle("active", b.dataset.panel === name));
+  }
+  document.querySelectorAll("nav.tabs button").forEach(b => b.addEventListener("click", () => switchPanel(b.dataset.panel)));
+
+  /* =========================================================
+     EXPLORE
+     ========================================================= */
+  (function exploreModule() {
+    const aInput = document.getElementById("ex-a");
+    const bInput = document.getElementById("ex-b");
+    const goBtn = document.getElementById("ex-go");
+    const errorEl = document.getElementById("ex-error");
+    const outputEl = document.getElementById("ex-output");
+
+    function run() {
+      errorEl.style.display = "none";
+      const a = parseInt(aInput.value, 10);
+      const bRaw = bInput.value.trim();
+      if (!Number.isFinite(a) || a < 2) {
+        errorEl.style.display = "block";
+        errorEl.className = "feedback incorrect";
+        errorEl.textContent = "Enter a whole number, 2 or greater, for Number A.";
+        outputEl.innerHTML = "";
+        return;
+      }
+      let html = `<h3>${fmtInt(a)}</h3>` + buildLadderHTML(a) + `<p class="fact-line">${fmtInt(a)} = ${factString(factorize(a))}</p>`;
+
+      if (bRaw !== "") {
+        const b = parseInt(bRaw, 10);
+        if (!Number.isFinite(b) || b < 2) {
+          errorEl.style.display = "block";
+          errorEl.className = "feedback incorrect";
+          errorEl.textContent = "Number B must be a whole number, 2 or greater (or leave it blank).";
+        } else {
+          html += `<h3>${fmtInt(b)}</h3>` + buildLadderHTML(b) + `<p class="fact-line">${fmtInt(b)} = ${factString(factorize(b))}</p>`;
+          const h = gcd(a, b), l = lcm(a, b);
+          html += `<div class="result-badge good">HCF(${fmtInt(a)}, ${fmtInt(b)}) = ${fmtInt(h)}</div>`;
+          html += `<div class="result-badge good">LCM(${fmtInt(a)}, ${fmtInt(b)}) = ${fmtInt(l)}</div>`;
+        }
+      }
+      outputEl.innerHTML = html;
+    }
+
+    goBtn.addEventListener("click", run);
+    run();
+  })();
+
+  /* =========================================================
+     GUIDED PRACTICE
+     ========================================================= */
+  (function practiceModule() {
+    const stepsEl = document.getElementById("prac-steps");
+    const feedbackEl = document.getElementById("prac-feedback");
+    const hintBtn = document.getElementById("prac-hint");
+    const solutionBtn = document.getElementById("prac-solution");
+    const restartBtn = document.getElementById("prac-restart");
+
+    let step = 0;
+
+    function normalise(s) {
+      return s.trim().toLowerCase().replace(/\s+/g, "").replace(/\^/g, "").replace(/×/g, "x").replace(/\*/g, "x");
+    }
+
+    function render() {
+      feedbackEl.style.display = "none";
+      if (step === 0) {
+        stepsEl.innerHTML = `<div class="step"><b>Step 1:</b> Prime factorise 24. Write your answer like <code>2^3 x 3</code>.</div>
+          <div class="field-row"><input id="prac-input" type="text" placeholder="e.g. 2^3 x 3" style="width:200px;" /><button class="btn secondary" id="prac-check" type="button">Check</button></div>`;
+      } else if (step === 1) {
+        stepsEl.innerHTML = `<div class="step"><b>Step 1:</b> 24 = 2³ × 3 ✓</div>
+          <div class="step"><b>Step 2:</b> Prime factorise 36.</div>
+          <div class="field-row"><input id="prac-input" type="text" placeholder="e.g. 2^2 x 3^2" style="width:200px;" /><button class="btn secondary" id="prac-check" type="button">Check</button></div>`;
+      } else if (step === 2) {
+        stepsEl.innerHTML = `<div class="step"><b>Step 1:</b> 24 = 2³ × 3 ✓</div>
+          <div class="step"><b>Step 2:</b> 36 = 2² × 3² ✓</div>
+          <div class="step"><b>Step 3:</b> Using the lowest shared powers, find HCF(24, 36).</div>
+          <div class="field-row"><input id="prac-input" type="number" placeholder="HCF" style="width:120px;" /><button class="btn secondary" id="prac-check" type="button">Check</button></div>`;
+      } else if (step === 3) {
+        stepsEl.innerHTML = `<div class="step"><b>Step 1:</b> 24 = 2³ × 3 ✓</div>
+          <div class="step"><b>Step 2:</b> 36 = 2² × 3² ✓</div>
+          <div class="step"><b>Step 3:</b> HCF = 2² × 3 = 12 ✓</div>
+          <div class="step"><b>Step 4:</b> Using the highest powers overall, find LCM(24, 36).</div>
+          <div class="field-row"><input id="prac-input" type="number" placeholder="LCM" style="width:120px;" /><button class="btn secondary" id="prac-check" type="button">Check</button></div>`;
+      } else {
+        stepsEl.innerHTML = `<div class="step"><b>Step 1:</b> 24 = 2³ × 3 ✓</div>
+          <div class="step"><b>Step 2:</b> 36 = 2² × 3² ✓</div>
+          <div class="step"><b>Step 3:</b> HCF = 2² × 3 = 12 ✓</div>
+          <div class="step"><b>Step 4:</b> LCM = 2³ × 3² = 72 ✓</div>`;
+        feedbackEl.style.display = "block";
+        feedbackEl.className = "feedback correct";
+        feedbackEl.innerHTML = "Well done — HCF(24, 36) = 12 and LCM(24, 36) = 72. Check: 12 × 72 = 864 = 24 × 36 ✓";
+      }
+      const checkBtn = document.getElementById("prac-check");
+      if (checkBtn) checkBtn.addEventListener("click", check);
+    }
+
+    function check() {
+      const raw = document.getElementById("prac-input").value;
+      const val = normalise(raw);
+      if (step === 0) {
+        if (["2x2x2x3", "2^3x3", "23x3", "2x3x2x2"].includes(val) || val === "2x2x2x3" || val.replace(/x/g, "") === "2223") {
+          step = 1; render();
+        } else {
+          feedbackEl.style.display = "block"; feedbackEl.className = "feedback incorrect";
+          feedbackEl.textContent = "Not quite — 24 = 2 × 2 × 2 × 3. Try writing it with a power, like 2^3 x 3.";
+        }
+      } else if (step === 1) {
+        if (val.replace(/x/g, "") === "2233" || ["2x2x3x3", "22x32"].includes(val)) {
+          step = 2; render();
+        } else {
+          feedbackEl.style.display = "block"; feedbackEl.className = "feedback incorrect";
+          feedbackEl.textContent = "Not quite — 36 = 2 × 2 × 3 × 3. Try writing it with a power, like 2^2 x 3^2.";
+        }
+      } else if (step === 2) {
+        if (parseInt(raw, 10) === 12) { step = 3; render(); }
+        else {
+          feedbackEl.style.display = "block"; feedbackEl.className = "feedback incorrect";
+          feedbackEl.textContent = "Hint: the common primes are 2 and 3. Take the lower power of each: 2² and 3¹.";
+        }
+      } else if (step === 3) {
+        if (parseInt(raw, 10) === 72) { step = 4; render(); }
+        else {
+          feedbackEl.style.display = "block"; feedbackEl.className = "feedback incorrect";
+          feedbackEl.textContent = "Hint: take the higher power of every prime that appears: 2³ and 3².";
+        }
+      }
+    }
+
+    hintBtn.addEventListener("click", () => {
+      feedbackEl.style.display = "block"; feedbackEl.className = "feedback info";
+      const hints = [
+        "Divide 24 by 2 repeatedly until you can't, then move to the next prime.",
+        "Divide 36 by 2, then by 3, repeatedly.",
+        "Common primes are 2 and 3 — take the smaller power of each.",
+        "Take the larger power of every prime that appears in either factorisation."
+      ];
+      feedbackEl.textContent = hints[Math.min(step, 3)];
+    });
+    solutionBtn.addEventListener("click", () => {
+      feedbackEl.style.display = "block"; feedbackEl.className = "feedback info";
+      feedbackEl.innerHTML = "24 = 2³ × 3<br/>36 = 2² × 3²<br/>HCF = 2² × 3 = 12<br/>LCM = 2³ × 3² = 72";
+    });
+    restartBtn.addEventListener("click", () => { step = 0; render(); });
+
+    render();
+  })();
+
+  /* =========================================================
+     CHALLENGE ZONE
+     ========================================================= */
+  (function challengeModule() {
+    const bank = [
+      { q: "Find the HCF of 48 and 72.", options: ["12", "24", "36", "6"], answer: 1, explain: "48 = 2⁴ × 3, 72 = 2³ × 3². HCF = 2³ × 3 = 24." },
+      { q: "Find the LCM of 15 and 20.", options: ["30", "45", "60", "300"], answer: 2, explain: "15 = 3 × 5, 20 = 2² × 5. LCM = 2² × 3 × 5 = 60." },
+      { q: "What is the prime factorisation of 90?", options: ["2 × 3² × 5", "2² × 3 × 5", "2 × 3 × 5²", "2³ × 3 × 5"], answer: 0, explain: "90 = 2 × 3 × 3 × 5 = 2 × 3² × 5." },
+      { q: "Which of these is a composite number?", options: ["31", "37", "51", "43"], answer: 2, explain: "51 = 3 × 17, so it has more than two factors. The others are prime." },
+      { q: "Find the HCF of 36 and 60.", options: ["6", "12", "18", "24"], answer: 1, explain: "36 = 2² × 3², 60 = 2² × 3 × 5. HCF = 2² × 3 = 12." },
+      { q: "Find the LCM of 56 and 98.", options: ["196", "294", "392", "784"], answer: 2, explain: "56 = 2³ × 7, 98 = 2 × 7². LCM = 2³ × 7² = 392." },
+      { q: "If HCF(a, b) = 8 and LCM(a, b) = 144, what is a × b?", options: ["152", "1152", "18", "1200"], answer: 1, explain: "For two numbers, HCF × LCM = a × b. 8 × 144 = 1152." },
+      { q: "What is the prime factorisation of 128?", options: ["2⁶", "2⁷", "2⁸", "4⁴"], answer: 1, explain: "128 = 2 × 2 × 2 × 2 × 2 × 2 × 2 = 2⁷." }
+    ];
+
+    let order = [], idx = 0, score = 0;
+    const area = document.getElementById("chal-area");
+    const scoreEl = document.getElementById("chal-score");
+    const progressEl = document.getElementById("chal-progress");
+    const restartBtn = document.getElementById("chal-restart");
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
+      return a;
+    }
+
+    function start() {
+      order = shuffle(bank.map((_, i) => i));
+      idx = 0; score = 0;
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      progressEl.style.width = (idx / order.length * 100) + "%";
+      if (idx >= order.length) {
+        scoreEl.textContent = "Finished — score " + score + " / " + order.length;
+        area.innerHTML = `<div class="feedback ${score === order.length ? "correct" : "info"}">You scored ${score} out of ${order.length}. ${score === order.length ? "Perfect score!" : "Try again for a perfect score."}</div>`;
+        return;
+      }
+      scoreEl.textContent = "Question " + (idx + 1) + " of " + order.length + " · Score " + score;
+      const item = bank[order[idx]];
+      let html = `<div class="quiz-q">${item.q}</div><div class="quiz-opts">`;
+      item.options.forEach((opt, i) => {
+        html += `<button class="quiz-opt" data-i="${i}" type="button">${opt}</button>`;
+      });
+      html += `</div><p class="feedback" id="chal-feedback" style="display:none;"></p>`;
+      area.innerHTML = html;
+      area.querySelectorAll(".quiz-opt").forEach(btn => btn.addEventListener("click", () => answer(item, parseInt(btn.dataset.i, 10))));
+    }
+
+    function answer(item, i) {
+      const buttons = area.querySelectorAll(".quiz-opt");
+      buttons.forEach(b => b.disabled = true);
+      buttons[item.answer].classList.add("correct");
+      const fb = document.getElementById("chal-feedback");
+      fb.style.display = "block";
+      if (i === item.answer) {
+        score++;
+        fb.className = "feedback correct";
+        fb.textContent = "Correct! " + item.explain;
+      } else {
+        buttons[i].classList.add("incorrect");
+        fb.className = "feedback incorrect";
+        fb.textContent = "Not quite. " + item.explain;
+      }
+      setTimeout(() => { idx++; renderQuestion(); }, 1400);
+    }
+
+    restartBtn.addEventListener("click", start);
+    start();
+  })();
+
+  /* =========================================================
+     EXAM PRACTICE
+     ========================================================= */
+  (function examModule() {
+    const languageSelect = document.getElementById("exam-language");
+    const language = new URLSearchParams(location.search).get("examLang") || "en";
+    const copy = {
+      en: { heading:"Exam Practice", intro:"Experiment with the numbers in each scenario, then answer its CBSE board-style questions. Incorrect choices stay retryable for learning; your first attempt is recorded for exam practice.", preferred:"Preferred language", case1:"Case Study 1 — Story-book Drive", scenario1:"A school is buying story-books to distribute equally and completely among the students of two sections of Class X. Section A has <strong>32</strong> students and Section B has <strong>40</strong> students.", expA:"Experiment A — Find a book stock that works for both sections", stock:"Books in stock", secA:"Section A · 32 students", secB:"Section B · 40 students", expB:"Experiment B — Test equal group sizes", perGroup:"Students per group", shortA:"Section A", shortB:"Section B", prompt1:"Find the smallest positive stock that divides evenly between either section, and the largest group size that divides both sections.", case2:"Case Study 2 — Cultural Fest Clubs", scenario2:"For a cultural fest, Dance has <strong>72</strong> members, Music has <strong>90</strong>, and Art has <strong>126</strong>. The same group size must divide all three clubs with no student left out.", expC:"Experiment — Test one group size across all clubs", dance:"Dance · 72", music:"Music · 90", art:"Art · 126", prompt2:"Which group sizes leave no remainder for all three clubs? Find the largest one.", reset:"Reset case study", mastered:"mastered", correctFirst:"Correct on the first attempt! ", correctRetry:"Correct — good recovery! ", retry:"Not quite. Use the scenario or number experiment, then try another answer.", complete:"Case complete — first-attempt exam score: {score} / {total}.", excellent:" Excellent exam readiness!", improve:" Reset and try again to improve your exam score.", groups:"full groups", remainder:"remainder", commonMultiple:"Works for both sections — this is a common multiple.", notMultiple:"Not yet: at least one section would have books left over.", commonFactor:"Works for both sections — this is a common factor.", notFactor:"This group size leaves students over in at least one section.", clubsFactor:"Works for all three clubs — this is a common factor.", clubsNotFactor:"This size leaves students over in at least one club." },
+      hi: { heading:"परीक्षा अभ्यास", intro:"हर परिस्थिति में संख्याओं के साथ प्रयोग करें, फिर CBSE शैली के प्रश्न हल करें। गलत उत्तर दोबारा प्रयास किए जा सकते हैं; परीक्षा अभ्यास के लिए पहला प्रयास दर्ज होगा।", preferred:"पसंदीदा भाषा", case1:"केस स्टडी 1 — कहानी की किताबों का अभियान", scenario1:"विद्यालय कक्षा X के दो अनुभागों में किताबें बिना शेष के समान रूप से बाँटना चाहता है। अनुभाग A में <strong>32</strong> और अनुभाग B में <strong>40</strong> विद्यार्थी हैं।", expA:"प्रयोग A — दोनों अनुभागों के लिए उपयुक्त किताबों की संख्या खोजें", stock:"कुल किताबें", secA:"अनुभाग A · 32 विद्यार्थी", secB:"अनुभाग B · 40 विद्यार्थी", expB:"प्रयोग B — समान समूह आकार जाँचें", perGroup:"प्रति समूह विद्यार्थी", shortA:"अनुभाग A", shortB:"अनुभाग B", prompt1:"वह न्यूनतम किताब संख्या खोजें जो दोनों अनुभागों में पूरी बाँटे और वह अधिकतम समूह आकार खोजें जो दोनों को विभाजित करे।", case2:"केस स्टडी 2 — सांस्कृतिक उत्सव क्लब", scenario2:"सांस्कृतिक उत्सव में नृत्य के <strong>72</strong>, संगीत के <strong>90</strong> और कला के <strong>126</strong> सदस्य हैं। एक ही समूह आकार से तीनों क्लबों में कोई विद्यार्थी शेष नहीं रहना चाहिए।", expC:"प्रयोग — सभी क्लबों में एक समूह आकार जाँचें", dance:"नृत्य · 72", music:"संगीत · 90", art:"कला · 126", prompt2:"कौन-से समूह आकार तीनों क्लबों को बिना शेष विभाजित करते हैं? सबसे बड़ा खोजें।", reset:"केस स्टडी रीसेट करें", mastered:"पूरे", correctFirst:"पहले प्रयास में सही! ", correctRetry:"सही — अच्छा सुधार! ", retry:"अभी सही नहीं। परिस्थिति या संख्या प्रयोग देखें और दूसरा उत्तर चुनें।", complete:"केस पूरा — प्रथम-प्रयास परीक्षा अंक: {score} / {total}।", excellent:" बहुत अच्छी परीक्षा तैयारी!", improve:" अंक सुधारने के लिए रीसेट करके फिर प्रयास करें।", groups:"पूरे समूह", remainder:"शेष", commonMultiple:"दोनों अनुभागों के लिए सही — यह एक सार्व गुणज है।", notMultiple:"अभी नहीं: कम-से-कम एक अनुभाग में किताबें बचेंगी।", commonFactor:"दोनों अनुभागों के लिए सही — यह एक सार्व गुणनखंड है।", notFactor:"इस समूह आकार में कम-से-कम एक अनुभाग में विद्यार्थी बचते हैं।", clubsFactor:"तीनों क्लबों के लिए सही — यह एक सार्व गुणनखंड है।", clubsNotFactor:"इस आकार में कम-से-कम एक क्लब में विद्यार्थी बचते हैं।" },
+      te: { heading:"పరీక్ష అభ్యాసం", intro:"ప్రతి సందర్భంలోని సంఖ్యలతో ప్రయోగం చేసి, CBSE తరహా ప్రశ్నలకు సమాధానమివ్వండి. తప్పు సమాధానాన్ని మళ్లీ ప్రయత్నించవచ్చు; పరీక్ష అభ్యాసం కోసం మొదటి ప్రయత్నం నమోదు అవుతుంది.", preferred:"ఇష్టమైన భాష", case1:"కేస్ స్టడీ 1 — కథల పుస్తకాల పంపిణీ", scenario1:"పాఠశాల X తరగతి రెండు విభాగాలకు పుస్తకాలను మిగులు లేకుండా సమానంగా పంచాలనుకుంటోంది. A విభాగంలో <strong>32</strong>, B విభాగంలో <strong>40</strong> మంది విద్యార్థులు ఉన్నారు.", expA:"ప్రయోగం A — రెండు విభాగాలకు సరిపోయే పుస్తకాల సంఖ్యను కనుగొనండి", stock:"మొత్తం పుస్తకాలు", secA:"A విభాగం · 32 మంది", secB:"B విభాగం · 40 మంది", expB:"ప్రయోగం B — సమాన సమూహ పరిమాణాలను పరీక్షించండి", perGroup:"ఒక్కో సమూహంలో విద్యార్థులు", shortA:"A విభాగం", shortB:"B విభాగం", prompt1:"రెండు విభాగాలకు పూర్తిగా పంచగల కనిష్ఠ పుస్తకాల సంఖ్యను, రెండింటినీ భాగించే గరిష్ఠ సమూహ పరిమాణాన్ని కనుగొనండి.", case2:"కేస్ స్టడీ 2 — సాంస్కృతిక ఉత్సవ క్లబ్‌లు", scenario2:"సాంస్కృతిక ఉత్సవంలో నృత్యంలో <strong>72</strong>, సంగీతంలో <strong>90</strong>, కళలో <strong>126</strong> మంది ఉన్నారు. ఒకే సమూహ పరిమాణం మూడు క్లబ్‌లను మిగులు లేకుండా భాగించాలి.", expC:"ప్రయోగం — అన్ని క్లబ్‌లకు ఒక సమూహ పరిమాణాన్ని పరీక్షించండి", dance:"నృత్యం · 72", music:"సంగీతం · 90", art:"కళ · 126", prompt2:"ఏ సమూహ పరిమాణాలు మూడు క్లబ్‌లను మిగులు లేకుండా భాగిస్తాయి? గరిష్ఠమైనదాన్ని కనుగొనండి.", reset:"కేస్ స్టడీని రీసెట్ చేయండి", mastered:"పూర్తయ్యాయి", correctFirst:"మొదటి ప్రయత్నంలో సరైంది! ", correctRetry:"సరైంది — మంచి ప్రయత్నం! ", retry:"ఇంకా సరైంది కాదు. సందర్భం లేదా సంఖ్యా ప్రయోగాన్ని చూసి మరో సమాధానం ప్రయత్నించండి.", complete:"కేస్ పూర్తి — మొదటి ప్రయత్న పరీక్ష స్కోరు: {score} / {total}.", excellent:" అద్భుతమైన పరీక్ష సిద్ధత!", improve:" స్కోరు మెరుగుపరచడానికి రీసెట్ చేసి మళ్లీ ప్రయత్నించండి.", groups:"పూర్తి సమూహాలు", remainder:"మిగులు", commonMultiple:"రెండు విభాగాలకు సరిపోతుంది — ఇది ఉమ్మడి గుణితం.", notMultiple:"ఇంకా కాదు: కనీసం ఒక విభాగంలో పుస్తకాలు మిగులుతాయి.", commonFactor:"రెండు విభాగాలకు సరిపోతుంది — ఇది ఉమ్మడి కారణాంకం.", notFactor:"ఈ సమూహ పరిమాణంలో కనీసం ఒక విభాగంలో విద్యార్థులు మిగులుతారు.", clubsFactor:"మూడు క్లబ్‌లకు సరిపోతుంది — ఇది ఉమ్మడి కారణాంకం.", clubsNotFactor:"ఈ పరిమాణంలో కనీసం ఒక క్లబ్‌లో విద్యార్థులు మిగులుతారు." }
+    };
+    const t = copy[language] || copy.en;
+
+    function applyStaticLanguage() {
+      const text = {"exam-heading":"heading","exam-intro":"intro","language-label":"preferred","case1-title":"case1","books-experiment-title":"expA","books-stock-label":"stock","section-a-label":"secA","section-b-label":"secB","sections-experiment-title":"expB","students-group-label":"perGroup","section-a-short":"shortA","section-b-short":"shortB","case1-prompt":"prompt1","case2-title":"case2","clubs-experiment-title":"expC","clubs-group-label":"perGroup","dance-label":"dance","music-label":"music","art-label":"art","case2-prompt":"prompt2"};
+      Object.entries(text).forEach(([id,key]) => document.getElementById(id).textContent = t[key]);
+      document.getElementById("case1-scenario").innerHTML = t.scenario1;
+      document.getElementById("case2-scenario").innerHTML = t.scenario2;
+      document.getElementById("exam1-reset").textContent = t.reset;
+      document.getElementById("exam2-reset").textContent = t.reset;
+      languageSelect.value = language;
+      languageSelect.addEventListener("change", () => { const url = new URL(location.href); url.searchParams.set("examLang", languageSelect.value); url.hash = "exam"; location.href = url; });
+      if (location.hash === "#exam") switchPanel("exam");
+    }
+    applyStaticLanguage();
+    function quizBlock(container, items, resetButton) {
+      const state = items.map(() => ({ attempts: 0, solved: false, firstTry: false }));
+
+      function updateProgress() {
+        const solved = state.filter(item => item.solved).length;
+        const firstTry = state.filter(item => item.firstTry).length;
+        container.querySelector(".case-progress .progress-fill").style.width = (solved / items.length * 100) + "%";
+        container.querySelector(".case-status").textContent = solved + " / " + items.length + " " + t.mastered;
+        const result = container.querySelector(".case-result");
+        if (solved === items.length) {
+          result.style.display = "block";
+          result.className = "feedback case-result " + (firstTry === items.length ? "correct" : "info");
+          result.textContent = t.complete.replace("{score}", firstTry).replace("{total}", items.length) +
+            (firstTry === items.length ? t.excellent : t.improve);
+        }
+      }
+
+      function render() {
+      let html = "";
+      html += `<div class="case-progress"><div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div><span class="case-status">0 / ${items.length} ${t.mastered}</span></div>`;
+      items.forEach((item, qi) => {
+        html += `<div class="quiz-q" style="margin-top:14px;">${qi + 1}. ${item.q}</div><div class="quiz-opts" data-qi="${qi}">`;
+        item.options.forEach((opt, i) => { html += `<button class="quiz-opt" data-qi="${qi}" data-i="${i}" type="button">${opt}</button>`; });
+        html += `</div><p class="feedback" id="${container.id}-fb-${qi}" style="display:none;"></p>`;
+      });
+      html += `<p class="feedback case-result" style="display:none;"></p>`;
+      container.innerHTML = html;
+      container.querySelectorAll(".quiz-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const qi = parseInt(btn.dataset.qi, 10);
+          const i = parseInt(btn.dataset.i, 10);
+          const item = items[qi];
+          const questionState = state[qi];
+          if (questionState.solved) return;
+          questionState.attempts++;
+          const group = container.querySelectorAll(`.quiz-opt[data-qi="${qi}"]`);
+          const fb = document.getElementById(container.id + "-fb-" + qi);
+          fb.style.display = "block";
+          if (i === item.answer) {
+            questionState.solved = true;
+            questionState.firstTry = questionState.attempts === 1;
+            group.forEach(button => button.disabled = true);
+            group[item.answer].classList.add("correct");
+            fb.className = "feedback correct";
+            fb.textContent = (questionState.firstTry ? t.correctFirst : t.correctRetry) + item.explain;
+            updateProgress();
+          } else {
+            btn.disabled = true;
+            btn.classList.add("incorrect");
+            fb.className = "feedback incorrect";
+            fb.textContent = t.retry;
+          }
+        });
+      });
+      updateProgress();
+      }
+
+      resetButton.addEventListener("click", () => {
+        state.forEach(item => { item.attempts = 0; item.solved = false; item.firstTry = false; });
+        render();
+        container.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      render();
+    }
+
+    function divisionText(total, size) {
+      const groups = Math.floor(total / size), remainder = total % size;
+      return groups + " " + t.groups + ", " + t.remainder + " " + remainder;
+    }
+
+    function setupTwoSectionLab() {
+      const stock = document.getElementById("book-stock");
+      const groupSize = document.getElementById("section-group-size");
+
+      function renderStock() {
+        const value = parseInt(stock.value, 10), remainderA = value % 32, remainderB = value % 40;
+        document.getElementById("book-stock-out").textContent = value;
+        document.getElementById("books-a-result").textContent = value + " ÷ 32 = " + Math.floor(value / 32) + ", " + t.remainder + " " + remainderA;
+        document.getElementById("books-b-result").textContent = value + " ÷ 40 = " + Math.floor(value / 40) + ", " + t.remainder + " " + remainderB;
+        const verdict = document.getElementById("book-stock-verdict"), works = remainderA === 0 && remainderB === 0;
+        verdict.className = "number-verdict " + (works ? "good" : "try");
+        verdict.textContent = works ? t.commonMultiple : t.notMultiple;
+      }
+
+      function renderGroups() {
+        const value = parseInt(groupSize.value, 10), remainderA = 32 % value, remainderB = 40 % value;
+        document.getElementById("section-group-size-out").textContent = value;
+        document.getElementById("groups-a-result").textContent = divisionText(32, value);
+        document.getElementById("groups-b-result").textContent = divisionText(40, value);
+        const verdict = document.getElementById("section-group-verdict"), works = remainderA === 0 && remainderB === 0;
+        verdict.className = "number-verdict " + (works ? "good" : "try");
+        verdict.textContent = works ? t.commonFactor : t.notFactor;
+      }
+
+      stock.addEventListener("input", renderStock);
+      groupSize.addEventListener("input", renderGroups);
+      renderStock();
+      renderGroups();
+    }
+
+    function setupClubLab() {
+      const slider = document.getElementById("club-group-size");
+      function render() {
+        const size = parseInt(slider.value, 10);
+        document.getElementById("club-group-size-out").textContent = size;
+        document.getElementById("dance-result").textContent = divisionText(72, size);
+        document.getElementById("music-result").textContent = divisionText(90, size);
+        document.getElementById("art-result").textContent = divisionText(126, size);
+        const works = 72 % size === 0 && 90 % size === 0 && 126 % size === 0;
+        const verdict = document.getElementById("club-group-verdict");
+        verdict.className = "number-verdict " + (works ? "good" : "try");
+        verdict.textContent = works ? t.clubsFactor : t.clubsNotFactor;
+      }
+      slider.addEventListener("input", render);
+      render();
+    }
+
+    const exam1 = [
+      { q: "What is the minimum number of books the school must buy for each section, if it wants the same minimum stock to work for either section alone, with none left over?", options: ["120", "160", "200", "320"], answer: 1, explain: "32 = 2⁵ and 40 = 2³ × 5, so LCM(32, 40) = 2⁵ × 5 = 160." },
+      { q: "What is the largest possible group size if students from Section A and Section B are split into equal-size groups (no mixing between sections) with none left over?", options: ["4", "8", "10", "16"], answer: 1, explain: "The largest such group size is HCF(32, 40). 32 = 2⁵, 40 = 2³ × 5, so HCF = 2³ = 8." },
+      { q: "What is the prime factorisation of 40?", options: ["2² × 5²", "2³ × 5", "2 × 5³", "2⁴ × 5"], answer: 1, explain: "40 = 2 × 2 × 2 × 5 = 2³ × 5." },
+      { q: "Is 6 × 11 × 13 + 13 a prime or a composite number?", options: ["Prime", "Composite", "Neither", "Cannot be determined"], answer: 1, explain: "6×11×13+13 = 13(6×11+1) = 13 × 67, which has more than two factors, so it is composite." },
+      { q: "If p = x·y² and q = x²·y, where x and y are distinct primes, what is LCM(p, q)?", options: ["x·y", "x²·y²", "x³·y³", "x²·y"], answer: 1, explain: "Taking the higher power of each prime: x² (from q) and y² (from p) gives LCM = x²y²." }
+    ];
+    const exam2 = [
+      { q: "What is the largest group size that can be used for all three clubs, with no student left out?", options: ["9", "12", "18", "36"], answer: 2, explain: "72 = 2³×3², 90 = 2×3²×5, 126 = 2×3²×7. HCF = 2 × 3² = 18." },
+      { q: "Using that group size, how many groups are formed in total across all three clubs?", options: ["12", "14", "16", "20"], answer: 2, explain: "72÷18 + 90÷18 + 126÷18 = 4 + 5 + 7 = 16 groups." },
+      { q: "What is the smallest number of members a single club could have so that groups of the same size (found above) divide it exactly, and that also happens to be a common multiple of 72, 90 and 126?", options: ["1260", "2520", "5040", "630"], answer: 1, explain: "LCM(72, 90, 126): taking the highest powers — 2³ × 3² × 5 × 7 = 2520." },
+      { q: "What is the prime factorisation of 126?", options: ["2 × 3³ × 7", "2² × 3² × 7", "2 × 3² × 7", "3² × 14"], answer: 2, explain: "126 = 2 × 3 × 3 × 7 = 2 × 3² × 7." },
+      { q: "What is the product of the HCF and LCM found above (18 and 2520)?", options: ["25200", "45360", "22680", "50400"], answer: 1, explain: "18 × 2520 = 45360. (Note: for three numbers this product does not equal 72 × 90 × 126 — that identity only holds for exactly two numbers.)" }
+    ];
+
+    const localizedQuestions = {
+      hi: [
+        "दोनों अनुभागों में बिना शेष बाँटने के लिए स्कूल को न्यूनतम कितनी किताबें खरीदनी चाहिए?", "दोनों अनुभागों को समान आकार के समूहों में बाँटने का अधिकतम समूह आकार क्या है?", "40 का अभाज्य गुणनखंडन क्या है?", "क्या 6 × 11 × 13 + 13 अभाज्य है या भाज्य?", "यदि p = x·y² और q = x²·y हों, तो LCM(p, q) क्या है?",
+        "तीनों क्लबों के लिए बिना शेष का अधिकतम समूह आकार क्या है?", "उस समूह आकार से तीनों क्लबों में कुल कितने समूह बनेंगे?", "72, 90 और 126 का लघुत्तम समापवर्त्य क्या है?", "126 का अभाज्य गुणनखंडन क्या है?", "ऊपर प्राप्त HCF और LCM (18 और 2520) का गुणनफल क्या है?"
+      ],
+      te: [
+        "రెండు విభాగాలకు మిగులు లేకుండా పంచడానికి పాఠశాల కనిష్ఠంగా ఎన్ని పుస్తకాలు కొనాలి?", "రెండు విభాగాలను సమాన సమూహాలుగా విభజించగల గరిష్ఠ సమూహ పరిమాణం ఎంత?", "40 యొక్క ప్రధాన కారణాంక విభజన ఏమిటి?", "6 × 11 × 13 + 13 ప్రధాన సంఖ్యా లేదా సంయుక్త సంఖ్యా?", "p = x·y² మరియు q = x²·y అయితే, LCM(p, q) ఎంత?",
+        "మూడు క్లబ్‌లకు మిగులు లేకుండా ఉపయోగించగల గరిష్ఠ సమూహ పరిమాణం ఎంత?", "ఆ సమూహ పరిమాణంతో మూడు క్లబ్‌లలో మొత్తం ఎన్ని సమూహాలు ఏర్పడతాయి?", "72, 90 మరియు 126ల కనిష్ఠ సామాన్య గుణితం ఎంత?", "126 యొక్క ప్రధాన కారణాంక విభజన ఏమిటి?", "పైన లభించిన HCF మరియు LCM (18 మరియు 2520)ల గుణఫలం ఎంత?"
+      ]
+    };
+    const localizedExplanations = {
+      hi: ["32 = 2⁵ और 40 = 2³ × 5, इसलिए LCM = 160।", "HCF(32, 40) = 2³ = 8।", "40 = 2 × 2 × 2 × 5 = 2³ × 5।", "यह 13(6×11+1) = 13 × 67 है, इसलिए भाज्य है।", "हर अभाज्य की बड़ी घात लेने पर LCM = x²y²।", "HCF(72, 90, 126) = 18।", "72÷18 + 90÷18 + 126÷18 = 4 + 5 + 7 = 16।", "LCM = 2³ × 3² × 5 × 7 = 2520।", "126 = 2 × 3² × 7।", "18 × 2520 = 45360। तीन संख्याओं के लिए HCF × LCM वाला दो-संख्या नियम लागू नहीं होता।"],
+      te: ["32 = 2⁵ మరియు 40 = 2³ × 5, కాబట్టి LCM = 160.", "HCF(32, 40) = 2³ = 8.", "40 = 2 × 2 × 2 × 5 = 2³ × 5.", "ఇది 13(6×11+1) = 13 × 67, కాబట్టి సంయుక్త సంఖ్య.", "ప్రతి ప్రధాన సంఖ్య యొక్క పెద్ద ఘాతాన్ని తీసుకుంటే LCM = x²y².", "HCF(72, 90, 126) = 18.", "72÷18 + 90÷18 + 126÷18 = 4 + 5 + 7 = 16.", "LCM = 2³ × 3² × 5 × 7 = 2520.", "126 = 2 × 3² × 7.", "18 × 2520 = 45360. మూడు సంఖ్యలకు రెండు-సంఖ్యల HCF × LCM నియమం వర్తించదు."]
+    };
+    const optionWords = {
+      hi: { Prime:"अभाज्य", Composite:"भाज्य", Neither:"कोई नहीं", "Cannot be determined":"निर्धारित नहीं किया जा सकता" },
+      te: { Prime:"ప్రధాన సంఖ్య", Composite:"సంయుక్త సంఖ్య", Neither:"ఏదీ కాదు", "Cannot be determined":"నిర్ణయించలేము" }
+    };
+    if (localizedQuestions[language]) {
+      [...exam1, ...exam2].forEach((item, index) => {
+        item.q = localizedQuestions[language][index];
+        item.explain = localizedExplanations[language][index];
+        item.options = item.options.map(option => optionWords[language][option] || option);
+      });
+    }
+
+    setupTwoSectionLab();
+    setupClubLab();
+    quizBlock(document.getElementById("exam1-area"), exam1, document.getElementById("exam1-reset"));
+    quizBlock(document.getElementById("exam2-area"), exam2, document.getElementById("exam2-reset"));
+  })();
+})();
+</script>
+</body>
+</html>

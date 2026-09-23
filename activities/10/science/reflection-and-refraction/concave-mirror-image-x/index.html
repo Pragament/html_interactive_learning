@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concave Mirror Virtual Laboratory | Class X Science Interactive Optics</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-panel: #0b1120;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-color: #334155;
+      --accent-primary: #38bdf8;
+      --accent-secondary: #818cf8;
+      --accent-focus: #f59e0b;
+      --accent-c: #ec4899;
+      --accent-image: #10b981;
+      --accent-virtual: #a855f7;
+      --ray-parallel: #38bdf8;
+      --ray-focal: #f59e0b;
+      --ray-c: #ec4899;
+      --ray-pole: #10b981;
+      --bench-axis: #475569;
+      --bench-grid: rgba(255, 255, 255, 0.04);
+      --mirror-silver: #94a3b8;
+      --mirror-glass: #38bdf8;
+      --candle-wax: #fef08a;
+      --candle-flame: #f97316;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --badge-bg: rgba(56, 189, 248, 0.12);
+      --badge-text: #38bdf8;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-panel: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-color: #cbd5e1;
+      --accent-primary: #0284c7;
+      --accent-secondary: #6366f1;
+      --accent-focus: #d97706;
+      --accent-c: #db2777;
+      --accent-image: #059669;
+      --accent-virtual: #9333ea;
+      --ray-parallel: #0284c7;
+      --ray-focal: #d97706;
+      --ray-c: #db2777;
+      --ray-pole: #059669;
+      --bench-axis: #94a3b8;
+      --bench-grid: rgba(0, 0, 0, 0.04);
+      --mirror-silver: #64748b;
+      --mirror-glass: #0284c7;
+      --candle-wax: #fde047;
+      --candle-flame: #ea580c;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --badge-bg: rgba(2, 132, 199, 0.12);
+      --badge-text: #0284c7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex; align-items: center; justify-content: center;
+      color: #ffffff; font-size: 1.3rem; font-weight: bold;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+    .brand-text h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary); }
+    .brand-text p { font-size: 0.78rem; color: var(--text-secondary); font-weight: 500; }
+
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+      padding: 0.45rem 0.85rem; font-size: 0.82rem; font-weight: 600; border-radius: 6px;
+      border: 1px solid var(--border-color); background-color: var(--bg-secondary);
+      color: var(--text-primary); cursor: pointer; transition: all 0.15s ease; user-select: none;
+    }
+    .btn:hover { background-color: var(--border-color); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background-color: var(--accent-primary); border-color: var(--accent-primary); color: #0f172a; }
+    .btn-primary:hover { background-color: #0284c7; border-color: #0284c7; color: #ffffff; }
+    .btn-success { background-color: #10b981; border-color: #10b981; color: #ffffff; }
+    .btn-success:hover { background-color: #059669; }
+    .btn-danger { background-color: #ef4444; border-color: #ef4444; color: #ffffff; }
+    .btn-danger:hover { background-color: #dc2626; }
+    .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+
+    nav.nav-tabs {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex; overflow-x: auto; padding: 0 1rem; gap: 0.5rem;
+    }
+    .tab-btn {
+      padding: 0.75rem 1rem; background: none; border: none;
+      border-bottom: 2px solid transparent; color: var(--text-secondary);
+      font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap;
+      display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s ease;
+    }
+    .tab-btn:hover { color: var(--text-primary); }
+    .tab-btn.active { color: var(--accent-primary); border-bottom-color: var(--accent-primary); }
+
+    main { flex: 1; padding: 1.2rem; max-width: 1560px; margin: 0 auto; width: 100%; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .bench-view-grid { display: grid; grid-template-columns: 1fr 340px; gap: 1.2rem; }
+    @media (max-width: 1100px) { .bench-view-grid { grid-template-columns: 1fr; } }
+
+    .sim-card {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow);
+      display: flex; flex-direction: column;
+    }
+    .sim-header {
+      padding: 0.75rem 1rem; background-color: var(--bg-panel);
+      border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap;
+      justify-content: space-between; align-items: center; gap: 0.75rem;
+    }
+    .sim-title { font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+
+    .presets-bar {
+      display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.6rem 1rem;
+      background-color: var(--bg-secondary); border-bottom: 1px solid var(--border-color);
+      align-items: center;
+    }
+    .presets-label {
+      font-size: 0.76rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.3rem;
+    }
+    .preset-btn {
+      background-color: var(--bg-panel); border: 1px solid var(--border-color);
+      color: var(--text-secondary); padding: 0.3rem 0.65rem; border-radius: 5px;
+      font-size: 0.76rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease;
+    }
+    .preset-btn:hover { color: var(--text-primary); border-color: var(--accent-primary); }
+    .preset-btn.active {
+      background-color: var(--accent-primary); border-color: var(--accent-primary);
+      color: #0f172a; font-weight: 700;
+    }
+
+    .bench-canvas-container {
+      position: relative; width: 100%; height: 480px;
+      background: radial-gradient(circle at 75% 50%, var(--bg-panel), var(--bg-primary));
+      overflow: hidden; user-select: none; touch-action: none;
+    }
+    svg#benchSvg { width: 100%; height: 100%; display: block; cursor: default; }
+    .draggable-object { cursor: grab; }
+    .draggable-object:active { cursor: grabbing; }
+
+    .anim-bar {
+      padding: 0.75rem 1rem; background-color: var(--bg-panel);
+      border-top: 1px solid var(--border-color); display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 0.8rem;
+    }
+    .anim-btn-group { display: flex; align-items: center; gap: 0.4rem; }
+    .speed-selector {
+      display: flex; align-items: center; gap: 0.25rem;
+      background-color: var(--bg-secondary); border: 1px solid var(--border-color);
+      border-radius: 6px; padding: 0.15rem;
+    }
+    .speed-btn {
+      background: none; border: none; color: var(--text-secondary);
+      padding: 0.2rem 0.45rem; font-size: 0.72rem; font-weight: 600;
+      border-radius: 4px; cursor: pointer;
+    }
+    .speed-btn.active { background-color: var(--accent-primary); color: #0f172a; }
+
+    .sidebar-controls { display: flex; flex-direction: column; gap: 1rem; }
+    .control-card {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; padding: 1rem; box-shadow: var(--card-shadow);
+    }
+    .card-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--text-primary);
+      margin-bottom: 0.85rem; display: flex; align-items: center;
+      justify-content: space-between; border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .control-group { margin-bottom: 0.9rem; }
+    .control-group:last-child { margin-bottom: 0; }
+    .control-label-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.8rem; font-weight: 600; margin-bottom: 0.35rem;
+    }
+    .control-label-row span.val {
+      font-family: monospace; color: var(--accent-primary); font-size: 0.85rem;
+    }
+
+    input[type="range"] {
+      width: 100%; height: 6px; background: var(--border-color);
+      border-radius: 4px; outline: none; -webkit-appearance: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+      background: var(--accent-primary); cursor: pointer;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.6); transition: transform 0.1s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .custom-check {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); cursor: pointer;
+    }
+    .custom-check input[type="checkbox"] {
+      cursor: pointer; accent-color: var(--accent-primary); width: 15px; height: 15px;
+    }
+
+    .metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .metric-box {
+      background-color: var(--bg-panel); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 0.6rem 0.75rem; display: flex; flex-direction: column;
+    }
+    .metric-box .label { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
+    .metric-box .val {
+      font-size: 1.05rem; font-weight: 700; font-family: monospace;
+      color: var(--accent-primary); margin-top: 0.15rem;
+    }
+    .metric-box.highlight { border-color: var(--accent-image); }
+    .metric-box.highlight .val { color: var(--accent-image); }
+
+    .char-badge-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .char-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.4rem 0.6rem; background-color: var(--bg-panel);
+      border-radius: 6px; border-left: 3px solid var(--accent-primary);
+    }
+    .char-item .char-title { font-size: 0.76rem; color: var(--text-muted); font-weight: 600; }
+    .char-item .char-badge {
+      font-size: 0.78rem; font-weight: 700; padding: 0.2rem 0.55rem;
+      border-radius: 4px; background-color: var(--badge-bg); color: var(--badge-text);
+    }
+    .badge-real { background-color: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .badge-virtual { background-color: rgba(168, 85, 247, 0.15); color: #a855f7; }
+
+    .calc-steps {
+      display: flex; flex-direction: column; gap: 0.6rem; font-family: monospace;
+      font-size: 0.85rem; background-color: var(--bg-panel);
+      border: 1px solid var(--border-color); border-radius: 8px; padding: 0.85rem;
+    }
+    .step-line {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px dashed var(--border-color); padding-bottom: 0.4rem;
+    }
+    .step-line:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .experiment-container {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; padding: 1.25rem; box-shadow: var(--card-shadow);
+    }
+    .exp-instructions {
+      background-color: var(--bg-panel); border-left: 4px solid var(--accent-primary);
+      padding: 0.85rem 1.1rem; border-radius: 6px; margin-bottom: 1.2rem;
+      font-size: 0.86rem; line-height: 1.6;
+    }
+    .exp-instructions ol { margin-left: 1.2rem; margin-top: 0.4rem; }
+    .exp-table-actions {
+      display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem;
+      justify-content: space-between; align-items: center;
+    }
+    .table-wrapper {
+      overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px;
+    }
+    table.data-table {
+      width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left;
+    }
+    table.data-table th, table.data-table td {
+      padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border-color); white-space: nowrap;
+    }
+    table.data-table th {
+      background-color: var(--bg-panel); font-weight: 700; color: var(--text-secondary);
+      text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em;
+    }
+    table.data-table tr:hover { background-color: rgba(255, 255, 255, 0.02); }
+
+    .challenge-container {
+      max-width: 860px; margin: 0 auto; background-color: var(--bg-card);
+      border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+    .challenge-prompt-box {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(129, 140, 248, 0.1));
+      border: 1px solid var(--accent-primary); border-radius: 10px; padding: 1.2rem;
+      margin-bottom: 1.5rem; text-align: center;
+    }
+    .challenge-prompt-title {
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--accent-primary); font-weight: 700; margin-bottom: 0.4rem;
+    }
+    .challenge-scenario { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); }
+    .challenge-form {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;
+    }
+    @media (max-width: 650px) { .challenge-form { grid-template-columns: 1fr; } }
+    .challenge-input-group label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      color: var(--text-secondary); margin-bottom: 0.4rem;
+    }
+    .challenge-select {
+      width: 100%; padding: 0.55rem 0.8rem; background-color: var(--bg-panel);
+      border: 1px solid var(--border-color); border-radius: 6px;
+      color: var(--text-primary); font-size: 0.85rem; outline: none;
+    }
+    .challenge-feedback {
+      display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.88rem;
+    }
+    .challenge-feedback.success {
+      background-color: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981;
+    }
+    .challenge-feedback.partial {
+      background-color: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #f59e0b;
+    }
+
+    .quiz-container {
+      max-width: 820px; margin: 0 auto; background-color: var(--bg-card);
+      border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+    .quiz-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color);
+    }
+    .quiz-progress-bar {
+      width: 100%; height: 6px; background-color: var(--bg-panel);
+      border-radius: 3px; overflow: hidden; margin-bottom: 1.5rem;
+    }
+    .quiz-progress-fill {
+      height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      width: 0%; transition: width 0.3s ease;
+    }
+    .quiz-question-box {
+      font-size: 1.05rem; font-weight: 600; margin-bottom: 1.2rem; line-height: 1.4;
+    }
+    .quiz-options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem; }
+    .quiz-option-btn {
+      padding: 0.75rem 1rem; background-color: var(--bg-panel);
+      border: 1px solid var(--border-color); border-radius: 8px;
+      color: var(--text-primary); text-align: left; font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s ease; display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .quiz-option-btn:hover:not(:disabled) {
+      background-color: var(--border-color); border-color: var(--accent-primary);
+    }
+    .quiz-option-btn.correct {
+      background-color: rgba(16, 185, 129, 0.2) !important; border-color: #10b981 !important;
+      color: #10b981 !important; font-weight: 700;
+    }
+    .quiz-option-btn.wrong {
+      background-color: rgba(239, 68, 68, 0.2) !important; border-color: #ef4444 !important;
+      color: #ef4444 !important;
+    }
+    .quiz-explanation {
+      display: none; padding: 1rem; border-radius: 8px; background-color: var(--bg-panel);
+      border-left: 4px solid var(--accent-primary); margin-bottom: 1.2rem;
+      font-size: 0.85rem; line-height: 1.5;
+    }
+
+    .graph-container {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; padding: 1.25rem; box-shadow: var(--card-shadow);
+    }
+    .graph-controls-row {
+      display: flex; flex-wrap: wrap; justify-content: space-between;
+      align-items: center; gap: 0.8rem; margin-bottom: 1rem;
+    }
+    .canvas-wrapper {
+      position: relative; width: 100%; height: 480px; background-color: var(--bg-panel);
+      border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;
+    }
+    canvas#uvGraph { width: 100%; height: 100%; display: block; }
+
+    .guide-container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+    .guide-card {
+      background-color: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: 12px; padding: 1.4rem; box-shadow: var(--card-shadow);
+    }
+    .guide-card h2 {
+      font-size: 1.15rem; color: var(--accent-primary); margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .guide-card p {
+      font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0.8rem; line-height: 1.6;
+    }
+    .rules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem; }
+    @media (max-width: 768px) { .rules-grid { grid-template-columns: 1fr; } }
+    .rule-box {
+      background-color: var(--bg-panel); border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 1rem;
+    }
+    .rule-box h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .rule-box p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+
+    footer {
+      background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);
+      padding: 0.85rem 1.5rem; font-size: 0.78rem; color: var(--text-muted);
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      gap: 0.5rem; margin-top: auto;
+    }
+
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; padding: 0.7rem 1.2rem;
+      background-color: var(--accent-primary); color: #0f172a; font-size: 0.84rem;
+      font-weight: 600; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: translateY(100px); opacity: 0; transition: all 0.25s ease;
+      z-index: 1000; pointer-events: none;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; }
+      header, nav.nav-tabs, .exp-table-actions, .presets-bar, .anim-bar, .sidebar-controls, footer, #toast {
+        display: none !important;
+      }
+      .tab-content { display: none !important; }
+      #tab-experiment { display: block !important; }
+      .experiment-container { border: none !important; box-shadow: none !important; padding: 0 !important; }
+      table.data-table th, table.data-table td { border: 1px solid #000000 !important; color: #000000 !important; }
+    }
+  </style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-science-reflection-and-refraction-concave-mirror-image-x",
+  "order": 194,
+  "class": "X",
+  "subject": "Science",
+  "topic": "Reflection and Refraction",
+  "subtopic": null,
+  "title": "Concave Mirror Image",
+  "description": "Place a candle at different distances from a concave mirror. Obtain the image on a screen.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">❩</div>
+      <div class="brand-text">
+        <h1>Concave Mirror Virtual Laboratory</h1>
+        <p>Interactive Simulation of Image Formation | Class X Science Optics</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-sm" id="themeToggleBtn" title="Toggle Light / Dark Mode">
+        <span id="themeIcon">☀️</span> <span id="themeLabel">Light Mode</span>
+      </button>
+      <button class="btn btn-sm" id="clearDataBtn" title="Reset all saved data in browser">
+        🗑️ Clear Saved Data
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="tab-btn active" data-tab="tab-bench">🔬 Optical Bench</button>
+    <button class="tab-btn" data-tab="tab-experiment">📋 Experiment Table</button>
+    <button class="tab-btn" data-tab="tab-challenge">🎯 Prediction Challenge</button>
+    <button class="tab-btn" data-tab="tab-quiz">📝 Class X Quiz</button>
+    <button class="tab-btn" data-tab="tab-graph">📈 u-v Graph</button>
+    <button class="tab-btn" data-tab="tab-guide">📖 Concept Guide</button>
+  </nav>
+
+  <!-- MAIN VIEWPORT -->
+  <main>
+
+    <!-- TAB 1: OPTICAL BENCH -->
+    <div id="tab-bench" class="tab-content active">
+      
+      <!-- PRESET POSITION BAR -->
+      <div class="presets-bar">
+        <span class="presets-label">Object Presets:</span>
+        <button class="preset-btn" data-preset="infinity">1. Object at Infinity (∞)</button>
+        <button class="preset-btn" data-preset="beyond_c">2. Beyond C (u &gt; 2f)</button>
+        <button class="preset-btn" data-preset="at_c">3. At C (u = 2f)</button>
+        <button class="preset-btn active" data-preset="between_c_f">4. Between C and F</button>
+        <button class="preset-btn" data-preset="at_f">5. At F (u = f)</button>
+        <button class="preset-btn" data-preset="between_f_p">6. Between F and P (u &lt; f)</button>
+      </div>
+
+      <div class="bench-view-grid" style="margin-top: 1rem;">
+        
+        <!-- LEFT: SVG OPTICAL BENCH SIMULATION CARD -->
+        <div class="sim-card">
+          <div class="sim-header">
+            <div class="sim-title">
+              <span>Virtual Optical Bench</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">(Drag candle horizontally along principal axis or vertically to adjust height)</span>
+            </div>
+            <div style="display: flex; gap: 0.4rem; align-items: center;">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">Object Style:</span>
+              <button class="btn btn-sm" id="objectStyleToggle">🕯️ Candle</button>
+            </div>
+          </div>
+
+          <!-- INTERACTIVE SVG BENCH -->
+          <div class="bench-canvas-container" id="svgContainer">
+            <svg id="benchSvg" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <marker id="arrow-parallel" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--ray-parallel)" />
+                </marker>
+                <marker id="arrow-focal" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--ray-focal)" />
+                </marker>
+                <marker id="arrow-c" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--ray-c)" />
+                </marker>
+                <marker id="arrow-pole" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--ray-pole)" />
+                </marker>
+                <marker id="dim-arrow-start" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                  <path d="M 8 1.5 L 0 5 L 8 8.5 z" fill="var(--text-muted)" />
+                </marker>
+                <marker id="dim-arrow-end" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="var(--text-muted)" />
+                </marker>
+
+                <linearGradient id="flameGrad" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#3b82f6" />
+                  <stop offset="25%" stop-color="#f97316" />
+                  <stop offset="70%" stop-color="#fde047" />
+                  <stop offset="100%" stop-color="#ffffff" />
+                </linearGradient>
+                <linearGradient id="flameVirtualGrad" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#9333ea" stop-opacity="0.8" />
+                  <stop offset="50%" stop-color="#c084fc" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0.9" />
+                </linearGradient>
+
+                <linearGradient id="candleWaxGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#fef08a" />
+                  <stop offset="50%" stop-color="#fef9c3" />
+                  <stop offset="100%" stop-color="#eab308" />
+                </linearGradient>
+                <linearGradient id="candleWaxVirtualGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#c084fc" stop-opacity="0.6" />
+                  <stop offset="50%" stop-color="#e9d5ff" stop-opacity="0.7" />
+                  <stop offset="100%" stop-color="#a855f7" stop-opacity="0.6" />
+                </linearGradient>
+
+                <filter id="mirrorGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+
+              <g id="benchGridGroup"></g>
+              <line id="principalAxis" x1="15" y1="260" x2="1085" y2="260" stroke="var(--bench-axis)" stroke-width="2" stroke-dasharray="8 4" />
+              <text x="35" y="252" fill="var(--text-muted)" font-size="12" font-weight="600" letter-spacing="1">PRINCIPAL AXIS</text>
+
+              <g id="mirrorSilverGroup"></g>
+              <path id="mirrorSurface" stroke="var(--mirror-glass)" stroke-width="5" fill="none" filter="url(#mirrorGlow)" stroke-linecap="round" />
+              <path id="mirrorApertureLine" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5" />
+
+              <g id="markersGroup">
+                <circle id="markerP" cx="800" cy="260" r="5" fill="var(--accent-primary)" />
+                <text id="labelP" x="808" y="278" fill="var(--text-primary)" font-size="14" font-weight="700">P</text>
+                <circle id="markerF" cx="650" cy="260" r="5" fill="var(--accent-focus)" />
+                <text id="labelF" x="646" y="282" fill="var(--accent-focus)" font-size="15" font-weight="700">F</text>
+                <circle id="markerC" cx="500" cy="260" r="5" fill="var(--accent-c)" />
+                <text id="labelC" x="496" y="282" fill="var(--accent-c)" font-size="15" font-weight="700">C</text>
+              </g>
+
+              <g id="virtualExtensionsGroup"></g>
+              <g id="reflectedRaysGroup"></g>
+              <g id="incidentRaysGroup"></g>
+              <g id="photonsGroup"></g>
+              <g id="imageGroup"></g>
+              <g id="objectGroup" class="draggable-object"></g>
+              <g id="measurementsGroup"></g>
+              <g id="overlayGroup"></g>
+            </svg>
+          </div>
+
+          <!-- ANIMATION CONTROLS -->
+          <div class="anim-bar">
+            <div class="anim-btn-group">
+              <button class="btn btn-primary btn-sm" id="playRayAnimBtn">▶ Animate Rays</button>
+              <button class="btn btn-sm" id="pauseRayAnimBtn">⏸ Pause</button>
+              <button class="btn btn-sm" id="replayRayAnimBtn">↻ Replay</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.8rem;">
+              <div class="speed-selector">
+                <button class="speed-btn" data-speed="0.5">0.5×</button>
+                <button class="speed-btn active" data-speed="1.0">1×</button>
+                <button class="speed-btn" data-speed="2.0">2×</button>
+                <button class="speed-btn" data-speed="4.0">4×</button>
+              </div>
+              <div style="border-left: 1px solid var(--border-color); height: 20px;"></div>
+              <button class="btn btn-sm" id="autoTourBtn" title="Automatically glide object across all 6 regions">
+                🎬 Animate Object (Tour)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SIDEBAR CONTROL PANEL -->
+        <div class="sidebar-controls">
+
+          <!-- MIRROR PARAMETERS CARD -->
+          <div class="control-card">
+            <div class="card-title">
+              <span>Mirror Parameters</span>
+              <span style="font-size: 0.72rem; color: var(--accent-primary); font-weight: bold;">R = 2f</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Focal Length (f):</span>
+                <span class="val" id="dispFocalLength">20.0 cm</span>
+              </div>
+              <input type="range" id="sliderFocalLength" min="10" max="50" step="1" value="20">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Radius of Curvature (R):</span>
+                <span class="val" id="dispRadius">40.0 cm</span>
+              </div>
+              <input type="range" id="sliderRadius" min="20" max="100" step="2" value="40">
+            </div>
+
+            <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.3rem;">
+              Adjusting R (20–100 cm) or f (10–50 cm) dynamically changes the concave mirror curve and repositions F and C.
+            </div>
+          </div>
+
+          <!-- OBJECT PARAMETERS CARD -->
+          <div class="control-card">
+            <div class="card-title">
+              <span>Object Parameters</span>
+              <span style="font-size: 0.72rem; color: var(--accent-primary);">Drag or Slide</span>
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Object Distance (u):</span>
+                <span class="val" id="dispObjectDist">30.0 cm</span>
+              </div>
+              <input type="range" id="sliderObjectDist" min="6" max="95" step="0.5" value="30">
+            </div>
+
+            <div class="control-group">
+              <div class="control-label-row">
+                <span>Object Height (h₀):</span>
+                <span class="val" id="dispObjectHeight">5.0 cm</span>
+              </div>
+              <input type="range" id="sliderObjectHeight" min="2" max="10" step="0.5" value="5">
+            </div>
+          </div>
+
+          <!-- STANDARD RAY CONTROLS -->
+          <div class="control-card">
+            <div class="card-title">
+              <span>Standard Principal Rays</span>
+            </div>
+            
+            <div class="checkbox-grid">
+              <label class="custom-check" style="color: var(--ray-parallel);">
+                <input type="checkbox" id="checkRayParallel" checked>
+                <span>Ray 1: Parallel</span>
+              </label>
+              <label class="custom-check" style="color: var(--ray-focal);">
+                <input type="checkbox" id="checkRayFocal" checked>
+                <span>Ray 2: Focal</span>
+              </label>
+              <label class="custom-check" style="color: var(--ray-c);">
+                <input type="checkbox" id="checkRayC" checked>
+                <span>Ray 3: Centre (C)</span>
+              </label>
+              <label class="custom-check" style="color: var(--ray-pole);">
+                <input type="checkbox" id="checkRayPole">
+                <span>Ray 4: Pole (P)</span>
+              </label>
+            </div>
+
+            <div class="checkbox-grid" style="margin-top: 0.8rem; border-top: 1px solid var(--border-color); padding-top: 0.6rem;">
+              <label class="custom-check">
+                <input type="checkbox" id="checkArrows" checked>
+                <span>Direction Arrows</span>
+              </label>
+              <label class="custom-check">
+                <input type="checkbox" id="checkVirtualExt" checked>
+                <span>Virtual Extensions</span>
+              </label>
+              <label class="custom-check">
+                <input type="checkbox" id="checkMeasurements" checked>
+                <span>Measurements</span>
+              </label>
+              <label class="custom-check">
+                <input type="checkbox" id="checkLabels" checked>
+                <span>Labels (P,F,C)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- IMAGE CHARACTERISTICS CARD -->
+          <div class="control-card">
+            <div class="card-title">
+              <span>Image Characteristics</span>
+              <span id="badgeNature" class="char-badge badge-real">Real</span>
+            </div>
+
+            <div class="char-badge-list">
+              <div class="char-item">
+                <span class="char-title">Position:</span>
+                <span class="char-badge" id="dispCharPosition">Beyond C</span>
+              </div>
+              <div class="char-item">
+                <span class="char-title">Orientation:</span>
+                <span class="char-badge" id="dispCharOrientation">Inverted</span>
+              </div>
+              <div class="char-item">
+                <span class="char-title">Relative Size:</span>
+                <span class="char-badge" id="dispCharSize">Magnified</span>
+              </div>
+              <div class="char-item">
+                <span class="char-title">Magnification:</span>
+                <span class="char-badge" id="dispCharMag">-2.00×</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BOTTOM SECTION: LIVE MEASUREMENTS & FORMULA DERIVATION -->
+      <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.2rem; margin-top: 1.2rem;">
+        
+        <!-- CURRENT MEASUREMENTS PANEL -->
+        <div class="control-card">
+          <div class="card-title">
+            <span>Current Measurements (Cartesian Sign Convention)</span>
+            <button class="btn btn-sm" id="recordObservationBtn">➕ Record in Lab Table</button>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <span class="label">Focal Length (f)</span>
+              <span class="val" id="metricF">-20.0 cm</span>
+            </div>
+            <div class="metric-box">
+              <span class="label">Radius of Curvature (R)</span>
+              <span class="val" id="metricR">-40.0 cm</span>
+            </div>
+            <div class="metric-box">
+              <span class="label">Object Distance (u)</span>
+              <span class="val" id="metricU">-30.0 cm</span>
+            </div>
+            <div class="metric-box highlight">
+              <span class="label">Image Distance (v)</span>
+              <span class="val" id="metricV">-60.0 cm</span>
+            </div>
+            <div class="metric-box">
+              <span class="label">Object Height (h₀)</span>
+              <span class="val" id="metricHo">+5.0 cm</span>
+            </div>
+            <div class="metric-box highlight">
+              <span class="label">Image Height (hᵢ)</span>
+              <span class="val" id="metricHi">-10.0 cm</span>
+            </div>
+            <div class="metric-box highlight" style="grid-column: span 2;">
+              <span class="label">Magnification (m = -v/u = hᵢ/h₀)</span>
+              <span class="val" id="metricMag" style="color: var(--accent-image);">-2.00</span>
+            </div>
+          </div>
+          
+          <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 0.6rem;">
+            * Cartesian Sign: Distances left of pole P are negative; right of pole are positive. Above axis positive, below axis negative.
+          </div>
+        </div>
+
+        <!-- MIRROR FORMULA CALCULATION CARD -->
+        <div class="control-card">
+          <div class="card-title">
+            <span>Mirror Equation & Magnification Step-by-Step</span>
+            <span style="font-size: 0.76rem; color: var(--accent-primary); font-family: monospace;">1/f = 1/v + 1/u</span>
+          </div>
+
+          <div class="calc-steps" id="calcStepsBox"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: EXPERIMENT TABLE -->
+    <div id="tab-experiment" class="tab-content">
+      <div class="experiment-container">
+        
+        <h2 style="font-size: 1.25rem; margin-bottom: 0.4rem; color: var(--accent-primary);">
+          Experiment: Image Formation by Concave Mirror
+        </h2>
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Standard Class X Science Physics Laboratory Practical for recording image distances and characteristics.
+        </p>
+
+        <div class="exp-instructions">
+          <strong>Laboratory Instructions:</strong>
+          <ol>
+            <li>Set the desired focal length (e.g. f = 20 cm) on the Optical Bench.</li>
+            <li>Place the object at various standard positions (Infinity, Beyond C, At C, Between C & F, At F, Between F & P).</li>
+            <li>Observe ray convergence, image location, orientation, and size on the bench.</li>
+            <li>Click <strong>"Record Current Observation"</strong> to capture the trial in the observation table below.</li>
+            <li>Verify that the experimental values satisfy the mirror formula: <code>1/f = 1/v + 1/u</code>.</li>
+          </ol>
+        </div>
+
+        <div class="exp-table-actions">
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-primary" id="addCurrentExpBtn">➕ Record Current Bench Observation</button>
+            <button class="btn" id="populateStandardExpBtn">⚡ Populate All 6 Standard Cases</button>
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn" id="exportCsvBtn">📥 Export CSV</button>
+            <button class="btn" id="printTableBtn">🖨️ Print Table</button>
+            <button class="btn btn-danger btn-sm" id="clearTableBtn">Reset Table</button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="data-table" id="observationTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Object Position</th>
+                <th>u (cm)</th>
+                <th>f (cm)</th>
+                <th>v (cm)</th>
+                <th>Image Position</th>
+                <th>Image Size</th>
+                <th>Nature</th>
+                <th>Orientation</th>
+                <th>Magnification (m)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="observationTableBody"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: PREDICTION CHALLENGE -->
+    <div id="tab-challenge" class="tab-content">
+      <div class="challenge-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+          <div>
+            <h2 style="font-size: 1.2rem; color: var(--accent-primary);">Predict the Image Challenge</h2>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">Test your optical deduction before revealing the ray diagram!</p>
+          </div>
+          <div style="text-align: right;">
+            <span style="font-size: 0.78rem; color: var(--text-muted);">Score:</span>
+            <span id="challengeScore" style="font-size: 1.3rem; font-weight: 700; color: var(--accent-primary); margin-left: 0.3rem;">0 / 0</span>
+          </div>
+        </div>
+
+        <div class="challenge-prompt-box">
+          <div class="challenge-prompt-title">OPTICAL SETUP CHALLENGE</div>
+          <div class="challenge-scenario" id="challengeScenarioText">
+            An object is placed between C and F (u = 30 cm, f = 20 cm) in front of a concave mirror.
+          </div>
+        </div>
+
+        <div class="challenge-form">
+          <div class="challenge-input-group">
+            <label for="predPosition">1. Predicted Image Position:</label>
+            <select id="predPosition" class="challenge-select">
+              <option value="">-- Select Position --</option>
+              <option value="at_f">At Focus (F)</option>
+              <option value="between_c_f">Between C and F</option>
+              <option value="at_c">At Centre of Curvature (C)</option>
+              <option value="beyond_c">Beyond C</option>
+              <option value="at_infinity">At Infinity</option>
+              <option value="behind_mirror">Behind the Mirror</option>
+            </select>
+          </div>
+
+          <div class="challenge-input-group">
+            <label for="predNature">2. Predicted Nature:</label>
+            <select id="predNature" class="challenge-select">
+              <option value="">-- Select Nature --</option>
+              <option value="real">Real Image</option>
+              <option value="virtual">Virtual Image</option>
+            </select>
+          </div>
+
+          <div class="challenge-input-group">
+            <label for="predOrientation">3. Predicted Orientation:</label>
+            <select id="predOrientation" class="challenge-select">
+              <option value="">-- Select Orientation --</option>
+              <option value="inverted">Inverted</option>
+              <option value="erect">Erect (Upright)</option>
+            </select>
+          </div>
+
+          <div class="challenge-input-group">
+            <label for="predSize">4. Predicted Relative Size:</label>
+            <select id="predSize" class="challenge-select">
+              <option value="">-- Select Size --</option>
+              <option value="highly_diminished">Highly Diminished (Point-sized)</option>
+              <option value="diminished">Diminished</option>
+              <option value="same_size">Same Size as Object</option>
+              <option value="magnified">Magnified (Enlarged)</option>
+              <option value="highly_enlarged">Highly Enlarged</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; justify-content: center;">
+          <button class="btn btn-primary" id="submitChallengeBtn">Check Prediction & Animate Rays</button>
+          <button class="btn" id="nextChallengeBtn">Next Setup ➔</button>
+        </div>
+
+        <div class="challenge-feedback" id="challengeFeedback"></div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: CLASS X QUIZ -->
+    <div id="tab-quiz" class="tab-content">
+      <div class="quiz-container">
+        
+        <div class="quiz-header">
+          <div>
+            <h2 style="font-size: 1.15rem; color: var(--text-primary);">Class X Concave Mirror Physics Quiz</h2>
+            <span style="font-size: 0.78rem; color: var(--text-muted);" id="quizCounter">Question 1 of 12</span>
+          </div>
+          <div>
+            <span style="font-size: 0.8rem; color: var(--text-secondary);">Score:</span>
+            <span id="quizScore" style="font-size: 1.15rem; font-weight: 700; color: var(--accent-primary); margin-left: 0.3rem;">0</span>
+          </div>
+        </div>
+
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressBar"></div>
+        </div>
+
+        <div class="quiz-question-box" id="quizQuestionText">
+          Loading question...
+        </div>
+
+        <div class="quiz-options-list" id="quizOptionsContainer"></div>
+
+        <div class="quiz-explanation" id="quizExplanation"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+          <button class="btn btn-sm" id="restartQuizBtn">Restart Quiz</button>
+          <button class="btn btn-primary btn-sm" id="nextQuestionBtn" style="display: none;">Next Question ➔</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 5: GRAPH MODE -->
+    <div id="tab-graph" class="tab-content">
+      <div class="graph-container">
+        
+        <div class="graph-controls-row">
+          <div>
+            <h2 style="font-size: 1.15rem; color: var(--accent-primary);">Optics Relationship Plot (u vs v)</h2>
+            <p style="font-size: 0.82rem; color: var(--text-secondary);">
+              Visualizing the hyperbolic relationship <code>1/v = 1/f - 1/u</code>. Move the object on the bench to see the live operating point glide!
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button class="btn btn-sm" id="graphToggleModeBtn">Show Magnification (m vs u)</button>
+            <button class="btn btn-sm" id="plotExpPointsBtn">Overlay Recorded Lab Points</button>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="uvGraph"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-around; margin-top: 0.75rem; font-size: 0.78rem; color: var(--text-muted);">
+          <span>🔵 Theoretical Optics Curve</span>
+          <span>🔴 Current Bench State</span>
+          <span>🟢 Recorded Observation Points</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 6: CONCEPT & LEARNING GUIDE -->
+    <div id="tab-guide" class="tab-content">
+      <div class="guide-container">
+        
+        <!-- CARD 1: WHAT IS A CONCAVE MIRROR -->
+        <div class="guide-card">
+          <h2><span>❩</span> What is a Concave Mirror?</h2>
+          <p>
+            A <strong>concave mirror</strong> (converging mirror) is a spherical mirror whose reflecting surface is curved inwards, facing towards the centre of the sphere. It is capable of forming both real-inverted and virtual-erect images depending on the object's position relative to its focus.
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 0.8rem;">
+            <div class="rule-box">
+              <h3>Pole (P)</h3>
+              <p>The geometric centre of the reflecting spherical surface. All distances are measured from here.</p>
+            </div>
+            <div class="rule-box">
+              <h3>Principal Focus (F)</h3>
+              <p>The point on the principal axis where rays parallel to the axis converge after reflection. PF = f.</p>
+            </div>
+            <div class="rule-box">
+              <h3>Centre of Curvature (C)</h3>
+              <p>The centre of the hollow sphere of which the mirror is a part. PC = R = 2f.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: THE 4 STANDARD RAYS -->
+        <div class="guide-card">
+          <h2><span>⚡</span> The 4 Standard Rules for Ray Tracing</h2>
+          <p>Any two of these four standard rays can be used to determine the exact position and size of an image:</p>
+          
+          <div class="rules-grid">
+            <div class="rule-box" style="border-left: 3px solid var(--ray-parallel);">
+              <h3 style="color: var(--ray-parallel);">Rule 1 — Parallel Ray</h3>
+              <p>A ray of light parallel to the principal axis passes through the <strong>Principal Focus (F)</strong> after reflection from a concave mirror.</p>
+              <button class="btn btn-sm" onclick="ui.demoRayRule(1)" style="margin-top: 0.4rem;">👁️ Demonstrate on Bench</button>
+            </div>
+            <div class="rule-box" style="border-left: 3px solid var(--ray-focal);">
+              <h3 style="color: var(--ray-focal);">Rule 2 — Focal Ray</h3>
+              <p>A ray of light passing through the <strong>Principal Focus (F)</strong> emerges <strong>parallel to the principal axis</strong> after reflection.</p>
+              <button class="btn btn-sm" onclick="ui.demoRayRule(2)" style="margin-top: 0.4rem;">👁️ Demonstrate on Bench</button>
+            </div>
+            <div class="rule-box" style="border-left: 3px solid var(--ray-c);">
+              <h3 style="color: var(--ray-c);">Rule 3 — Centre of Curvature Ray</h3>
+              <p>A ray passing through the <strong>Centre of Curvature (C)</strong> strikes the mirror normally (∠i = 0°) and reflects back <strong>along the exact same path</strong>.</p>
+              <button class="btn btn-sm" onclick="ui.demoRayRule(3)" style="margin-top: 0.4rem;">👁️ Demonstrate on Bench</button>
+            </div>
+            <div class="rule-box" style="border-left: 3px solid var(--ray-pole);">
+              <h3 style="color: var(--ray-pole);">Rule 4 — Pole Ray</h3>
+              <p>A ray incident obliquely to the <strong>Pole (P)</strong> reflects obliquely such that <strong>angle of incidence = angle of reflection (∠i = ∠r)</strong>.</p>
+              <button class="btn btn-sm" onclick="ui.demoRayRule(4)" style="margin-top: 0.4rem;">👁️ Demonstrate on Bench</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: SUMMARY TABLE OF 6 CASES -->
+        <div class="guide-card">
+          <h2><span>📋</span> Master Table: 6 Image Formation Cases</h2>
+          <div class="table-wrapper" style="margin-top: 0.6rem;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Object Position</th>
+                  <th>Image Position</th>
+                  <th>Relative Size</th>
+                  <th>Nature & Orientation</th>
+                  <th>Magnification (m)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>At Infinity (∞)</strong></td>
+                  <td>At Focus (F)</td>
+                  <td>Highly Diminished (point-sized)</td>
+                  <td>Real & Inverted</td>
+                  <td>|m| &lt;&lt; 1, negative</td>
+                </tr>
+                <tr>
+                  <td><strong>Beyond C</strong></td>
+                  <td>Between C and F</td>
+                  <td>Diminished</td>
+                  <td>Real & Inverted</td>
+                  <td>|m| &lt; 1, negative</td>
+                </tr>
+                <tr>
+                  <td><strong>At C</strong></td>
+                  <td>At C</td>
+                  <td>Same size</td>
+                  <td>Real & Inverted</td>
+                  <td>m = -1.0</td>
+                </tr>
+                <tr>
+                  <td><strong>Between C and F</strong></td>
+                  <td>Beyond C</td>
+                  <td>Magnified (Enlarged)</td>
+                  <td>Real & Inverted</td>
+                  <td>|m| &gt; 1, negative</td>
+                </tr>
+                <tr>
+                  <td><strong>At Focus (F)</strong></td>
+                  <td>At Infinity (∞)</td>
+                  <td>Highly Enlarged</td>
+                  <td>Real & Inverted</td>
+                  <td>|m| &gt;&gt; 1, negative</td>
+                </tr>
+                <tr>
+                  <td><strong>Between F and P</strong></td>
+                  <td>Behind the Mirror</td>
+                  <td>Magnified (Enlarged)</td>
+                  <td><strong>Virtual & Erect</strong></td>
+                  <td>m &gt; +1, positive</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 4: SIGN CONVENTION & APPLICATIONS -->
+        <div class="guide-card">
+          <h2><span>📐</span> New Cartesian Sign Convention & Practical Applications</h2>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <h3 style="font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--text-primary);">Cartesian Rules:</h3>
+              <ul style="font-size: 0.83rem; color: var(--text-secondary); margin-left: 1.2rem; line-height: 1.6;">
+                <li>Pole (P) is taken as origin (0, 0).</li>
+                <li>Object is always placed on the left: <strong>u is always negative</strong>.</li>
+                <li>Focal length of concave mirror is always <strong>negative (f &lt; 0)</strong>.</li>
+                <li>Real images form on the left: <strong>v &lt; 0</strong>.</li>
+                <li>Virtual images form behind the mirror on the right: <strong>v &gt; 0</strong>.</li>
+                <li>Erect height is positive (h &gt; 0); inverted height is negative (h &lt; 0).</li>
+              </ul>
+            </div>
+            <div>
+              <h3 style="font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--text-primary);">Everyday Uses:</h3>
+              <ul style="font-size: 0.83rem; color: var(--text-secondary); margin-left: 1.2rem; line-height: 1.6;">
+                <li><strong>Shaving / Makeup Mirrors:</strong> Face placed between F and P produces an erect, magnified virtual image.</li>
+                <li><strong>Dentist Mirrors:</strong> Small concave mirror held close to teeth provides an enlarged upright view.</li>
+                <li><strong>Torches & Headlights:</strong> Bulb placed at Focus (F) creates a powerful parallel beam of light.</li>
+                <li><strong>Solar Furnaces:</strong> Large concave reflectors concentrate parallel sunlight at Focus (F) producing extreme heat.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <strong>Concave Mirror Virtual Laboratory</strong> — Exclusively designed for Class X CBSE/ICSE/State Board Physics
+    </div>
+    <div>
+      Strict adherence to New Cartesian Sign Convention & Class X NCERT Syllabus
+    </div>
+  </footer>
+
+  <div id="toast">Observation Recorded!</div>
+
+  <!-- COMPLETE VIRTUAL LAB ENGINE JAVASCRIPT -->
+  <script>
+    const state = {
+      f: 20.0,
+      R: 40.0,
+      u: 30.0,
+      h0: 5.0,
+      objectStyle: 'candle',
+      
+      showRayParallel: true,
+      showRayFocal: true,
+      showRayC: true,
+      showRayPole: false,
+      showArrows: true,
+      showVirtualExt: true,
+      showMeasurements: true,
+      showLabels: true,
+
+      animProgress: 1.0,
+      isAnimatingRays: false,
+      animSpeed: 1.0,
+      animReqId: null,
+
+      isAutoTour: false,
+      autoTourDirection: -1,
+      autoTourReqId: null,
+
+      scale: 7.5,
+      heightScale: 12,
+      xPole: 800,
+      yAxis: 260,
+      mirrorAperture: 170,
+
+      graphMode: 'vu',
+      plotExpPoints: true,
+
+      observations: [],
+      currentQuizIndex: 0,
+      quizScore: 0,
+      challengeCurrent: null,
+      challengeScore: 0,
+      challengeTotal: 0
+    };
+
+    const optics = {
+      calculate() {
+        const u = state.u;
+        const f = state.f;
+        const h0 = state.h0;
+
+        if (u >= 999) {
+          return {
+            uCart: -Infinity, fCart: -f, vCart: -f, vMag: f,
+            m: 0, hiCart: 0, hiMag: 0, isReal: true, isVirtual: false,
+            isAtInfinity: false, caseId: 'infinity', positionText: 'At Focus (F)',
+            natureText: 'Real', orientationText: 'Inverted', sizeText: 'Highly Diminished (Point-sized)'
+          };
+        }
+
+        const uCart = -u;
+        const fCart = -f;
+
+        if (Math.abs(u - f) < 0.05) {
+          return {
+            uCart, fCart, vCart: -Infinity, vMag: Infinity,
+            m: -Infinity, hiCart: -Infinity, hiMag: Infinity, isReal: true, isVirtual: false,
+            isAtInfinity: true, caseId: 'at_f', positionText: 'At Infinity (∞)',
+            natureText: 'Real', orientationText: 'Inverted', sizeText: 'Highly Enlarged'
+          };
+        }
+
+        const vCart = (uCart * fCart) / (uCart - fCart);
+        const m = -vCart / uCart;
+        const hiCart = m * h0;
+
+        const isReal = vCart < 0;
+        const isVirtual = vCart > 0;
+        const vMag = Math.abs(vCart);
+        const hiMag = Math.abs(hiCart);
+
+        let caseId = '';
+        let positionText = '';
+        let sizeText = '';
+        let orientationText = isReal ? 'Inverted' : 'Erect';
+        let natureText = isReal ? 'Real' : 'Virtual';
+        const R = 2 * f;
+
+        if (u > R + 0.1) {
+          caseId = 'beyond_c'; positionText = 'Between C and F'; sizeText = 'Diminished';
+        } else if (Math.abs(u - R) <= 0.1) {
+          caseId = 'at_c'; positionText = 'At Centre of Curvature (C)'; sizeText = 'Same Size as Object';
+        } else if (u > f + 0.1 && u < R - 0.1) {
+          caseId = 'between_c_f'; positionText = 'Beyond C'; sizeText = 'Magnified (Enlarged)';
+        } else if (u < f - 0.1) {
+          caseId = 'between_f_p'; positionText = 'Behind the Mirror'; sizeText = 'Magnified (Enlarged)';
+        }
+
+        return {
+          uCart, fCart, vCart, vMag, m, hiCart, hiMag,
+          isReal, isVirtual, isAtInfinity: false,
+          caseId, positionText, natureText, orientationText, sizeText
+        };
+      },
+
+      getMirrorX(y) {
+        const R_px = state.R * state.scale;
+        const dy = y - state.yAxis;
+        if (Math.abs(dy) > state.mirrorAperture) return state.xPole;
+        const sagitta = R_px - Math.sqrt(Math.max(0, R_px * R_px - dy * dy));
+        return state.xPole - sagitta;
+      }
+    };
+
+    const renderer = {
+      initGrid() {
+        const gridGroup = document.getElementById('benchGridGroup');
+        gridGroup.innerHTML = '';
+        const width = 1100;
+        const height = 520;
+        const step = 40;
+
+        for (let x = 0; x <= width; x += step) {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x); line.setAttribute('y1', 0);
+          line.setAttribute('x2', x); line.setAttribute('y2', height);
+          line.setAttribute('stroke', 'var(--bench-grid)'); line.setAttribute('stroke-width', '1');
+          gridGroup.appendChild(line);
+        }
+        for (let y = 0; y <= height; y += step) {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', 0); line.setAttribute('y1', y);
+          line.setAttribute('x2', width); line.setAttribute('y2', y);
+          line.setAttribute('stroke', 'var(--bench-grid)'); line.setAttribute('stroke-width', '1');
+          gridGroup.appendChild(line);
+        }
+      },
+
+      updateScale() {
+        if (state.R <= 45) {
+          state.scale = 7.5;
+        } else {
+          state.scale = Math.max(4.2, 7.5 * (45 / state.R));
+        }
+      },
+
+      render() {
+        this.updateScale();
+        const calc = optics.calculate();
+        const f_px = state.f * state.scale;
+        const R_px = state.R * state.scale;
+        const u_px = state.u * state.scale;
+        const h0_px = state.h0 * state.heightScale;
+
+        const xP = state.xPole;
+        const y0 = state.yAxis;
+        const xF = xP - f_px;
+        const xC = xP - R_px;
+
+        const markersGroup = document.getElementById('markersGroup');
+        markersGroup.style.display = state.showLabels ? 'block' : 'none';
+
+        document.getElementById('markerP').setAttribute('cx', xP);
+        document.getElementById('markerP').setAttribute('cy', y0);
+        document.getElementById('labelP').setAttribute('x', xP + 10);
+        document.getElementById('labelP').setAttribute('y', y0 + 20);
+
+        document.getElementById('markerF').setAttribute('cx', xF);
+        document.getElementById('markerF').setAttribute('cy', y0);
+        document.getElementById('labelF').setAttribute('x', xF - 6);
+        document.getElementById('labelF').setAttribute('y', y0 + 22);
+
+        document.getElementById('markerC').setAttribute('cx', xC);
+        document.getElementById('markerC').setAttribute('cy', y0);
+        document.getElementById('labelC').setAttribute('x', xC - 6);
+        document.getElementById('labelC').setAttribute('y', y0 + 22);
+
+        this.renderMirror(xP, y0, R_px);
+
+        const xO = state.u >= 999 ? 50 : (xP - u_px);
+        const yO = y0 - h0_px;
+        this.renderObject(xO, yO, h0_px, state.u >= 999);
+
+        this.renderImage(calc, xP, y0, h0_px);
+        this.renderRays(calc, xO, yO, xF, xC, xP, y0, h0_px);
+        this.renderMeasurements(calc, xO, yO, xP, xF, xC, y0, h0_px);
+        ui.updatePanels(calc);
+      },
+
+      renderMirror(xP, y0, R_px) {
+        const H = state.mirrorAperture;
+        const edgeSagitta = R_px - Math.sqrt(Math.max(0, R_px * R_px - H * H));
+        const xEdge = xP - edgeSagitta;
+
+        const mirrorPath = `M ${xEdge} ${y0 - H} A ${R_px} ${R_px} 0 0 0 ${xEdge} ${y0 + H}`;
+        document.getElementById('mirrorSurface').setAttribute('d', mirrorPath);
+
+        const apertureLine = document.getElementById('mirrorApertureLine');
+        apertureLine.setAttribute('x1', xEdge); apertureLine.setAttribute('y1', y0 - H);
+        apertureLine.setAttribute('x2', xEdge); apertureLine.setAttribute('y2', y0 + H);
+
+        const silverGroup = document.getElementById('mirrorSilverGroup');
+        silverGroup.innerHTML = '';
+        const numHatches = 26;
+        const step = (2 * H) / numHatches;
+
+        for (let i = 0; i <= numHatches; i++) {
+          const y = (y0 - H) + i * step;
+          const dy = y - y0;
+          const sag = R_px - Math.sqrt(Math.max(0, R_px * R_px - dy * dy));
+          const mx = xP - sag;
+
+          const hatch = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          hatch.setAttribute('x1', mx); hatch.setAttribute('y1', y);
+          hatch.setAttribute('x2', mx + 12); hatch.setAttribute('y2', y - 9);
+          hatch.setAttribute('stroke', 'var(--mirror-silver)');
+          hatch.setAttribute('stroke-width', '1.5');
+          hatch.setAttribute('stroke-linecap', 'round');
+          silverGroup.appendChild(hatch);
+        }
+      },
+
+      renderObject(xO, yO, h0_px, isInfinity) {
+        const objectGroup = document.getElementById('objectGroup');
+        objectGroup.innerHTML = '';
+        const y0 = state.yAxis;
+
+        if (isInfinity) {
+          const infText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          infText.setAttribute('x', '30'); infText.setAttribute('y', y0 - 80);
+          infText.setAttribute('fill', 'var(--accent-primary)');
+          infText.setAttribute('font-size', '16'); infText.setAttribute('font-weight', 'bold');
+          infText.textContent = 'Object at Infinity (∞)';
+          objectGroup.appendChild(infText);
+          return;
+        }
+
+        if (state.objectStyle === 'candle') {
+          const candleW = 14;
+          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          rect.setAttribute('x', xO - candleW / 2); rect.setAttribute('y', yO + 12);
+          rect.setAttribute('width', candleW); rect.setAttribute('height', Math.max(4, h0_px - 12));
+          rect.setAttribute('rx', '3'); rect.setAttribute('fill', 'url(#candleWaxGrad)');
+          rect.setAttribute('stroke', '#ca8a04'); rect.setAttribute('stroke-width', '1');
+          objectGroup.appendChild(rect);
+
+          const wick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          wick.setAttribute('x1', xO); wick.setAttribute('y1', yO + 12);
+          wick.setAttribute('x2', xO); wick.setAttribute('y2', yO + 6);
+          wick.setAttribute('stroke', '#334155'); wick.setAttribute('stroke-width', '2');
+          objectGroup.appendChild(wick);
+
+          const flame = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const fw = 7;
+          flame.setAttribute('d', `M ${xO} ${yO} Q ${xO - fw} ${yO + 6} ${xO} ${yO + 11} Q ${xO + fw} ${yO + 6} ${xO} ${yO} Z`);
+          flame.setAttribute('fill', 'url(#flameGrad)'); flame.setAttribute('filter', 'url(#mirrorGlow)');
+          objectGroup.appendChild(flame);
+
+          const flameGlow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          flameGlow.setAttribute('cx', xO); flameGlow.setAttribute('cy', yO + 5);
+          flameGlow.setAttribute('r', '8'); flameGlow.setAttribute('fill', '#f59e0b');
+          flameGlow.setAttribute('opacity', '0.35');
+          objectGroup.appendChild(flameGlow);
+        } else {
+          const arrowShaft = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          arrowShaft.setAttribute('x1', xO); arrowShaft.setAttribute('y1', y0);
+          arrowShaft.setAttribute('x2', xO); arrowShaft.setAttribute('y2', yO);
+          arrowShaft.setAttribute('stroke', 'var(--accent-primary)'); arrowShaft.setAttribute('stroke-width', '4');
+          objectGroup.appendChild(arrowShaft);
+
+          const arrowHead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          arrowHead.setAttribute('points', `${xO},${yO - 4} ${xO - 7},${yO + 10} ${xO + 7},${yO + 10}`);
+          arrowHead.setAttribute('fill', 'var(--accent-primary)');
+          objectGroup.appendChild(arrowHead);
+        }
+
+        const grip = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        grip.setAttribute('cx', xO); grip.setAttribute('cy', y0); grip.setAttribute('r', '6');
+        grip.setAttribute('fill', 'var(--accent-primary)'); grip.setAttribute('stroke', '#ffffff');
+        grip.setAttribute('stroke-width', '2');
+        objectGroup.appendChild(grip);
+
+        if (state.showLabels) {
+          const objLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          objLabel.setAttribute('x', xO); objLabel.setAttribute('y', yO - 10);
+          objLabel.setAttribute('text-anchor', 'middle'); objLabel.setAttribute('fill', 'var(--text-primary)');
+          objLabel.setAttribute('font-size', '12'); objLabel.setAttribute('font-weight', '700');
+          objLabel.textContent = 'Object (AB)';
+          objectGroup.appendChild(objLabel);
+        }
+      },
+
+      renderImage(calc, xP, y0, h0_px) {
+        const imageGroup = document.getElementById('imageGroup');
+        imageGroup.innerHTML = '';
+
+        if (calc.caseId === 'infinity') {
+          const xF = xP - state.f * state.scale;
+          const pt = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          pt.setAttribute('cx', xF); pt.setAttribute('cy', y0); pt.setAttribute('r', '5');
+          pt.setAttribute('fill', 'var(--accent-image)'); pt.setAttribute('filter', 'url(#mirrorGlow)');
+          imageGroup.appendChild(pt);
+
+          const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          lbl.setAttribute('x', xF); lbl.setAttribute('y', y0 - 15);
+          lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('fill', 'var(--accent-image)');
+          lbl.setAttribute('font-size', '11'); lbl.setAttribute('font-weight', '700');
+          lbl.textContent = 'Point Image (A\'B\')';
+          imageGroup.appendChild(lbl);
+          return;
+        }
+
+        if (calc.isAtInfinity) {
+          const infLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          infLabel.setAttribute('x', '30'); infLabel.setAttribute('y', y0 + 120);
+          infLabel.setAttribute('fill', 'var(--accent-image)'); infLabel.setAttribute('font-size', '13');
+          infLabel.setAttribute('font-weight', '700');
+          infLabel.textContent = '⇚ Reflected rays parallel → Image formed at Infinity (∞)';
+          imageGroup.appendChild(infLabel);
+          return;
+        }
+
+        const v_px = calc.vCart * state.scale;
+        const xI = xP + v_px;
+        const hi_px = calc.hiCart * state.heightScale;
+        const yI = y0 - hi_px;
+        const clampedXI = Math.max(30, Math.min(1080, xI));
+
+        if (calc.isReal) {
+          const heightMag = Math.abs(hi_px);
+          if (state.objectStyle === 'candle') {
+            const candleW = Math.max(6, Math.min(22, 14 * Math.abs(calc.m)));
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', clampedXI - candleW / 2); rect.setAttribute('y', y0);
+            rect.setAttribute('width', candleW); rect.setAttribute('height', Math.max(4, heightMag - 12));
+            rect.setAttribute('rx', '2'); rect.setAttribute('fill', 'url(#candleWaxGrad)');
+            rect.setAttribute('stroke', '#ca8a04'); rect.setAttribute('opacity', '0.9');
+            imageGroup.appendChild(rect);
+
+            const wick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            wick.setAttribute('x1', clampedXI); wick.setAttribute('y1', yI - 12);
+            wick.setAttribute('x2', clampedXI); wick.setAttribute('y2', yI - 6);
+            wick.setAttribute('stroke', '#334155'); wick.setAttribute('stroke-width', '2');
+            imageGroup.appendChild(wick);
+
+            const flame = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const fw = Math.max(3, 7 * Math.abs(calc.m));
+            flame.setAttribute('d', `M ${clampedXI} ${yI} Q ${clampedXI - fw} ${yI - 6} ${clampedXI} ${yI - 11} Q ${clampedXI + fw} ${yI - 6} ${clampedXI} ${yI} Z`);
+            flame.setAttribute('fill', 'url(#flameGrad)'); flame.setAttribute('filter', 'url(#mirrorGlow)');
+            imageGroup.appendChild(flame);
+          } else {
+            const shaft = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            shaft.setAttribute('x1', clampedXI); shaft.setAttribute('y1', y0);
+            shaft.setAttribute('x2', clampedXI); shaft.setAttribute('y2', yI);
+            shaft.setAttribute('stroke', 'var(--accent-image)'); shaft.setAttribute('stroke-width', '4');
+            imageGroup.appendChild(shaft);
+
+            const head = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            head.setAttribute('points', `${clampedXI},${yI + 4} ${clampedXI - 7},${yI - 10} ${clampedXI + 7},${yI - 10}`);
+            head.setAttribute('fill', 'var(--accent-image)');
+            imageGroup.appendChild(head);
+          }
+
+          if (state.showLabels) {
+            const imgLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            imgLabel.setAttribute('x', clampedXI); imgLabel.setAttribute('y', yI + 18);
+            imgLabel.setAttribute('text-anchor', 'middle'); imgLabel.setAttribute('fill', 'var(--accent-image)');
+            imgLabel.setAttribute('font-size', '12'); imgLabel.setAttribute('font-weight', '700');
+            imgLabel.textContent = `Real Image A'B' (m = ${calc.m.toFixed(2)})`;
+            imageGroup.appendChild(imgLabel);
+          }
+        } else {
+          const heightMag = Math.abs(hi_px);
+          if (state.objectStyle === 'candle') {
+            const candleW = Math.max(6, Math.min(26, 14 * calc.m));
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', clampedXI - candleW / 2); rect.setAttribute('y', yI + 12);
+            rect.setAttribute('width', candleW); rect.setAttribute('height', Math.max(4, heightMag - 12));
+            rect.setAttribute('rx', '3'); rect.setAttribute('fill', 'url(#candleWaxVirtualGrad)');
+            rect.setAttribute('stroke', 'var(--accent-virtual)'); rect.setAttribute('stroke-width', '1.5');
+            rect.setAttribute('stroke-dasharray', '4 2');
+            imageGroup.appendChild(rect);
+
+            const wick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            wick.setAttribute('x1', clampedXI); wick.setAttribute('y1', yI + 12);
+            wick.setAttribute('x2', clampedXI); wick.setAttribute('y2', yI + 6);
+            wick.setAttribute('stroke', 'var(--accent-virtual)'); wick.setAttribute('stroke-width', '2');
+            imageGroup.appendChild(wick);
+
+            const flame = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const fw = Math.max(4, 7 * calc.m);
+            flame.setAttribute('d', `M ${clampedXI} ${yI} Q ${clampedXI - fw} ${yI + 6} ${clampedXI} ${yI + 11} Q ${clampedXI + fw} ${yI + 6} ${clampedXI} ${yI} Z`);
+            flame.setAttribute('fill', 'url(#flameVirtualGrad)'); flame.setAttribute('filter', 'url(#mirrorGlow)');
+            imageGroup.appendChild(flame);
+          } else {
+            const shaft = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            shaft.setAttribute('x1', clampedXI); shaft.setAttribute('y1', y0);
+            shaft.setAttribute('x2', clampedXI); shaft.setAttribute('y2', yI);
+            shaft.setAttribute('stroke', 'var(--accent-virtual)'); shaft.setAttribute('stroke-width', '4');
+            shaft.setAttribute('stroke-dasharray', '6 3');
+            imageGroup.appendChild(shaft);
+
+            const head = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            head.setAttribute('points', `${clampedXI},${yI - 4} ${clampedXI - 7},${yI + 10} ${clampedXI + 7},${yI + 10}`);
+            head.setAttribute('fill', 'var(--accent-virtual)');
+            imageGroup.appendChild(head);
+          }
+
+          if (state.showLabels) {
+            const imgLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            imgLabel.setAttribute('x', clampedXI); imgLabel.setAttribute('y', yI - 12);
+            imgLabel.setAttribute('text-anchor', 'middle'); imgLabel.setAttribute('fill', 'var(--accent-virtual)');
+            imgLabel.setAttribute('font-size', '12'); imgLabel.setAttribute('font-weight', '700');
+            imgLabel.textContent = `Virtual Image A'B' (m = +${calc.m.toFixed(2)})`;
+            imageGroup.appendChild(imgLabel);
+          }
+        }
+      },
+
+      renderRays(calc, xO, yO, xF, xC, xP, y0, h0_px) {
+        const incidentGroup = document.getElementById('incidentRaysGroup');
+        const reflectedGroup = document.getElementById('reflectedRaysGroup');
+        const virtualGroup = document.getElementById('virtualExtensionsGroup');
+        const photonsGroup = document.getElementById('photonsGroup');
+
+        incidentGroup.innerHTML = ''; reflectedGroup.innerHTML = '';
+        virtualGroup.innerHTML = ''; photonsGroup.innerHTML = '';
+
+        const p = state.animProgress;
+
+        const lerp = (x1, y1, x2, y2, t) => ({
+          x: x1 + (x2 - x1) * t,
+          y: y1 + (y2 - y1) * t
+        });
+
+        const createLine = (x1, y1, x2, y2, color, markerId, isDashed = false) => {
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+          line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+          line.setAttribute('stroke', color); line.setAttribute('stroke-width', '2.5');
+          line.setAttribute('stroke-linecap', 'round');
+          if (isDashed) line.setAttribute('stroke-dasharray', '5 4');
+          if (state.showArrows && markerId) line.setAttribute('marker-end', `url(#${markerId})`);
+          return line;
+        };
+
+        const addPhoton = (x, y, color) => {
+          if (!isFinite(x) || !isFinite(y)) return;
+          const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          dot.setAttribute('cx', x); dot.setAttribute('cy', y); dot.setAttribute('r', '4');
+          dot.setAttribute('fill', '#ffffff'); dot.setAttribute('stroke', color);
+          dot.setAttribute('stroke-width', '2'); dot.setAttribute('filter', 'url(#mirrorGlow)');
+          photonsGroup.appendChild(dot);
+        };
+
+        // SPECIAL CASE: OBJECT AT INFINITY
+        if (calc.caseId === 'infinity') {
+          const rayHeights = [y0 - 110, y0 - 60, y0 + 60, y0 + 110];
+          rayHeights.forEach((ry) => {
+            const mx = optics.getMirrorX(ry);
+            const incProgress = Math.min(1, p / 0.5);
+            const incEnd = lerp(20, ry, mx, ry, incProgress);
+            incidentGroup.appendChild(createLine(20, ry, incEnd.x, incEnd.y, 'var(--ray-parallel)', 'arrow-parallel'));
+
+            if (p > 0.5) {
+              const refProgress = Math.min(1, (p - 0.5) / 0.5);
+              const refEnd = lerp(mx, ry, xF, y0, refProgress);
+              reflectedGroup.appendChild(createLine(mx, ry, refEnd.x, refEnd.y, 'var(--ray-parallel)', 'arrow-parallel'));
+              addPhoton(refEnd.x, refEnd.y, 'var(--ray-parallel)');
+            } else if (incProgress > 0) {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-parallel)');
+            }
+          });
+          return;
+        }
+
+        // SPECIAL CASE: OBJECT AT FOCUS (Reflected rays parallel to infinity)
+        if (calc.isAtInfinity) {
+          const slope = (y0 - yO) / (xF - xP);
+          const farX = 25;
+          const farY1 = y0 + slope * (farX - xF);
+
+          if (state.showRayParallel) {
+            const mx1 = optics.getMirrorX(yO);
+            const incProgress = Math.min(1, p / 0.45);
+            const incEnd = lerp(xO, yO, mx1, yO, incProgress);
+            incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-parallel)', 'arrow-parallel'));
+
+            if (p > 0.45) {
+              const refProgress = Math.min(1, (p - 0.45) / 0.55);
+              const targetPt = lerp(mx1, yO, farX, farY1, refProgress);
+              reflectedGroup.appendChild(createLine(mx1, yO, targetPt.x, targetPt.y, 'var(--ray-parallel)', 'arrow-parallel'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-parallel)');
+            } else {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-parallel)');
+            }
+          }
+
+          if (state.showRayC) {
+            const mx3 = optics.getMirrorX(yO + slope * (xP - xO));
+            const my3 = y0 + slope * (mx3 - xC);
+            const farY3 = y0 + slope * (farX - xC);
+
+            const incProgress = Math.min(1, p / 0.45);
+            const incEnd = lerp(xO, yO, mx3, my3, incProgress);
+            incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-c)', 'arrow-c'));
+
+            if (p > 0.45) {
+              const refProgress = Math.min(1, (p - 0.45) / 0.55);
+              const targetPt = lerp(mx3, my3, farX, farY3, refProgress);
+              reflectedGroup.appendChild(createLine(mx3, my3, targetPt.x, targetPt.y, 'var(--ray-c)', 'arrow-c'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-c)');
+            } else {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-c)');
+            }
+          }
+
+          if (state.showRayPole) {
+            const incProgress = Math.min(1, p / 0.45);
+            const incEnd = lerp(xO, yO, xP, y0, incProgress);
+            incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-pole)', 'arrow-pole'));
+
+            if (p > 0.45) {
+              const refProgress = Math.min(1, (p - 0.45) / 0.55);
+              const targetPt = lerp(xP, y0, farX, y0 + ((y0 - yO) / (xP - xO)) * (xP - farX), refProgress);
+              reflectedGroup.appendChild(createLine(xP, y0, targetPt.x, targetPt.y, 'var(--ray-pole)', 'arrow-pole'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-pole)');
+            } else {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-pole)');
+            }
+          }
+          return;
+        }
+
+        // STANDARD FINITE CASES
+        const v_px = calc.vCart * state.scale;
+        const xI = xP + v_px;
+        const hi_px = calc.hiCart * state.heightScale;
+        const yI = y0 - hi_px;
+
+        // RAY 1: PARALLEL RAY
+        if (state.showRayParallel) {
+          const mx1 = optics.getMirrorX(yO);
+          const incProgress = Math.min(1, p / 0.45);
+          const incEnd = lerp(xO, yO, mx1, yO, incProgress);
+          incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-parallel)', 'arrow-parallel'));
+
+          if (incProgress < 1) {
+            addPhoton(incEnd.x, incEnd.y, 'var(--ray-parallel)');
+          } else {
+            const refProgress = Math.min(1, (p - 0.45) / 0.45);
+            const slope = (y0 - yO) / (xF - mx1);
+
+            if (calc.isReal) {
+              const farX = Math.min(30, xI - 80);
+              const farY = y0 + slope * (farX - xF);
+              const targetPt = lerp(mx1, yO, farX, farY, refProgress);
+              reflectedGroup.appendChild(createLine(mx1, yO, targetPt.x, targetPt.y, 'var(--ray-parallel)', 'arrow-parallel'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-parallel)');
+            } else {
+              const farX = 30;
+              const farY = y0 + slope * (farX - xF);
+              const targetPt = lerp(mx1, yO, farX, farY, refProgress);
+              reflectedGroup.appendChild(createLine(mx1, yO, targetPt.x, targetPt.y, 'var(--ray-parallel)', 'arrow-parallel'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-parallel)');
+
+              if (state.showVirtualExt && p > 0.8) {
+                const extProgress = Math.min(1, (p - 0.8) / 0.2);
+                const extEnd = lerp(mx1, yO, xI, yI, extProgress);
+                virtualGroup.appendChild(createLine(mx1, yO, extEnd.x, extEnd.y, 'var(--ray-parallel)', null, true));
+              }
+            }
+          }
+        }
+
+        // RAY 2: FOCAL RAY
+        if (state.showRayFocal) {
+          if (state.u > state.f) {
+            const slope = (y0 - yO) / (xF - xO);
+            let mx2 = xP; let my2 = yO + slope * (mx2 - xO);
+            mx2 = optics.getMirrorX(my2); my2 = yO + slope * (mx2 - xO);
+
+            const incProgress = Math.min(1, p / 0.45);
+            const incEnd = lerp(xO, yO, mx2, my2, incProgress);
+            incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-focal)', 'arrow-focal'));
+
+            if (incProgress < 1) {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-focal)');
+            } else {
+              const refProgress = Math.min(1, (p - 0.45) / 0.45);
+              const farX = Math.min(30, xI - 80);
+              const targetPt = lerp(mx2, my2, farX, my2, refProgress);
+              reflectedGroup.appendChild(createLine(mx2, my2, targetPt.x, targetPt.y, 'var(--ray-focal)', 'arrow-focal'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-focal)');
+            }
+          } else {
+            const slope = (yO - y0) / (xO - xF);
+            let mx2 = xP; let my2 = yO + slope * (mx2 - xO);
+            mx2 = optics.getMirrorX(my2); my2 = yO + slope * (mx2 - xO);
+
+            const incProgress = Math.min(1, p / 0.45);
+            const incEnd = lerp(xO, yO, mx2, my2, incProgress);
+            incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-focal)', 'arrow-focal'));
+            virtualGroup.appendChild(createLine(xF, y0, xO, yO, 'var(--ray-focal)', null, true));
+
+            if (incProgress < 1) {
+              addPhoton(incEnd.x, incEnd.y, 'var(--ray-focal)');
+            } else {
+              const refProgress = Math.min(1, (p - 0.45) / 0.45);
+              const farX = 30;
+              const targetPt = lerp(mx2, my2, farX, my2, refProgress);
+              reflectedGroup.appendChild(createLine(mx2, my2, targetPt.x, targetPt.y, 'var(--ray-focal)', 'arrow-focal'));
+              addPhoton(targetPt.x, targetPt.y, 'var(--ray-focal)');
+
+              if (state.showVirtualExt && p > 0.8) {
+                const extProgress = Math.min(1, (p - 0.8) / 0.2);
+                const extEnd = lerp(mx2, my2, xI, my2, extProgress);
+                virtualGroup.appendChild(createLine(mx2, my2, extEnd.x, extEnd.y, 'var(--ray-focal)', null, true));
+              }
+            }
+          }
+        }
+
+        // RAY 3: CENTRE OF CURVATURE RAY
+        if (state.showRayC) {
+          const slope = (yO - y0) / (xO - xC);
+          let mx3 = xP; let my3 = yO + slope * (mx3 - xO);
+          mx3 = optics.getMirrorX(my3); my3 = yO + slope * (mx3 - xO);
+
+          const incProgress = Math.min(1, p / 0.45);
+          const incEnd = lerp(xO, yO, mx3, my3, incProgress);
+          incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-c)', 'arrow-c'));
+
+          if (incProgress < 1) {
+            addPhoton(incEnd.x, incEnd.y, 'var(--ray-c)');
+          } else {
+            const refProgress = Math.min(1, (p - 0.45) / 0.45);
+            const farX = Math.min(30, xI - 60);
+            const farY = y0 + slope * (farX - xC);
+            const targetPt = lerp(mx3, my3, farX, farY, refProgress);
+            reflectedGroup.appendChild(createLine(mx3, my3, targetPt.x, targetPt.y, 'var(--ray-c)', 'arrow-c'));
+            addPhoton(targetPt.x, targetPt.y, 'var(--ray-c)');
+
+            if (!calc.isReal && state.showVirtualExt && p > 0.8) {
+              const extProgress = Math.min(1, (p - 0.8) / 0.2);
+              const extEnd = lerp(mx3, my3, xI, yI, extProgress);
+              virtualGroup.appendChild(createLine(mx3, my3, extEnd.x, extEnd.y, 'var(--ray-c)', null, true));
+            }
+          }
+        }
+
+        // RAY 4: POLE RAY
+        if (state.showRayPole) {
+          const incProgress = Math.min(1, p / 0.45);
+          const incEnd = lerp(xO, yO, xP, y0, incProgress);
+          incidentGroup.appendChild(createLine(xO, yO, incEnd.x, incEnd.y, 'var(--ray-pole)', 'arrow-pole'));
+
+          if (incProgress < 1) {
+            addPhoton(incEnd.x, incEnd.y, 'var(--ray-pole)');
+          } else {
+            const refProgress = Math.min(1, (p - 0.45) / 0.45);
+            const slope = (y0 - yO) / (xP - xO);
+            const farX = Math.min(30, xI - 60);
+            const farY = y0 + slope * (xP - farX);
+            const targetPt = lerp(xP, y0, farX, farY, refProgress);
+            reflectedGroup.appendChild(createLine(xP, y0, targetPt.x, targetPt.y, 'var(--ray-pole)', 'arrow-pole'));
+            addPhoton(targetPt.x, targetPt.y, 'var(--ray-pole)');
+
+            if (!calc.isReal && state.showVirtualExt && p > 0.8) {
+              const extProgress = Math.min(1, (p - 0.8) / 0.2);
+              const extEnd = lerp(xP, y0, xI, yI, extProgress);
+              virtualGroup.appendChild(createLine(xP, y0, extEnd.x, extEnd.y, 'var(--ray-pole)', null, true));
+            }
+          }
+        }
+      },
+
+      renderMeasurements(calc, xO, yO, xP, xF, xC, y0, h0_px) {
+        const measGroup = document.getElementById('measurementsGroup');
+        measGroup.innerHTML = '';
+
+        if (!state.showMeasurements) return;
+
+        const addDim = (x1, y, x2, label, color = 'var(--text-muted)') => {
+          if (Math.abs(x2 - x1) < 12) return;
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+          const t1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          t1.setAttribute('x1', x1); t1.setAttribute('y1', y - 4);
+          t1.setAttribute('x2', x1); t1.setAttribute('y2', y + 4);
+          t1.setAttribute('stroke', color); t1.setAttribute('stroke-width', '1');
+          g.appendChild(t1);
+
+          const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          t2.setAttribute('x1', x2); t2.setAttribute('y1', y - 4);
+          t2.setAttribute('x2', x2); t2.setAttribute('y2', y + 4);
+          t2.setAttribute('stroke', color); t2.setAttribute('stroke-width', '1');
+          g.appendChild(t2);
+
+          const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          l.setAttribute('x1', x1); l.setAttribute('y1', y);
+          l.setAttribute('x2', x2); l.setAttribute('y2', y);
+          l.setAttribute('stroke', color); l.setAttribute('stroke-width', '1');
+          l.setAttribute('marker-start', 'url(#dim-arrow-start)');
+          l.setAttribute('marker-end', 'url(#dim-arrow-end)');
+          g.appendChild(l);
+
+          const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          txt.setAttribute('x', (x1 + x2) / 2); txt.setAttribute('y', y - 5);
+          txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('fill', color);
+          txt.setAttribute('font-size', '10'); txt.setAttribute('font-weight', '600');
+          txt.textContent = label;
+          g.appendChild(txt);
+
+          measGroup.appendChild(g);
+        };
+
+        const addVertDim = (x, y1, y2, label, color = 'var(--text-muted)') => {
+          if (Math.abs(y2 - y1) < 8) return;
+          const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+          const t1 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          t1.setAttribute('x1', x - 4); t1.setAttribute('y1', y1);
+          t1.setAttribute('x2', x + 4); t1.setAttribute('y2', y1);
+          t1.setAttribute('stroke', color); t1.setAttribute('stroke-width', '1');
+          g.appendChild(t1);
+
+          const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          t2.setAttribute('x1', x - 4); t2.setAttribute('y1', y2);
+          t2.setAttribute('x2', x + 4); t2.setAttribute('y2', y2);
+          t2.setAttribute('stroke', color); t2.setAttribute('stroke-width', '1');
+          g.appendChild(t2);
+
+          const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          l.setAttribute('x1', x); l.setAttribute('y1', y1);
+          l.setAttribute('x2', x); l.setAttribute('y2', y2);
+          l.setAttribute('stroke', color); l.setAttribute('stroke-width', '1');
+          l.setAttribute('marker-start', 'url(#dim-arrow-start)');
+          l.setAttribute('marker-end', 'url(#dim-arrow-end)');
+          g.appendChild(l);
+
+          const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          txt.setAttribute('x', x - 7); txt.setAttribute('y', (y1 + y2) / 2 + 3);
+          txt.setAttribute('text-anchor', 'end'); txt.setAttribute('fill', color);
+          txt.setAttribute('font-size', '10'); txt.setAttribute('font-weight', '600');
+          txt.textContent = label;
+          g.appendChild(txt);
+
+          measGroup.appendChild(g);
+        };
+
+        addDim(xF, y0 + 38, xP, `f = ${state.f.toFixed(1)} cm`, 'var(--accent-focus)');
+        addDim(xC, y0 + 64, xP, `R = 2f = ${state.R.toFixed(1)} cm`, 'var(--accent-c)');
+
+        if (state.u < 999) {
+          addDim(xO, y0 + 90, xP, `u = ${state.u.toFixed(1)} cm`, 'var(--accent-primary)');
+        }
+
+        if (!calc.isAtInfinity && calc.caseId !== 'infinity') {
+          const v_px = calc.vCart * state.scale;
+          const xI = xP + v_px;
+          if (calc.isReal) {
+            addDim(xI, y0 + 116, xP, `v = ${calc.vMag.toFixed(1)} cm`, 'var(--accent-image)');
+          } else {
+            addDim(xP, y0 + 38, xI, `v = +${calc.vMag.toFixed(1)} cm`, 'var(--accent-virtual)');
+          }
+        }
+
+        if (state.u < 999) {
+          addVertDim(xO - 16, y0, yO, `h₀ = ${state.h0.toFixed(1)} cm`, 'var(--accent-primary)');
+        }
+
+        if (!calc.isAtInfinity && calc.caseId !== 'infinity' && Math.abs(calc.hiMag) > 0.2) {
+          const xI = xP + calc.vCart * state.scale;
+          const yI = y0 - calc.hiCart * state.heightScale;
+          const bracketX = calc.isReal ? (xI - 16) : (xI + 16);
+          addVertDim(bracketX, y0, yI, `hᵢ = ${calc.hiMag.toFixed(1)} cm`, calc.isReal ? 'var(--accent-image)' : 'var(--accent-virtual)');
+        }
+      }
+    };
+
+    const ui = {
+      init() {
+        this.bindEvents();
+        this.bindDragging();
+        this.loadStorage();
+        this.initQuiz();
+        this.initChallenge();
+        this.initGraph();
+        renderer.initGrid();
+        renderer.render();
+      },
+
+      bindEvents() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            const targetId = btn.getAttribute('data-tab');
+            document.getElementById(targetId).classList.add('active');
+            if (targetId === 'tab-graph') graphEngine.draw();
+          });
+        });
+
+        const sliderF = document.getElementById('sliderFocalLength');
+        const sliderR = document.getElementById('sliderRadius');
+        const sliderU = document.getElementById('sliderObjectDist');
+        const sliderH0 = document.getElementById('sliderObjectHeight');
+
+        sliderF.addEventListener('input', (e) => {
+          state.f = parseFloat(e.target.value);
+          state.R = 2 * state.f;
+          sliderR.value = state.R;
+          renderer.render();
+          this.updateActivePresetHighlight();
+        });
+
+        sliderR.addEventListener('input', (e) => {
+          state.R = parseFloat(e.target.value);
+          state.f = state.R / 2;
+          sliderF.value = state.f;
+          renderer.render();
+          this.updateActivePresetHighlight();
+        });
+
+        sliderU.addEventListener('input', (e) => {
+          state.u = parseFloat(e.target.value);
+          renderer.render();
+          this.updateActivePresetHighlight();
+        });
+
+        sliderH0.addEventListener('input', (e) => {
+          state.h0 = parseFloat(e.target.value);
+          renderer.render();
+        });
+
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const preset = btn.getAttribute('data-preset');
+            this.applyPreset(preset);
+          });
+        });
+
+        document.getElementById('checkRayParallel').addEventListener('change', (e) => {
+          state.showRayParallel = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkRayFocal').addEventListener('change', (e) => {
+          state.showRayFocal = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkRayC').addEventListener('change', (e) => {
+          state.showRayC = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkRayPole').addEventListener('change', (e) => {
+          state.showRayPole = e.target.checked; renderer.render();
+        });
+
+        document.getElementById('checkArrows').addEventListener('change', (e) => {
+          state.showArrows = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkVirtualExt').addEventListener('change', (e) => {
+          state.showVirtualExt = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkMeasurements').addEventListener('change', (e) => {
+          state.showMeasurements = e.target.checked; renderer.render();
+        });
+        document.getElementById('checkLabels').addEventListener('change', (e) => {
+          state.showLabels = e.target.checked; renderer.render();
+        });
+
+        const objStyleBtn = document.getElementById('objectStyleToggle');
+        objStyleBtn.addEventListener('click', () => {
+          state.objectStyle = state.objectStyle === 'candle' ? 'arrow' : 'candle';
+          objStyleBtn.textContent = state.objectStyle === 'candle' ? '🕯️ Candle' : '🏹 Arrow';
+          renderer.render();
+        });
+
+        document.getElementById('playRayAnimBtn').addEventListener('click', () => this.startRayAnimation());
+        document.getElementById('pauseRayAnimBtn').addEventListener('click', () => this.pauseRayAnimation());
+        document.getElementById('replayRayAnimBtn').addEventListener('click', () => {
+          state.animProgress = 0; this.startRayAnimation();
+        });
+
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.animSpeed = parseFloat(btn.getAttribute('data-speed'));
+          });
+        });
+
+        document.getElementById('autoTourBtn').addEventListener('click', () => this.toggleAutoTour());
+        document.getElementById('themeToggleBtn').addEventListener('click', () => this.toggleTheme());
+
+        document.getElementById('clearDataBtn').addEventListener('click', () => {
+          if (confirm('Are you sure you want to reset all saved observations and quiz progress?')) {
+            localStorage.clear();
+            state.observations = [];
+            state.quizScore = 0;
+            state.challengeScore = 0;
+            state.challengeTotal = 0;
+            this.renderObservationsTable();
+            this.showToast('Saved data cleared successfully!');
+          }
+        });
+
+        document.getElementById('recordObservationBtn').addEventListener('click', () => this.recordCurrentObservation());
+        document.getElementById('addCurrentExpBtn').addEventListener('click', () => this.recordCurrentObservation());
+        document.getElementById('populateStandardExpBtn').addEventListener('click', () => this.populateAllStandardCases());
+        document.getElementById('exportCsvBtn').addEventListener('click', () => this.exportCsv());
+        document.getElementById('printTableBtn').addEventListener('click', () => window.print());
+        document.getElementById('clearTableBtn').addEventListener('click', () => {
+          if (confirm('Clear all recorded observations?')) {
+            state.observations = [];
+            this.saveStorage();
+            this.renderObservationsTable();
+            this.showToast('Observation table reset');
+          }
+        });
+      },
+
+      demoRayRule(ruleNum) {
+        document.querySelector('[data-tab="tab-bench"]').click();
+        state.showRayParallel = (ruleNum === 1);
+        state.showRayFocal = (ruleNum === 2);
+        state.showRayC = (ruleNum === 3);
+        state.showRayPole = (ruleNum === 4);
+
+        document.getElementById('checkRayParallel').checked = state.showRayParallel;
+        document.getElementById('checkRayFocal').checked = state.showRayFocal;
+        document.getElementById('checkRayC').checked = state.showRayC;
+        document.getElementById('checkRayPole').checked = state.showRayPole;
+
+        state.f = 20.0; state.R = 40.0; state.u = 32.0; state.h0 = 5.0;
+        document.getElementById('sliderFocalLength').value = 20;
+        document.getElementById('sliderRadius').value = 40;
+        document.getElementById('sliderObjectDist').value = 32;
+        renderer.render();
+
+        state.animProgress = 0;
+        this.startRayAnimation();
+        this.showToast(`Demonstrating Rule ${ruleNum} on Bench!`);
+      },
+
+      bindDragging() {
+        const svg = document.getElementById('benchSvg');
+        let isDragging = false;
+
+        const getSvgCoords = (e) => {
+          const pt = svg.createSVGPoint();
+          if (e.touches && e.touches.length > 0) {
+            pt.x = e.touches[0].clientX; pt.y = e.touches[0].clientY;
+          } else {
+            pt.x = e.clientX; pt.y = e.clientY;
+          }
+          return pt.matrixTransform(svg.getScreenCTM().inverse());
+        };
+
+        const onStart = (e) => {
+          const coords = getSvgCoords(e);
+          const xO = state.xPole - state.u * state.scale;
+          const yO = state.yAxis - state.h0 * state.heightScale;
+          const y0 = state.yAxis;
+
+          const distBase = Math.hypot(coords.x - xO, coords.y - y0);
+          const distTop = Math.hypot(coords.x - xO, coords.y - yO);
+          const inBoundingBox = (Math.abs(coords.x - xO) < 32 && coords.y >= Math.min(yO, y0) - 20 && coords.y <= Math.max(yO, y0) + 20);
+
+          if (distBase < 35 || distTop < 35 || inBoundingBox) {
+            isDragging = true;
+            if (e.cancelable) e.preventDefault();
+          }
+        };
+
+        const onMove = (e) => {
+          if (!isDragging) return;
+          if (e.cancelable) e.preventDefault();
+          const coords = getSvgCoords(e);
+
+          const newDistPx = state.xPole - coords.x;
+          let newU = newDistPx / state.scale;
+          newU = Math.max(6, Math.min(95, newU));
+          state.u = Math.round(newU * 10) / 10;
+          document.getElementById('sliderObjectDist').value = state.u;
+
+          const newHeightPx = state.yAxis - coords.y;
+          if (newHeightPx > 15 && newHeightPx < 140) {
+            let newH0 = newHeightPx / state.heightScale;
+            newH0 = Math.max(2, Math.min(10, Math.round(newH0 * 10) / 10));
+            state.h0 = newH0;
+            document.getElementById('sliderObjectHeight').value = state.h0;
+          }
+
+          renderer.render();
+          this.updateActivePresetHighlight();
+        };
+
+        const onEnd = () => { isDragging = false; };
+
+        svg.addEventListener('mousedown', onStart);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onEnd);
+        svg.addEventListener('touchstart', onStart, { passive: false });
+        window.addEventListener('touchmove', onMove, { passive: false });
+        window.addEventListener('touchend', onEnd);
+      },
+
+      applyPreset(preset) {
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = document.querySelector(`.preset-btn[data-preset="${preset}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+
+        const f = state.f;
+        const R = 2 * f;
+
+        switch (preset) {
+          case 'infinity': state.u = 999; break;
+          case 'beyond_c': state.u = Math.round((R + 15) * 10) / 10; break;
+          case 'at_c': state.u = R; break;
+          case 'between_c_f': state.u = Math.round(((R + f) / 2) * 10) / 10; break;
+          case 'at_f': state.u = f; break;
+          case 'between_f_p': state.u = Math.round((f / 2) * 10) / 10; break;
+        }
+
+        if (state.u < 999) {
+          document.getElementById('sliderObjectDist').value = state.u;
+        }
+        renderer.render();
+
+        state.animProgress = 0;
+        this.startRayAnimation();
+      },
+
+      updateActivePresetHighlight() {
+        const u = state.u;
+        const f = state.f;
+        const R = 2 * f;
+        let currentPreset = '';
+
+        if (u >= 999) currentPreset = 'infinity';
+        else if (u > R + 0.5) currentPreset = 'beyond_c';
+        else if (Math.abs(u - R) <= 0.5) currentPreset = 'at_c';
+        else if (u > f + 0.5 && u < R - 0.5) currentPreset = 'between_c_f';
+        else if (Math.abs(u - f) <= 0.5) currentPreset = 'at_f';
+        else if (u < f - 0.5) currentPreset = 'between_f_p';
+
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          if (b.getAttribute('data-preset') === currentPreset) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+      },
+
+      updatePanels(calc) {
+        document.getElementById('dispFocalLength').textContent = `${state.f.toFixed(1)} cm`;
+        document.getElementById('dispRadius').textContent = `${state.R.toFixed(1)} cm`;
+        document.getElementById('dispObjectDist').textContent = state.u >= 999 ? '∞' : `${state.u.toFixed(1)} cm`;
+        document.getElementById('dispObjectHeight').textContent = `${state.h0.toFixed(1)} cm`;
+
+        const badgeNature = document.getElementById('badgeNature');
+        badgeNature.textContent = calc.natureText;
+        badgeNature.className = `char-badge ${calc.isReal ? 'badge-real' : 'badge-virtual'}`;
+
+        document.getElementById('dispCharPosition').textContent = calc.positionText;
+        document.getElementById('dispCharOrientation').textContent = calc.orientationText;
+        document.getElementById('dispCharSize').textContent = calc.sizeText;
+        document.getElementById('dispCharMag').textContent = calc.isAtInfinity ? '∞' : `${calc.m >= 0 ? '+' : ''}${calc.m.toFixed(2)}×`;
+
+        document.getElementById('metricF').textContent = `-${state.f.toFixed(1)} cm`;
+        document.getElementById('metricR').textContent = `-${state.R.toFixed(1)} cm`;
+        document.getElementById('metricU').textContent = state.u >= 999 ? '-∞' : `-${state.u.toFixed(1)} cm`;
+        document.getElementById('metricV').textContent = calc.isAtInfinity ? '-∞' : `${calc.vCart >= 0 ? '+' : ''}${calc.vCart.toFixed(1)} cm`;
+        document.getElementById('metricHo').textContent = `+${state.h0.toFixed(1)} cm`;
+        document.getElementById('metricHi').textContent = calc.isAtInfinity ? '-∞' : `${calc.hiCart >= 0 ? '+' : ''}${calc.hiCart.toFixed(1)} cm`;
+        document.getElementById('metricMag').textContent = calc.isAtInfinity ? '-∞' : `${calc.m >= 0 ? '+' : ''}${calc.m.toFixed(2)}`;
+
+        const calcStepsBox = document.getElementById('calcStepsBox');
+        if (calc.caseId === 'infinity') {
+          calcStepsBox.innerHTML = `
+            <div class="step-line"><span>1. Given:</span> <span>u = -∞ cm, f = -${state.f.toFixed(1)} cm</span></div>
+            <div class="step-line"><span>2. Formula:</span> <span>1/v = 1/f - 1/u = -1/${state.f.toFixed(1)} - 0</span></div>
+            <div class="step-line"><span>3. Result:</span> <span>v = f = -${state.f.toFixed(1)} cm (Real, Inverted at Focus F)</span></div>
+            <div class="step-line"><span>4. Magnification:</span> <span>m = -v/u = 0 (Highly diminished, point-sized)</span></div>
+          `;
+        } else if (calc.isAtInfinity) {
+          calcStepsBox.innerHTML = `
+            <div class="step-line"><span>1. Given:</span> <span>u = -${state.f.toFixed(1)} cm, f = -${state.f.toFixed(1)} cm</span></div>
+            <div class="step-line"><span>2. Formula:</span> <span>1/v = 1/f - 1/u = (-1/${state.f.toFixed(1)}) - (-1/${state.f.toFixed(1)}) = 0</span></div>
+            <div class="step-line"><span>3. Result:</span> <span>1/v = 0  ⟹  v → -∞ cm (Image formed at Infinity)</span></div>
+            <div class="step-line"><span>4. Magnification:</span> <span>m → -∞ (Highly enlarged, real and inverted)</span></div>
+          `;
+        } else {
+          calcStepsBox.innerHTML = `
+            <div class="step-line"><span>1. Mirror Formula:</span> <span>1/v = 1/f - 1/u</span></div>
+            <div class="step-line"><span>2. Substitution:</span> <span>1/v = 1/(-${state.f.toFixed(1)}) - 1/(-${state.u.toFixed(1)})</span></div>
+            <div class="step-line"><span>3. Image Distance v:</span> <span>v = ${calc.vCart >= 0 ? '+' : ''}${calc.vCart.toFixed(2)} cm (${calc.isReal ? 'In front' : 'Behind mirror'})</span></div>
+            <div class="step-line"><span>4. Magnification m:</span> <span>m = -v/u = -(${calc.vCart.toFixed(2)}) / (-${state.u.toFixed(1)}) = ${calc.m >= 0 ? '+' : ''}${calc.m.toFixed(2)}</span></div>
+            <div class="step-line"><span>5. Image Height hᵢ:</span> <span>hᵢ = m × h₀ = ${calc.m.toFixed(2)} × ${state.h0.toFixed(1)} = ${calc.hiCart >= 0 ? '+' : ''}${calc.hiCart.toFixed(2)} cm</span></div>
+          `;
+        }
+
+        if (document.getElementById('tab-graph').classList.contains('active')) {
+          graphEngine.draw();
+        }
+      },
+
+      startRayAnimation() {
+        if (state.isAnimatingRays) return;
+        state.isAnimatingRays = true;
+
+        const animStep = () => {
+          if (!state.isAnimatingRays) return;
+          state.animProgress += 0.015 * state.animSpeed;
+          if (state.animProgress >= 1.0) {
+            state.animProgress = 1.0;
+            state.isAnimatingRays = false;
+            renderer.render();
+            return;
+          }
+          renderer.render();
+          state.animReqId = requestAnimationFrame(animStep);
+        };
+        state.animReqId = requestAnimationFrame(animStep);
+      },
+
+      pauseRayAnimation() {
+        state.isAnimatingRays = false;
+        if (state.animReqId) {
+          cancelAnimationFrame(state.animReqId);
+          state.animReqId = null;
+        }
+      },
+
+      toggleAutoTour() {
+        const btn = document.getElementById('autoTourBtn');
+        if (state.isAutoTour) {
+          state.isAutoTour = false;
+          if (state.autoTourReqId) {
+            cancelAnimationFrame(state.autoTourReqId);
+            state.autoTourReqId = null;
+          }
+          btn.textContent = '🎬 Animate Object (Tour)';
+          btn.classList.remove('btn-primary');
+        } else {
+          state.isAutoTour = true;
+          btn.textContent = '⏸ Pause Tour';
+          btn.classList.add('btn-primary');
+          state.u = 85.0;
+
+          const tourStep = () => {
+            if (!state.isAutoTour) return;
+            state.u += state.autoTourDirection * 0.25 * state.animSpeed;
+
+            if (state.u <= 8.0) state.autoTourDirection = 1;
+            else if (state.u >= 85.0) state.autoTourDirection = -1;
+
+            document.getElementById('sliderObjectDist').value = state.u;
+            renderer.render();
+            this.updateActivePresetHighlight();
+
+            state.autoTourReqId = requestAnimationFrame(tourStep);
+          };
+          state.autoTourReqId = requestAnimationFrame(tourStep);
+        }
+      },
+
+      recordCurrentObservation() {
+        const calc = optics.calculate();
+        const obs = {
+          id: Date.now(),
+          caseName: calc.positionText,
+          u: state.u >= 999 ? '∞' : state.u.toFixed(1),
+          f: state.f.toFixed(1),
+          v: calc.isAtInfinity ? '∞' : (calc.vCart >= 0 ? `+${calc.vCart.toFixed(1)}` : calc.vCart.toFixed(1)),
+          imgPos: calc.positionText,
+          size: calc.sizeText,
+          nature: calc.natureText,
+          orientation: calc.orientationText,
+          m: calc.isAtInfinity ? '∞' : `${calc.m >= 0 ? '+' : ''}${calc.m.toFixed(2)}`
+        };
+
+        state.observations.push(obs);
+        this.saveStorage();
+        this.renderObservationsTable();
+        this.showToast('Observation recorded in lab table!');
+      },
+
+      populateAllStandardCases() {
+        const f = state.f;
+        const R = 2 * f;
+        const standardCases = [
+          { u: 999, label: 'At Infinity (∞)' },
+          { u: R + 15, label: 'Beyond C' },
+          { u: R, label: 'At C' },
+          { u: (R + f) / 2, label: 'Between C and F' },
+          { u: f, label: 'At Focus (F)' },
+          { u: f / 2, label: 'Between F and P' }
+        ];
+
+        state.observations = [];
+        standardCases.forEach((item) => {
+          const oldU = state.u;
+          state.u = item.u;
+          const calc = optics.calculate();
+          state.observations.push({
+            id: Date.now() + Math.random(),
+            caseName: item.label,
+            u: item.u >= 999 ? '∞' : item.u.toFixed(1),
+            f: f.toFixed(1),
+            v: calc.isAtInfinity ? '∞' : (calc.vCart >= 0 ? `+${calc.vCart.toFixed(1)}` : calc.vCart.toFixed(1)),
+            imgPos: calc.positionText,
+            size: calc.sizeText,
+            nature: calc.natureText,
+            orientation: calc.orientationText,
+            m: calc.isAtInfinity ? '∞' : `${calc.m >= 0 ? '+' : ''}${calc.m.toFixed(2)}`
+          });
+          state.u = oldU;
+        });
+
+        this.saveStorage();
+        this.renderObservationsTable();
+        this.showToast('Populated all 6 Class X standard observations!');
+      },
+
+      renderObservationsTable() {
+        const tbody = document.getElementById('observationTableBody');
+        tbody.innerHTML = '';
+
+        if (state.observations.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="11" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                No observations recorded yet. Click "Record Current Bench Observation" or "Populate All 6 Standard Cases".
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        state.observations.forEach((row, index) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${index + 1}</strong></td>
+            <td><strong>${row.caseName}</strong></td>
+            <td>${row.u}</td>
+            <td>${row.f}</td>
+            <td><strong>${row.v}</strong></td>
+            <td>${row.imgPos}</td>
+            <td>${row.size}</td>
+            <td><span class="char-badge ${row.nature === 'Real' ? 'badge-real' : 'badge-virtual'}">${row.nature}</span></td>
+            <td>${row.orientation}</td>
+            <td>${row.m}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="ui.deleteObservation(${row.id})" title="Delete row">✕</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      },
+
+      deleteObservation(id) {
+        state.observations = state.observations.filter(o => o.id !== id);
+        this.saveStorage();
+        this.renderObservationsTable();
+      },
+
+      exportCsv() {
+        if (state.observations.length === 0) {
+          alert('No observation data to export! Record some data first.');
+          return;
+        }
+        let csv = 'S.No,Object Position,u (cm),f (cm),v (cm),Image Position,Image Size,Nature,Orientation,Magnification\n';
+        state.observations.forEach((row, idx) => {
+          csv += `${idx + 1},"${row.caseName}",${row.u},${row.f},${row.v},"${row.imgPos}","${row.size}","${row.nature}","${row.orientation}",${row.m}\n`;
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'concave_mirror_observations.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showToast('CSV downloaded successfully!');
+      },
+
+      initChallenge() {
+        const scenarios = [
+          { u: 45, f: 20, desc: 'Object placed beyond C (u = 45 cm, f = 20 cm, C = 40 cm)', pos: 'between_c_f', nature: 'real', orient: 'inverted', size: 'diminished' },
+          { u: 40, f: 20, desc: 'Object placed exactly at Centre of Curvature C (u = 40 cm, f = 20 cm)', pos: 'at_c', nature: 'real', orient: 'inverted', size: 'same_size' },
+          { u: 28, f: 20, desc: 'Object placed between C and F (u = 28 cm, f = 20 cm)', pos: 'beyond_c', nature: 'real', orient: 'inverted', size: 'magnified' },
+          { u: 20, f: 20, desc: 'Object placed exactly at Principal Focus F (u = 20 cm, f = 20 cm)', pos: 'at_infinity', nature: 'real', orient: 'inverted', size: 'highly_enlarged' },
+          { u: 10, f: 20, desc: 'Object placed between Principal Focus F and Pole P (u = 10 cm, f = 20 cm)', pos: 'behind_mirror', nature: 'virtual', orient: 'erect', size: 'magnified' },
+          { u: 999, f: 20, desc: 'Distant object at Infinity (u = ∞, f = 20 cm)', pos: 'at_f', nature: 'real', orient: 'inverted', size: 'highly_diminished' }
+        ];
+
+        let challengeIndex = 0;
+        const loadChallenge = () => {
+          state.challengeCurrent = scenarios[challengeIndex % scenarios.length];
+          document.getElementById('challengeScenarioText').textContent = state.challengeCurrent.desc;
+          document.getElementById('challengeFeedback').style.display = 'none';
+
+          document.getElementById('predPosition').value = '';
+          document.getElementById('predNature').value = '';
+          document.getElementById('predOrientation').value = '';
+          document.getElementById('predSize').value = '';
+        };
+
+        document.getElementById('submitChallengeBtn').addEventListener('click', () => {
+          const userPos = document.getElementById('predPosition').value;
+          const userNat = document.getElementById('predNature').value;
+          const userOri = document.getElementById('predOrientation').value;
+          const userSiz = document.getElementById('predSize').value;
+
+          if (!userPos || !userNat || !userOri || !userSiz) {
+            alert('Please select all 4 image characteristics before checking!');
+            return;
+          }
+
+          const cur = state.challengeCurrent;
+          let correctCount = 0;
+          if (userPos === cur.pos) correctCount++;
+          if (userNat === cur.nature) correctCount++;
+          if (userOri === cur.orient) correctCount++;
+          if (userSiz === cur.size) correctCount++;
+
+          state.challengeTotal += 4;
+          state.challengeScore += correctCount;
+          document.getElementById('challengeScore').textContent = `${state.challengeScore} / ${state.challengeTotal}`;
+
+          const fb = document.getElementById('challengeFeedback');
+          fb.style.display = 'block';
+
+          if (correctCount === 4) {
+            fb.className = 'challenge-feedback success';
+            fb.innerHTML = '<strong>🎉 Outstanding! All 4 predictions are 100% correct!</strong><br>Now watch the rays converge on the bench to verify!';
+          } else {
+            fb.className = 'challenge-feedback partial';
+            fb.innerHTML = `<strong>Score: ${correctCount}/4 Correct.</strong><br>Correct Position: <em>${cur.pos.replace(/_/g, ' ')}</em> | Nature: <em>${cur.nature}</em> | Orientation: <em>${cur.orient}</em> | Size: <em>${cur.size.replace(/_/g, ' ')}</em>.`;
+          }
+
+          state.u = cur.u; state.f = cur.f; state.R = 2 * cur.f;
+          document.getElementById('sliderFocalLength').value = state.f;
+          document.getElementById('sliderRadius').value = state.R;
+          if (state.u < 999) document.getElementById('sliderObjectDist').value = state.u;
+          renderer.render();
+          state.animProgress = 0;
+          this.startRayAnimation();
+        });
+
+        document.getElementById('nextChallengeBtn').addEventListener('click', () => {
+          challengeIndex++;
+          loadChallenge();
+        });
+
+        loadChallenge();
+      },
+
+      initQuiz() {
+        const quizData = [
+          {
+            q: "[MCQ] For a concave mirror, where should an object be placed to obtain a real, inverted image of the same size as the object?",
+            options: ["Between F and P", "At Focus (F)", "At Centre of Curvature (C)", "Beyond C"],
+            answer: 2,
+            explanation: "When the object is at C of a concave mirror, u = 2f, yielding v = 2f and magnification m = -1 (real, inverted, same size)."
+          },
+          {
+            q: "[Ray Rule] A ray of light parallel to the principal axis of a concave mirror passes through which point after reflection?",
+            options: ["Centre of Curvature (C)", "Principal Focus (F)", "Pole (P)", "Back behind mirror"],
+            answer: 1,
+            explanation: "By Rule 1 of concave mirror ray tracing, any paraxial incident ray parallel to the principal axis converges and passes through the Principal Focus (F)."
+          },
+          {
+            q: "[True/False] A concave mirror always forms real and inverted images for all positions of the object.",
+            options: ["True", "False — Between F and P it forms a virtual, erect, and magnified image"],
+            answer: 1,
+            explanation: "False! When the object is placed between the Focus (F) and Pole (P), the reflected rays diverge in front and their backward extensions meet behind the mirror, forming a virtual and erect image."
+          },
+          {
+            q: "[Numerical] An object is placed 30 cm in front of a concave mirror of focal length 20 cm. What is the image distance (v)?",
+            options: ["-60 cm (in front of mirror)", "-12 cm", "+60 cm (behind mirror)", "-30 cm"],
+            answer: 0,
+            explanation: "Cartesian values: f = -20 cm, u = -30 cm. Using 1/v = 1/f - 1/u = (-1/20) - (-1/30) = -1/60 ⟹ v = -60 cm."
+          },
+          {
+            q: "[Sign Convention] According to the New Cartesian Sign Convention, the focal length (f) of a concave mirror is taken as:",
+            options: ["Positive", "Negative", "Always Zero", "Depends on whether image is real or virtual"],
+            answer: 1,
+            explanation: "Since the focus of a concave mirror lies in front of the mirror (to the left of Pole P, against incident light), its focal length is always strictly negative."
+          },
+          {
+            q: "[Application] Why do dentists use a concave mirror rather than a plane or convex mirror?",
+            options: ["It gives a wider field of view", "Held between F and P, it produces an erect and magnified virtual image of the teeth", "It inverts the image for better illumination", "It reflects less glare"],
+            answer: 1,
+            explanation: "Holding the tooth inside the focal length (between F and P) creates an upright, highly magnified virtual image, allowing dentists to clearly inspect fine dental structures."
+          },
+          {
+            q: "[Numerical] If a 4 cm tall object produces an image of height -8 cm in a concave mirror, what is the magnification (m)?",
+            options: ["+2.0", "-2.0", "-0.5", "+0.5"],
+            answer: 1,
+            explanation: "Magnification m = hᵢ / h₀ = (-8 cm) / (4 cm) = -2.0. The negative sign confirms the image is real and inverted, and |m| = 2 means twice enlarged."
+          },
+          {
+            q: "[Ray Rule] A ray of light passing through the Centre of Curvature (C) strikes the concave mirror and reflects back along the same path because:",
+            options: ["The ray strikes the spherical surface at normal incidence (angle of incidence ∠i = 0°)", "Light cannot pass through C", "Total internal reflection occurs", "The mirror formula requires it"],
+            answer: 0,
+            explanation: "The radius connecting C to any point on the sphere is normal (perpendicular) to the tangent. Thus ∠i = 0°, so by the first law of reflection, ∠r = 0°."
+          },
+          {
+            q: "[Predict Image] When an object is placed at the Principal Focus (F) of a concave mirror, where is the image formed?",
+            options: ["At C", "Between C and F", "At Infinity (∞)", "Behind mirror at Pole P"],
+            answer: 2,
+            explanation: "When u = f, 1/v = 1/f - 1/u = 0 ⟹ v → ∞. Reflected rays emerge parallel to each other and converge at infinity."
+          },
+          {
+            q: "[Application] Which optical setup uses a concave mirror with the light source placed at its focus (F)?",
+            options: ["Vehicle rear-view wing mirrors", "Torches, searchlights, and automobile headlights", "Solar panels", "Magnifying reading glasses"],
+            answer: 1,
+            explanation: "Placing a high-intensity bulb at the focus of a concave reflector produces a powerful, non-diverging parallel beam that travels long distances."
+          },
+          {
+            q: "[Geometry] What is the exact mathematical relationship between the focal length (f) and the radius of curvature (R) of a concave mirror?",
+            options: ["f = 2R", "R = 2f (or f = R/2)", "f = R + 2", "R = f / 2"],
+            answer: 1,
+            explanation: "For spherical mirrors of small aperture, the principal focus lies exactly midway between the pole and centre of curvature: R = 2f."
+          },
+          {
+            q: "[Nature] Can a concave mirror ever form a virtual image that is smaller (diminished) than the object?",
+            options: ["Yes, when object is at infinity", "Yes, when object is at C", "No, virtual images in a concave mirror are always magnified (m > 1)", "Yes, when object is between C and F"],
+            answer: 2,
+            explanation: "A concave mirror forms a virtual image ONLY when the object is between F and P (0 < u < f). In this region, m = f / (f - u) > 1, so the virtual image is ALWAYS magnified."
+          }
+        ];
+
+        let curIdx = 0;
+        let score = 0;
+
+        const renderQuestion = () => {
+          const item = quizData[curIdx];
+          document.getElementById('quizCounter').textContent = `Question ${curIdx + 1} of ${quizData.length}`;
+          document.getElementById('quizProgressBar').style.width = `${((curIdx) / quizData.length) * 100}%`;
+          document.getElementById('quizQuestionText').textContent = item.q;
+          document.getElementById('quizExplanation').style.display = 'none';
+          document.getElementById('nextQuestionBtn').style.display = 'none';
+
+          const container = document.getElementById('quizOptionsContainer');
+          container.innerHTML = '';
+
+          item.options.forEach((optText, optIdx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-option-btn';
+            btn.textContent = optText;
+            btn.addEventListener('click', () => {
+              container.querySelectorAll('.quiz-option-btn').forEach(b => b.disabled = true);
+
+              if (optIdx === item.answer) {
+                btn.classList.add('correct');
+                score++;
+                document.getElementById('quizScore').textContent = score;
+              } else {
+                btn.classList.add('wrong');
+                container.children[item.answer].classList.add('correct');
+              }
+
+              const exp = document.getElementById('quizExplanation');
+              exp.innerHTML = `<strong>Explanation:</strong> ${item.explanation}`;
+              exp.style.display = 'block';
+
+              if (curIdx < quizData.length - 1) {
+                document.getElementById('nextQuestionBtn').style.display = 'inline-flex';
+              } else {
+                document.getElementById('quizProgressBar').style.width = '100%';
+                setTimeout(() => {
+                  alert(`🎉 Quiz Completed!\nYour Final Score: ${score} / ${quizData.length} (${Math.round((score / quizData.length) * 100)}%)`);
+                }, 400);
+              }
+            });
+            container.appendChild(btn);
+          });
+        };
+
+        document.getElementById('nextQuestionBtn').addEventListener('click', () => {
+          curIdx++;
+          renderQuestion();
+        });
+
+        document.getElementById('restartQuizBtn').addEventListener('click', () => {
+          curIdx = 0; score = 0;
+          document.getElementById('quizScore').textContent = '0';
+          renderQuestion();
+        });
+
+        renderQuestion();
+      },
+
+      initGraph() {
+        const canvas = document.getElementById('uvGraph');
+        const modeBtn = document.getElementById('graphToggleModeBtn');
+        const plotPointsBtn = document.getElementById('plotExpPointsBtn');
+
+        modeBtn.addEventListener('click', () => {
+          state.graphMode = state.graphMode === 'vu' ? 'mu' : 'vu';
+          modeBtn.textContent = state.graphMode === 'vu' ? 'Show Magnification (m vs u)' : 'Show Image Distance (v vs u)';
+          graphEngine.draw();
+        });
+
+        plotPointsBtn.addEventListener('click', () => {
+          state.plotExpPoints = !state.plotExpPoints;
+          plotPointsBtn.textContent = state.plotExpPoints ? 'Hide Recorded Lab Points' : 'Overlay Recorded Lab Points';
+          graphEngine.draw();
+        });
+
+        const resizeObserver = new ResizeObserver(() => {
+          graphEngine.resize();
+          graphEngine.draw();
+        });
+        resizeObserver.observe(canvas.parentElement);
+      },
+
+      toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'dark';
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+
+        const icon = document.getElementById('themeIcon');
+        const label = document.getElementById('themeLabel');
+        if (next === 'light') {
+          icon.textContent = '🌙'; label.textContent = 'Dark Mode';
+        } else {
+          icon.textContent = '☀️'; label.textContent = 'Light Mode';
+        }
+        localStorage.setItem('concave_lab_theme', next);
+        renderer.render();
+        graphEngine.draw();
+      },
+
+      loadStorage() {
+        const savedTheme = localStorage.getItem('concave_lab_theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+          if (savedTheme === 'light') {
+            document.getElementById('themeIcon').textContent = '🌙';
+            document.getElementById('themeLabel').textContent = 'Dark Mode';
+          }
+        }
+
+        const savedObs = localStorage.getItem('concave_lab_observations');
+        if (savedObs) {
+          try {
+            state.observations = JSON.parse(savedObs);
+            this.renderObservationsTable();
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      },
+
+      saveStorage() {
+        localStorage.setItem('concave_lab_observations', JSON.stringify(state.observations));
+      },
+
+      showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+    };
+
+    const graphEngine = {
+      resize() {
+        const canvas = document.getElementById('uvGraph');
+        const rect = canvas.parentElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      },
+
+      draw() {
+        const canvas = document.getElementById('uvGraph');
+        if (!canvas.width || !canvas.height) this.resize();
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const f = state.f;
+        const pad = 50;
+        const uMax = 90;
+        const uMin = 5;
+
+        if (state.graphMode === 'vu') {
+          const vMax = 120;
+          const vMin = -60;
+
+          const toScreenX = (u) => pad + ((u - uMin) / (uMax - uMin)) * (w - 2 * pad);
+          const toScreenY = (v) => (h - pad) - ((v - vMin) / (vMax - vMin)) * (h - 2 * pad);
+
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+          ctx.lineWidth = 1;
+
+          const yZero = toScreenY(0);
+          ctx.beginPath();
+          ctx.moveTo(pad, yZero);
+          ctx.lineTo(w - pad, yZero);
+          ctx.strokeStyle = 'var(--text-muted)';
+          ctx.stroke();
+
+          ctx.fillStyle = 'var(--text-secondary)';
+          ctx.font = '12px system-ui';
+          ctx.fillText('Object Distance u (cm) ➔', w - 160, yZero - 10);
+          ctx.fillText('Image Distance v (cm) ➔', pad + 10, pad - 10);
+
+          const xAsymp = toScreenX(f);
+          ctx.beginPath();
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = 'var(--accent-focus)';
+          ctx.moveTo(xAsymp, pad); ctx.lineTo(xAsymp, h - pad);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.fillStyle = 'var(--accent-focus)';
+          ctx.fillText(`Asymptote u = f (${f} cm)`, xAsymp + 6, pad + 20);
+
+          ctx.strokeStyle = 'var(--accent-primary)';
+          ctx.lineWidth = 3;
+
+          // Branch 1: u > f (Real images)
+          ctx.beginPath();
+          let started = false;
+          for (let uVal = f + 0.8; uVal <= uMax; uVal += 0.5) {
+            const vVal = (uVal * f) / (uVal - f);
+            const sx = toScreenX(uVal);
+            const sy = toScreenY(vVal);
+            if (!started) { ctx.moveTo(sx, sy); started = true; }
+            else ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+
+          // Branch 2: u < f (Virtual images behind mirror)
+          ctx.beginPath();
+          started = false;
+          for (let uVal = uMin; uVal <= f - 0.8; uVal += 0.5) {
+            const vVal = -(uVal * f) / (f - uVal);
+            const sx = toScreenX(uVal);
+            const sy = toScreenY(vVal);
+            if (!started) { ctx.moveTo(sx, sy); started = true; }
+            else ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+
+          // Current operating point
+          if (state.u < 999 && Math.abs(state.u - f) > 0.1) {
+            const curCalc = optics.calculate();
+            const curV = curCalc.isReal ? curCalc.vMag : -curCalc.vMag;
+            const curSx = toScreenX(state.u);
+            const curSy = toScreenY(curV);
+
+            ctx.beginPath();
+            ctx.arc(curSx, curSy, 7, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ef4444'; ctx.fill();
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.fillStyle = 'var(--text-primary)'; ctx.font = 'bold 11px system-ui';
+            ctx.fillText(`Current: (${state.u.toFixed(1)}, ${curCalc.vMag.toFixed(1)})`, curSx + 10, curSy - 8);
+          }
+
+          // Recorded observations
+          if (state.plotExpPoints && state.observations.length > 0) {
+            state.observations.forEach(obs => {
+              const uNum = parseFloat(obs.u);
+              const vNum = parseFloat(obs.v);
+              if (!isNaN(uNum) && !isNaN(vNum)) {
+                const sx = toScreenX(uNum);
+                const sy = toScreenY(vNum < 0 ? Math.abs(vNum) : -Math.abs(vNum));
+                ctx.beginPath();
+                ctx.arc(sx, sy, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = '#10b981'; ctx.fill(); ctx.stroke();
+              }
+            });
+          }
+
+        } else {
+          const mMax = 4;
+          const mMin = -4;
+
+          const toScreenX = (u) => pad + ((u - uMin) / (uMax - uMin)) * (w - 2 * pad);
+          const toScreenY = (m) => (h - pad) - ((m - mMin) / (mMax - mMin)) * (h - 2 * pad);
+
+          const yZero = toScreenY(0);
+          ctx.beginPath();
+          ctx.moveTo(pad, yZero); ctx.lineTo(w - pad, yZero);
+          ctx.strokeStyle = 'var(--text-muted)'; ctx.stroke();
+
+          ctx.fillStyle = 'var(--text-secondary)'; ctx.font = '12px system-ui';
+          ctx.fillText('Object Distance u (cm) ➔', w - 160, yZero - 10);
+          ctx.fillText('Magnification m ➔', pad + 10, pad - 10);
+
+          ctx.strokeStyle = 'var(--accent-secondary)';
+          ctx.lineWidth = 3;
+
+          ctx.beginPath();
+          let started = false;
+          for (let uVal = f + 0.8; uVal <= uMax; uVal += 0.5) {
+            const mVal = -f / (uVal - f);
+            const sx = toScreenX(uVal);
+            const sy = toScreenY(mVal);
+            if (!started) { ctx.moveTo(sx, sy); started = true; }
+            else ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+
+          ctx.beginPath();
+          started = false;
+          for (let uVal = uMin; uVal <= f - 0.8; uVal += 0.5) {
+            const mVal = f / (f - uVal);
+            const sx = toScreenX(uVal);
+            const sy = toScreenY(mVal);
+            if (!started) { ctx.moveTo(sx, sy); started = true; }
+            else ctx.lineTo(sx, sy);
+          }
+          ctx.stroke();
+
+          if (state.u < 999 && Math.abs(state.u - f) > 0.1) {
+            const curCalc = optics.calculate();
+            const curSx = toScreenX(state.u);
+            const curSy = toScreenY(curCalc.m);
+
+            ctx.beginPath();
+            ctx.arc(curSx, curSy, 7, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ef4444'; ctx.fill();
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; ctx.stroke();
+
+            ctx.fillStyle = 'var(--text-primary)'; ctx.font = 'bold 11px system-ui';
+            ctx.fillText(`m = ${curCalc.m.toFixed(2)}`, curSx + 10, curSy - 8);
+          }
+        }
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ui.init();
+    });
+  </script>
+</body>
+</html>

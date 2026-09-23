@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angle Explorer | Measurement of Angles</title>
+  <style>
+* { box-sizing: border-box; }
+
+:root {
+  --ink: #202124;
+  --muted: #666;
+  --paper: #f7f4ee;
+  --card: #fffdf8;
+  --accent: #315c4d;
+  --accent-light: #e4eee9;
+  --line: #ddd6ca;
+  --good: #2f6b43;
+  --bad: #a13b32;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.hero {
+  padding: 48px 7%;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  background: #ebe5d9;
+}
+
+.eyebrow, .section-tag {
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+h1 { margin: 6px 0 8px; font-size: clamp(34px, 6vw, 58px); }
+h2 { margin: 8px 0; font-size: 27px; }
+p { line-height: 1.55; color: var(--muted); }
+
+.score-pill {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 18px;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.container {
+  max-width: 980px;
+  margin: 36px auto;
+  padding: 0 20px;
+  display: grid;
+  gap: 24px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 28px;
+}
+
+.angle-stage, .quiz-visual {
+  margin: 22px 0;
+  border-radius: 16px;
+  background: #f0ece3;
+  padding: 8px;
+}
+
+svg { width: 100%; display: block; }
+
+#angleSvg { max-height: 390px; }
+#arm1, #arm2, #quizArm1, #quizArm2 { stroke: var(--accent); stroke-width: 6; stroke-linecap: round; }
+#vertex, #handle, .quiz-visual circle { fill: var(--accent); }
+#handle { cursor: grab; }
+#handle:focus { outline: none; stroke: #111; stroke-width: 3; }
+.arc { fill: none; stroke: #9b8c75; stroke-width: 2; stroke-dasharray: 4 5; }
+.tick { stroke: #8b8172; stroke-width: 1; }
+#angleText, #quizDegrees { font-size: 22px; font-weight: 700; fill: var(--accent); }
+
+.controls { display: grid; gap: 12px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+.angle-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 9px 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 3px solid #a8c4b8; outline-offset: 2px; }
+
+.classification {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--accent-light);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.classification span { color: var(--muted); }
+
+.answer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.answer.correct, .timed-answer.correct {
+  border-color: var(--good);
+  background: #e8f2e9;
+}
+
+.answer.wrong, .timed-answer.wrong {
+  border-color: var(--bad);
+  background: #f8e9e6;
+}
+
+.feedback { min-height: 26px; font-weight: 700; }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.timer-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.timer {
+  min-width: 82px;
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.timed-question {
+  margin: 20px 0 10px;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+  padding: 24px;
+  border-radius: 14px;
+  background: #f0ece3;
+}
+
+.compact { margin-top: 12px; }
+
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 13px;
+}
+
+@media (max-width: 680px) {
+  .hero { padding: 34px 20px; align-items: flex-start; flex-direction: column; }
+  .card { padding: 20px; }
+  .answer-grid { grid-template-columns: repeat(2, 1fr); }
+  .answer-grid .answer:last-child,
+  .answer-grid .timed-answer:last-child { grid-column: 1 / -1; }
+}
+
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-measurement-of-angles",
+  "order": 219,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry",
+  "subtopic": null,
+  "title": "Measurement of Angles",
+  "description": "Fix plastic strips with a full protractor. Move one strip to form and measure different angles (acute, obtuse, right, straight, reflex).",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Class IX–X • Mathematics</p>
+      <h1>Angle Explorer</h1>
+      <p>Learn, measure and identify angles using an interactive protractor.</p>
+    </div>
+    <div class="score-pill">Score: <span id="score">0</span></div>
+  </header>
+
+  <main class="container">
+    <section class="card learn">
+      <div>
+        <span class="section-tag">01 • Explore</span>
+        <h2>Interactive Protractor</h2>
+        <p>Drag the second arm or use the slider to change the angle.</p>
+      </div>
+
+      <div class="angle-stage">
+        <svg id="angleSvg" viewBox="0 0 520 320" aria-label="Interactive angle diagram">
+          <path id="protractorArc" class="arc" d=""></path>
+          <g id="ticks"></g>
+          <line id="arm1" x1="260" y1="250" x2="450" y2="250"></line>
+          <line id="arm2" x1="260" y1="250" x2="260" y2="250"></line>
+          <circle id="vertex" cx="260" cy="250" r="8"></circle>
+          <circle id="handle" cx="260" cy="250" r="13" tabindex="0" role="slider"
+                  aria-label="Angle handle" aria-valuemin="0" aria-valuemax="180"></circle>
+          <text id="angleText" x="260" y="215" text-anchor="middle">60°</text>
+        </svg>
+      </div>
+
+      <div class="controls">
+        <label for="angleSlider">Angle: <strong><span id="angleValue">60</span>°</strong></label>
+        <input id="angleSlider" type="range" min="0" max="180" value="60">
+        <div class="angle-buttons">
+          <button type="button" data-angle="30">30°</button>
+          <button type="button" data-angle="45">45°</button>
+          <button type="button" data-angle="90">90°</button>
+          <button type="button" data-angle="120">120°</button>
+          <button type="button" data-angle="180">180°</button>
+        </div>
+      </div>
+
+      <div class="classification" id="classification">
+        <strong>Acute angle</strong>
+        <span>It is less than 90°.</span>
+      </div>
+    </section>
+
+    <section class="card quiz">
+      <div>
+        <span class="section-tag">02 • Challenge</span>
+        <h2>Measure & Answer</h2>
+        <p>Identify the type of angle shown. You can also use the protractor above.</p>
+      </div>
+
+      <div class="quiz-visual">
+        <svg id="quizSvg" viewBox="0 0 360 220" aria-label="Quiz angle diagram">
+          <line id="quizArm1" x1="180" y1="175" x2="320" y2="175"></line>
+          <line id="quizArm2" x1="180" y1="175" x2="180" y2="175"></line>
+          <circle cx="180" cy="175" r="6"></circle>
+          <text id="quizDegrees" x="180" y="135" text-anchor="middle"></text>
+        </svg>
+      </div>
+
+      <div class="answer-grid">
+        <button type="button" class="answer" data-type="acute">Acute</button>
+        <button type="button" class="answer" data-type="right">Right</button>
+        <button type="button" class="answer" data-type="obtuse">Obtuse</button>
+        <button type="button" class="answer" data-type="straight">Straight</button>
+        <button type="button" class="answer" data-type="reflex">Reflex</button>
+      </div>
+
+      <p id="quizFeedback" class="feedback" aria-live="polite"></p>
+      <button type="button" id="nextQuestion" class="primary">Next Question</button>
+    </section>
+
+    <section class="card timed">
+      <div>
+        <span class="section-tag">03 • Speed Round</span>
+        <h2>Timed Angle Quiz</h2>
+        <p>Answer as many angle-type questions as you can in 30 seconds.</p>
+      </div>
+
+      <div class="timer-row">
+        <div class="timer"><span id="time">30</span>s</div>
+        <div>
+          <strong>Round score: <span id="roundScore">0</span></strong>
+          <p id="roundStatus">Ready when you are.</p>
+        </div>
+      </div>
+
+      <div id="timedQuestion" class="timed-question">Press Start to begin.</div>
+      <div class="answer-grid compact">
+        <button type="button" class="timed-answer" data-type="acute">Acute</button>
+        <button type="button" class="timed-answer" data-type="right">Right</button>
+        <button type="button" class="timed-answer" data-type="obtuse">Obtuse</button>
+        <button type="button" class="timed-answer" data-type="straight">Straight</button>
+        <button type="button" class="timed-answer" data-type="reflex">Reflex</button>
+      </div>
+      <button type="button" id="startQuiz" class="primary">Start 30-second Quiz</button>
+    </section>
+  </main>
+
+  <footer>
+    <p>Angle Explorer • Interactive learning activity for Measurement of Angles</p>
+  </footer>
+
+  <script>
+const scoreEl = document.getElementById("score");
+const slider = document.getElementById("angleSlider");
+const angleValue = document.getElementById("angleValue");
+const angleText = document.getElementById("angleText");
+const classification = document.getElementById("classification");
+const arm2 = document.getElementById("arm2");
+const handle = document.getElementById("handle");
+const ticks = document.getElementById("ticks");
+const protractorArc = document.getElementById("protractorArc");
+
+let score = 0;
+let angle = 60;
+
+function angleType(deg) {
+  if (deg === 0) return "zero";
+  if (deg < 90) return "acute";
+  if (deg === 90) return "right";
+  if (deg < 180) return "obtuse";
+  if (deg === 180) return "straight";
+  return "reflex";
+}
+
+const descriptions = {
+  zero: "It has no opening.",
+  acute: "It is greater than 0° and less than 90°.",
+  right: "It measures exactly 90°.",
+  obtuse: "It is greater than 90° and less than 180°.",
+  straight: "It measures exactly 180°.",
+  reflex: "It is greater than 180° and less than 360°."
+};
+
+function pointOnCircle(cx, cy, r, deg) {
+  const rad = -deg * Math.PI / 180;
+  return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)];
+}
+
+function updateAngle(deg) {
+  angle = Math.max(0, Math.min(180, Number(deg) || 0));
+  slider.value = angle;
+  angleValue.textContent = angle;
+  angleText.textContent = angle + "°";
+
+  const [x, y] = pointOnCircle(260, 250, 190, angle);
+  arm2.setAttribute("x2", x);
+  arm2.setAttribute("y2", y);
+  handle.setAttribute("cx", x);
+  handle.setAttribute("cy", y);
+  handle.setAttribute("aria-valuenow", angle);
+
+  const type = angleType(angle);
+  const title = type.charAt(0).toUpperCase() + type.slice(1) + " angle";
+  classification.innerHTML = `<strong>${title}</strong><span>${descriptions[type]}</span>`;
+}
+
+function buildProtractor() {
+  const [sx, sy] = pointOnCircle(260, 250, 190, 0);
+  const [ex, ey] = pointOnCircle(260, 250, 190, 180);
+  protractorArc.setAttribute("d", `M ${sx} ${sy} A 190 190 0 0 0 ${ex} ${ey}`);
+
+  for (let d = 0; d <= 180; d += 10) {
+    const [x1, y1] = pointOnCircle(260, 250, 165, d);
+    const [x2, y2] = pointOnCircle(260, 250, 180, d);
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+    line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+    line.setAttribute("class", "tick");
+    ticks.appendChild(line);
+  }
+}
+
+slider.addEventListener("input", e => updateAngle(e.target.value));
+
+document.querySelectorAll("[data-angle]").forEach(btn => {
+  btn.addEventListener("click", () => updateAngle(btn.dataset.angle));
+});
+
+let dragging = false;
+function setFromPointer(e) {
+  const rect = document.getElementById("angleSvg").getBoundingClientRect();
+  const cx = rect.left + rect.width * (260 / 520);
+  const cy = rect.top + rect.height * (250 / 320);
+  let deg = Math.atan2(-(e.clientY - cy), e.clientX - cx) * 180 / Math.PI;
+  if (deg < 0) deg = 0;
+  if (deg > 180) deg = 180;
+  updateAngle(Math.round(deg));
+}
+
+handle.addEventListener("pointerdown", e => {
+  dragging = true;
+  handle.setPointerCapture(e.pointerId);
+});
+handle.addEventListener("pointermove", e => { if (dragging) setFromPointer(e); });
+handle.addEventListener("pointerup", () => dragging = false);
+handle.addEventListener("pointercancel", () => dragging = false);
+
+handle.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+    e.preventDefault(); updateAngle(angle - 1);
+  }
+  if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+    e.preventDefault(); updateAngle(angle + 1);
+  }
+});
+
+let quizAngle = 120;
+function randomAngle() {
+  const choices = [20, 35, 45, 60, 75, 90, 110, 120, 135, 150, 180];
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function showQuizQuestion() {
+  quizAngle = randomAngle();
+  const [x, y] = pointOnCircle(180, 175, 140, quizAngle);
+  document.getElementById("quizArm2").setAttribute("x2", x);
+  document.getElementById("quizArm2").setAttribute("y2", y);
+  document.getElementById("quizDegrees").textContent = quizAngle + "°";
+  document.getElementById("quizFeedback").textContent = "";
+  document.getElementById("quizFeedback").className = "feedback";
+  document.querySelectorAll(".answer").forEach(b => b.classList.remove("correct", "wrong"));
+}
+
+document.querySelectorAll(".answer").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const chosen = btn.dataset.type;
+    const correct = angleType(quizAngle);
+    document.querySelectorAll(".answer").forEach(b => b.classList.remove("correct", "wrong"));
+
+    if (chosen === correct) {
+      btn.classList.add("correct");
+      score += 10;
+      scoreEl.textContent = score;
+      document.getElementById("quizFeedback").textContent = "Correct! +10 points";
+      document.getElementById("quizFeedback").className = "feedback good";
+    } else {
+      btn.classList.add("wrong");
+      document.getElementById("quizFeedback").textContent =
+        `Not quite. ${quizAngle}° is a ${correct} angle.`;
+      document.getElementById("quizFeedback").className = "feedback bad";
+    }
+  });
+});
+
+document.getElementById("nextQuestion").addEventListener("click", showQuizQuestion);
+
+let timer = 30;
+let interval = null;
+let roundScore = 0;
+let timedAngle = 0;
+const timeEl = document.getElementById("time");
+const roundScoreEl = document.getElementById("roundScore");
+const timedQuestion = document.getElementById("timedQuestion");
+const roundStatus = document.getElementById("roundStatus");
+const startQuiz = document.getElementById("startQuiz");
+
+function newTimedQuestion() {
+  timedAngle = randomAngle();
+  timedQuestion.textContent = `${timedAngle}° — What type of angle is this?`;
+  document.querySelectorAll(".timed-answer").forEach(b => b.classList.remove("correct", "wrong"));
+}
+
+function endTimedQuiz() {
+  clearInterval(interval);
+  interval = null;
+  document.querySelectorAll(".timed-answer").forEach(b => b.disabled = true);
+  startQuiz.disabled = false;
+  startQuiz.textContent = "Play Again";
+  roundStatus.textContent = `Time's up! You scored ${roundScore} in this round.`;
+}
+
+function startTimedQuiz() {
+  clearInterval(interval);
+  timer = 30;
+  roundScore = 0;
+  timeEl.textContent = timer;
+  roundScoreEl.textContent = roundScore;
+  startQuiz.disabled = true;
+  document.querySelectorAll(".timed-answer").forEach(b => b.disabled = false);
+  roundStatus.textContent = "Go!";
+  newTimedQuestion();
+
+  interval = setInterval(() => {
+    timer--;
+    timeEl.textContent = timer;
+    if (timer <= 0) endTimedQuiz();
+  }, 1000);
+}
+
+document.querySelectorAll(".timed-answer").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (!interval) return;
+    const correct = angleType(timedAngle);
+    if (btn.dataset.type === correct) {
+      roundScore++;
+      score += 5;
+      scoreEl.textContent = score;
+      roundScoreEl.textContent = roundScore;
+      btn.classList.add("correct");
+    } else {
+      btn.classList.add("wrong");
+    }
+    setTimeout(newTimedQuestion, 180);
+  });
+});
+
+startQuiz.addEventListener("click", startTimedQuiz);
+
+buildProtractor();
+updateAngle(angle);
+showQuizQuestion();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Class VII Science interactive activity - Testing with Indicators">
+<title>Testing with Indicators | Class VII Science</title>
+
+<style>
+:root{
+  --bg:#f5f9ff;
+  --surface:#ffffff;
+  --surface-2:#eef6ff;
+  --text:#172033;
+  --muted:#5f6b7a;
+  --primary:#2563eb;
+  --primary-dark:#1d4ed8;
+  --secondary:#7c3aed;
+  --border:#dbe5f1;
+  --success:#15803d;
+  --danger:#dc2626;
+  --warning:#b45309;
+  --shadow:0 12px 35px rgba(31,56,85,.10);
+  --radius:20px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+}
+button{font:inherit}
+button:focus-visible{outline:3px solid #93c5fd;outline-offset:3px}
+.container{width:min(1120px,92%);margin:auto}
+
+.hero{
+  min-height:620px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 20%, #dbeafe 0 10%, transparent 28%),
+    radial-gradient(circle at 90% 10%, #ede9fe 0 9%, transparent 25%),
+    linear-gradient(135deg,#ffffff,#eef6ff);
+}
+.hero::before,.hero::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  border:2px solid #bfdbfe;
+  opacity:.55;
+}
+.hero::before{width:280px;height:280px;right:-100px;bottom:-100px}
+.hero::after{width:150px;height:150px;left:-60px;bottom:70px}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:50px;
+  align-items:center;
+}
+.badge{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  background:#dbeafe;
+  color:#1e40af;
+  border:1px solid #bfdbfe;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.9rem;
+}
+h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1.05;margin:20px 0 16px}
+.hero h1 span{color:var(--primary)}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:650px}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0}
+.meta span{
+  background:#fff;border:1px solid var(--border);padding:7px 12px;border-radius:10px;font-size:.9rem;font-weight:600
+}
+.btn{
+  border:0;border-radius:12px;padding:12px 18px;cursor:pointer;font-weight:800;transition:.2s;
+}
+.btn-primary{background:var(--primary);color:white;box-shadow:0 8px 20px rgba(37,99,235,.25)}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px)}
+.btn-secondary{background:white;color:var(--text);border:1px solid var(--border)}
+.btn-danger{background:#fee2e2;color:#991b1b}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.hero-lab{
+  height:350px;position:relative;display:flex;align-items:center;justify-content:center
+}
+.glass{
+  width:130px;height:240px;border:7px solid #93c5fd;border-top:0;
+  border-radius:0 0 30px 30px;position:relative;background:rgba(255,255,255,.55);
+  box-shadow:inset 0 0 20px rgba(59,130,246,.08),0 20px 40px rgba(30,64,175,.15);
+}
+.glass::before{
+  content:"";position:absolute;left:-14px;right:-14px;top:-8px;height:15px;border:7px solid #93c5fd;border-radius:12px;background:#fff
+}
+.liquid{position:absolute;left:8px;right:8px;bottom:7px;height:55%;border-radius:0 0 20px 20px;background:#facc15;transition:background .5s}
+.bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.7);animation:float 3s infinite}
+.b1{width:10px;height:10px;left:35px;bottom:80px}.b2{width:7px;height:7px;right:35px;bottom:110px;animation-delay:.7s}.b3{width:8px;height:8px;left:70px;bottom:130px;animation-delay:1.2s}
+@keyframes float{50%{transform:translateY(-25px);opacity:.3}}
+
+section{padding:80px 0}
+.section-title{text-align:center;margin-bottom:38px}
+.section-title h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:8px}
+.section-title p{color:var(--muted)}
+
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow)
+}
+.objective-icon{font-size:2rem;margin-bottom:12px}
+.card h3{margin-bottom:7px}
+.card p{color:var(--muted);font-size:.95rem}
+
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.info-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:25px}
+.info-card .symbol{font-size:2.5rem;margin-bottom:8px}
+.info-card p{color:var(--muted)}
+
+.lab-wrap{
+  background:linear-gradient(180deg,#ffffff,#f4f8ff);
+  border:1px solid var(--border);border-radius:28px;padding:28px;box-shadow:var(--shadow)
+}
+.lab-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:28px}
+.panel{background:white;border:1px solid var(--border);border-radius:18px;padding:20px}
+.panel h3{margin-bottom:15px}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{
+  background:#f8fbff;border:2px solid #e2e8f0;border-radius:14px;padding:14px;text-align:left;cursor:pointer;transition:.2s
+}
+.choice:hover{border-color:#93c5fd;transform:translateY(-1px)}
+.choice.selected{border-color:var(--primary);background:#eff6ff}
+.choice small{display:block;color:var(--muted);margin-top:3px}
+
+.lab-stage{
+  min-height:430px;background:#edf6ff;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:25px;position:relative;overflow:hidden
+}
+.test-tube{
+  width:115px;height:250px;border:6px solid #7db2e8;border-top:0;border-radius:0 0 28px 28px;position:relative;background:rgba(255,255,255,.65)
+}
+.test-tube::before{
+  content:"";position:absolute;left:-12px;right:-12px;top:-8px;height:14px;border:6px solid #7db2e8;border-radius:12px;background:white
+}
+.tube-liquid{
+  position:absolute;left:6px;right:6px;bottom:6px;height:55%;border-radius:0 0 20px 20px;background:#dbeafe;transition:background .6s
+}
+.drop{
+  position:absolute;width:15px;height:15px;border-radius:50%;background:#2563eb;top:60px;opacity:0
+}
+.drop.animate{animation:drop .8s ease-in forwards}
+@keyframes drop{0%{opacity:1;transform:translateY(0)}100%{opacity:1;transform:translateY(170px);}}
+
+.result{
+  width:100%;margin-top:20px;background:white;border:1px solid var(--border);border-radius:15px;padding:16px;display:none
+}
+.result.show{display:block;animation:pop .35s ease}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:scale(1)}}
+.result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.result-item{background:#f8fafc;border-radius:10px;padding:10px}
+.result-item b{display:block;font-size:.78rem;color:var(--muted);text-transform:uppercase}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.status{min-height:28px;margin-top:12px;font-weight:700}
+.status.success{color:var(--success)}.status.error{color:var(--danger)}.status.warn{color:var(--warning)}
+
+.table-wrap{overflow-x:auto;background:white;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:13px 15px;border-bottom:1px solid var(--border);text-align:left}
+th{background:#eff6ff;color:#1e3a8a;font-size:.9rem}
+tr:last-child td{border-bottom:0}
+
+.challenge-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pool{display:flex;flex-wrap:wrap;gap:12px;min-height:90px;padding:15px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:16px}
+.drag-card{
+  background:white;border:1px solid var(--border);padding:12px 15px;border-radius:12px;cursor:pointer;font-weight:700;box-shadow:0 5px 12px rgba(0,0,0,.05)
+}
+.dropzone{min-height:170px}
+.dropzone.correct{border-color:#86efac;background:#f0fdf4}
+.dropzone.wrong{border-color:#fca5a5;background:#fff1f2}
+.challenge-feedback{margin-top:15px;font-weight:700;min-height:28px}
+
+.quiz-list{display:grid;gap:20px}
+.question{background:white;border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.question h3{margin-bottom:14px}
+.options{display:grid;gap:9px}
+.option{
+  padding:12px 14px;border:2px solid #e2e8f0;background:#f8fafc;border-radius:12px;text-align:left;cursor:pointer
+}
+.option:hover{border-color:#93c5fd}
+.option.correct{border-color:#86efac;background:#f0fdf4}
+.option.incorrect{border-color:#fca5a5;background:#fff1f2}
+.option:disabled{cursor:default}
+.quiz-feedback{margin-top:9px;font-weight:700;min-height:25px}
+
+.score-box{
+  text-align:center;background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #c7d2fe;border-radius:24px;padding:35px
+}
+.score-number{font-size:4rem;font-weight:900;color:var(--primary);line-height:1}
+.progress{height:12px;background:#e2e8f0;border-radius:99px;overflow:hidden;max-width:500px;margin:20px auto}
+.progress-bar{height:100%;width:0;background:var(--primary);transition:.4s}
+
+.takeaways{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.takeaway{background:white;border:1px solid var(--border);border-radius:18px;padding:22px}
+.takeaway strong{display:block;margin-bottom:5px}
+
+footer{padding:35px 0;text-align:center;color:var(--muted);border-top:1px solid var(--border);background:white}
+
+@media(max-width:900px){
+  .hero-grid,.lab-grid{grid-template-columns:1fr}
+  .hero{text-align:center}
+  .hero p{margin:auto}
+  .meta{justify-content:center}
+  .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  section{padding:55px 0}
+  .cards,.info-grid,.challenge-grid,.takeaways{grid-template-columns:1fr}
+  .choice-grid{grid-template-columns:1fr}
+  .lab-wrap{padding:16px}
+  .result-grid{grid-template-columns:1fr}
+  .hero{min-height:650px}
+}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-acids-bases-and-salts-testing-with-indicator",
+  "order": 72,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Acids, Bases and Salts",
+  "subtopic": null,
+  "title": "Testing with Indicators",
+  "description": "Test shampoo, lemon juice, vinegar, soap solution with litmus, turmeric, and china rose extract. Record colour changes to identify acidic/basic nature.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+
+<body>
+
+<header class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">🔬 Class VII • Science</span>
+      <h1>Testing with <span>Indicators</span></h1>
+      <p>Discover whether everyday substances are acidic or basic through a virtual science laboratory.</p>
+      <div class="meta">
+        <span>Acids, Bases and Salts</span>
+        <span>Interactive Experiment</span>
+        <span>8-Question Quiz</span>
+      </div>
+      <button class="btn btn-primary" id="startBtn">🧪 Start Experiment</button>
+    </div>
+
+    <div class="hero-lab" aria-hidden="true">
+      <div class="glass">
+        <div class="liquid" id="heroLiquid"></div>
+        <span class="bubble b1"></span>
+        <span class="bubble b2"></span>
+        <span class="bubble b3"></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section>
+  <div class="container">
+    <div class="section-title">
+      <h2>What You Will Learn</h2>
+      <p>By the end of this activity, you will be able to:</p>
+    </div>
+    <div class="cards">
+      <article class="card"><div class="objective-icon">🧪</div><h3>Understand Acids & Bases</h3><p>Learn the basic difference between acidic and basic substances.</p></article>
+      <article class="card"><div class="objective-icon">🎨</div><h3>Use Indicators</h3><p>Understand how indicators change colour in acids and bases.</p></article>
+      <article class="card"><div class="objective-icon">🔍</div><h3>Test Samples</h3><p>Perform virtual tests using common household substances.</p></article>
+      <article class="card"><div class="objective-icon">🧠</div><h3>Classify Substances</h3><p>Use your observations to identify acidic and basic substances.</p></article>
+    </div>
+  </div>
+</section>
+
+<section style="background:#eef6ff">
+  <div class="container">
+    <div class="section-title">
+      <h2>Quick Introduction</h2>
+      <p>Let's understand the three important ideas before entering the lab.</p>
+    </div>
+    <div class="info-grid">
+      <article class="info-card"><div class="symbol">🍋</div><h3>Acids</h3><p>Acids are substances that show acidic properties. Examples in this activity include lemon juice and vinegar.</p></article>
+      <article class="info-card"><div class="symbol">🧼</div><h3>Bases</h3><p>Bases show basic properties. Soap solution is an example of a basic substance.</p></article>
+      <article class="info-card"><div class="symbol">🎨</div><h3>Indicators</h3><p>Indicators are substances that show a characteristic colour change in acidic or basic solutions.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="lab">
+  <div class="container">
+    <div class="section-title">
+      <h2>🧪 Virtual Science Laboratory</h2>
+      <p>Select a substance and an indicator, then test your sample.</p>
+    </div>
+
+    <div class="lab-wrap">
+      <div class="lab-grid">
+        <div>
+          <div class="panel">
+            <h3>1. Choose a Substance</h3>
+            <div class="choice-grid" id="substanceChoices"></div>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <h3>2. Choose an Indicator</h3>
+            <div class="choice-grid" id="indicatorChoices"></div>
+          </div>
+
+          <div class="controls">
+            <button class="btn btn-primary" id="testBtn" disabled>💧 Test Sample</button>
+            <button class="btn btn-secondary" id="resetLabBtn">↻ Reset Experiment</button>
+          </div>
+          <div class="status" id="labStatus" role="status"></div>
+        </div>
+
+        <div class="lab-stage">
+          <div class="drop" id="drop"></div>
+          <div class="test-tube" aria-label="Virtual test tube">
+            <div class="tube-liquid" id="tubeLiquid"></div>
+          </div>
+          <p style="margin-top:12px;font-weight:800" id="tubeLabel">Select a substance and indicator</p>
+
+          <div class="result" id="resultBox">
+            <div class="result-grid">
+              <div class="result-item"><b>Substance</b><span id="rSubstance">—</span></div>
+              <div class="result-item"><b>Indicator</b><span id="rIndicator">—</span></div>
+              <div class="result-item"><b>Before Colour</b><span id="rBefore">—</span></div>
+              <div class="result-item"><b>After Colour</b><span id="rAfter">—</span></div>
+              <div class="result-item"><b>Observation</b><span id="rObservation">—</span></div>
+              <div class="result-item"><b>Conclusion</b><span id="rConclusion">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-title">
+      <h2>📋 Observation Table</h2>
+      <p>Your completed experiments will appear here.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Substance</th>
+            <th>Indicator</th>
+            <th>Initial Colour</th>
+            <th>Final Colour</th>
+            <th>Observation</th>
+            <th>Nature</th>
+          </tr>
+        </thead>
+        <tbody id="observationBody">
+          <tr><td colspan="6" style="text-align:center;color:#64748b">No experiments recorded yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="controls">
+      <button class="btn btn-danger" id="clearTableBtn">Clear Observations</button>
+    </div>
+  </div>
+</section>
+
+<section style="background:#eef6ff">
+  <div class="container">
+    <div class="section-title">
+      <h2>🎯 Classification Challenge</h2>
+      <p>Click a substance, then choose whether it belongs in the acidic or basic group.</p>
+    </div>
+
+    <div class="challenge-grid">
+      <div class="panel">
+        <h3>Substances</h3>
+        <div class="pool" id="challengePool"></div>
+        <div class="challenge-feedback" id="challengeFeedback" role="status"></div>
+      </div>
+
+      <div>
+        <div class="panel dropzone" id="acidZone" data-nature="acidic">
+          <h3>🍋 ACIDIC</h3>
+          <p style="color:#64748b">Select an item, then click here.</p>
+        </div>
+        <div class="panel dropzone" id="baseZone" data-nature="basic" style="margin-top:18px">
+          <h3>🧼 BASIC</h3>
+          <p style="color:#64748b">Select an item, then click here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="score-box" style="margin-top:25px">
+      <h3>Challenge Score</h3>
+      <div class="score-number" id="challengeScore">0 / 4</div>
+      <p id="challengeProgress">0 of 4 classified</p>
+    </div>
+  </div>
+</section>
+
+<section id="quiz">
+  <div class="container">
+    <div class="section-title">
+      <h2>🧠 Knowledge Quiz</h2>
+      <p>Answer all 8 questions and check how well you understand indicators.</p>
+    </div>
+    <div class="quiz-list" id="quizList"></div>
+
+    <div class="score-box" style="margin-top:28px">
+      <h3>Your Quiz Score</h3>
+      <div class="score-number" id="quizScore">0 / 8</div>
+      <div class="progress"><div class="progress-bar" id="quizProgress"></div></div>
+      <p id="quizMessage">Answer the questions to see your final result.</p>
+      <button class="btn btn-primary" id="retryQuizBtn" style="margin-top:18px">↻ Try Again</button>
+    </div>
+  </div>
+</section>
+
+<section style="background:#eef6ff">
+  <div class="container">
+    <div class="section-title">
+      <h2>💡 Key Takeaways</h2>
+      <p>Remember these important ideas.</p>
+    </div>
+    <div class="takeaways">
+      <div class="takeaway"><strong>🔵 Blue Litmus</strong>Turns red in an acidic solution and remains blue in a basic solution.</div>
+      <div class="takeaway"><strong>🟡 Turmeric</strong>Shows a reddish-brown colour in a basic solution.</div>
+      <div class="takeaway"><strong>🌹 China Rose</strong>Shows pink/magenta in acids and green in bases.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <strong>Testing with Indicators</strong> • Class VII Science • Acids, Bases and Salts
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+const substances = {
+  "Lemon Juice": { nature:"acidic", symbol:"🍋" },
+  "Vinegar": { nature:"acidic", symbol:"🫗" },
+  "Shampoo": { nature:"basic", symbol:"🧴" },
+  "Soap Solution": { nature:"basic", symbol:"🧼" }
+};
+
+const indicators = {
+  "Blue Litmus": { symbol:"🔵" },
+  "Red Litmus": { symbol:"🔴" },
+  "Turmeric": { symbol:"🟡" },
+  "China Rose Extract": { symbol:"🌹" }
+};
+
+const selected = { substance:null, indicator:null };
+let observations = [];
+
+const substanceChoices = document.getElementById("substanceChoices");
+const indicatorChoices = document.getElementById("indicatorChoices");
+const testBtn = document.getElementById("testBtn");
+const labStatus = document.getElementById("labStatus");
+const tubeLiquid = document.getElementById("tubeLiquid");
+const tubeLabel = document.getElementById("tubeLabel");
+const resultBox = document.getElementById("resultBox");
+const drop = document.getElementById("drop");
+
+function makeChoices(container, data, type){
+  container.innerHTML = "";
+  Object.entries(data).forEach(([name, info])=>{
+    const button = document.createElement("button");
+    button.className = "choice";
+    button.type = "button";
+    button.innerHTML = `<strong>${info.symbol} ${name}</strong><small>${type === "substance" ? "Test sample" : "Indicator"}</small>`;
+    button.addEventListener("click",()=>{
+      selected[type] = name;
+      [...container.children].forEach(el=>el.classList.remove("selected"));
+      button.classList.add("selected");
+      updateTestButton();
+      labStatus.textContent = `${name} selected.`;
+      labStatus.className = "status";
+    });
+    container.appendChild(button);
+  });
+}
+
+function updateTestButton(){
+  testBtn.disabled = !(selected.substance && selected.indicator);
+}
+
+function getResult(substance, indicator){
+  const nature = substances[substance].nature;
+  let before, after, observation;
+
+  if(indicator === "Blue Litmus"){
+    before = "Blue";
+    after = nature === "acidic" ? "Red" : "Blue";
+    observation = nature === "acidic"
+      ? "Blue litmus turns red."
+      : "Blue litmus shows no colour change.";
+  } else if(indicator === "Red Litmus"){
+    before = "Red";
+    after = nature === "acidic" ? "Red" : "Blue";
+    observation = nature === "acidic"
+      ? "Red litmus shows no colour change."
+      : "Red litmus turns blue.";
+  } else if(indicator === "Turmeric"){
+    before = "Yellow";
+    after = nature === "acidic" ? "Yellow" : "Reddish-brown";
+    observation = nature === "acidic"
+      ? "Turmeric remains yellow."
+      : "Turmeric turns reddish-brown.";
+  } else {
+    before = "Pink/Magenta";
+    after = nature === "acidic" ? "Pink/Magenta" : "Green";
+    observation = nature === "acidic"
+      ? "China rose remains pink/magenta."
+      : "China rose turns green.";
+  }
+
+  return { before, after, observation, nature };
+}
+
+function colourFor(name){
+  const colours = {
+    "Blue":"#3b82f6",
+    "Red":"#ef4444",
+    "Yellow":"#facc15",
+    "Reddish-brown":"#a16207",
+    "Pink/Magenta":"#ec4899",
+    "Green":"#22c55e"
+  };
+  return colours[name] || "#dbeafe";
+}
+
+function runTest(){
+  const {substance, indicator} = selected;
+  if(!substance || !indicator) return;
+
+  const result = getResult(substance, indicator);
+
+  resultBox.classList.remove("show");
+  drop.classList.remove("animate");
+  void drop.offsetWidth;
+  drop.classList.add("animate");
+
+  tubeLabel.textContent = `Testing ${substance} with ${indicator}...`;
+  labStatus.textContent = "Experiment in progress...";
+  labStatus.className = "status";
+
+  setTimeout(()=>{
+    tubeLiquid.style.background = colourFor(result.after);
+    tubeLabel.textContent = `${substance} + ${indicator}`;
+
+    document.getElementById("rSubstance").textContent = substance;
+    document.getElementById("rIndicator").textContent = indicator;
+    document.getElementById("rBefore").textContent = result.before;
+    document.getElementById("rAfter").textContent = result.after;
+    document.getElementById("rObservation").textContent = result.observation;
+    document.getElementById("rConclusion").textContent = result.nature === "acidic"
+      ? "The substance is acidic."
+      : "The substance is basic.";
+
+    resultBox.classList.add("show");
+    labStatus.textContent = "Experiment complete! Observation recorded.";
+    labStatus.className = "status success";
+
+    observations.push({
+      substance, indicator, before:result.before, after:result.after,
+      observation:result.observation,
+      nature:result.nature === "acidic" ? "Acidic" : "Basic"
+    });
+    renderObservations();
+  },850);
+}
+
+function resetLab(){
+  selected.substance = null;
+  selected.indicator = null;
+  document.querySelectorAll(".choice").forEach(el=>el.classList.remove("selected"));
+  testBtn.disabled = true;
+  resultBox.classList.remove("show");
+  tubeLiquid.style.background = "#dbeafe";
+  tubeLabel.textContent = "Select a substance and indicator";
+  labStatus.textContent = "Experiment reset.";
+  labStatus.className = "status";
+}
+
+function renderObservations(){
+  const body = document.getElementById("observationBody");
+  if(!observations.length){
+    body.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#64748b">No experiments recorded yet.</td></tr>`;
+    return;
+  }
+  body.innerHTML = observations.map(o=>`
+    <tr>
+      <td>${o.substance}</td>
+      <td>${o.indicator}</td>
+      <td>${o.before}</td>
+      <td>${o.after}</td>
+      <td>${o.observation}</td>
+      <td><strong>${o.nature}</strong></td>
+    </tr>
+  `).join("");
+}
+
+testBtn.addEventListener("click",runTest);
+document.getElementById("resetLabBtn").addEventListener("click",resetLab);
+document.getElementById("clearTableBtn").addEventListener("click",()=>{
+  observations = [];
+  renderObservations();
+});
+
+makeChoices(substanceChoices,substances,"substance");
+makeChoices(indicatorChoices,indicators,"indicator");
+
+/* Classification challenge */
+const challengePool = document.getElementById("challengePool");
+let selectedChallenge = null;
+let challengeScore = 0;
+let classified = 0;
+const challengeState = {};
+
+Object.entries(substances).forEach(([name,info])=>{
+  const card = document.createElement("button");
+  card.className = "drag-card";
+  card.type = "button";
+  card.textContent = `${info.symbol} ${name}`;
+  card.addEventListener("click",()=>{
+    if(challengeState[name]) return;
+    selectedChallenge = name;
+    document.querySelectorAll(".drag-card").forEach(x=>x.style.outline="none");
+    card.style.outline = "3px solid #93c5fd";
+    document.getElementById("challengeFeedback").textContent = `${name} selected. Now choose ACIDIC or BASIC.`;
+  });
+  challengePool.appendChild(card);
+});
+
+function classify(nature){
+  const feedback = document.getElementById("challengeFeedback");
+  if(!selectedChallenge){
+    feedback.textContent = "Select a substance first.";
+    feedback.style.color = "#b45309";
+    return;
+  }
+
+  const correct = substances[selectedChallenge].nature === nature;
+  const zone = nature === "acidic" ? document.getElementById("acidZone") : document.getElementById("baseZone");
+
+  if(correct){
+    challengeScore++;
+    classified++;
+    challengeState[selectedChallenge] = true;
+
+    const old = [...challengePool.children].find(x=>x.textContent.includes(selectedChallenge));
+    if(old) old.remove();
+
+    const item = document.createElement("div");
+    item.className = "drag-card";
+    item.textContent = `${substances[selectedChallenge].symbol} ${selectedChallenge}`;
+    item.style.cursor = "default";
+    zone.appendChild(item);
+
+    zone.classList.add("correct");
+    setTimeout(()=>zone.classList.remove("correct"),500);
+
+    feedback.textContent = "Correct! 🎉";
+    feedback.style.color = "#15803d";
+    selectedChallenge = null;
+    updateChallengeScore();
+  } else {
+    zone.classList.add("wrong");
+    setTimeout(()=>zone.classList.remove("wrong"),500);
+    feedback.textContent = "Not quite. Think about the indicator colour changes and try again.";
+    feedback.style.color = "#dc2626";
+  }
+}
+
+document.getElementById("acidZone").addEventListener("click",()=>classify("acidic"));
+document.getElementById("baseZone").addEventListener("click",()=>classify("basic"));
+
+function updateChallengeScore(){
+  document.getElementById("challengeScore").textContent = `${challengeScore} / 4`;
+  document.getElementById("challengeProgress").textContent = `${classified} of 4 classified`;
+}
+
+/* Quiz */
+const quizQuestions = [
+  {
+    q:"What is an indicator?",
+    options:["A substance that shows a colour change in acids or bases","A type of salt","A measuring instrument","A gas"],
+    answer:0
+  },
+  {
+    q:"What happens to blue litmus in an acidic solution?",
+    options:["It stays blue","It turns red","It turns green","It turns brown"],
+    answer:1
+  },
+  {
+    q:"What happens to red litmus in a basic solution?",
+    options:["It turns blue","It stays red","It turns yellow","It turns pink"],
+    answer:0
+  },
+  {
+    q:"What colour does turmeric show in a basic solution?",
+    options:["Blue","Green","Reddish-brown","Pink"],
+    answer:2
+  },
+  {
+    q:"What colour does china rose show in an acidic solution?",
+    options:["Green","Pink/Magenta","Blue","Brown"],
+    answer:1
+  },
+  {
+    q:"Which pair contains acidic substances in this activity?",
+    options:["Soap solution and shampoo","Lemon juice and vinegar","Shampoo and soap solution","Turmeric and vinegar"],
+    answer:1
+  },
+  {
+    q:"Which substance is treated as basic in this activity?",
+    options:["Lemon juice","Vinegar","Soap solution","Water"],
+    answer:2
+  },
+  {
+    q:"Why are indicators useful?",
+    options:["They help identify whether a solution is acidic or basic","They make every solution neutral","They increase the temperature","They remove all salts"],
+    answer:0
+  }
+];
+
+let quizAnswers = Array(quizQuestions.length).fill(null);
+
+function renderQuiz(){
+  const list = document.getElementById("quizList");
+  list.innerHTML = "";
+
+  quizQuestions.forEach((item,index)=>{
+    const question = document.createElement("article");
+    question.className = "question";
+
+    const options = item.options.map((option,optIndex)=>`
+      <button class="option" type="button" data-q="${index}" data-o="${optIndex}">
+        ${String.fromCharCode(65+optIndex)}. ${option}
+      </button>
+    `).join("");
+
+    question.innerHTML = `
+      <h3>${index+1}. ${item.q}</h3>
+      <div class="options">${options}</div>
+      <div class="quiz-feedback" id="feedback-${index}" role="status"></div>
+    `;
+    list.appendChild(question);
+  });
+
+  list.querySelectorAll(".option").forEach(button=>{
+    button.addEventListener("click",()=>{
+      const q = Number(button.dataset.q);
+      const chosen = Number(button.dataset.o);
+
+      if(quizAnswers[q] !== null) return;
+      quizAnswers[q] = chosen;
+
+      const all = list.querySelectorAll(`[data-q="${q}"]`);
+      all.forEach(x=>x.disabled=true);
+
+      if(chosen === quizQuestions[q].answer){
+        button.classList.add("correct");
+        document.getElementById(`feedback-${q}`).textContent = "Correct! 🎉";
+        document.getElementById(`feedback-${q}`).style.color = "#15803d";
+      }else{
+        button.classList.add("incorrect");
+        document.getElementById(`feedback-${q}`).textContent = "Not quite. Try to remember the indicator colour change.";
+        document.getElementById(`feedback-${q}`).style.color = "#dc2626";
+      }
+
+      updateQuizScore();
+    });
+  });
+}
+
+function updateQuizScore(){
+  const answered = quizAnswers.filter(x=>x!==null).length;
+  const score = quizAnswers.reduce((total,answer,index)=>{
+    return total + (answer === quizQuestions[index].answer ? 1 : 0);
+  },0);
+
+  document.getElementById("quizScore").textContent = `${score} / 8`;
+  document.getElementById("quizProgress").style.width = `${answered/8*100}%`;
+
+  const message = document.getElementById("quizMessage");
+  if(answered < 8){
+    message.textContent = `${answered} of 8 questions answered.`;
+  }else if(score >= 7){
+    message.textContent = "Excellent! You are an Indicator Expert! 🌟";
+  }else if(score >= 5){
+    message.textContent = "Great work! Review the colour changes once more. 👍";
+  }else{
+    message.textContent = "Keep practising! Try the experiment again. 💪";
+  }
+}
+
+document.getElementById("retryQuizBtn").addEventListener("click",()=>{
+  quizAnswers = Array(quizQuestions.length).fill(null);
+  renderQuiz();
+  updateQuizScore();
+  document.getElementById("quiz").scrollIntoView({behavior:"smooth"});
+});
+
+renderQuiz();
+
+/* Start button */
+document.getElementById("startBtn").addEventListener("click",()=>{
+  document.getElementById("lab").scrollIntoView({behavior:"smooth"});
+});
+</script>
+
+</body>
+</html>
+

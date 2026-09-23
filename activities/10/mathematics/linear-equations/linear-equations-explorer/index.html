@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linear Equations - Consistency &amp; Solution Solver</title>
+<style>
+:root{--ink:#172033;--muted:#617084;--bg:#f3f6fa;--card:#fff;--line:#dbe3ec;--primary:#176b87;--primary-dark:#0e4f66;--soft:#eaf6fa;--good:#207a55;--good-bg:#e5f7ee;--warn:#9a6900;--warn-bg:#fff5d9;--bad:#b33f46;--bad-bg:#fde8ea;--radius:14px}
+*{box-sizing:border-box}body{margin:0;padding:clamp(12px,3vw,28px);font-family:Inter,"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--bg)}button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;display:grid;gap:16px}
+header,.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 10px 28px #24384b12}header{padding:clamp(18px,4vw,30px);background:linear-gradient(135deg,#176b87,#0e4f66);color:#fff}h1,h2,h3,p{margin:0}h1{font-size:clamp(1.65rem,4vw,2.7rem)}header p{margin-top:8px;color:#d9f1f6;max-width:70ch}.panel{padding:clamp(16px,3vw,24px)}.layout{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.controls{display:grid;gap:14px}.line-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.field{display:grid;gap:5px;color:#3e5064;font-weight:700;font-size:.9rem}.field input{width:100%;min-height:40px;border:2px solid #cbd8e2;border-radius:9px;text-align:center;font-weight:800;color:var(--ink);outline:none}.field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px #176b8730}.line-title{grid-column:1/-1;color:var(--primary-dark);font-weight:850}.equations{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.equation{padding:12px;border-radius:9px;background:var(--soft);font-weight:850;text-align:center}.equation.two{background:#fff5df}.canvas-wrap{padding:8px;border-radius:12px;background:#101c2b}.canvas-wrap canvas{display:block;width:100%;height:auto;aspect-ratio:1}.ratios{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ratio{padding:10px;border-radius:9px;background:#f4f7fa;text-align:center}.ratio span{display:block;color:var(--muted);font-size:.82rem}.ratio b{font-size:1.15rem}.status{padding:14px;border-radius:10px;line-height:1.45}.status.unique{background:var(--good-bg);color:var(--good)}.status.infinite{background:#eee9ff;color:#6044a5}.status.none{background:var(--bad-bg);color:var(--bad)}.status strong{display:block;font-size:1.12rem}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab,.method{border:1px solid var(--line);background:#f7f9fb;color:var(--muted);padding:10px 14px;border-radius:9px;font-weight:800}.tab.active,.method.active{background:var(--primary);color:#fff;border-color:var(--primary)}.steps{display:grid;gap:8px;margin-top:14px}.step{padding:12px;border-left:4px solid var(--primary);background:#f5fafc;border-radius:6px;line-height:1.5}.practice{display:none}.practice.active{display:block}.practice-grid{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.answer{min-height:42px;border:2px solid var(--line);border-radius:8px;padding:0 10px}.action{border:0;border-radius:9px;background:var(--primary);color:#fff;padding:11px 16px;font-weight:850}.hint{margin-top:12px;color:var(--muted);line-height:1.5}.feedback{margin-top:10px;font-weight:800}.success{color:var(--good)}.error{color:var(--bad)}@media(max-width:820px){.layout{grid-template-columns:1fr}}@media(max-width:500px){.line-controls,.equations{grid-template-columns:1fr}.ratios{font-size:.9rem}.practice-grid{grid-template-columns:1fr}}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "10-mathematics-linear-equations-linear-equations-explorer",
+  "order": 247,
+  "class": "X",
+  "subject": "Mathematics",
+  "topic": "Linear Equations",
+  "subtopic": null,
+  "title": "Linear Equations - Consistency & Solution Solver",
+  "description": "Explore the consistency of a pair of linear equations in two variables. Change\nthe six coefficients to compare a1/a2, b1/b2 and c1/c2, see both lines on a\ncoordinate plane, and follow an elimination or substitution solution. Includes\nguided fraction and two-digit-number practice.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<main class="app">
+<header><h1>Linear Equations Explorer</h1><p>Investigate consistency, visualize two lines, and practise solving pairs of linear equations.</p></header>
+<section class="layout">
+<div class="panel"><h2>Live coordinate plane</h2><p style="color:var(--muted);margin-top:5px">The graph updates whenever a coefficient changes.</p><div class="canvas-wrap" style="margin-top:14px"><canvas id="lineCanvas" width="720" height="520" aria-label="Coordinate plane with two lines"></canvas></div><div class="equations"><div class="equation" id="eq1"></div><div class="equation two" id="eq2"></div></div></div>
+<aside class="panel controls">
+<h2>Coefficient controls</h2>
+<div class="line-controls"><div class="line-title">Equation 1: a₁x + b₁y + c₁ = 0</div><label class="field">a₁<input id="a1" type="number" value="2" step="1"></label><label class="field">b₁<input id="b1" type="number" value="3" step="1"></label><label class="field">c₁<input id="c1" type="number" value="-13" step="1"></label><div class="line-title">Equation 2: a₂x + b₂y + c₂ = 0</div><label class="field">a₂<input id="a2" type="number" value="4" step="1"></label><label class="field">b₂<input id="b2" type="number" value="-3" step="1"></label><label class="field">c₂<input id="c2" type="number" value="-5" step="1"></label></div>
+<div class="ratios"><div class="ratio"><span>a₁/a₂</span><b id="ra"></b></div><div class="ratio"><span>b₁/b₂</span><b id="rb"></b></div><div class="ratio"><span>c₁/c₂</span><b id="rc"></b></div></div><div id="status" class="status"></div>
+</aside></section>
+<section class="panel"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><div><h2>Step-by-step solver</h2><p style="color:var(--muted);margin-top:4px">Choose a method to see the working.</p></div><div><button class="method active" data-method="elimination">Elimination</button><button class="method" data-method="substitution">Substitution</button></div></div><div id="steps" class="steps"></div></section>
+<section class="panel"><h2>Interactive practice</h2><p style="color:var(--muted);margin-top:4px">Build the equations before checking your answer.</p><div class="tabs" style="margin-top:14px"><button class="tab active" data-practice="fraction">Fraction manipulation</button><button class="tab" data-practice="number">Two-digit reversal</button></div><div id="fraction" class="practice active"><p class="hint">The denominator of a fraction is 3 more than its numerator. If 1 is added to both, the fraction becomes 1/2. Find the fraction.</p><div class="practice-grid" style="margin-top:12px"><input class="answer" id="fractionAnswer" placeholder="Example: 2/5"><button class="action" id="fractionCheck">Check</button></div><div id="fractionFeedback" class="feedback"></div></div><div id="number" class="practice"><p class="hint">A two-digit number has digits x and y. The number is 4 times their sum and the reversed number is 18 more. Find the number.</p><div class="practice-grid" style="margin-top:12px"><input class="answer" id="numberAnswer" placeholder="Example: 24"><button class="action" id="numberCheck">Check</button></div><div id="numberFeedback" class="feedback"></div></div></section>
+</main>
+<script>
+(() => {
+  const ids = ["a1","b1","c1","a2","b2","c2"], $ = id => document.getElementById(id);
+  const values = () => Object.fromEntries(ids.map(id => [id, Number($(id).value) || 0]));
+  const clean = n => Number.isInteger(n) ? String(n) : Number(n.toFixed(2));
+  const ratio = (n,d) => d === 0 ? (n === 0 ? "indeterminate" : "undefined") : clean(n/d);
+  const equation = (a,b,c) => `${a}x ${b < 0 ? "−" : "+"} ${Math.abs(b)}y ${c < 0 ? "−" : "+"} ${Math.abs(c)} = 0`;
+  let method = "elimination";
+  function analyse() {
+    const v = values(), det = v.a1*v.b2-v.a2*v.b1;
+    const same = det === 0 && v.a1*v.c2 === v.a2*v.c1 && v.b1*v.c2 === v.b2*v.c1;
+    const kind = det !== 0 ? "unique" : same ? "infinite" : "none";
+    const data = {v,det,same,kind,ratios:[ratio(v.a1,v.a2),ratio(v.b1,v.b2),ratio(v.c1,v.c2)]};
+    if (kind === "unique") data.x = (v.b1*v.c2-v.b2*v.c1)/det, data.y = (v.a2*v.c1-v.a1*v.c2)/det;
+    return data;
+  }
+  function renderStatus(d) {
+    $("ra").textContent=d.ratios[0]; $("rb").textContent=d.ratios[1]; $("rc").textContent=d.ratios[2];
+    const labels={unique:["Intersecting lines","Unique solution"],infinite:["Coincident lines","Infinitely many solutions"],none:["Parallel lines","No solution"]};
+    $("status").className=`status ${d.kind}`; $("status").innerHTML=`<strong>${labels[d.kind][0]}</strong>${labels[d.kind][1]}<br><small>${d.kind==="unique"?"a₁/a₂ ≠ b₁/b₂":d.kind==="infinite"?"a₁/a₂ = b₁/b₂ = c₁/c₂":"a₁/a₂ = b₁/b₂ ≠ c₁/c₂"}</small>`;
+    $("eq1").textContent=equation(d.v.a1,d.v.b1,d.v.c1); $("eq2").textContent=equation(d.v.a2,d.v.b2,d.v.c2);
+  }
+  function renderSteps(d) {
+    let out;
+    if (d.kind !== "unique") out=[`The determinant a₁b₂ − a₂b₁ = ${clean(d.det)}.`, `Because the determinant is zero, the pair has ${d.kind==="infinite"?"infinitely many solutions":"no solution"}.`];
+    else if (method==="elimination") out=[`Eliminate y using a₁b₂ − a₂b₁ = ${clean(d.det)}.`,`x = (b₁c₂ − b₂c₁) / (a₁b₂ − a₂b₁) = ${clean(d.x)}.`,`y = (a₂c₁ − a₁c₂) / (a₁b₂ − a₂b₁) = ${clean(d.y)}.`];
+    else { const y = d.v.b1 ? `y = (${-d.v.a1}x ${d.v.c1 >= 0 ? "−" : "+"} ${Math.abs(d.v.c1)})/${d.v.b1}` : `x = ${clean(-d.v.c1/d.v.a1)}`; out=[`Rearrange equation 1: ${y}.`,`Substitute this expression in equation 2 and simplify.`,`x = ${clean(d.x)}, then y = ${clean(d.y)}.`]; }
+    $("steps").innerHTML=out.map((s,i)=>`<div class="step"><b>Step ${i+1}.</b> ${s}</div>`).join("");
+  }
+  function draw(d) {
+    const canvas=$("lineCanvas"), ctx=canvas.getContext("2d"), w=canvas.width,h=canvas.height, scale=34, ox=w/2, oy=h/2;
+    ctx.clearRect(0,0,w,h); ctx.fillStyle="#101c2b"; ctx.fillRect(0,0,w,h); ctx.strokeStyle="#233448"; ctx.lineWidth=1;
+    for(let x=ox%scale;x<w;x+=scale){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()} for(let y=oy%scale;y<h;y+=scale){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+    ctx.strokeStyle="#9fb0c1";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(w,oy);ctx.moveTo(ox,0);ctx.lineTo(ox,h);ctx.stroke();ctx.fillStyle="#cbd5e1";ctx.font="16px sans-serif";ctx.fillText("x",w-22,oy-8);ctx.fillText("y",ox+8,18);
+    const line=(a,b,c,color)=>{ctx.strokeStyle=color;ctx.lineWidth=4;ctx.beginPath();if(b!==0){const y=x=>(-a*x-c)/b;ctx.moveTo(0,oy-y(-ox/scale)*scale);ctx.lineTo(w,oy-y((w-ox)/scale)*scale)}else{const x= -c/a;ctx.moveTo(ox+x*scale,0);ctx.lineTo(ox+x*scale,h)}ctx.stroke()};
+    line(d.v.a1,d.v.b1,d.v.c1,"#38bdf8");line(d.v.a2,d.v.b2,d.v.c2,"#fbbf24");
+    if(d.kind==="unique"){ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(ox+d.x*scale,oy-d.y*scale,7,0,Math.PI*2);ctx.fill();ctx.fillStyle="#172033";ctx.fillText(`(${clean(d.x)}, ${clean(d.y)})`,ox+d.x*scale+10,oy-d.y*scale-10)}
+  }
+  function render(){const d=analyse();renderStatus(d);renderSteps(d);draw(d)}
+  ids.forEach(id=>$(id).addEventListener("input",render));document.querySelectorAll(".method").forEach(btn=>btn.addEventListener("click",()=>{method=btn.dataset.method;document.querySelectorAll(".method").forEach(b=>b.classList.toggle("active",b===btn));render()}));
+  document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b===btn));document.querySelectorAll(".practice").forEach(p=>p.classList.toggle("active",p.id===btn.dataset.practice))}));
+  const check=(input,feedback,expected)=>{$(feedback).className=`feedback ${$(input).value.trim().toLowerCase()===expected?"success":"error"}`;$(feedback).textContent=$(input).value.trim().toLowerCase()===expected?"Correct!":"Try again - set up two equations first."};
+  $("fractionCheck").addEventListener("click",()=>check("fractionAnswer","fractionFeedback","2/5"));$("numberCheck").addEventListener("click",()=>check("numberAnswer","numberFeedback","24"));render();
+})();
+</script>
+</body>
+</html>
