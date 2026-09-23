@@ -139,7 +139,8 @@
     }
 
     .support-modal,
-    .prompt-modal {
+    .prompt-modal,
+    .edit-modal {
       width: min(680px, calc(100% - 28px));
       max-height: min(760px, calc(100vh - 28px));
       padding: 0;
@@ -155,19 +156,22 @@
     }
 
     .support-modal::backdrop,
-    .prompt-modal::backdrop {
+    .prompt-modal::backdrop,
+    .edit-modal::backdrop {
       background: rgba(14, 28, 43, 0.66);
       backdrop-filter: blur(3px);
     }
 
     .support-modal-inner,
-    .prompt-modal-inner {
+    .prompt-modal-inner,
+    .edit-modal-inner {
       padding: 24px;
       overflow-y: auto;
     }
 
     .support-modal-header,
-    .prompt-modal-header {
+    .prompt-modal-header,
+    .edit-modal-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -180,12 +184,15 @@
     .support-modal p,
     .prompt-modal h2,
     .prompt-modal h3,
-    .prompt-modal p {
+    .prompt-modal p,
+    .edit-modal h2,
+    .edit-modal p {
       margin-top: 0;
     }
 
     .support-modal h2,
-    .prompt-modal h2 {
+    .prompt-modal h2,
+    .edit-modal h2 {
       margin-bottom: 7px;
       font-size: 1.5rem;
     }
@@ -610,6 +617,45 @@
       font-size: 0.9rem;
     }
 
+    .edit-activity {
+      min-height: 38px;
+      padding: 0 13px;
+      border: 1px solid var(--brand);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--brand-dark);
+      font-weight: 800;
+    }
+
+    .edit-activity:hover {
+      background: #edf8fb;
+    }
+
+    .edit-instructions {
+      color: #4f5c6d;
+      line-height: 1.55;
+    }
+
+    .edit-instructions ol {
+      margin: 16px 0;
+      padding-left: 22px;
+    }
+
+    .edit-instructions li + li {
+      margin-top: 8px;
+    }
+
+    .edit-path {
+      display: block;
+      margin: 14px 0 18px;
+      overflow-wrap: anywhere;
+      border-radius: 8px;
+      padding: 11px 12px;
+      background: var(--soft);
+      color: var(--ink);
+      font: 0.84rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
     .viewer {
       display: none;
       background: var(--panel);
@@ -816,7 +862,8 @@
       }
 
       .support-modal-inner,
-      .prompt-modal-inner {
+      .prompt-modal-inner,
+      .edit-modal-inner {
         padding: 18px;
       }
 
@@ -1035,6 +1082,32 @@
     </div>
   </dialog>
 
+  <dialog id="editModal" class="edit-modal" aria-labelledby="editTitle">
+    <div class="edit-modal-inner">
+      <div class="edit-modal-header">
+        <div>
+          <h2 id="editTitle">Edit this activity</h2>
+          <p id="editActivityName" class="support-intro"></p>
+        </div>
+        <form method="dialog">
+          <button class="modal-close" type="submit" aria-label="Close activity editing instructions">&times;</button>
+        </form>
+      </div>
+
+      <div class="edit-instructions">
+        <p>GitHub’s editor lets you update the activity directly in your browser. If you cannot write to this repository, GitHub will help you create a fork and propose the change with a pull request.</p>
+        <ol>
+          <li>Sign in to GitHub, then open the activity file using the button below.</li>
+          <li>Edit the embedded metadata, HTML, CSS, or JavaScript in the single <code>index.html</code> file.</li>
+          <li>Keep the activity responsive and ensure every control causes a clear visual change.</li>
+          <li>Use GitHub’s preview and commit controls, then create a pull request describing what you changed.</li>
+        </ol>
+        <code id="editSourcePath" class="edit-path"></code>
+        <a id="editOnGithub" class="support-link primary" href="#" target="_blank" rel="noopener">Edit on GitHub</a>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const pageSize = 12;
     let activities = [];
@@ -1081,11 +1154,16 @@
       promptTopic: document.querySelector("#promptTopic"),
       promptSubtopic: document.querySelector("#promptSubtopic"),
       promptNote: document.querySelector("#promptNote"),
-      promptList: document.querySelector("#promptList")
+      promptList: document.querySelector("#promptList"),
+      editModal: document.querySelector("#editModal"),
+      editActivityName: document.querySelector("#editActivityName"),
+      editSourcePath: document.querySelector("#editSourcePath"),
+      editOnGithub: document.querySelector("#editOnGithub")
     };
 
     bindSupportEvents();
     bindPromptEvents();
+    bindEditEvents();
 
     fetch("list.json", { cache: "no-store" })
       .then((response) => {
@@ -1104,7 +1182,8 @@
           activityType: activity.activity_type || "exploration",
           name: activity.activity_name || "Untitled activity",
           details: activity.activity_details || "",
-          path: activity.activity_path || activity.file_path || activity.path || ""
+          path: activity.activity_path || activity.file_path || activity.path || "",
+          sourcePath: activity.source_path || activity.activity_path || activity.file_path || activity.path || ""
         }));
 
         elements.totalCount.textContent = activities.length;
@@ -1183,6 +1262,13 @@
       });
 
       elements.cards.addEventListener("click", (event) => {
+        const editButton = event.target.closest("[data-edit-activity]");
+        if (editButton) {
+          const activity = activities.find((item) => item.id === Number(editButton.dataset.activityId));
+          if (activity && activity.sourcePath) openEditModal(activity);
+          return;
+        }
+
         const button = event.target.closest("[data-open-activity]");
         if (!button) return;
 
@@ -1196,6 +1282,20 @@
         elements.activityViewer.classList.remove("is-open");
         elements.viewerExternal.setAttribute("href", "#");
       });
+    }
+
+    function bindEditEvents() {
+      elements.editModal.addEventListener("click", (event) => {
+        if (event.target === elements.editModal) elements.editModal.close();
+      });
+    }
+
+    function openEditModal(activity) {
+      const encodedPath = activity.sourcePath.split("/").map(encodeURIComponent).join("/");
+      elements.editActivityName.textContent = activity.name;
+      elements.editSourcePath.textContent = activity.sourcePath;
+      elements.editOnGithub.href = `https://github.com/Pragament/html_interactive_learning/edit/main/${encodedPath}`;
+      elements.editModal.showModal();
     }
 
     function bindSupportEvents() {
@@ -1519,6 +1619,16 @@
             Open activity <span aria-hidden="true">→</span>
           </button>
         ` : "";
+        const editButton = activity.sourcePath ? `
+          <button
+            class="edit-activity"
+            type="button"
+            data-edit-activity
+            data-activity-id="${activity.id}"
+          >
+            Edit activity
+          </button>
+        ` : "";
 
         card.innerHTML = `
           <div class="meta">
@@ -1532,9 +1642,8 @@
           <h2>${escapeHtml(activity.name)}</h2>
           <p>${escapeHtml(activity.details)}</p>
           <div class="card-actions">
-            ${isAvailable(activity)
-              ? `<div class="activity-actions">${launchButton}</div>`
-              : '<span class="unavailable">No HTML activity yet</span>'}
+            <div class="activity-actions">${launchButton}${editButton}</div>
+            ${isAvailable(activity) ? "" : '<span class="unavailable">Planned activity</span>'}
           </div>
         `;
 

@@ -71,6 +71,7 @@ def build_activity(path)
     "activity_type" => metadata["activityType"].to_s, "status" => metadata["status"].to_s
   }
   activity["subtopic"] = metadata["subtopic"].to_s unless metadata["subtopic"].to_s.strip.empty?
+  activity["source_path"] = path.relative_path_from(ROOT).to_s
   activity["activity_path"] = path.relative_path_from(ROOT).to_s if metadata["status"] == "active"
   [order, activity, path]
 rescue ArgumentError, TypeError

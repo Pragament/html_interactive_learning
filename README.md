@@ -98,8 +98,9 @@ Recommended activity types are `exploration`, `guided-practice`,
 `exam-practice`, `simulation`, `game`, `challenge`, `assessment`, and
 `demonstration`.
 
-An `active` activity receives a launch path in `list.json`. A `planned` activity
-remains searchable in the full catalog but is not launchable.
+Every activity receives a `source_path` in `list.json` so contributors can edit
+its HTML on GitHub. An `active` activity also receives a launch path. A `planned`
+activity remains searchable in the full catalog but is not launchable.
 
 ## Topic and subtopic rules
 
