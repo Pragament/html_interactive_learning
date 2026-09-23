@@ -118,7 +118,28 @@
       border-color: var(--brand-dark);
     }
 
-    .support-modal {
+    .header-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .prompt-btn {
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 0 16px;
+      background: #fff;
+      color: #9d341f;
+      font-weight: 800;
+    }
+
+    .prompt-btn:hover {
+      background: #fff3ef;
+    }
+
+    .support-modal,
+    .prompt-modal {
       width: min(680px, calc(100% - 28px));
       max-height: min(760px, calc(100vh - 28px));
       padding: 0;
@@ -129,17 +150,24 @@
       box-shadow: 0 24px 70px rgba(10, 23, 38, 0.28);
     }
 
-    .support-modal::backdrop {
+    .prompt-modal {
+      width: min(920px, calc(100% - 28px));
+    }
+
+    .support-modal::backdrop,
+    .prompt-modal::backdrop {
       background: rgba(14, 28, 43, 0.66);
       backdrop-filter: blur(3px);
     }
 
-    .support-modal-inner {
+    .support-modal-inner,
+    .prompt-modal-inner {
       padding: 24px;
       overflow-y: auto;
     }
 
-    .support-modal-header {
+    .support-modal-header,
+    .prompt-modal-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -149,11 +177,15 @@
 
     .support-modal h2,
     .support-modal h3,
-    .support-modal p {
+    .support-modal p,
+    .prompt-modal h2,
+    .prompt-modal h3,
+    .prompt-modal p {
       margin-top: 0;
     }
 
-    .support-modal h2 {
+    .support-modal h2,
+    .prompt-modal h2 {
       margin-bottom: 7px;
       font-size: 1.5rem;
     }
@@ -239,6 +271,138 @@
 
     .support-link.primary:hover {
       background: var(--brand-dark);
+    }
+
+    .prompt-form {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft);
+    }
+
+    .prompt-form .wide {
+      grid-column: 1 / -1;
+    }
+
+    .prompt-form textarea {
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      line-height: 1.45;
+    }
+
+    .prompt-form textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(23, 107, 135, 0.13);
+      outline: none;
+    }
+
+    .prompt-list-heading {
+      margin: 20px 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .prompt-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .prompt-preview {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcfe;
+      overflow: hidden;
+    }
+
+    .prompt-preview-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 15px 16px;
+    }
+
+    .prompt-preview-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .prompt-preview-title strong,
+    .prompt-preview-title span {
+      display: block;
+    }
+
+    .prompt-preview-title span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .prompt-full {
+      padding: 0 16px 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .prompt-full[hidden] {
+      display: none;
+    }
+
+    .prompt-full pre {
+      max-height: 320px;
+      margin: 14px 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border-radius: 8px;
+      padding: 14px;
+      background: #172231;
+      color: #f4f7fa;
+      font: 0.88rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .copy-prompt,
+    .expand-prompt {
+      border: 1px solid var(--brand);
+      border-radius: 8px;
+      min-height: 40px;
+      padding: 0 14px;
+      font-weight: 800;
+    }
+
+    .copy-prompt {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .copy-prompt:hover {
+      background: var(--brand-dark);
+    }
+
+    .expand-prompt {
+      background: #fff;
+      color: var(--brand-dark);
+    }
+
+    .expand-prompt:hover {
+      background: #edf8fb;
+    }
+
+    .copy-status {
+      margin-left: 10px;
+      color: var(--ok);
+      font-size: 0.88rem;
+      font-weight: 800;
     }
 
     .toolbar {
@@ -600,6 +764,10 @@
         width: 100%;
       }
 
+      .prompt-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .filter-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -647,8 +815,26 @@
         min-height: 460px;
       }
 
-      .support-modal-inner {
+      .support-modal-inner,
+      .prompt-modal-inner {
         padding: 18px;
+      }
+
+      .header-buttons,
+      .prompt-form {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-preview-head {
+        grid-template-columns: 1fr;
+      }
+
+      .prompt-preview-actions {
+        justify-content: stretch;
+      }
+
+      .prompt-preview-actions button {
+        flex: 1;
       }
 
       .support-links {
@@ -675,7 +861,10 @@
             <span>cataloged</span>
           </div>
         </div>
-        <button id="supportOpen" class="support-btn" type="button">Help &amp; support</button>
+        <div class="header-buttons">
+          <button id="promptOpen" class="prompt-btn" type="button" disabled>Build AI prompt</button>
+          <button id="supportOpen" class="support-btn" type="button">Help &amp; support</button>
+        </div>
       </div>
     </header>
 
@@ -806,6 +995,46 @@
     </div>
   </dialog>
 
+  <dialog id="promptModal" class="prompt-modal" aria-labelledby="promptTitle">
+    <div class="prompt-modal-inner">
+      <div class="prompt-modal-header">
+        <div>
+          <h2 id="promptTitle">AI prompt builder</h2>
+          <p class="support-intro">Choose a curriculum location and copy a ready-to-use prompt for creating or improving an interactive activity.</p>
+        </div>
+        <form method="dialog">
+          <button class="modal-close" type="submit" aria-label="Close AI prompt builder">&times;</button>
+        </form>
+      </div>
+
+      <div class="prompt-form" aria-label="Prompt context">
+        <div class="field">
+          <label for="promptClass">Class</label>
+          <select id="promptClass"></select>
+        </div>
+        <div class="field">
+          <label for="promptSubject">Subject</label>
+          <select id="promptSubject"></select>
+        </div>
+        <div class="field">
+          <label for="promptTopic">Topic</label>
+          <select id="promptTopic"></select>
+        </div>
+        <div class="field">
+          <label for="promptSubtopic">Subtopic (optional)</label>
+          <select id="promptSubtopic"></select>
+        </div>
+        <div class="field wide">
+          <label for="promptNote">Custom note (optional)</label>
+          <textarea id="promptNote" placeholder="Example: Include English, Telugu, and Hindi; focus on visual feedback for every slider."></textarea>
+        </div>
+      </div>
+
+      <h3 class="prompt-list-heading">Prompt previews</h3>
+      <div id="promptList" class="prompt-list" aria-live="polite"></div>
+    </div>
+  </dialog>
+
   <script>
     const pageSize = 12;
     let activities = [];
@@ -844,10 +1073,19 @@
       viewerClose: document.querySelector("#viewerClose"),
       activityFrame: document.querySelector("#activityFrame"),
       supportOpen: document.querySelector("#supportOpen"),
-      supportModal: document.querySelector("#supportModal")
+      supportModal: document.querySelector("#supportModal"),
+      promptOpen: document.querySelector("#promptOpen"),
+      promptModal: document.querySelector("#promptModal"),
+      promptClass: document.querySelector("#promptClass"),
+      promptSubject: document.querySelector("#promptSubject"),
+      promptTopic: document.querySelector("#promptTopic"),
+      promptSubtopic: document.querySelector("#promptSubtopic"),
+      promptNote: document.querySelector("#promptNote"),
+      promptList: document.querySelector("#promptList")
     };
 
     bindSupportEvents();
+    bindPromptEvents();
 
     fetch("list.json", { cache: "no-store" })
       .then((response) => {
@@ -872,6 +1110,7 @@
         elements.totalCount.textContent = activities.length;
         elements.availableCount.textContent = activities.filter(isAvailable).length;
         populateFilters();
+        initializePromptBuilder();
         bindEvents();
         render();
       })
@@ -969,6 +1208,233 @@
           elements.supportModal.close();
         }
       });
+    }
+
+    function bindPromptEvents() {
+      elements.promptOpen.addEventListener("click", () => {
+        syncPromptBuilderWithCatalog();
+        renderPromptPreviews();
+        elements.promptModal.showModal();
+      });
+
+      elements.promptModal.addEventListener("click", (event) => {
+        if (event.target === elements.promptModal) elements.promptModal.close();
+      });
+
+      elements.promptClass.addEventListener("change", () => {
+        populatePromptSubjects();
+        renderPromptPreviews();
+      });
+
+      elements.promptSubject.addEventListener("change", () => {
+        populatePromptTopics();
+        renderPromptPreviews();
+      });
+
+      elements.promptTopic.addEventListener("change", () => {
+        populatePromptSubtopics();
+        renderPromptPreviews();
+      });
+
+      elements.promptSubtopic.addEventListener("change", renderPromptPreviews);
+      elements.promptNote.addEventListener("input", renderPromptPreviews);
+
+      elements.promptList.addEventListener("click", async (event) => {
+        const expandButton = event.target.closest("[data-expand-prompt]");
+        if (expandButton) {
+          const preview = expandButton.closest(".prompt-preview");
+          const fullPrompt = preview.querySelector(".prompt-full");
+          const willExpand = fullPrompt.hidden;
+          fullPrompt.hidden = !willExpand;
+          expandButton.textContent = willExpand ? "Collapse" : "Expand";
+          expandButton.setAttribute("aria-expanded", String(willExpand));
+          return;
+        }
+
+        const copyButton = event.target.closest("[data-copy-prompt]");
+        if (!copyButton) return;
+        const prompt = copyButton.closest(".prompt-preview").querySelector("pre").textContent;
+        const status = copyButton.closest(".prompt-preview").querySelector(".copy-status");
+
+        try {
+          await copyText(prompt);
+          status.textContent = "Copied";
+        } catch (_error) {
+          status.textContent = "Copy failed";
+        }
+
+        window.setTimeout(() => {
+          status.textContent = "";
+        }, 1800);
+      });
+    }
+
+    function initializePromptBuilder() {
+      populatePromptSelect(elements.promptClass, hierarchyValues("className"), state.className, "Choose class");
+      populatePromptSubjects();
+      elements.promptOpen.disabled = false;
+    }
+
+    function syncPromptBuilderWithCatalog() {
+      const preferredClass = state.className !== "all" ? state.className : elements.promptClass.value;
+      populatePromptSelect(elements.promptClass, hierarchyValues("className"), preferredClass, "Choose class");
+
+      const preferredSubject = state.subject !== "all" ? state.subject : elements.promptSubject.value;
+      populatePromptSubjects(preferredSubject);
+
+      const preferredTopic = state.topic !== "all" ? state.topic : elements.promptTopic.value;
+      populatePromptTopics(preferredTopic);
+
+      const preferredSubtopic = state.subtopic !== "all" ? state.subtopic : elements.promptSubtopic.value;
+      populatePromptSubtopics(preferredSubtopic);
+    }
+
+    function populatePromptSubjects(preferredValue = elements.promptSubject.value) {
+      const values = hierarchyValues("subject", { className: elements.promptClass.value });
+      populatePromptSelect(elements.promptSubject, values, preferredValue, "Choose subject");
+      populatePromptTopics();
+    }
+
+    function populatePromptTopics(preferredValue = elements.promptTopic.value) {
+      const values = hierarchyValues("topic", {
+        className: elements.promptClass.value,
+        subject: elements.promptSubject.value
+      });
+      populatePromptSelect(elements.promptTopic, values, preferredValue, "Choose topic");
+      populatePromptSubtopics();
+    }
+
+    function populatePromptSubtopics(preferredValue = elements.promptSubtopic.value) {
+      const values = hierarchyValues("subtopic", {
+        className: elements.promptClass.value,
+        subject: elements.promptSubject.value,
+        topic: elements.promptTopic.value
+      });
+      elements.promptSubtopic.innerHTML = "";
+      elements.promptSubtopic.append(new Option("Topic level (no subtopic)", ""));
+      values.forEach((value) => elements.promptSubtopic.append(new Option(value, value)));
+      elements.promptSubtopic.value = values.includes(preferredValue) ? preferredValue : "";
+    }
+
+    function hierarchyValues(key, constraints = {}) {
+      const values = new Set();
+      activities.forEach((activity) => {
+        if (constraints.className && activity.className !== constraints.className) return;
+        if (constraints.subject && activity.subject !== constraints.subject) return;
+        if (constraints.topic && activity.topic !== constraints.topic) return;
+        if (activity[key]) values.add(activity[key]);
+      });
+      return Array.from(values).sort(sortText);
+    }
+
+    function populatePromptSelect(select, values, preferredValue, placeholder) {
+      select.innerHTML = "";
+      if (!values.length) {
+        select.append(new Option(placeholder, ""));
+        select.disabled = true;
+        return;
+      }
+
+      select.disabled = false;
+      values.forEach((value) => select.append(new Option(value, value)));
+      select.value = values.includes(preferredValue) ? preferredValue : values[0];
+    }
+
+    function renderPromptPreviews() {
+      const context = promptContext();
+      const prompts = buildPrompts(context);
+      elements.promptList.innerHTML = "";
+
+      prompts.forEach((prompt, index) => {
+        const card = document.createElement("article");
+        card.className = "prompt-preview";
+
+        const head = document.createElement("div");
+        head.className = "prompt-preview-head";
+        head.innerHTML = `
+          <div class="prompt-preview-title">
+            <strong>${escapeHtml(prompt.title)}</strong>
+            <span>${escapeHtml(prompt.description)}</span>
+          </div>
+          <div class="prompt-preview-actions">
+            <button class="expand-prompt" type="button" data-expand-prompt aria-expanded="false" aria-controls="prompt-full-${index}">Expand</button>
+            <button class="copy-prompt" type="button" data-copy-prompt>Copy full prompt</button>
+            <span class="copy-status" role="status"></span>
+          </div>
+        `;
+
+        const full = document.createElement("div");
+        full.className = "prompt-full";
+        full.id = `prompt-full-${index}`;
+        full.hidden = true;
+        const pre = document.createElement("pre");
+        pre.textContent = prompt.text;
+        full.append(pre);
+        card.append(head, full);
+        elements.promptList.append(card);
+      });
+    }
+
+    function promptContext() {
+      return {
+        className: elements.promptClass.value,
+        subject: elements.promptSubject.value,
+        topic: elements.promptTopic.value,
+        subtopic: elements.promptSubtopic.value,
+        note: elements.promptNote.value.trim()
+      };
+    }
+
+    function buildPrompts(context) {
+      const location = [
+        `Class: ${context.className}`,
+        `Subject: ${context.subject}`,
+        `Topic: ${context.topic}`,
+        context.subtopic ? `Subtopic: ${context.subtopic}` : "Scope: Topic level (may cover all subtopics)"
+      ].join("\n");
+      const note = context.note ? `\n\nAdditional requirements from the contributor:\n${context.note}` : "";
+      const repositoryRules = `Follow this repository's activity convention:\n- Create one self-contained index.html under activities/{class}/{subject}/{topic}/[subtopic/]/{activity}/.\n- Embed valid activity-metadata JSON with schemaVersion, unique id and order, class, subject, topic, optional subtopic, title, description, activityType, and active status.\n- Keep all CSS and JavaScript inside the HTML; do not add activity.md or external runtime dependencies.\n- Make the page responsive, keyboard accessible, and usable on touch devices.\n- Every control must produce an immediate, clearly visible change in the learning visual.\n- Preserve unrelated repository content and validate the generated catalog after the change.`;
+
+      return [
+        {
+          title: "Create a complete interactive activity",
+          description: "Generate a new, curriculum-aligned activity with exploration, practice, and feedback.",
+          text: `Create a new interactive learning activity for:\n${location}\n\nBuild a polished learner experience that explains the concept visually, lets students manipulate meaningful controls, provides guided steps, checks understanding, and gives clear feedback. Use age-appropriate language and include a concise learning objective, instructions, exploration, and practice section.\n\n${repositoryRules}${note}`
+        },
+        {
+          title: "Build a visual concept laboratory",
+          description: "Focus on exploration where inputs visibly change a model, diagram, or simulation.",
+          text: `Create a visual concept laboratory for:\n${location}\n\nTeach the concept through a detailed interactive model. Include a complete legend, labelled elements, live values, a plain-language explanation of what changes and why, and guided discovery questions. Sliders and controls must visibly move, resize, recolour, or otherwise update the relevant model—not only change a number. Include reset and sensible starting values.\n\n${repositoryRules}${note}`
+        },
+        {
+          title: "Create interactive exam practice",
+          description: "Turn realistic case studies and questions into guided, assessable practice.",
+          text: `Create an interactive exam-practice activity for:\n${location}\n\nInclude multiple realistic case studies or application problems. Let the student interact with each diagram or scenario before answering. Mix question styles appropriate to the class, reveal hints progressively, validate answers, explain every solution step, and show a final practice summary. Avoid static question dumps: each case study must have a meaningful visual interaction.\n\n${repositoryRules}${note}`
+        },
+        {
+          title: "Review and improve an existing activity",
+          description: "Audit learning quality, visual feedback, accessibility, and repository compliance.",
+          text: `Find the most relevant existing activity for:\n${location}\n\nReview it as both a student and a content contributor. Improve incomplete explanations, weak visual feedback, unclear legends, controls whose numeric values change without a corresponding visual change, mobile layout, keyboard access, and practice feedback. Retain working features and the activity's intent. If more than one activity matches, state which one you selected before editing.\n\n${repositoryRules}${note}`
+        }
+      ];
+    }
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.append(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      if (!copied) throw new Error("Clipboard unavailable");
     }
 
     function populateFilters() {
