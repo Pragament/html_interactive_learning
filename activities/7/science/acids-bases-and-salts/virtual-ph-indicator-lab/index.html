@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual pH Indicator Lab</title>
+    <script id="activity-metadata" type="application/json">
+  {
+    "schema_version": "1.0",
+    "title": "Virtual pH Indicator Lab - Acids, Bases & Neutralization",
+    "description": "Interactive chemistry simulation allowing students to test household liquids with Red/Blue litmus paper and Universal Indicator, visualize H+ vs OH- ions, and perform titration.",
+    "class": "7",
+    "subject": "science",
+    "topic": "acids-bases-and-salts",
+    "subtopic": "Indicators and pH Scale",
+    "learning_objectives": [
+      "Differentiate acids, bases, and neutral substances using litmus papers and universal indicator.",
+      "Relate the color changes of indicators to the 0-14 pH scale.",
+      "Visualize the concentration of H+ and OH- ions in acidic, basic, and neutral solutions.",
+      "Simulate acid-base neutralization reactions via interactive titration."
+    ],
+    "interactive_elements": [
+      "Interactive dropper tool to pipette liquids into test tubes",
+      "Real-time color reaction on Red Litmus, Blue Litmus, and Universal Indicator strips",
+      "Dynamic molecular ion view showing floating H+ and OH- ions",
+      "Titration dropper allowing dropwise neutralization with visual color transition"
+    ],
+    "tags": ["chemistry", "acids", "bases", "ph-scale", "litmus", "science", "class7"],
+    "estimated_time_minutes": 20,
+    "language": "en",
+    "created_by": "Contributor"
+  }
+  </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            background: #059669;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #475569;
+        }
+
+        .btn.active {
+            background: #10b981;
+            border-color: #34d399;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 900px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+
+        .bench {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .shelf {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #1e293b;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .bottle {
+            background: #334155;
+            border: 2px solid #475569;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 85px;
+        }
+
+        .bottle:hover,
+        .bottle.selected {
+            border-color: #10b981;
+            transform: translateY(-3px);
+            background: #1e293b;
+        }
+
+        .bottle-cap {
+            width: 22px;
+            height: 8px;
+            background: #64748b;
+            margin: 0 auto 4px auto;
+            border-radius: 2px;
+        }
+
+        .bottle-body {
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            margin: 0 auto 6px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .test-area {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .beaker {
+            width: 130px;
+            height: 170px;
+            border: 3px solid #94a3b8;
+            border-top: none;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .liquid {
+            width: 100%;
+            height: 100px;
+            transition: background 0.4s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .strips-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .litmus-strip {
+            width: 24px;
+            height: 85px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background 0.4s;
+            position: relative;
+        }
+
+        .strip-label {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        .ph-spectrum {
+            width: 100%;
+            height: 16px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #ef4444, #f97316, #eab308, #22c55e, #06b6d4, #3b82f6, #8b5cf6);
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .ph-pointer {
+            position: absolute;
+            top: -5px;
+            width: 4px;
+            height: 26px;
+            background: white;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            transition: left 0.4s;
+        }
+
+        .sidebar {
+            width: 100%;
+            max-width: 360px;
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .ion-box {
+            width: 100%;
+            height: 75px;
+            background: #090d16;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><span>Virtual pH Indicator Lab</span><span class="badge">Class 7 Science</span></h1>
+        <div class="nav-btns">
+            <button class="btn active" id="btn-lab-test" onclick="setLabMode('test')">Bench Testing</button>
+            <button class="btn" id="btn-lab-titration" onclick="setLabMode('titration')">Titration
+                Neutralization</button>
+        </div>
+    </header>
+    <div class="container">
+        <div class="bench">
+            <div class="shelf">
+                <div class="bottle selected" id="b-lemon" onclick="selectChemical('lemon')">
+                    <div class="bottle-cap"></div>
+                    <div class="bottle-body" style="background:#fef08a; color:#854d0e;">🍋</div>
+                    <div style="font-size:0.75rem; font-weight:700;">Lemon Juice</div>
+                </div>
+                <div class="bottle" id="b-vinegar" onclick="selectChemical('vinegar')">
+                    <div class="bottle-cap"></div>
+                    <div class="bottle-body" style="background:#fed7aa; color:#9a3412;">🍶</div>
+                    <div style="font-size:0.75rem; font-weight:700;">Vinegar</div>
+                </div>
+                <div class="bottle" id="b-water" onclick="selectChemical('water')">
+                    <div class="bottle-cap"></div>
+                    <div class="bottle-body" style="background:#bae6fd; color:#0369a1;">💧</div>
+                    <div style="font-size:0.75rem; font-weight:700;">Pure Water</div>
+                </div>
+                <div class="bottle" id="b-baking" onclick="selectChemical('baking')">
+                    <div class="bottle-cap"></div>
+                    <div class="bottle-body" style="background:#e2e8f0; color:#334155;">🥄</div>
+                    <div style="font-size:0.75rem; font-weight:700;">Baking Soda</div>
+                </div>
+                <div class="bottle" id="b-soap" onclick="selectChemical('soap')">
+                    <div class="bottle-cap"></div>
+                    <div class="bottle-body" style="background:#c7d2fe; color:#3730a3;">🧼</div>
+                    <div style="font-size:0.75rem; font-weight:700;">Soap Soln</div>
+                </div>
+            </div>
+
+            <div class="test-area">
+                <div>
+                    <div
+                        style="font-size:0.8rem; font-weight:700; text-align:center; color:#94a3b8; margin-bottom:6px;">
+                        Reaction Beaker</div>
+                    <div class="beaker">
+                        <div class="liquid" id="beaker-liquid" style="background: rgba(234, 179, 8, 0.4);">
+                            <span id="beaker-label"
+                                style="font-size:0.8rem; font-weight:700; text-shadow:0 1px 2px #000;">Lemon
+                                Juice</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div
+                        style="font-size:0.8rem; font-weight:700; text-align:center; color:#94a3b8; margin-bottom:6px;">
+                        Litmus & Indicator Strips</div>
+                    <div class="strips-row">
+                        <div>
+                            <div class="litmus-strip" id="red-litmus" style="background: #ef4444;"></div>
+                            <div class="strip-label">Red Litmus</div>
+                        </div>
+                        <div>
+                            <div class="litmus-strip" id="blue-litmus" style="background: #ef4444;"></div>
+                            <div class="strip-label">Blue Litmus</div>
+                        </div>
+                        <div>
+                            <div class="litmus-strip" id="univ-strip" style="background: #ef4444;"></div>
+                            <div class="strip-label">Universal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="titration-controls" style="display:none; gap:10px;">
+                <button class="btn" style="background:#ef4444;" onclick="titrate('acid')">+ Add 1 Drop Acid
+                    (HCl)</button>
+                <button class="btn" style="background:#3b82f6;" onclick="titrate('base')">+ Add 1 Drop Base
+                    (NaOH)</button>
+                <button class="btn" onclick="resetTitration()">Reset</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="card">
+                <div class="card-title">pH Scale Indicator</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.85rem; color:#cbd5e1;">Approximate pH:</span>
+                    <span style="font-size:1.5rem; font-weight:800; color:#10b981;" id="ph-val">2.2</span>
+                </div>
+                <div class="ph-spectrum">
+                    <div class="ph-pointer" id="ph-pointer" style="left: 15%;"></div>
+                </div>
+                <div
+                    style="display:flex; justify-content:space-between; font-size:0.7rem; color:#94a3b8; margin-top:4px;">
+                    <span>0 (Acidic)</span>
+                    <span>7 (Neutral)</span>
+                    <span>14 (Basic)</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Classification</div>
+                <div id="nature-badge"
+                    style="padding:6px; text-align:center; font-weight:800; border-radius:6px; background:#7f1d1d; color:#fca5a5;">
+                    ACIDIC</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Microscopic Ion View</div>
+                <div class="ion-box">
+                    <canvas id="ion-canvas" width="300" height="75"></canvas>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-top:6px;">
+                    <span style="color:#ef4444; font-weight:700;">H⁺: Acidic ions</span>
+                    <span style="color:#3b82f6; font-weight:700;">OH⁻: Basic ions</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const chems = {
+            lemon: { name: 'Lemon Juice', ph: 2.2, redLit: '#ef4444', blueLit: '#ef4444', univ: '#ef4444', liquid: 'rgba(234, 179, 8, 0.4)', nature: 'ACIDIC' },
+            vinegar: { name: 'Vinegar', ph: 3.0, redLit: '#ef4444', blueLit: '#ef4444', univ: '#f97316', liquid: 'rgba(251, 146, 60, 0.3)', nature: 'ACIDIC' },
+            water: { name: 'Pure Water', ph: 7.0, redLit: '#ef4444', blueLit: '#3b82f6', univ: '#22c55e', liquid: 'rgba(56, 189, 248, 0.25)', nature: 'NEUTRAL' },
+            baking: { name: 'Baking Soda', ph: 8.5, redLit: '#3b82f6', blueLit: '#3b82f6', univ: '#06b6d4', liquid: 'rgba(148, 163, 184, 0.3)', nature: 'BASIC' },
+            soap: { name: 'Soap Solution', ph: 10.0, redLit: '#3b82f6', blueLit: '#3b82f6', univ: '#3b82f6', liquid: 'rgba(129, 140, 248, 0.35)', nature: 'BASIC' }
+        };
+        let currentChem = 'lemon', titrationPH = 2.0;
+
+        function selectChemical(k) {
+            currentChem = k;
+            document.querySelectorAll('.bottle').forEach(b => b.classList.remove('selected'));
+            const el = document.getElementById('b-' + k);
+            if (el) el.classList.add('selected');
+            applyChem(chems[k]);
+        }
+
+        function applyChem(c) {
+            document.getElementById('beaker-label').innerText = c.name;
+            document.getElementById('beaker-liquid').style.background = c.liquid;
+            document.getElementById('red-litmus').style.background = c.redLit;
+            document.getElementById('blue-litmus').style.background = c.blueLit;
+            document.getElementById('univ-strip').style.background = c.univ;
+            document.getElementById('ph-val').innerText = c.ph.toFixed(1);
+            document.getElementById('ph-pointer').style.left = ((c.ph / 14) * 100) + '%';
+            const badge = document.getElementById('nature-badge');
+            badge.innerText = c.nature;
+            if (c.nature === 'ACIDIC') { badge.style.background = '#7f1d1d'; badge.style.color = '#fca5a5'; }
+            else if (c.nature === 'BASIC') { badge.style.background = '#1e3a8a'; badge.style.color = '#bfdbfe'; }
+            else { badge.style.background = '#065f46'; badge.style.color = '#6ee7b7'; }
+            drawIons(c.ph);
+        }
+
+        function drawIons(ph) {
+            const c = document.getElementById('ion-canvas');
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, 300, 75);
+            const hCount = Math.round(14 - ph), ohCount = Math.round(ph);
+            ctx.fillStyle = '#ef4444'; ctx.font = 'bold 11px sans-serif';
+            for (let i = 0; i < hCount * 2; i++) ctx.fillText('H⁺', 15 + Math.random() * 260, 15 + Math.random() * 50);
+            ctx.fillStyle = '#3b82f6';
+            for (let j = 0; j < ohCount * 2; j++) ctx.fillText('OH⁻', 15 + Math.random() * 260, 15 + Math.random() * 50);
+        }
+
+        function setLabMode(mode) {
+            document.getElementById('btn-lab-test').classList.toggle('active', mode === 'test');
+            document.getElementById('btn-lab-titration').classList.toggle('active', mode === 'titration');
+            document.getElementById('titration-controls').style.display = (mode === 'titration') ? 'flex' : 'none';
+            if (mode === 'titration') { titrationPH = 2.0; updateTitration(); }
+            else selectChemical(currentChem);
+        }
+
+        function titrate(type) {
+            titrationPH = (type === 'base') ? Math.min(13.5, titrationPH + 0.8) : Math.max(1.0, titrationPH - 0.8);
+            updateTitration();
+        }
+        function resetTitration() { titrationPH = 2.0; updateTitration(); }
+
+        function updateTitration() {
+            let nat = titrationPH < 6.5 ? 'ACIDIC' : (titrationPH > 7.5 ? 'BASIC' : 'NEUTRAL');
+            let redL = titrationPH < 7 ? '#ef4444' : '#3b82f6';
+            let blueL = titrationPH <= 7 ? '#ef4444' : '#3b82f6';
+            let univ = titrationPH < 4 ? '#ef4444' : (titrationPH < 6 ? '#f97316' : (titrationPH < 8 ? '#22c55e' : (titrationPH < 10 ? '#06b6d4' : '#8b5cf6')));
+            applyChem({ name: 'Titration Beaker (pH ' + titrationPH.toFixed(1) + ')', ph: titrationPH, redLit: redL, blueLit: blueL, univ: univ, liquid: univ + '55', nature: nat });
+        }
+
+        applyChem(chems.lemon);
+    </script>
+</body>
+
+</html>
