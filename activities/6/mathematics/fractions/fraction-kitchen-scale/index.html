@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction Kitchen Scale - Visual Balance</title>
+    <script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "fraction-kitchen-scale",
+  "order": 309,
+  "class": "6",
+  "subject": "mathematics",
+  "topic": "fractions",
+  "title": "Fraction Kitchen Scale - Visual Balance & Common Denominators",
+  "description": "Interactive two-pan balance scale that helps students understand fraction addition, equivalence, and common denominators through physical intuition and visual partitioning.",
+  "activityType": "simulation",
+  "status": "active"
+}
+  </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #1e293b;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            color: #f59e0b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            background: #d97706;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #475569;
+        }
+
+        .btn.active {
+            background: #d97706;
+            border-color: #f59e0b;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border-color: #dc2626;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 900px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+
+        .work-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .scale-box {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .scale-beam {
+            width: 380px;
+            height: 12px;
+            background: #94a3b8;
+            border-radius: 6px;
+            position: absolute;
+            top: 90px;
+            transform-origin: center center;
+            transition: transform 0.4s ease;
+        }
+
+        .scale-pivot {
+            width: 22px;
+            height: 22px;
+            background: #f59e0b;
+            border-radius: 50%;
+            position: absolute;
+            top: 85px;
+            z-index: 5;
+        }
+
+        .scale-stand {
+            width: 14px;
+            height: 140px;
+            background: #64748b;
+            position: absolute;
+            top: 100px;
+        }
+
+        .scale-base {
+            width: 160px;
+            height: 16px;
+            background: #475569;
+            position: absolute;
+            top: 240px;
+            border-radius: 8px;
+        }
+
+        .pan-string {
+            width: 2px;
+            height: 60px;
+            background: #cbd5e1;
+            position: absolute;
+            top: 12px;
+        }
+
+        .pan {
+            width: 130px;
+            min-height: 45px;
+            background: #334155;
+            border: 2px solid #64748b;
+            border-radius: 0 0 65px 65px;
+            position: absolute;
+            top: 72px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 6px;
+            gap: 4px;
+        }
+
+        .pan-left-anchor {
+            position: absolute;
+            left: 10px;
+        }
+
+        .pan-right-anchor {
+            position: absolute;
+            right: 10px;
+        }
+
+        .weight-item {
+            background: #f59e0b;
+            color: #0f172a;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .weight-shelf {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+            background: #1e293b;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+        }
+
+        .shelf-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .shelf-btn:hover {
+            background: #2563eb;
+        }
+
+        .sidebar {
+            width: 100%;
+            max-width: 360px;
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .readout {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #38bdf8;
+            text-align: center;
+        }
+
+        .visual-bar {
+            height: 20px;
+            background: #1e293b;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 6px;
+            border: 1px solid #475569;
+        }
+
+        .bar-seg {
+            height: 100%;
+            background: #f59e0b;
+            border-right: 1px solid #0f172a;
+        }
+
+        .balance-status {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: center;
+            padding: 6px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .balanced {
+            background: #065f46;
+            color: #6ee7b7;
+            border: 1px solid #059669;
+        }
+
+        .unbalanced {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border: 1px solid #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><span>Fraction Kitchen Scale</span><span class="badge">Class 6 Maths</span></h1>
+        <div class="nav-btns">
+            <button class="btn active" id="btn-scale-free" onclick="setScaleMode('free')">Free Balance</button>
+            <button class="btn" id="btn-scale-buster" onclick="setScaleMode('buster')">Misconception Buster</button>
+        </div>
+    </header>
+    <div class="container">
+        <div class="work-area">
+            <div class="scale-box">
+                <div class="scale-stand"></div>
+                <div class="scale-base"></div>
+                <div class="scale-pivot"></div>
+                <div class="scale-beam" id="beam">
+                    <div class="pan-left-anchor">
+                        <div class="pan-string" style="left: 65px;"></div>
+                        <div class="pan" id="left-pan" style="left: 0;"></div>
+                    </div>
+                    <div class="pan-right-anchor">
+                        <div class="pan-string" style="right: 65px;"></div>
+                        <div class="pan" id="right-pan" style="right: 0;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="weight-shelf">
+                <span style="font-size: 0.8rem; font-weight: 600; color: #cbd5e1; align-self: center;">Left Pan:</span>
+                <button class="shelf-btn" onclick="addWeight('left', 1, 2)">1/2</button>
+                <button class="shelf-btn" onclick="addWeight('left', 1, 3)">1/3</button>
+                <button class="shelf-btn" onclick="addWeight('left', 1, 4)">1/4</button>
+                <button class="shelf-btn" onclick="addWeight('left', 1, 6)">1/6</button>
+            </div>
+            <div class="weight-shelf" style="margin-top: 8px;">
+                <span style="font-size: 0.8rem; font-weight: 600; color: #cbd5e1; align-self: center;">Right Pan:</span>
+                <button class="shelf-btn" style="background:#10b981;" onclick="addWeight('right', 1, 2)">1/2</button>
+                <button class="shelf-btn" style="background:#10b981;" onclick="addWeight('right', 1, 3)">1/3</button>
+                <button class="shelf-btn" style="background:#10b981;" onclick="addWeight('right', 1, 4)">1/4</button>
+                <button class="shelf-btn" style="background:#10b981;" onclick="addWeight('right', 1, 6)">1/6</button>
+            </div>
+            <button class="btn btn-danger" style="margin-top: 15px;" onclick="clearWeights()">Reset Scale</button>
+        </div>
+        <div class="sidebar">
+            <div class="card">
+                <div class="card-title">Scale Comparison</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div>
+                        <div style="font-size:0.75rem; color:#94a3b8; text-align:center;">Left</div>
+                        <div class="readout" id="left-fraction-txt">0</div>
+                    </div>
+                    <div>
+                        <div style="font-size:0.75rem; color:#94a3b8; text-align:center;">Right</div>
+                        <div class="readout" id="right-fraction-txt">0</div>
+                    </div>
+                </div>
+                <div class="balance-status balanced" id="status-badge">Balanced at 0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Visual Fraction Bar</div>
+                <div class="visual-bar" id="left-bar"></div>
+                <div class="visual-bar" id="right-bar" style="margin-top: 4px;"></div>
+            </div>
+            <div class="card" id="buster-card" style="display:none; border-color: #ef4444;">
+                <div class="card-title" style="color: #ef4444;">Misconception Demo</div>
+                <p style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.4;">
+                    <strong>Myth:</strong> "1/2 + 1/3 = 2/5"<br>
+                    Notice how 1/2 + 1/3 (0.833) easily outweighs 2/5 (0.400). Adding denominators is false!
+                </p>
+            </div>
+        </div>
+    </div>
+    <script>
+        let leftItems = [], rightItems = [];
+        function addWeight(pan, num, den) {
+            if (pan === 'left') leftItems.push({ num, den });
+            else rightItems.push({ num, den });
+            updateScale();
+        }
+        function clearWeights() { leftItems = []; rightItems = []; updateScale(); }
+        function sumPan(items) { return items.reduce((acc, item) => acc + (item.num / item.den), 0); }
+        function updateScale() {
+            const leftSum = sumPan(leftItems), rightSum = sumPan(rightItems);
+            let angle = Math.max(-16, Math.min(16, (rightSum - leftSum) * 30));
+            document.getElementById('beam').style.transform = 'rotate(' + angle + 'deg)';
+            renderPan('left-pan', leftItems); renderPan('right-pan', rightItems);
+            document.getElementById('left-fraction-txt').innerText = leftSum === 0 ? '0' : leftSum.toFixed(3);
+            document.getElementById('right-fraction-txt').innerText = rightSum === 0 ? '0' : rightSum.toFixed(3);
+            const statusEl = document.getElementById('status-badge');
+            if (Math.abs(leftSum - rightSum) < 0.001) {
+                statusEl.className = 'balance-status balanced';
+                statusEl.innerText = leftSum === 0 ? 'Balanced at 0' : 'Balanced (=)';
+            } else if (leftSum > rightSum) {
+                statusEl.className = 'balance-status unbalanced';
+                statusEl.innerText = 'Left is Heavier (>)';
+            } else {
+                statusEl.className = 'balance-status unbalanced';
+                statusEl.innerText = 'Right is Heavier (<)';
+            }
+            renderBar('left-bar', leftSum); renderBar('right-bar', rightSum);
+        }
+        function renderPan(panId, items) {
+            const el = document.getElementById(panId); el.innerHTML = '';
+            items.forEach((item, idx) => {
+                const d = document.createElement('div'); d.className = 'weight-item';
+                d.innerText = item.num + '/' + item.den;
+                d.onclick = () => { items.splice(idx, 1); updateScale(); };
+                el.appendChild(d);
+            });
+        }
+        function renderBar(barId, sum) {
+            const el = document.getElementById(barId); el.innerHTML = '';
+            const pct = Math.min(100, (sum / 2) * 100);
+            const seg = document.createElement('div'); seg.className = 'bar-seg'; seg.style.width = pct + '%';
+            el.appendChild(seg);
+        }
+        function setScaleMode(mode) {
+            document.getElementById('btn-scale-free').classList.toggle('active', mode === 'free');
+            document.getElementById('btn-scale-buster').classList.toggle('active', mode === 'buster');
+            document.getElementById('buster-card').style.display = (mode === 'buster') ? 'block' : 'none';
+            if (mode === 'buster') {
+                leftItems = [{ num: 1, den: 2 }, { num: 1, den: 3 }];
+                rightItems = [{ num: 2, den: 5 }];
+                updateScale();
+            } else clearWeights();
+        }
+        updateScale();
+    </script>
+</body>
+
+</html>
