@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Make a Bulb Glow with a Simple Circuit</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Make a Bulb Glow with a Simple Circuit — RGB LED Current Flow Explorer</title>
 <script type="application/json" id="activity-metadata">
 {
   "schemaVersion": 1,
@@ -16,12 +16,1658 @@
   "title": "Make a Bulb Glow with a Simple Circuit",
   "description": "Connect a cell, bulb, and switch with wires. Close the switch to complete the circuit and make the bulb glow.",
   "activityType": "exploration",
-  "status": "planned"
+  "status": "active"
 }
 </script>
+
 <style>
-  *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f5f7fb;color:#202637;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.card{width:min(680px,100%);padding:30px;border:1px solid #dfe4ed;border-radius:16px;background:#fff;box-shadow:0 16px 40px rgba(31,36,48,.09)}.tag{display:inline-block;padding:5px 10px;border-radius:999px;background:#fff4dd;color:#8a5814;font-size:.8rem;font-weight:800;text-transform:uppercase}h1{font-size:clamp(1.45rem,4vw,2.1rem);margin:16px 0 10px}p{color:#596274;line-height:1.65;margin:0}.path{margin-top:18px;padding:12px;border-radius:10px;background:#eef2ff;color:#30459b;font-weight:650}
+  :root{
+    --bg:#0b0f18;
+    --panel:#141a26;
+    --panel2:#1b2331;
+    --line:#263044;
+    --text:#e6edf3;
+    --muted:#8b98ad;
+    --accent:#58a6ff;
+    --red:#ff7b72;
+    --blue:#79c0ff;
+    --gold:#ffcf8a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #16213a 0%, transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, #1a1430 0%, transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height:100vh;
+    padding:20px clamp(12px,3vw,36px) 60px;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:wrap; margin-bottom:20px;
+  }
+  .brand{display:flex; align-items:center; gap:14px}
+  .logo{
+    width:46px;height:46px;border-radius:14px;
+    display:grid;place-items:center;font-size:22px;
+    background:linear-gradient(145deg,#1f2b41,#101827);
+    border:1px solid #2b3a55;
+    box-shadow:0 0 24px rgba(88,166,255,.25);
+  }
+  .brand h1{font-size:clamp(16px,2.2vw,21px); margin:0 0 3px}
+  .brand p{margin:0; color:var(--muted); font-size:13px}
+
+  button{font-family:inherit; cursor:pointer}
+  .ghost{
+    background:#1a2331; color:var(--text);
+    border:1px solid #2c3a52; border-radius:10px;
+    padding:9px 15px; font-size:13px; font-weight:600;
+    transition:.15s;
+  }
+  .ghost:hover{background:#22304a; border-color:#3d5175}
+  .primary{
+    background:linear-gradient(145deg,#3d8bfd,#2563eb); color:#fff;
+    border:none; border-radius:10px; padding:10px 18px;
+    font-size:13px; font-weight:700;
+    box-shadow:0 6px 18px rgba(37,99,235,.4);
+    transition:.15s;
+  }
+  .primary:hover{filter:brightness(1.12)}
+  .primary:disabled{opacity:.5; cursor:not-allowed; filter:none}
+
+  /* ---------- layout ---------- */
+  .wrap{
+    display:grid;
+    grid-template-columns: minmax(0,1fr) 370px;
+    gap:18px;
+    align-items:start;
+  }
+  @media (max-width:1020px){ .wrap{grid-template-columns:1fr} }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0)) , var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    box-shadow:0 14px 40px rgba(0,0,0,.35);
+  }
+  .card h2{
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 12px; font-weight:700;
+  }
+
+  .stage{padding:10px}
+  #board{display:block; width:100%; border-radius:12px; background:#0b0f18}
+  .legend{
+    display:flex; gap:18px; flex-wrap:wrap;
+    padding:10px 6px 2px; font-size:12px; color:var(--muted);
+  }
+  .legend i{
+    display:inline-block;width:9px;height:9px;border-radius:50%;
+    background:var(--accent); margin-right:6px;
+    box-shadow:0 0 8px var(--accent);
+  }
+
+  .side{display:flex; flex-direction:column; gap:18px}
+
+  /* ---------- segmented control ---------- */
+  .seg{display:grid; grid-template-columns:1fr 1fr; gap:6px; background:#0f1520; padding:5px; border-radius:12px; border:1px solid var(--line)}
+  .seg button{
+    background:transparent; border:none; color:var(--muted);
+    padding:9px 8px; border-radius:99px; font-size:12.5px; font-weight:600;
+    transition:.15s;
+  }
+  .seg button.active{background:#233250; color:#fff; box-shadow:0 2px 10px rgba(0,0,0,.35)}
+  .hint{margin:12px 0 0; font-size:12.5px; line-height:1.55; color:var(--muted)}
+  .hint b{color:#c9d4e6}
+
+  /* ================= PIN IDENTIFICATION ================= */
+  .pin-card{margin-bottom:18px; padding:20px}
+  .pin-head h2{
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 8px; font-weight:700;
+  }
+  .pin-head h2 em{color:var(--gold); font-style:normal}
+  .pin-sub{margin:0 0 18px; font-size:13.5px; color:#a9b6ca; line-height:1.65; max-width:900px}
+  .pin-sub b{color:#e6edf3}
+  .pin-sub code{background:#1b2434;padding:1.5px 6px;border-radius:5px;font-size:12.5px;color:var(--gold)}
+
+  .pin-grid{
+    display:grid;
+    grid-template-columns:minmax(0,400px) minmax(0,1fr);
+    gap:22px; align-items:start;
+  }
+  @media (max-width:880px){ .pin-grid{grid-template-columns:1fr} }
+
+  .pin-diagram{
+    background:#0f1520; border:1px solid var(--line);
+    border-radius:14px; padding:8px 8px 12px;
+  }
+  #ledSvg{display:block; width:100%; height:auto}
+
+  .svg-note{font:600 11.5px ui-sans-serif,system-ui,sans-serif; fill:#6f7f99}
+  .svg-note.gold{fill:var(--gold)}
+  .svg-title{font:700 12px ui-sans-serif,system-ui,sans-serif; fill:#5d6b82; letter-spacing:.08em}
+
+  .leg{cursor:pointer}
+  .leg .leg-hit{stroke:rgba(0,0,0,0); stroke-width:30; stroke-linecap:round; fill:none; pointer-events:stroke}
+  .leg .leg-metal{stroke:#9fb0cc; stroke-width:5.5; stroke-linecap:round; transition:stroke .25s}
+  .leg:hover .leg-metal{stroke:#e6edf3}
+  .leg.sel .leg-metal{stroke-width:7}
+  .leg-label{
+    font:800 13px ui-sans-serif,system-ui,sans-serif;
+    fill:#c9d4e6; text-anchor:middle;
+    opacity:0; transition:opacity .3s; pointer-events:none;
+  }
+  .leg-label.show{opacity:1}
+  .leg.sel .leg-label{fill:#fff}
+
+  .pin-caption{
+    margin:8px 4px 0; text-align:center;
+    font-size:12px; color:var(--muted); min-height:16px;
+  }
+
+  .pin-info{display:flex; flex-direction:column; gap:14px}
+  .pin-info .seg{max-width:340px}
+
+  .steps{
+    margin:0; padding:0; list-style:none;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .steps li{
+    display:flex; gap:11px; font-size:13px; line-height:1.6; color:#a9b6ca;
+  }
+  .steps li .n{
+    flex:none; width:22px; height:22px; border-radius:7px;
+    background:#22304a; color:var(--accent);
+    display:grid; place-items:center;
+    font-size:11.5px; font-weight:800; margin-top:1px;
+  }
+  .steps li b{color:#e6edf3}
+  .steps li code{background:#1b2434;padding:1.5px 6px;border-radius:5px;font-size:12px;color:var(--gold)}
+
+  .probe-box{
+    background:#0f1520; border:1px solid var(--line);
+    border-radius:12px; padding:13px 14px;
+  }
+  .probe-head{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; margin-bottom:10px; flex-wrap:wrap;
+  }
+  .probe-head span{
+    font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); font-weight:700;
+  }
+  #probeText{font-size:13px; line-height:1.65; color:#a9b6ca; margin:0; min-height:66px}
+  #probeText b{color:#e6edf3}
+
+  .pin-actions{display:flex; gap:10px; flex-wrap:wrap}
+  .pin-actions .ghost{font-size:12.5px; padding:8px 14px}
+
+  /* ---------- branch rows ---------- */
+  .branch{
+    background:#0f1520;
+    border:1px solid var(--line);
+    border-left:3px solid var(--c);
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:10px;
+  }
+  .branch:last-child{margin-bottom:0}
+  .branch-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+  .switch{display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none}
+  .switch input{position:absolute; opacity:0; width:0; height:0}
+  .track{
+    width:44px;height:24px;border-radius:12px;background:#33425c;
+    position:relative; transition:.2s; flex:none;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .switch input:checked + .track{background:var(--c); box-shadow:0 0 14px -2px var(--c)}
+  .knob{
+    position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;
+    background:#fff; transition:.2s; box-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  .switch input:checked + .track .knob{transform:translateX(20px)}
+  .blabel{font-size:13.5px; font-weight:700; color:var(--c)}
+
+  .state{font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:99px}
+  .state.on{background:rgba(61,220,116,.14); color:#3ddc74; border:1px solid rgba(61,220,116,.35)}
+  .state.off{background:rgba(255,123,114,.13); color:#ff7b72; border:1px solid rgba(255,123,114,.35)}
+
+  .slider-row{display:flex; align-items:center; gap:12px}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    flex:1; height:5px; border-radius:3px;
+    background:linear-gradient(90deg,#2b3a55,#3d5175);
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background:var(--c); cursor:pointer;
+    border:2px solid #0b0f18;
+    box-shadow:0 0 10px -1px var(--c);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:16px;height:16px;border-radius:50%;background:var(--c);
+    cursor:pointer;border:2px solid #0b0f18;
+  }
+  .rval{
+    font-variant-numeric:tabular-nums;
+    font-size:12.5px; font-weight:700; min-width:64px; text-align:right;
+    color:#c9d4e6;
+  }
+
+  /* ---------- readouts ---------- */
+  .readout{
+    display:flex; align-items:flex-start; gap:9px;
+    padding:9px 0; border-bottom:1px dashed #212b3d;
+    font-size:12.5px; color:var(--muted); line-height:1.5;
+  }
+  .readout:last-child{border-bottom:none; padding-bottom:0}
+  .swatch{width:9px;height:9px;border-radius:50%;flex:none;margin-top:5px}
+  .readout b{color:#e6edf3; font-variant-numeric:tabular-nums}
+  .formula{font-size:12px;color:#6f7f99;margin:0 0 10px;font-family:ui-monospace,monospace}
+
+  .warn{
+    margin:12px 0 0; font-size:12.5px; line-height:1.55;
+    background:rgba(255,190,90,.08);
+    border:1px solid rgba(255,190,90,.25);
+    color:#ffcf8a; border-radius:10px; padding:10px 12px;
+  }
+  .warn:empty{display:none}
+
+  /* ---------- FAQ ---------- */
+  .faq{margin-top:18px}
+  .faq h2{margin-bottom:14px}
+  details{
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#0f1520;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  details[open]{border-color:#33425c; background:#121a28}
+  summary{
+    cursor:pointer; padding:13px 16px; font-size:13.5px; font-weight:600;
+    list-style:none; display:flex; gap:10px; align-items:flex-start;
+    color:#dbe5f3;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{
+    content:"Q"; flex:none;
+    width:20px;height:20px;border-radius:6px;
+    background:#22304a; color:var(--accent);
+    display:grid;place-items:center;font-size:11px;font-weight:800;
+    margin-top:1px;
+  }
+  details[open] summary::before{background:var(--accent); color:#0b0f18}
+  .answer{
+    padding:0 16px 15px 46px; font-size:13px; line-height:1.65; color:#a9b6ca;
+    border-top:1px solid #1c2637; padding-top:13px; margin-top:-1px;
+  }
+  .answer code{
+    background:#1b2434; padding:1.5px 6px; border-radius:5px;
+    font-size:12px; color:#ffcf8a;
+  }
+  .answer b{color:#dbe5f3}
+
+  footer{
+    margin-top:26px; text-align:center; color:#5d6b82; font-size:12px;
+  }
+  footer a{color:#6f8bb5}
+
+  /* ---------- modal ---------- */
+  .backdrop{
+    position:fixed; inset:0; background:rgba(5,8,14,.78);
+    backdrop-filter:blur(4px);
+    display:grid; place-items:center; z-index:9999;
+    padding:20px;
+  }
+  .backdrop.hidden{display:none}
+  .modal{
+    background:var(--panel2);
+    border:1px solid #2c3a52;
+    border-radius:18px;
+    padding:26px;
+    max-width:420px; width:100%;
+    box-shadow:0 30px 80px rgba(0,0,0,.7);
+    animation:pop .22s ease-out;
+  }
+  @keyframes pop{from{transform:scale(.94); opacity:0} to{transform:scale(1); opacity:1}}
+  .modal h3{margin:0 0 10px; font-size:19px}
+  .modal p{margin:0 0 16px; color:var(--muted); font-size:13.5px; line-height:1.6}
+  .check{display:flex; align-items:center; gap:9px; font-size:13px; color:#c9d4e6; cursor:pointer; margin-bottom:20px; user-select:none}
+  .check input{width:16px;height:16px; accent-color:var(--accent); cursor:pointer}
+  .modal-actions{display:flex; gap:10px; justify-content:flex-end}
+
+  /* ---------- intro.js dark theme ---------- */
+  .introjs-tooltip{
+    background:#161d2b !important; color:#e6edf3 !important;
+    border:1px solid #2a3648 !important; border-radius:14px !important;
+    box-shadow:0 20px 60px rgba(0,0,0,.7) !important;
+    max-width:410px; font-family:inherit !important;
+  }
+  .introjs-tooltip-header{padding:14px 16px 0 !important}
+  .introjs-tooltip-title{font-size:15px !important; color:#e6edf3 !important; font-weight:700}
+  .introjs-tooltiptext{padding:10px 16px 16px !important; color:#c9d4e6 !important; font-size:13px !important; line-height:1.6 !important}
+  .introjs-tooltiptext h4{margin:0 0 8px !important; font-size:15px !important; color:#58a6ff !important}
+  .introjs-tooltiptext b{color:#e6edf3}
+  .introjs-button{
+    background:#223046 !important; color:#e6edf3 !important;
+    border:1px solid #33425c !important; text-shadow:none !important;
+    border-radius:8px !important; padding:6px 13px !important;
+    font-size:12.5px !important; font-weight:600 !important;
+    font-family:inherit !important;
+  }
+  .introjs-button:hover{background:#2c3d58 !important; border-color:#4a6288 !important}
+  .introjs-skipbutton{color:#8b98ad !important; font-size:18px !important}
+  .introjs-progress{background:#223046 !important; height:4px !important; border-radius:2px !important}
+  .introjs-progressbar{background:#58a6ff !important}
+  .introjs-arrow{display:none !important}
+  .introjs-helperLayer{background:rgba(88,166,255,.10) !important; border-radius:14px !important}
+  .introjs-overlay{background:#050810 !important; opacity:.7 !important}
+
+  /* ---------- activity metadata / introduction ---------- */
+  .activity-intro{
+    width:min(680px,100%);
+    margin:0 auto 20px;
+    padding:30px;
+    border:1px solid #dfe4ed;
+    border-radius:16px;
+    background:#fff;
+    color:#202637;
+    box-shadow:0 16px 40px rgba(31,36,48,.09);
+  }
+  .activity-intro .activity-tag{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:999px;
+    background:#fff4dd;
+    color:#8a5814;
+    font-size:.8rem;
+    font-weight:800;
+    text-transform:uppercase;
+  }
+  .activity-intro h2{
+    font-size:clamp(1.45rem,4vw,2.1rem);
+    margin:16px 0 10px;
+    color:#202637;
+  }
+  .activity-intro p{
+    color:#596274;
+    line-height:1.65;
+    margin:0;
+  }
+  .activity-intro .activity-path{
+    margin-top:18px;
+    padding:12px;
+    border-radius:10px;
+    background:#eef2ff;
+    color:#30459b;
+    font-weight:650;
+  }
 </style>
 </head>
-<body><main class="card"><span class="tag">Planned activity</span><h1>Make a Bulb Glow with a Simple Circuit</h1><p>Connect a cell, bulb, and switch with wires. Close the switch to complete the circuit and make the bulb glow.</p><div class="path">VI · Science · How Things Work</div></main></body>
+<body>
+
+<section class="activity-intro" aria-label="Activity information">
+  <span class="activity-tag">Active activity</span>
+  <h2>Make a Bulb Glow with a Simple Circuit</h2>
+  <p>Connect a cell, bulb, and switch with wires. Close the switch to complete the circuit and make the bulb glow.</p>
+  <div class="activity-path">VI · Science · How Things Work</div>
+</section>
+
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⚡</span>
+    <div>
+      <h1>RGB LED Current Flow Explorer</h1>
+      <p>Identify the pins → then wire it · 2 × 1.5 V cells · one resistor per colour</p>
+    </div>
+  </div>
+  <button id="tourBtn" class="ghost">▶ Take the tour</button>
+</header>
+
+<!-- ============================================================
+     STEP 0 — PIN IDENTIFICATION
+     ============================================================ -->
+<section class="card pin-card" id="pinCard">
+  <div class="pin-head">
+    <h2>Step 0 · Identify the pins <em>before</em> you plug anything in</h2>
+  </div>
+  <p class="pin-sub">
+    A 4-pin RGB LED has <b>one common lead</b> plus <b>three colour leads</b>. Nothing is printed on the
+    package and the lead order changes between manufacturers, so you must <b>test it</b>. It takes about
+    a minute — and it saves you from wiring the whole breadboard twice.
+  </p>
+
+  <div class="pin-grid">
+
+    <!-- ---------- SVG diagram ---------- -->
+    <div class="pin-diagram">
+      <svg id="ledSvg" viewBox="0 0 420 360" role="img"
+           aria-label="Four-pin RGB LED pin identification diagram">
+        <defs>
+          <radialGradient id="lensGrad" cx="38%" cy="26%" r="78%">
+            <stop offset="0%"   stop-color="#3d4e6b"/>
+            <stop offset="60%"  stop-color="#1d2736"/>
+            <stop offset="100%" stop-color="#111925"/>
+          </radialGradient>
+          <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="18"/>
+          </filter>
+        </defs>
+
+        <!-- glow blob (coloured when lit) -->
+        <circle id="pinGlow" cx="210" cy="148" r="112" fill="#ffffff" opacity="0" filter="url(#softGlow)"/>
+
+        <text x="210" y="26" text-anchor="middle" class="svg-title">4-PIN RGB LED · 5 mm</text>
+
+        <!-- lens -->
+        <path d="M110,178 L110,150 A100,100 0 0 1 310,150 L310,178 Z"
+              fill="url(#lensGrad)" stroke="#4a5f80" stroke-width="2.5"/>
+        <!-- colour tint overlay -->
+        <path id="pinLit" d="M110,178 L110,150 A100,100 0 0 1 310,150 L310,178 Z"
+              fill="#ffffff" opacity="0" style="pointer-events:none"/>
+        <!-- flange -->
+        <rect x="100" y="178" width="220" height="20" rx="4"
+              fill="#1d2736" stroke="#4a5f80" stroke-width="2.5"/>
+
+        <!-- flat edge marker -->
+        <line x1="100" y1="173" x2="100" y2="203" stroke="#ffcf8a" stroke-width="4" stroke-linecap="round"/>
+        <text x="88" y="196" text-anchor="end" class="svg-note gold">flat edge</text>
+
+        <!-- ---------- LEGS ---------- -->
+        <g class="leg" data-leg="0">
+          <line class="leg-metal" x1="145" y1="196" x2="145" y2="268"/>
+          <line class="leg-hit"   x1="145" y1="188" x2="145" y2="280"/>
+          <text class="leg-label" x="145" y="290">R</text>
+        </g>
+        <g class="leg" data-leg="1">
+          <line class="leg-metal" x1="190" y1="196" x2="190" y2="300"/>
+          <line class="leg-hit"   x1="190" y1="188" x2="190" y2="312"/>
+          <text class="leg-label" x="190" y="322">COM</text>
+        </g>
+        <g class="leg" data-leg="2">
+          <line class="leg-metal" x1="235" y1="196" x2="235" y2="268"/>
+          <line class="leg-hit"   x1="235" y1="188" x2="235" y2="280"/>
+          <text class="leg-label" x="235" y="290">G</text>
+        </g>
+        <g class="leg" data-leg="3">
+          <line class="leg-metal" x1="280" y1="196" x2="280" y2="268"/>
+          <line class="leg-hit"   x1="280" y1="188" x2="280" y2="280"/>
+          <text class="leg-label" x="280" y="290">B</text>
+        </g>
+
+        <!-- longest-lead annotation -->
+        <line x1="190" y1="308" x2="190" y2="330" stroke="#ffcf8a" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="210" y="346" text-anchor="middle" class="svg-note gold">
+          The longest lead is always the common pin
+        </text>
+      </svg>
+
+      <p class="pin-caption" id="pinCaption">Tap any lead to inspect it.</p>
+    </div>
+
+    <!-- ---------- Info panel ---------- -->
+    <div class="pin-info">
+
+      <div class="seg" id="pinModeSeg">
+        <button data-mode="cc" class="active">Common cathode</button>
+        <button data-mode="ca">Common anode</button>
+      </div>
+      <p class="hint" id="pinModeText"></p>
+
+      <ol class="steps">
+        <li>
+          <span class="n">1</span>
+          <span><b>Find the longest lead.</b> That is the <b>common pin</b> — the only lead that is shared
+          by all three colours. In a common-cathode LED it is the <b>cathode (−)</b>; in a common-anode LED
+          it is the <b>anode (+)</b>.</span>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <span><b>Note which side the flat edge is on.</b> The flat on the rim of the package tells you
+          which way round the part is, but the colour order after it <b>varies by manufacturer</b> — never
+          trust it on its own.</span>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <span><b>Test the other three leads.</b> Use a multimeter in <code>diode-test</code> mode, or a
+          <code>3 V coin cell + 220 Ω</code> resistor. Whichever lead makes the LED glow is that colour.</span>
+        </li>
+      </ol>
+
+      <div class="probe-box">
+        <div class="probe-head">
+          <span>Probe test</span>
+          <button class="primary" id="probeBtn">▶ Run probe test</button>
+        </div>
+        <p id="probeText"></p>
+      </div>
+
+      <div class="pin-actions">
+        <button class="ghost" id="revealBtn">Show all labels</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MAIN CIRCUIT
+     ============================================================ -->
+<main class="wrap">
+
+  <section class="card stage" id="boardWrap">
+    <canvas id="board"></canvas>
+    <div class="legend">
+      <span><i></i>Moving dots = conventional current (+ terminal → − terminal)</span>
+      <span>Dot speed &amp; size ∝ current (mA)</span>
+    </div>
+  </section>
+
+  <aside class="side">
+
+    <div class="card" id="modeCard">
+      <h2>1 · LED wiring</h2>
+      <div class="seg" id="modeSeg">
+        <button data-mode="cc" class="active">Common cathode</button>
+        <button data-mode="ca">Common anode</button>
+      </div>
+      <p class="hint" id="modeHint"></p>
+    </div>
+
+    <div class="card" id="branchCard">
+      <h2>2 · Switches &amp; resistors</h2>
+      <div id="branchList"></div>
+    </div>
+
+    <div class="card" id="readoutCard">
+      <h2>3 · Live measurements</h2>
+      <p class="formula">I = (3.0 V − V<sub>f</sub>) ÷ R</p>
+      <div id="readouts"></div>
+      <p class="warn" id="warn"></p>
+    </div>
+
+  </aside>
+</main>
+
+<!-- ============================================================
+     FAQ
+     ============================================================ -->
+<section class="card faq" id="faqCard">
+  <h2>Student → Teacher : Frequently Asked Questions</h2>
+
+  <details open>
+    <summary>How do I know which lead is which on my RGB LED? Nothing is labelled.</summary>
+    <div class="answer">
+      Three steps, in order:<br><br>
+      <b>1 · Length.</b> The <b>longest lead is the common pin</b> — cathode in a common-cathode part, anode in a common-anode part.<br>
+      <b>2 · Flat edge.</b> Find the flat on the rim of the package. It orients the part, but the colour order after it is <i>not</i> standardised.<br>
+      <b>3 · Test.</b> Multimeter in <code>diode-test</code> mode (or 3 V coin cell + 220 Ω):<br>
+      &nbsp;&nbsp;• <b>Common cathode</b> → red probe (+) on a colour lead, black probe (−) on the longest lead.<br>
+      &nbsp;&nbsp;• <b>Common anode</b> → black probe (−) on a colour lead, red probe (+) on the longest lead.<br>
+      Whichever lead lights up tells you that colour. If nothing lights in either arrangement, the LED may be dead (or your supply is below its forward voltage — very common with blue).
+    </div>
+  </details>
+
+  <details>
+    <summary>Why does current flow from the + rail, through the resistor, then the LED — and not the other way round?</summary>
+    <div class="answer">
+      "Conventional current" is defined as flowing from <b>+</b> to <b>−</b>. In a common-cathode setup the + rail sits at 3 V and the common cathode sits at 0 V, so charge is pushed out of the + rail, down through the resistor, through the LED (anode → cathode), and out to GND. If you flip the LED around it becomes <b>reverse biased</b> — the junction blocks, current stops, and nothing lights.
+    </div>
+  </details>
+
+  <details>
+    <summary>Does it matter whether the resistor is before or after the LED?</summary>
+    <div class="answer">
+      No. A series loop has the <b>same current at every point</b>. The resistor's only job is to limit that current. What <i>does</i> matter is the polarity across the LED. (In common-anode wiring the resistor actually ends up <i>after</i> the LED, and it works exactly the same.)
+    </div>
+  </details>
+
+  <details>
+    <summary>Why does each colour need its own resistor? Can't I share one?</summary>
+    <div class="answer">
+      Because each colour has a different forward voltage and a different brightness per milliamp. If you share one resistor, the three LEDs fight over the current — one lights brightly, another is dim, and the shared value is wrong for all of them. <b>One resistor per colour, always.</b>
+    </div>
+  </details>
+
+  <details>
+    <summary>How do I choose the resistor value?</summary>
+    <div class="answer">
+      Use <code>R = (V_supply − V_f) ÷ I</code>.<br>
+      Example — red, V<sub>f</sub> ≈ 1.8 V, target 10 mA on a 3 V supply:<br>
+      <code>R = (3.0 − 1.8) / 0.010 = 120 Ω</code><br>
+      Then round <b>up</b> to the next standard value (E12 series: 100, 120, 150, 180 …).
+    </div>
+  </details>
+
+  <details>
+    <summary>Why is my blue LED so dim compared with red and green?</summary>
+    <div class="answer">
+      Blue LEDs have the highest forward voltage — roughly <b>2.6 V to 3.2 V</b>. With only 3.0 V from two cells there is almost nothing left to drop across the resistor, so the current is tiny. Many real blue LEDs won't light at all from 2 × AA. Try 3 cells (4.5 V) or a lower-value resistor.
+    </div>
+  </details>
+
+  <details>
+    <summary>Where does 3 V come from if each cell is only 1.5 V?</summary>
+    <div class="answer">
+      The cells are in <b>series</b>: the + terminal of one touches the − terminal of the other, so the voltages add. <code>1.5 V + 1.5 V = 3.0 V</code>. (In parallel they'd stay 1.5 V but last twice as long.)
+    </div>
+  </details>
+
+  <details>
+    <summary>Do I need a resistor on the common pin?</summary>
+    <div class="answer">
+      <b>No.</b> In common cathode the common pin <i>is</i> the cathode (0 V) — the resistors go on the anode side, one per colour. In common anode the common pin is +3 V and the resistors go on the cathode side. Either way: <b>one resistor per colour, never on the common.</b>
+    </div>
+  </details>
+
+  <details>
+    <summary>My LED doesn't light at all. What should I check?</summary>
+    <div class="answer">
+      In order: <b>1)</b> Is that colour's switch closed? <b>2)</b> Is the resistor too large (too little current)? <b>3)</b> Is the LED the right way round — longest leg on the correct rail? <b>4)</b> Is the common pin actually on the correct rail (+3 V for common anode, GND for common cathode)? <b>5)</b> Is the LED sitting across the centre channel of the breadboard?
+    </div>
+  </details>
+
+  <details>
+    <summary>Is the current "used up" as it goes around the circuit?</summary>
+    <div class="answer">
+      No! <b>Current is the same everywhere in a series loop.</b> What gets "used up" is <b>voltage</b>. The resistor drops V<sub>R</sub>, the LED drops V<sub>f</sub>, and those two add up to the supply: <code>V_R + V_f = 3.0 V</code>.
+    </div>
+  </details>
+
+  <details>
+    <summary>Why do the dots move faster when I lower the resistance?</summary>
+    <div class="answer">
+      Lower resistance → more current. Current is literally "charge per second", so more charge passes each point per second — the animation shows this as dots moving faster and getting slightly larger.
+    </div>
+  </details>
+
+  <details>
+    <summary>What happens if I close two switches at once?</summary>
+    <div class="answer">
+      Each branch is independent, so both LEDs light and the light mixes additively: red + green = yellow, red + blue = magenta, green + blue = cyan, all three = white-ish. Notice that the <b>common pin carries the sum</b> of the branch currents.
+    </div>
+  </details>
+
+  <details>
+    <summary>Why does the current have to go all the way back to the battery?</summary>
+    <div class="answer">
+      Because it's a <b>closed loop</b>. Charge that leaves the + terminal must return to the − terminal. If the path is broken anywhere (open switch, missing jumper), no charge can move anywhere in that loop — which is exactly why opening one switch instantly stops that colour's dots.
+    </div>
+  </details>
+
+  <details>
+    <summary>What's the difference between common cathode and common anode?</summary>
+    <div class="answer">
+      Only <b>which pin is shared</b>. Common cathode: the three cathodes are joined internally and go to GND; you drive each anode through its own resistor. Common anode: the three anodes are joined and go to +3 V; you pull each cathode down through its own resistor. The current through each LED still flows <b>anode → cathode</b> in both cases.
+    </div>
+  </details>
+
+</section>
+
+<footer>
+  Built for teaching · <a href="#" id="resetTour">Reset tour prompt</a>
+</footer>
+
+<!-- ---------- tour prompt modal ---------- -->
+<div class="backdrop hidden" id="tourModal">
+  <div class="modal">
+    <h3>👋 Want a quick tour?</h3>
+    <p>Take a 90-second guided tour — starting with how to identify the pins on the LED, then the circuit and the controls.</p>
+    <label class="check">
+      <input type="checkbox" id="dontAsk">
+      <span>Don't ask me again on this device</span>
+    </label>
+    <div class="modal-actions">
+      <button class="ghost" id="skipTour">Skip</button>
+      <button class="primary" id="startTour">Start the tour</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     1.  DATA & STATE
+     ========================================================= */
+  const E12 = [33,39,47,56,68,82,100,120,150,180,220,270,330,390,470,560,680,820,1000];
+  const VS  = 3.0;                       // 2 × 1.5 V in series
+  const COLORS = [
+    { name:'Red',   css:'#ff4d4d', rgb:'255,77,77',  vf:1.8 },
+    { name:'Green', css:'#3ddc74', rgb:'61,220,116', vf:2.0 },
+    { name:'Blue',  css:'#4d9bff', rgb:'77,155,255', vf:2.6 }
+  ];
+
+  const state = {
+    mode: 'cc',                          // 'cc' | 'ca'
+    br: [
+      { idx:6, on:true, current:0 },
+      { idx:6, on:true, current:0 },
+      { idx:6, on:true, current:0 }
+    ]
+  };
+
+  /* =========================================================
+     2.  CANVAS GEOMETRY  (main circuit board)
+     ========================================================= */
+  const W = 960, H = 600;
+  const TOP_Y = 80, BOT_Y = 520;
+  const RAIL_X0 = 100, RAIL_X1 = 920;
+  const BX = [340, 560, 780];
+  const PKG = { x0:262, x1:858, y0:235, y1:355 };
+  const LED_Y   = 295;
+  const BUS_CC  = 335, BUS_CA = 258;
+  const RES_CC  = 143, SW_CC  = 200;
+  const SW_CA   = 388, RES_CA = 445;
+
+  const CVS = document.getElementById('board');
+  const ctx = CVS.getContext('2d');
+
+  function resize() {
+    const cssW = CVS.clientWidth || CVS.parentElement.clientWidth;
+    if (!cssW) return;
+    const dpr = window.devicePixelRatio || 1;
+    const scale = cssW / W;
+    CVS.style.height = (H * scale) + 'px';
+    CVS.width  = Math.round(cssW * dpr);
+    CVS.height = Math.round(H * scale * dpr);
+    ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  }
+
+  /* =========================================================
+     3.  DRAW HELPERS
+     ========================================================= */
+  function line(x1,y1,x2,y2,color,w){
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle = color; ctx.lineWidth = w||3;
+    ctx.lineCap = 'round'; ctx.stroke();
+  }
+  function rr(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  /* =========================================================
+     4.  PHYSICS
+     ========================================================= */
+  function recompute() {
+    for (let i=0;i<3;i++){
+      const s = state.br[i];
+      const R = E12[s.idx];
+      const vR = VS - COLORS[i].vf;
+      s.R  = R;
+      s.vR = vR;
+      s.current = (s.on && vR > 0) ? (vR / R) * 1000 : 0;   // mA
+    }
+    buildFlows();
+    updateDOM();
+  }
+
+  /* =========================================================
+     5.  CURRENT PATHS
+     ========================================================= */
+  const flows = [0,1,2].map(i => ({
+    pts:[], cum:[0], len:1, offset: i*19, active:false, speed:0
+  }));
+
+  function branchPath(i){
+    const x = BX[i];
+    if (state.mode === 'cc'){
+      return [
+        [RAIL_X0, TOP_Y], [x, TOP_Y], [x, BUS_CC],
+        [BX[1], BUS_CC], [BX[1], BOT_Y],
+        [RAIL_X0, BOT_Y], [RAIL_X0, TOP_Y]
+      ];
+    }
+    return [
+      [RAIL_X0, TOP_Y], [BX[1], TOP_Y], [BX[1], BUS_CA],
+      [x, BUS_CA], [x, BOT_Y],
+      [RAIL_X0, BOT_Y], [RAIL_X0, TOP_Y]
+    ];
+  }
+
+  function buildFlows(){
+    for (let i=0;i<3;i++){
+      const raw = branchPath(i);
+      const pts = raw.filter((p,k)=> k===0 || p[0]!==raw[k-1][0] || p[1]!==raw[k-1][1]);
+
+      const cum = [0]; let len = 0;
+      for (let k=1;k<pts.length;k++){
+        len += Math.hypot(pts[k][0]-pts[k-1][0], pts[k][1]-pts[k-1][1]);
+        cum.push(len);
+      }
+      const f = flows[i];
+      f.pts = pts; f.cum = cum; f.len = len || 1;
+      f.offset = f.offset % f.len;
+
+      const s = state.br[i];
+      f.active = s.on && s.current > 0.05;
+      f.speed  = Math.min(240, 22 + s.current * 9);
+    }
+  }
+
+  function pointAt(pts, cum, d){
+    let lo = 0, hi = cum.length - 1;
+    while (lo < hi - 1){
+      const mid = (lo + hi) >> 1;
+      if (cum[mid] <= d) lo = mid; else hi = mid;
+    }
+    const seg = cum[lo+1] - cum[lo];
+    const t = seg > 0 ? (d - cum[lo]) / seg : 0;
+    return [
+      pts[lo][0] + (pts[lo+1][0]-pts[lo][0]) * t,
+      pts[lo][1] + (pts[lo+1][1]-pts[lo][1]) * t
+    ];
+  }
+
+  /* =========================================================
+     6.  DRAWING THE CIRCUIT
+     ========================================================= */
+  function drawTitle(){
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = '700 18px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillText(state.mode === 'cc'
+      ? 'Common-cathode RGB LED'
+      : 'Common-anode RGB LED', 28, 40);
+
+    ctx.fillStyle = '#8b98ad';
+    ctx.font = '400 13.5px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillText('2 × 1.5 V cells in series  →  3.0 V   ·   one resistor per colour', 28, 62);
+  }
+
+  function drawRails(){
+    line(RAIL_X0, TOP_Y, RAIL_X1, TOP_Y, '#ff7b72', 5);
+    line(RAIL_X0, BOT_Y, RAIL_X1, BOT_Y, '#79c0ff', 5);
+
+    ctx.textAlign = 'right';
+    ctx.font = '700 15px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillStyle = '#ff7b72';
+    ctx.fillText('+3.0 V', RAIL_X1, TOP_Y - 16);
+    ctx.fillStyle = '#79c0ff';
+    ctx.fillText('0 V  (GND)', RAIL_X1, BOT_Y + 28);
+  }
+
+  function drawCell(x, yNeg, yPos){
+    line(x-13, yNeg, x+13, yNeg, '#c9d4e6', 5);
+    line(x-26, yPos, x+26, yPos, '#c9d4e6', 2.5);
+  }
+
+  function drawBattery(){
+    const x = RAIL_X0, wc = '#8b98ad';
+    line(x, BOT_Y, x, 340, wc, 3.5);
+    drawCell(x, 340, 320);
+    line(x, 320, x, 300, wc, 3.5);
+    drawCell(x, 300, 280);
+    line(x, 280, x, TOP_Y, wc, 3.5);
+
+    ctx.font = '700 14px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillStyle = '#c9d4e6';
+    ctx.textAlign = 'right';
+    ctx.fillText('+', x - 32, 285);
+    ctx.fillText('−', x - 24, 346);
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#8b98ad';
+    ctx.font = '600 13px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillText('2 × 1.5 V cells', x + 44, 404);
+    ctx.fillText('in series = 3.0 V', x + 44, 424);
+  }
+
+  function anyBranchOn(){
+    return state.br.some(b => b.on && b.current > 0.05);
+  }
+
+  function drawBranchWires(){
+    const offCol  = '#333e54';
+    const commCol = anyBranchOn() ? '#5a6b8c' : '#333e54';
+
+    if (state.mode === 'cc'){
+      for (let i=0;i<3;i++){
+        const x = BX[i];
+        const on = state.br[i].on && state.br[i].current > 0.05;
+        const col = on ? COLORS[i].css : offCol;
+        line(x, TOP_Y, x, SW_CC - 15, col, 3.5);
+        line(x, SW_CC + 15, x, BUS_CC, col, 3.5);
+      }
+      line(BX[0], BUS_CC, BX[2], BUS_CC, commCol, 3.5);
+      line(BX[1], BUS_CC, BX[1], BOT_Y, commCol, 3.5);
+      ctx.fillStyle = '#6f7f99';
+      ctx.font = '600 11.5px ui-sans-serif, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('common cathode pin → GND', BX[1] + 118, BUS_CC + 5);
+    } else {
+      for (let i=0;i<3;i++){
+        const x = BX[i];
+        const on = state.br[i].on && state.br[i].current > 0.05;
+        const col = on ? COLORS[i].css : offCol;
+        line(x, BUS_CA, x, SW_CA - 15, col, 3.5);
+        line(x, SW_CA + 15, x, BOT_Y, col, 3.5);
+      }
+      line(BX[1], TOP_Y, BX[1], BUS_CA, commCol, 3.5);
+      line(BX[0], BUS_CA, BX[2], BUS_CA, commCol, 3.5);
+      ctx.fillStyle = '#6f7f99';
+      ctx.font = '600 11.5px ui-sans-serif, system-ui, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('common anode pin → +3 V', BX[1] + 14, 150);
+    }
+  }
+
+  function drawPackage(){
+    ctx.save();
+    ctx.setLineDash([9, 7]);
+    ctx.strokeStyle = 'rgba(140,160,200,.40)';
+    ctx.lineWidth = 2;
+    rr(PKG.x0, PKG.y0, PKG.x1 - PKG.x0, PKG.y1 - PKG.y0, 16);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawResistor(i){
+    const x = BX[i];
+    const y = state.mode === 'cc' ? RES_CC : RES_CA;
+    const w = 28, h = 58;
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 2;
+    rr(x - w/2, y - h/2, w, h, 7);
+    ctx.fillStyle = '#e8dcc0'; ctx.fill();
+    ctx.restore();
+
+    rr(x - w/2, y - h/2, w, h, 7);
+    ctx.strokeStyle = '#a89060'; ctx.lineWidth = 2; ctx.stroke();
+
+    ctx.fillStyle = COLORS[i].css;
+    ctx.fillRect(x - w/2 + 1, y - 8, w - 2, 16);
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#cbd5e6';
+    ctx.font = '700 13px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillText(E12[state.br[i].idx] + ' Ω', x + 23, y + 5);
+  }
+
+  function drawSwitch(i){
+    const x = BX[i];
+    const y = state.mode === 'cc' ? SW_CC : SW_CA;
+    const closed = state.br[i].on;
+    const t = 15;
+
+    ctx.fillStyle = '#9fb0cc';
+    [y - t, y + t].forEach(yy => {
+      ctx.beginPath(); ctx.arc(x, yy, 3.6, 0, Math.PI*2); ctx.fill();
+    });
+
+    ctx.strokeStyle = closed ? '#3ddc74' : '#ff7b72';
+    ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x, y - t);
+    if (closed) ctx.lineTo(x, y + t);
+    else        ctx.lineTo(x + 17, y + 10);
+    ctx.stroke();
+  }
+
+  function drawLED(i){
+    const x = BX[i], y = LED_Y, s = 17;
+    const st = state.br[i];
+    const c  = COLORS[i];
+    const on = st.on && st.current > 0.05;
+    const bright = Math.min(1, st.current / 20);
+
+    if (on && bright > 0.01){
+      const g = ctx.createRadialGradient(x, y, 2, x, y, 88);
+      g.addColorStop(0,   'rgba(' + c.rgb + ',' + (0.55 * bright) + ')');
+      g.addColorStop(0.35,'rgba(' + c.rgb + ',' + (0.20 * bright) + ')');
+      g.addColorStop(1,   'rgba(' + c.rgb + ',0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x, y, 88, 0, Math.PI*2); ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(x - s, y - s);
+    ctx.lineTo(x + s, y - s);
+    ctx.lineTo(x,     y + s);
+    ctx.closePath();
+    ctx.fillStyle = on
+      ? 'rgba(' + c.rgb + ',' + (0.22 + 0.78 * bright) + ')'
+      : 'rgba(90,105,135,.30)';
+    ctx.fill();
+    ctx.strokeStyle = on ? c.css : '#5a6987';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    line(x - s - 3, y + s, x + s + 3, y + s, on ? c.css : '#5a6987', 3.5);
+
+    ctx.strokeStyle = on ? c.css : '#4a5a78';
+    ctx.fillStyle   = ctx.strokeStyle;
+    ctx.lineWidth = 2; ctx.lineCap = 'round';
+    [[0,0],[10,7]].forEach(function(d){
+      const x1 = x + 21 + d[0], y1 = y - 21 + d[1];
+      const x2 = x1 + 12,       y2 = y1 - 12;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 7, y2 + 1);
+      ctx.lineTo(x2 - 1, y2 + 7);
+      ctx.closePath(); ctx.fill();
+    });
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = on ? c.css : '#4a5a78';
+    ctx.font = '800 15px ui-sans-serif, system-ui, sans-serif';
+    ctx.fillText(['R','G','B'][i], x - 36, y + 6);
+  }
+
+  function drawDots(){
+    for (let i=0;i<3;i++){
+      const f = flows[i];
+      if (!f.active || f.len < 5) continue;
+
+      const spacing = 50;
+      const n   = Math.max(2, Math.round(f.len / spacing));
+      const gap = f.len / n;
+      const c   = COLORS[i];
+
+      for (let k=0;k<n;k++){
+        const d  = (f.offset + k * gap) % f.len;
+        const p  = pointAt(f.pts, f.cum, d);
+
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], 7.5, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(' + c.rgb + ',0.22)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(p[0], p[1], 3.4, 0, Math.PI*2);
+        ctx.fillStyle = c.css;
+        ctx.fill();
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0b0f18';
+    ctx.fillRect(0, 0, W, H);
+
+    drawTitle();
+    drawRails();
+    drawBattery();
+    drawBranchWires();
+    drawPackage();
+    for (let i=0;i<3;i++) drawResistor(i);
+    for (let i=0;i<3;i++) drawSwitch(i);
+    for (let i=0;i<3;i++) drawLED(i);
+    drawDots();
+  }
+
+  /* =========================================================
+     7.  ANIMATION LOOP
+     ========================================================= */
+  let last = performance.now();
+  function loop(t){
+    const dt = Math.min(0.05, (t - last) / 1000);
+    last = t;
+    for (let i=0;i<3;i++){
+      const f = flows[i];
+      if (f.active) f.offset = (f.offset + f.speed * dt) % f.len;
+    }
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  /* =========================================================
+     8.  BUILD DOM CONTROLS
+     ========================================================= */
+  const branchList = document.getElementById('branchList');
+  const readouts   = document.getElementById('readouts');
+  const warnBox    = document.getElementById('warn');
+  const modeHint   = document.getElementById('modeHint');
+
+  branchList.innerHTML = COLORS.map(function(c, i){
+    return '' +
+    '<div class="branch" style="--c:' + c.css + '">' +
+      '<div class="branch-head">' +
+        '<label class="switch">' +
+          '<input type="checkbox" data-sw="' + i + '" checked>' +
+          '<span class="track"><span class="knob"></span></span>' +
+          '<span class="blabel">' + c.name + '</span>' +
+        '</label>' +
+        '<span class="state on" data-state="' + i + '">closed</span>' +
+      '</div>' +
+      '<div class="slider-row">' +
+        '<input type="range" min="0" max="18" step="1" value="6" data-slider="' + i + '">' +
+        '<span class="rval" data-rval="' + i + '">100 Ω</span>' +
+      '</div>' +
+      '<div class="readout" style="border:none;padding:9px 0 0">' +
+        '<span class="swatch" style="background:' + c.css + '"></span>' +
+        '<span data-out="' + i + '"></span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  readouts.innerHTML = COLORS.map(function(c, i){
+    return '<div class="readout">' +
+      '<span class="swatch" style="background:' + c.css + '"></span>' +
+      '<span data-read="' + i + '"></span>' +
+    '</div>';
+  }).join('');
+
+  /* =========================================================
+     9.  UPDATE READOUTS
+     ========================================================= */
+  function updateDOM(){
+    const warns = [];
+
+    for (let i=0;i<3;i++){
+      const c  = state.br[i];
+      const R  = E12[c.idx];
+      const vR = c.current * R / 1000;
+
+      const rval = document.querySelector('[data-rval="' + i + '"]');
+      if (rval) rval.textContent = R + ' Ω';
+
+      const st = document.querySelector('[data-state="' + i + '"]');
+      if (st){
+        st.textContent = c.on ? 'closed' : 'open';
+        st.className = 'state ' + (c.on ? 'on' : 'off');
+      }
+
+      const out = document.querySelector('[data-out="' + i + '"]');
+      if (out){
+        out.innerHTML = c.current > 0.05
+          ? '<b>' + c.current.toFixed(1) + ' mA</b> · V<sub>R</sub> = ' + vR.toFixed(2) +
+            ' V · V<sub>LED</sub> = ' + COLORS[i].vf.toFixed(1) + ' V'
+          : '<b>0 mA</b> — ' + (c.on ? 'not enough voltage for this colour' : 'switch open');
+      }
+
+      const read = document.querySelector('[data-read="' + i + '"]');
+      if (read){
+        read.innerHTML = '<b style="color:' + COLORS[i].css + '">' + COLORS[i].name + '</b> &nbsp;' +
+          (c.current > 0.05
+            ? 'I = <b>' + c.current.toFixed(1) + ' mA</b> &nbsp;·&nbsp; R = ' + R + ' Ω &nbsp;·&nbsp; V<sub>f</sub> = ' + COLORS[i].vf.toFixed(1) + ' V'
+            : '<span style="color:#6f7f99">0 mA — no current in this branch</span>');
+      }
+
+      if (c.current > 20){
+        warns.push('<b>' + COLORS[i].name + '</b> is drawing ' + c.current.toFixed(1) +
+          ' mA — above the ~20 mA continuous rating of a typical 5 mm LED. Increase its resistor.');
+      }
+    }
+
+    const b = state.br[2];
+    if (b.on && b.current > 0.05 && b.current < 6){
+      warns.push('<b>Blue looks dim</b> — its forward voltage (~2.6 V) is close to the 3.0 V supply, so almost no voltage is left across its resistor. This is exactly what happens with a real blue LED on 2 × AA cells.');
+    }
+
+    warnBox.innerHTML = warns.join('<br><br>');
+  }
+
+  function updateModeHint(){
+    modeHint.innerHTML = state.mode === 'cc'
+      ? 'The <b>common pin (longest leg) goes to the GND rail</b>. Each colour\'s anode gets its own resistor up to +3 V.<br><br>Current path: <b>+3 V → resistor → LED (anode→cathode) → common pin → GND</b>.'
+      : 'The <b>common pin goes to the +3 V rail</b>. Each colour\'s cathode gets its own resistor down to GND.<br><br>Current path: <b>+3 V → common pin → LED (anode→cathode) → resistor → GND</b>.';
+  }
+
+  /* =========================================================
+     10. PIN IDENTIFICATION MODULE
+     ========================================================= */
+  const LEGS = [
+    { i:0, name:'Red',    color:'#ff4d4d', kind:'color' },
+    { i:1, name:'Common', color:'#ffcf8a', kind:'common' },
+    { i:2, name:'Green',  color:'#3ddc74', kind:'color' },
+    { i:3, name:'Blue',   color:'#4d9bff', kind:'color' }
+  ];
+
+  const pinState = {
+    labels: false,
+    revealed: [false,false,false,false],
+    selected: -1,
+    lit: -1,
+    probing: false,
+    token: 0
+  };
+
+  const elProbeText  = document.getElementById('probeText');
+  const elPinCaption = document.getElementById('pinCaption');
+  const elPinModeTxt = document.getElementById('pinModeText');
+  const elRevealBtn  = document.getElementById('revealBtn');
+  const elProbeBtn   = document.getElementById('probeBtn');
+
+  function isRevealed(i){
+    return pinState.labels || pinState.revealed[i];
+  }
+
+  function renderPin(){
+    LEGS.forEach(function(L){
+      const g = document.querySelector('.leg[data-leg="' + L.i + '"]');
+      if (!g) return;
+      const metal = g.querySelector('.leg-metal');
+      const label = g.querySelector('.leg-label');
+      const rev   = isRevealed(L.i);
+
+      let col = '#9fb0cc';
+      if (rev) col = (L.kind === 'common') ? '#ffcf8a' : L.color;
+      if (pinState.lit === L.i) col = '#ffffff';
+
+      metal.setAttribute('stroke', col);
+
+      label.textContent = (L.kind === 'common') ? 'COM' : L.name.charAt(0);
+      label.classList.toggle('show', rev);
+      g.classList.toggle('sel', pinState.selected === L.i);
+    });
+
+    /* lens glow */
+    const glow = document.getElementById('pinGlow');
+    const litP = document.getElementById('pinLit');
+    const L    = LEGS[pinState.lit];
+
+    if (L && L.kind === 'color'){
+      glow.setAttribute('fill', L.color);
+      glow.setAttribute('opacity', '0.75');
+      litP.setAttribute('fill', L.color);
+      litP.setAttribute('opacity', '0.50');
+    } else if (L && L.kind === 'common'){
+      glow.setAttribute('fill', '#ffcf8a');
+      glow.setAttribute('opacity', '0.40');
+      litP.setAttribute('fill', '#ffcf8a');
+      litP.setAttribute('opacity', '0.16');
+    } else {
+      glow.setAttribute('opacity', '0');
+      litP.setAttribute('opacity', '0');
+    }
+  }
+
+  function updateRevealBtn(){
+    elRevealBtn.textContent = pinState.labels ? 'Hide labels (test yourself)' : 'Show all labels';
+  }
+
+  function updatePinModeText(){
+    const cc = state.mode === 'cc';
+    elPinModeTxt.innerHTML = cc
+      ? 'In a <b>common-cathode</b> RGB LED the three colour leads are <b>anodes</b> and the longest lead is the shared <b>cathode</b>.'
+      : 'In a <b>common-anode</b> RGB LED the three colour leads are <b>cathodes</b> and the longest lead is the shared <b>anode</b>.';
+  }
+
+  function defaultProbeText(){
+    const cc = state.mode === 'cc';
+    return 'Multimeter in <b>diode-test mode</b> (or a 3 V coin cell + 220 Ω resistor). ' +
+      (cc
+        ? '<b>Red probe (+)</b> on a colour lead, <b>black probe (−)</b> on the longest lead.'
+        : '<b>Black probe (−)</b> on a colour lead, <b>red probe (+)</b> on the longest lead.') +
+      ' Whichever lead makes the LED glow is that colour. Press <b>Run probe test</b> to watch it happen.';
+  }
+
+  /* ---------- probe test animation ---------- */
+  function runProbe(){
+    if (pinState.probing) return;
+
+    pinState.probing  = true;
+    pinState.token++;
+    const my = pinState.token;
+
+    pinState.labels   = false;
+    pinState.revealed = [false,false,false,false];
+    pinState.selected = -1;
+    pinState.lit      = -1;
+
+    elProbeBtn.disabled = true;
+    elProbeBtn.textContent = 'Testing…';
+    updateRevealBtn();
+    renderPin();
+
+    const cc = state.mode === 'cc';
+
+    const steps = [
+      { leg:1, dur:1900, text: cc
+        ? '① <b>Find the common first.</b> Put the <b>black probe (−)</b> on the longest lead. ' +
+          'It is the shared <b>cathode</b> — the pin that will go to the GND rail.'
+        : '① <b>Find the common first.</b> Put the <b>red probe (+)</b> on the longest lead. ' +
+          'It is the shared <b>anode</b> — the pin that will go to the +3 V rail.' },
+
+      { leg:0, dur:1700, text: cc
+        ? '② <b>Red probe (+)</b> on the first short lead → the LED glows ' +
+          '<b style="color:#ff4d4d">RED</b>. So that lead is the red <b>anode</b>.'
+        : '② <b>Black probe (−)</b> on the first short lead → the LED glows ' +
+          '<b style="color:#ff4d4d">RED</b>. So that lead is the red <b>cathode</b>.' },
+
+      { leg:2, dur:1700, text: cc
+        ? '③ <b>Red probe (+)</b> on the next short lead → it glows ' +
+          '<b style="color:#3ddc74">GREEN</b>. That lead is the green <b>anode</b>.'
+        : '③ <b>Black probe (−)</b> on the next short lead → it glows ' +
+          '<b style="color:#3ddc74">GREEN</b>. That lead is the green <b>cathode</b>.' },
+
+      { leg:3, dur:1700, text: cc
+        ? '④ <b>Red probe (+)</b> on the last lead → it glows ' +
+          '<b style="color:#4d9bff">BLUE</b>. That lead is the blue <b>anode</b>.'
+        : '④ <b>Black probe (−)</b> on the last lead → it glows ' +
+          '<b style="color:#4d9bff">BLUE</b>. That lead is the blue <b>cathode</b>.' }
+    ];
+
+    let k = 0;
+    function next(){
+      if (my !== pinState.token) return;      /* cancelled by a mode switch */
+
+      if (k >= steps.length){
+        pinState.probing = false;
+        pinState.lit     = -1;
+        pinState.labels  = true;
+
+        elProbeText.innerHTML = '✅ <b>All four leads identified.</b> ' +
+          (cc
+            ? 'Longest lead = common <b>cathode</b> (→ GND). The three short leads are the R, G and B <b>anodes</b>, each through its own resistor to +3 V.'
+            : 'Longest lead = common <b>anode</b> (→ +3 V). The three short leads are the R, G and B <b>cathodes</b>, each through its own resistor to GND.') +
+          '<br><br>Stick a piece of tape on each lead and label it <i>before</i> you unplug anything.';
+
+        elPinCaption.textContent = 'All leads identified — labels revealed.';
+        elProbeBtn.disabled = false;
+        elProbeBtn.textContent = '↻ Run probe test again';
+        updateRevealBtn();
+        renderPin();
+        return;
+      }
+
+      const s = steps[k];
+      pinState.lit = s.leg;
+      pinState.revealed[s.leg] = true;
+
+      elProbeText.innerHTML = s.text;
+      elPinCaption.textContent = 'Probing lead ' + (s.leg + 1) + ' of 4…';
+      renderPin();
+
+      k++;
+      setTimeout(next, s.dur);
+    }
+    next();
+  }
+
+  /* ---------- leg click ---------- */
+  document.querySelectorAll('.leg').forEach(function(g){
+    g.addEventListener('click', function(){
+      if (pinState.probing) return;
+
+      const i = +g.dataset.leg;
+      const L = LEGS[i];
+      const cc = state.mode === 'cc';
+
+      pinState.selected = i;
+      pinState.lit      = i;
+
+      let html;
+      if (L.kind === 'common'){
+        html = cc
+          ? '<b>Longest lead → COMMON CATHODE.</b> This is the shared <b>cathode (−)</b>. ' +
+            'On the breadboard it goes straight to the <b>GND rail</b>. It gets <u>no</u> resistor.'
+          : '<b>Longest lead → COMMON ANODE.</b> This is the shared <b>anode (+)</b>. ' +
+            'On the breadboard it goes straight to the <b>+3 V rail</b>. It gets <u>no</u> resistor.';
+      } else {
+        html = cc
+          ? '<b>' + L.name + ' lead.</b> This is the ' + L.name.toLowerCase() + ' <b>anode</b>. ' +
+            'It goes through its <b>own resistor</b> up to the +3 V rail.'
+          : '<b>' + L.name + ' lead.</b> This is the ' + L.name.toLowerCase() + ' <b>cathode</b>. ' +
+            'It goes through its <b>own resistor</b> down to the GND rail.';
+      }
+
+      elProbeText.innerHTML = html;
+      elPinCaption.textContent = 'Selected lead ' + (i + 1) + ' of 4 · ' +
+        (L.kind === 'common' ? 'common pin' : L.name.toLowerCase() + ' colour');
+      renderPin();
+    });
+  });
+
+  elProbeBtn.addEventListener('click', runProbe);
+
+  elRevealBtn.addEventListener('click', function(){
+    pinState.labels = !pinState.labels;
+    pinState.token++;                     /* stop any running probe */
+    pinState.probing = false;
+    pinState.lit = -1;
+    elProbeBtn.disabled = false;
+    elProbeBtn.textContent = '▶ Run probe test';
+    if (pinState.labels){
+      pinState.revealed = [true,true,true,true];
+      elPinCaption.textContent = 'Labels shown for reference.';
+    } else {
+      pinState.revealed = [false,false,false,false];
+      elPinCaption.textContent = 'Labels hidden — can you still tell which is which?';
+    }
+    updateRevealBtn();
+    renderPin();
+  });
+
+  /* =========================================================
+     11. MODE SWITCHING  (single delegated handler)
+     ========================================================= */
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('[data-mode]');
+    if (!btn) return;
+
+    state.mode = btn.dataset.mode;
+
+    document.querySelectorAll('[data-mode]').forEach(function(b){
+      b.classList.toggle('active', b.dataset.mode === state.mode);
+    });
+
+    /* cancel any running probe and reset the pin panel */
+    pinState.token++;
+    pinState.probing  = false;
+    pinState.lit      = -1;
+    pinState.selected = -1;
+    elProbeBtn.disabled = false;
+    elProbeBtn.textContent = '▶ Run probe test';
+    elProbeText.innerHTML = defaultProbeText();
+    elPinCaption.textContent = 'Tap any lead to inspect it.';
+
+    updateModeHint();
+    updatePinModeText();
+    recompute();
+    renderPin();
+  });
+
+  /* =========================================================
+     12. BRANCH CONTROLS
+     ========================================================= */
+  branchList.addEventListener('input', function(e){
+    const t = e.target;
+    if (t.dataset.slider !== undefined){
+      state.br[+t.dataset.slider].idx = +t.value;
+      recompute();
+    }
+    if (t.dataset.sw !== undefined){
+      state.br[+t.dataset.sw].on = t.checked;
+      recompute();
+    }
+  });
+  branchList.addEventListener('change', function(e){
+    const t = e.target;
+    if (t.dataset.sw !== undefined){
+      state.br[+t.dataset.sw].on = t.checked;
+      recompute();
+    }
+  });
+
+  window.addEventListener('resize', resize);
+  if (window.ResizeObserver){
+    new ResizeObserver(resize).observe(document.getElementById('boardWrap'));
+  }
+
+  /* =========================================================
+     13. INLINE TOUR + PERSISTENCE
+     ========================================================= */
+  const TOUR_KEY = 'rgb-led-current-flow-tour-dismissed';
+  const modal    = document.getElementById('tourModal');
+  const dontAsk  = document.getElementById('dontAsk');
+
+  const TOUR_STEPS = [
+    { intro:
+      '<h4>Welcome 👋</h4>' +
+      'This lab has two halves: first you <b>work out which lead is which</b> on a 4-pin RGB LED, ' +
+      'then you watch <b>which way current flows</b> when it is wired up on a breadboard.'
+    },
+    { element: '#pinCard', intro:
+      '<h4>Step 0 · Identify the pins</h4>' +
+      'Never guess. The <b>longest lead is the common pin</b>, and the other three are R, G and B — ' +
+      'but their order <b>varies between manufacturers</b>.<br><br>' +
+      'Tap a lead to inspect it, or press <b>Run probe test</b> to walk through the multimeter method.'
+    },
+    { element: '#ledSvg', intro:
+      '<h4>Reading the diagram</h4>' +
+      'The flat edge on the rim orients the package. The dashed leader marks the <b>longest lead</b> — ' +
+      'that is the common <b>cathode</b> (common-cathode part) or the common <b>anode</b> (common-anode part).'
+    },
+    { element: '#boardWrap', intro:
+      '<h4>The circuit</h4>' +
+      'The <span style="color:#ff7b72">red rail</span> is +3 V and the <span style="color:#79c0ff">blue rail</span> is 0 V (GND).<br><br>' +
+      'The moving dots are <b>conventional current</b>: out of the battery\'s + terminal, through the resistor ' +
+      'and the LED, and back to the − terminal through the bottom rail.'
+    },
+    { element: '#modeSeg', intro:
+      '<h4>Common cathode or common anode?</h4>' +
+      'Flip between the two and watch the resistors and the common pin swap sides.<br><br>' +
+      'The current through each LED <b>still flows anode → cathode</b> either way.'
+    },
+    { element: '#branchList', intro:
+      '<h4>Switches &amp; resistors</h4>' +
+      'Each toggle is a real switch in that colour\'s branch — open it and the dots stop instantly.<br><br>' +
+      'Drag a slider to change that colour\'s resistor (E12 values). ' +
+      '<b>Smaller R → more current → faster dots, brighter LED.</b>'
+    },
+    { element: '#readoutCard', intro:
+      '<h4>Live numbers</h4>' +
+      'I = (3.0 V − V<sub>f</sub>) ÷ R.<br><br>' +
+      'Every colour has a different forward voltage — that is why the <i>same</i> resistor gives a different ' +
+      'current for red, green and blue.'
+    },
+    { element: '#faqCard', intro:
+      '<h4>Stuck? Read the FAQ</h4>' +
+      'Real questions students ask after playing with this — including how to identify the leads, ' +
+      'why blue is always dim, and why one shared resistor is a bad idea.'
+    }
+  ];
+
+  function launchTour(){
+    let currentStep = 0;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(5,8,16,0.75);z-index:99998;transition:all .2s;';
+    
+    const tooltip = document.createElement('div');
+    tooltip.className = 'introjs-tooltip';
+    tooltip.style.cssText = 'position:fixed;z-index:99999;max-width:410px;padding:16px;background:#161d2b;color:#e6edf3;border:1px solid #2a3648;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.7);';
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(tooltip);
+
+    function showStep(idx){
+      if(idx < 0 || idx >= TOUR_STEPS.length){
+        cleanup();
+        return;
+      }
+      currentStep = idx;
+      const step = TOUR_STEPS[idx];
+      let target = step.element ? document.querySelector(step.element) : null;
+      
+      let html = '<div style="margin-bottom:12px;">' + step.intro + '</div>';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid #2a3648;">';
+      html += '<span style="font-size:12px;color:#8b98ad;">Step ' + (idx+1) + ' of ' + TOUR_STEPS.length + '</span>';
+      html += '<div style="display:flex;gap:6px;">';
+      if(idx > 0) html += '<button class="ghost" id="tourPrevBtn" style="padding:4px 10px;font-size:12px;">← Back</button>';
+      html += '<button class="primary" id="tourNextBtn" style="padding:4px 12px;font-size:12px;">' + (idx === TOUR_STEPS.length - 1 ? 'Done' : 'Next →') + '</button>';
+      html += '</div></div>';
+      
+      tooltip.innerHTML = html;
+
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'center'});
+        const rect = target.getBoundingClientRect();
+        tooltip.style.top = Math.min(window.innerHeight - 220, Math.max(20, rect.bottom + 12)) + 'px';
+        tooltip.style.left = Math.min(window.innerWidth - 430, Math.max(20, rect.left)) + 'px';
+      } else {
+        tooltip.style.top = '50%';
+        tooltip.style.left = '50%';
+        tooltip.style.transform = 'translate(-50%, -50%)';
+      }
+
+      const prevBtn = tooltip.querySelector('#tourPrevBtn');
+      if(prevBtn) prevBtn.onclick = () => showStep(idx - 1);
+      const nextBtn = tooltip.querySelector('#tourNextBtn');
+      if(nextBtn) nextBtn.onclick = () => showStep(idx + 1);
+    }
+
+    function cleanup(){
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      if (tooltip.parentNode) tooltip.parentNode.removeChild(tooltip);
+    }
+
+    overlay.onclick = cleanup;
+    showStep(0);
+  }
+
+  document.getElementById('startTour').addEventListener('click', function(){
+    if (dontAsk.checked) localStorage.setItem(TOUR_KEY, '1');
+    modal.classList.add('hidden');
+    launchTour();
+  });
+
+  document.getElementById('skipTour').addEventListener('click', function(){
+    if (dontAsk.checked) localStorage.setItem(TOUR_KEY, '1');
+    modal.classList.add('hidden');
+  });
+
+  document.getElementById('tourBtn').addEventListener('click', function(){
+    modal.classList.add('hidden');
+    launchTour();
+  });
+
+  document.getElementById('resetTour').addEventListener('click', function(e){
+    e.preventDefault();
+    localStorage.removeItem(TOUR_KEY);
+    alert('Done — the tour prompt will appear again next time you refresh.');
+  });
+
+  function maybePromptTour(){
+    let dismissed = false;
+    try { dismissed = localStorage.getItem(TOUR_KEY) === '1'; } catch(err){}
+    if (dismissed) return;
+    setTimeout(function(){ modal.classList.remove('hidden'); }, 600);
+  }
+
+  /* =========================================================
+     14. BOOT
+     ========================================================= */
+  function boot(){
+    resize();
+    updateModeHint();
+    updatePinModeText();
+    elProbeText.innerHTML = defaultProbeText();
+    updateRevealBtn();
+    renderPin();
+    recompute();
+    requestAnimationFrame(loop);
+    maybePromptTour();
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive'){
+    boot();
+  } else {
+    document.addEventListener('DOMContentLoaded', boot);
+  }
+
+})();
+</script>
+</body>
 </html>
