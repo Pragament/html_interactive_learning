@@ -1,132 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wizbot Maxx — A4 Shape Paths</title>
-<style>
-  :root{
-    /* Change these values from 0 (invisible) to 1 (fully black). */
-    --path-opacity:0.65;
-    --grid-opacity:0.22;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:#e9e9e9}
-  body{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;font-family:Arial,Helvetica,sans-serif}
-  .sheet{position:relative;flex-shrink:0;width:900px;height:1273px;background:#fff;
-    overflow:hidden;box-shadow:0 12px 48px #0003}
-  .grid,.number-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .grid{opacity:var(--grid-opacity)}
-  .number-lines{font-size:14px;fill:#111}
-  .routes{position:absolute;inset:0;width:100%;height:100%;opacity:var(--path-opacity)}
-  .route{fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round}
-  /* Each route has its own thickness and repeating dash signature. */
-  .circle{stroke-width:3;stroke-dasharray:1 12}
-  .triangle{stroke-width:4;stroke-dasharray:24 12}
-  .one{stroke-width:3.5;stroke-dasharray:18 9 1 9}
-  .four{stroke-width:5;stroke-dasharray:10 10}
-  .seven{stroke-width:4.5;stroke-dasharray:28 9 1 9 1 9}
-  .foreground{position:absolute;z-index:2;background:#fff;border:1.5px solid #111;
-    border-radius:10px;padding:12px 16px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-  h1{font-size:20px;margin:0 0 4px;letter-spacing:1px}
-  p{margin:0;font-size:13px;line-height:1.5}
-  .qr-link{display:flex;flex-direction:column;align-items:center;color:#111;text-decoration:none;font-size:11px;font-weight:bold;flex-shrink:0}
-  .qr-link img{width:76px;height:76px;display:block}
-  .steps{margin:4px 0 0;padding-left:20px;font-size:13px;line-height:1.45}
-  .steps li{margin-bottom:4px}
-  .advanced{max-width:900px;width:100%;background:#fff;padding:24px;scroll-margin-top:20px}
-  .advanced h2{margin-top:16px}
-  .advanced p{margin-bottom:8px}
-  .quick-start{left:50%;top:50%;width:390px;transform:translate(-50%,-50%)}
-  h2{font-size:14px;letter-spacing:1px;margin:0 0 5px}
-  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:9px;padding-top:9px;border-top:1px solid #ccc}
-  .legend span{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:bold;white-space:nowrap}
-  .legend svg{width:64px;height:12px;overflow:visible}
-  @page{size:A4 portrait;margin:0}
-  @media print{
-    .advanced{display:none}
-    html,body{background:#fff}
-    body{display:block;padding:0}
-    .sheet{width:210mm;height:297mm;box-shadow:none;transform:none !important;
-      margin:0 !important;break-inside:avoid;print-color-adjust:exact;-webkit-print-color-adjust:exact}
-    .quick-start{width:91mm}
-    h1{font-size:14pt} h2{font-size:10pt} p,.steps{font-size:9pt}
-    .legend span{font-size:8pt}.legend svg{width:13mm}
-  }
-</style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizbot Academy — Learn, code, explore</title>
+<link rel="stylesheet" href="course.css">
+<script defer src="course.js"></script>
 </head>
 <body>
-<main class="sheet" aria-label="Wizbot single A4 tracing activity">
-  <!-- Grid gap: 96 viewBox units (previously 24). Edge numbers count intervals, not robot steps. -->
-  <svg class="grid" viewBox="0 0 900 1273" aria-hidden="true"><g fill="#000"><circle cx="66" cy="60" r="2"/><circle cx="66" cy="156" r="2"/><circle cx="66" cy="252" r="2"/><circle cx="66" cy="348" r="2"/><circle cx="66" cy="444" r="2"/><circle cx="66" cy="540" r="2"/><circle cx="66" cy="636" r="2"/><circle cx="66" cy="732" r="2"/><circle cx="66" cy="828" r="2"/><circle cx="66" cy="924" r="2"/><circle cx="66" cy="1020" r="2"/><circle cx="66" cy="1116" r="2"/><circle cx="66" cy="1212" r="2"/><circle cx="162" cy="60" r="2"/><circle cx="162" cy="156" r="2"/><circle cx="162" cy="252" r="2"/><circle cx="162" cy="348" r="2"/><circle cx="162" cy="444" r="2"/><circle cx="162" cy="540" r="2"/><circle cx="162" cy="636" r="2"/><circle cx="162" cy="732" r="2"/><circle cx="162" cy="828" r="2"/><circle cx="162" cy="924" r="2"/><circle cx="162" cy="1020" r="2"/><circle cx="162" cy="1116" r="2"/><circle cx="162" cy="1212" r="2"/><circle cx="258" cy="60" r="2"/><circle cx="258" cy="156" r="2"/><circle cx="258" cy="252" r="2"/><circle cx="258" cy="348" r="2"/><circle cx="258" cy="444" r="2"/><circle cx="258" cy="540" r="2"/><circle cx="258" cy="636" r="2"/><circle cx="258" cy="732" r="2"/><circle cx="258" cy="828" r="2"/><circle cx="258" cy="924" r="2"/><circle cx="258" cy="1020" r="2"/><circle cx="258" cy="1116" r="2"/><circle cx="258" cy="1212" r="2"/><circle cx="354" cy="60" r="2"/><circle cx="354" cy="156" r="2"/><circle cx="354" cy="252" r="2"/><circle cx="354" cy="348" r="2"/><circle cx="354" cy="444" r="2"/><circle cx="354" cy="540" r="2"/><circle cx="354" cy="636" r="2"/><circle cx="354" cy="732" r="2"/><circle cx="354" cy="828" r="2"/><circle cx="354" cy="924" r="2"/><circle cx="354" cy="1020" r="2"/><circle cx="354" cy="1116" r="2"/><circle cx="354" cy="1212" r="2"/><circle cx="450" cy="60" r="2"/><circle cx="450" cy="156" r="2"/><circle cx="450" cy="252" r="2"/><circle cx="450" cy="348" r="2"/><circle cx="450" cy="444" r="2"/><circle cx="450" cy="540" r="2"/><circle cx="450" cy="636" r="2"/><circle cx="450" cy="732" r="2"/><circle cx="450" cy="828" r="2"/><circle cx="450" cy="924" r="2"/><circle cx="450" cy="1020" r="2"/><circle cx="450" cy="1116" r="2"/><circle cx="450" cy="1212" r="2"/><circle cx="546" cy="60" r="2"/><circle cx="546" cy="156" r="2"/><circle cx="546" cy="252" r="2"/><circle cx="546" cy="348" r="2"/><circle cx="546" cy="444" r="2"/><circle cx="546" cy="540" r="2"/><circle cx="546" cy="636" r="2"/><circle cx="546" cy="732" r="2"/><circle cx="546" cy="828" r="2"/><circle cx="546" cy="924" r="2"/><circle cx="546" cy="1020" r="2"/><circle cx="546" cy="1116" r="2"/><circle cx="546" cy="1212" r="2"/><circle cx="642" cy="60" r="2"/><circle cx="642" cy="156" r="2"/><circle cx="642" cy="252" r="2"/><circle cx="642" cy="348" r="2"/><circle cx="642" cy="444" r="2"/><circle cx="642" cy="540" r="2"/><circle cx="642" cy="636" r="2"/><circle cx="642" cy="732" r="2"/><circle cx="642" cy="828" r="2"/><circle cx="642" cy="924" r="2"/><circle cx="642" cy="1020" r="2"/><circle cx="642" cy="1116" r="2"/><circle cx="642" cy="1212" r="2"/><circle cx="738" cy="60" r="2"/><circle cx="738" cy="156" r="2"/><circle cx="738" cy="252" r="2"/><circle cx="738" cy="348" r="2"/><circle cx="738" cy="444" r="2"/><circle cx="738" cy="540" r="2"/><circle cx="738" cy="636" r="2"/><circle cx="738" cy="732" r="2"/><circle cx="738" cy="828" r="2"/><circle cx="738" cy="924" r="2"/><circle cx="738" cy="1020" r="2"/><circle cx="738" cy="1116" r="2"/><circle cx="738" cy="1212" r="2"/><circle cx="834" cy="60" r="2"/><circle cx="834" cy="156" r="2"/><circle cx="834" cy="252" r="2"/><circle cx="834" cy="348" r="2"/><circle cx="834" cy="444" r="2"/><circle cx="834" cy="540" r="2"/><circle cx="834" cy="636" r="2"/><circle cx="834" cy="732" r="2"/><circle cx="834" cy="828" r="2"/><circle cx="834" cy="924" r="2"/><circle cx="834" cy="1020" r="2"/><circle cx="834" cy="1116" r="2"/><circle cx="834" cy="1212" r="2"/></g></svg>
-  <svg class="number-lines" viewBox="0 0 900 1273" role="img" aria-label="Grid counting scales: zero to eight across, zero to twelve down">
-    <path d="M66 32 H834 M66 1236 H834 M30 60 V1212 M870 60 V1212" fill="none" stroke="#555" stroke-width="1"/>
-    <g style="paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round"><text x="66" y="37" text-anchor="middle">0</text><text x="66" y="1241" text-anchor="middle">0</text><text x="162" y="37" text-anchor="middle">1</text><text x="162" y="1241" text-anchor="middle">1</text><text x="258" y="37" text-anchor="middle">2</text><text x="258" y="1241" text-anchor="middle">2</text><text x="354" y="37" text-anchor="middle">3</text><text x="354" y="1241" text-anchor="middle">3</text><text x="450" y="37" text-anchor="middle">4</text><text x="450" y="1241" text-anchor="middle">4</text><text x="546" y="37" text-anchor="middle">5</text><text x="546" y="1241" text-anchor="middle">5</text><text x="642" y="37" text-anchor="middle">6</text><text x="642" y="1241" text-anchor="middle">6</text><text x="738" y="37" text-anchor="middle">7</text><text x="738" y="1241" text-anchor="middle">7</text><text x="834" y="37" text-anchor="middle">8</text><text x="834" y="1241" text-anchor="middle">8</text><text x="35" y="60" text-anchor="middle" dominant-baseline="middle">0</text><text x="865" y="60" text-anchor="middle" dominant-baseline="middle">0</text><text x="35" y="156" text-anchor="middle" dominant-baseline="middle">1</text><text x="865" y="156" text-anchor="middle" dominant-baseline="middle">1</text><text x="35" y="252" text-anchor="middle" dominant-baseline="middle">2</text><text x="865" y="252" text-anchor="middle" dominant-baseline="middle">2</text><text x="35" y="348" text-anchor="middle" dominant-baseline="middle">3</text><text x="865" y="348" text-anchor="middle" dominant-baseline="middle">3</text><text x="35" y="444" text-anchor="middle" dominant-baseline="middle">4</text><text x="865" y="444" text-anchor="middle" dominant-baseline="middle">4</text><text x="35" y="540" text-anchor="middle" dominant-baseline="middle">5</text><text x="865" y="540" text-anchor="middle" dominant-baseline="middle">5</text><text x="35" y="636" text-anchor="middle" dominant-baseline="middle">6</text><text x="865" y="636" text-anchor="middle" dominant-baseline="middle">6</text><text x="35" y="732" text-anchor="middle" dominant-baseline="middle">7</text><text x="865" y="732" text-anchor="middle" dominant-baseline="middle">7</text><text x="35" y="828" text-anchor="middle" dominant-baseline="middle">8</text><text x="865" y="828" text-anchor="middle" dominant-baseline="middle">8</text><text x="35" y="924" text-anchor="middle" dominant-baseline="middle">9</text><text x="865" y="924" text-anchor="middle" dominant-baseline="middle">9</text><text x="35" y="1020" text-anchor="middle" dominant-baseline="middle">10</text><text x="865" y="1020" text-anchor="middle" dominant-baseline="middle">10</text><text x="35" y="1116" text-anchor="middle" dominant-baseline="middle">11</text><text x="865" y="1116" text-anchor="middle" dominant-baseline="middle">11</text><text x="35" y="1212" text-anchor="middle" dominant-baseline="middle">12</text><text x="865" y="1212" text-anchor="middle" dominant-baseline="middle">12</text></g>
-  </svg>
-  <svg class="routes" viewBox="0 0 900 1273" role="img" aria-labelledby="routes-title routes-description">
-    <title id="routes-title">Circle, triangle and numbers 1, 4 and 7</title>
-    <desc id="routes-description">Five overlapping full-page paths, each with a different dash pattern and thickness. Match the legend and follow the same path through crossings.</desc>
-    <circle class="route circle" cx="450" cy="637" r="400"/>
-    <path class="route triangle" d="M450 100 L50 1165 L850 1165 Z"/>
-    <path class="route one" d="M90 330 L350 110 L350 1165 M100 1165 H610"/>
-    <path class="route four" d="M610 110 L90 830 H850 M610 110 V1165"/>
-    <path class="route seven" d="M50 110 H850 L180 1165"/>
-  </svg>
-  <section class="foreground quick-start" aria-label="Quick-start instructions and path key">
-    <header>
-      <div><h1>WIZBOT MAXX</h1><p>Pick a line. Plan. Move!</p></div>
-      <a class="qr-link" href="#advanced"><img src="advanced-qr.svg" alt="QR code for advanced Wizbot activities">More adventures</a>
-    </header>
-    <h2>QUICK START</h2>
-    <ol class="steps">
-      <li><b>Ready:</b> fit 3 AAA batteries underneath. Match + / −; flat − ends touch springs. Close the cover. Put the sheet on a flat floor.</li>
-      <li><b>On:</b> slide the bottom switch to the middle. Press <b>ACTION (✱) + REVERSE (▼)</b> together to switch between Grid and Draw modes.</li>
-      <li><b>First move:</b> face along a line. Press <b>CLEAR (X) → FORWARD (▲) → green GO.</b> Watch how far Wizbot moves.</li>
-      <li><b>Plan:</b> CLEAR, then ▲ forward, ▼ back, ◀ / ▶ turn. Tap again for more moves. GO runs your plan.</li>
-    </ol>
-    <p><b>Grid Mode:</b> straight steps and 90° turns.<br>
-      <b>Draw Mode (purple):</b> shorter steps, angled turns and curves. ▲ + ◀ / ▶ together: 45°; ▼ + ◀ / ▶: 30°. Hold ◀ / ▶ for 1 second (one chime): curve.</p>
-    <p><b>Try again:</b> CLEAR before a new plan. Follow the same pattern at crossings. Count gaps using the edge numbers; a dot gap may differ from a robot step.</p>
-    <div class="legend" aria-label="Path patterns">
-      <span><svg viewBox="0 0 64 12" aria-hidden="true"><path class="route circle" d="M2 6 H62"/></svg>Circle</span>
-      <span><svg viewBox="0 0 64 12" aria-hidden="true"><path class="route triangle" d="M2 6 H62"/></svg>Triangle</span>
-      <span><svg viewBox="0 0 64 12" aria-hidden="true"><path class="route one" d="M2 6 H62"/></svg>1</span>
-      <span><svg viewBox="0 0 64 12" aria-hidden="true"><path class="route four" d="M2 6 H62"/></svg>4</span>
-      <span><svg viewBox="0 0 64 12" aria-hidden="true"><path class="route seven" d="M2 6 H62"/></svg>7</span>
-    </div>
-  </section>
-</main>
-<section class="advanced" id="advanced" aria-label="Advanced Wizbot activities">
-  <h1>More Wizbot adventures</h1>
-  <p>From the Wizbot Maxx student manual. Try these after learning the buttons.</p>
-  <h2>Move in a circle</h2>
-  <p>Use purple Draw Mode. Press CLEAR. Hold RIGHT for 1 second until a short chime; repeat this four times, then press GO. The robot’s circle may differ from the printed circle.</p>
-  <h2>Try a wider curve</h2>
-  <p>In Draw Mode, hold LEFT or RIGHT for 3 seconds until a double chime to queue a wide arc. Press GO to run it.</p>
-  <h2>Code with blocks</h2>
-  <p>Switch power to Picto-Coding (blue light). Enable Bluetooth on your tablet or computer. Open Junior Blocks, select Board → Wizbot Maxx, then choose your robot’s Bluetooth ID. A chime confirms the connection. Build a sequence of move and turn blocks, then run it.</p>
-  <h2>If moves become wobbly</h2>
-  <p>Check that the surface is flat and the wheels move freely. If the low-battery red light appears, replace all three AAA batteries together with fresh batteries of the same brand.</p>
-</section>
-<script>
-(function fitToScreen(){
-  const sheet = document.querySelector('.sheet');
-  function apply(){
-    sheet.style.transform = '';
-    sheet.style.marginBottom = '0';
-    if (!window.matchMedia('print').matches && window.innerWidth < 948){
-      const scale = Math.max(0.1, (window.innerWidth - 48) / 900);
-      sheet.style.transformOrigin = 'top center';
-      sheet.style.transform = `scale(${scale})`;
-      sheet.style.marginBottom = `${(scale - 1) * 1273}px`;
-    }
-  }
-  apply();
-  window.addEventListener('resize', apply);
-  window.addEventListener('beforeprint', apply);
-  window.addEventListener('afterprint', apply);
-})();
-</script>
-</body>
-</html>
+<header class="topbar"><a class="brand" href="./">W<span>✦</span> Wizbot Academy</a><a class="print-link" href="a4sheet.html">↗ Printable path sheet</a></header>
+<main>
+<section class="hero"><div><p class="eyebrow">YOUR ROBOTICS ADVENTURE</p><h1>Small robot.<br>Big possibilities.</h1><p>Start with one move. Build paths, explore curves, and learn to solve problems with Wizbot Maxx.</p><button id="resume" class="primary">Start learning →</button><span class="hero-note">12 lessons · learn at your own pace</span></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="robot-face"><i></i><i></i><span>⌣</span></div><span class="float-tag tag-one">▲ MOVE</span><span class="float-tag tag-two">↻ REPEAT</span><span class="float-tag tag-three">✦ EXPLORE</span></div></section>
+<section class="course-layout" id="course"><aside><div class="progress-heading"><h2>Your journey</h2><span id="progress-count"></span></div><progress id="progress" max="12" value="0" aria-label="Course completion"></progress><nav id="lesson-nav" aria-label="Course lessons"></nav><button id="reset-progress" class="text-button">Reset saved progress</button><p class="storage-note" id="storage-note">Progress is saved in this browser.</p></aside><article id="lesson" tabindex="-1"></article></section>
+<section class="lab" id="lab"><div class="section-heading"><div><p class="eyebrow">TRY YOUR IDEAS</p><h2>Code playground</h2><p>A browser practice model. It does not connect to a real robot; distances and curves are illustrative.</p></div><label>Movement mode<select id="mode"><option value="grid">Grid · 90° turns</option><option value="draw">Draw · angles & curves</option></select></label></div><div class="lab-layout"><div class="board-wrap"><svg id="board" viewBox="0 0 600 600" role="img" aria-label="Robot practice grid and programmed path"><defs><pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="#c7d8d3"/></pattern></defs><rect width="600" height="600" fill="url(#dots)"/><g id="goal"></g><path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round"/><g id="bot"><circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/><path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/><circle cx="-6" cy="-4" r="2"/><circle cx="6" cy="-4" r="2"/></g></svg><p id="sim-status" role="status" aria-live="polite">Facing up. Add moves, then press GO.</p></div><div class="controls"><h3>Your commands</h3><div id="command-buttons" class="command-buttons"></div><div class="repeat-control"><label>Repeat sequence <input id="repeat-count" type="number" min="1" max="8" value="1"></label><span>times</span></div><ol id="queue" class="queue" aria-label="Program sequence"></ol><div class="run-buttons"><button id="clear">CLEAR</button><button id="undo">Undo</button><button id="go" class="primary">GO ▶</button><button id="stop">Stop</button></div><p class="hint">Turns change direction. Forward and reverse change position. CLEAR removes your program and resets the robot.</p></div></div></section>
+<section class="reference" id="advanced"><div class="section-heading"><div><p class="eyebrow">KEEP EXPLORING</p><h2>Command reference</h2></div><label>Find a command<input id="search" type="search" placeholder="Try arc, battery, calibration…"></label></div><div id="reference-list"></div><p class="source-note">Course adapted from the supplied Wizbot Maxx student manual, commands workbook, and mind map. The simulator is a teaching model; check results on your own robot.</p></section>
+</main><footer>Wizbot Academy · Plan → Code → Observe → Improve</footer>
+<noscript><p class="noscript">Enable JavaScript to use the lessons and playground. The <a href="a4sheet.html">printable quick-start sheet</a> is available without JavaScript.</p></noscript>
+</body></html>
