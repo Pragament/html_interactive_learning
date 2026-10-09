@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why opposite angles of a cyclic quadrilateral are supplementary</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;min-height:100vh;display:grid;place-items:center;padding:16px;
+    background:#0b1220;color:#e2e8f0;
+    font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  .card{
+    background:#151f33;border:1px solid #24334d;border-radius:18px;
+    padding:18px;width:min(96vw,470px);box-shadow:0 20px 50px #0009;
+  }
+  h1{font-size:17px;margin:0 0 4px}
+  .sub{color:#8fa3bf;font-size:13px;margin:0 0 10px}
+  svg{width:100%;height:auto;display:block;touch-action:none;user-select:none}
+  .eq{
+    margin-top:8px;background:#0d1626;border:1px solid #23324a;border-radius:12px;
+    padding:10px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:13px;line-height:1.75;
+  }
+  .eq b{color:#38bdf8}
+  .am{color:#fbbf24}
+  .pk{color:#f472b6}
+  .note{
+    margin-top:10px;font-size:13.5px;color:#b9c8dd;background:#122a3f;
+    border-left:4px solid #38bdf8;border-radius:10px;padding:10px 12px;
+  }
+  .note b{color:#7dd3fc}
+  .angle-control{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:13px}
+  input{width:85px;padding:7px;border:1px solid #456080;border-radius:7px;background:#0d1626;color:#e2e8f0;font:inherit}
+  input:focus-visible{outline:2px solid #38bdf8}
+  .hint{font-size:12px;color:#6b7f9c;margin-top:8px;text-align:center}
+</style>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "9-mathematics-geometry-circles-cyclic-quadrilateral-arc-proof",
+  "order": 313,
+  "class": "IX",
+  "subject": "Mathematics",
+  "topic": "Geometry (Circles)",
+  "subtopic": null,
+  "title": "Cyclic Quadrilateral — Arc Proof",
+  "description": "Drag vertices around a circle and explore how opposite angles intercept arcs totaling 360°, proving their sum is 180°. Set the starting angle with angle_one in the URL.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+</head>
+<body>
+<div class="card">
+  <h1>Why are opposite angles supplementary?</h1>
+  <p class="sub">Drag any vertex around the circle and watch what happens.</p>
+
+  <label class="angle-control" for="angle-one">Set ∠A <input id="angle-one" type="number" min="0.1" max="179.9" step="any" value="75"> degrees</label>
+  <svg id="s" viewBox="0 0 400 400" role="img" aria-label="Draggable cyclic quadrilateral with amber and pink intercepted arcs"></svg>
+
+  <div class="eq" id="eq" aria-live="polite"></div>
+
+  <div class="note">
+    <b>Key idea:</b> an inscribed angle is <b>half</b> the arc it faces.
+    ∠A faces the <span class="am">amber arc</span>, ∠C faces the <span class="pk">pink arc</span>.
+    Those two arcs together make the whole circle (360°), so
+    ∠A + ∠C = 360°/2 = <b>180°</b>.
+  </div>
+
+  <p class="hint">Drag A, B, C or D — the sum never changes. You can also set ∠A above.</p>
+</div>
+
+<script>
+const svg = document.getElementById('s');
+const eq  = document.getElementById('eq');
+
+/* ---------- geometry setup ---------- */
+const cx = 200, cy = 200, R = 100, VB = 400;
+
+// vertex angles (degrees, counter-clockwise, maths convention)
+// order on circle:  A -> B -> C -> D  (counter-clockwise)
+const angleInput = document.getElementById('angle-one');
+const rawAngle = new URLSearchParams(location.search).get('angle_one');
+const requestedAngle = rawAngle !== null && rawAngle.trim() !== '' ? Number(rawAngle) : NaN;
+const startingAngle = Number.isFinite(requestedAngle) && requestedAngle > 0 && requestedAngle < 180 ? requestedAngle : 75;
+let b = 0, c = startingAngle, d = 2 * startingAngle, a = startingAngle + 180;   // a is kept "unwrapped" in (d, b+360)
+
+const rad   = t => t * Math.PI / 180;
+const P     = (t, r = R) => [cx + r*Math.cos(rad(t)), cy - r*Math.sin(rad(t))];
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const norm  = t => ((t % 360) + 360) % 360;
+
+/* keep the four vertices in valid cyclic order with a minimum gap */
+function fix(){
+  // Clamp only the moving vertex between its neighbours, keeping cyclic order.
+  // A small gap prevents coincident points without restricting the starting angle.
+  const gap = Math.min(0.1, startingAngle / 4, (180 - startingAngle) / 4);
+  if (drag === 'b') b = clamp(b, a - 360 + gap, c - gap);
+  if (drag === 'c') c = clamp(c, b + gap, d - gap);
+  if (drag === 'd') d = clamp(d, c + gap, a - gap);
+  if (drag === 'a') a = clamp(a, d + gap, b + 360 - gap);
+}
+
+/* ---------- helpers ---------- */
+function angleArc(V, P1, P2, s){
+  const u = [P1[0]-V[0], P1[1]-V[1]];
+  const v = [P2[0]-V[0], P2[1]-V[1]];
+  const nu = Math.hypot(u[0],u[1]) || 1;
+  const nv = Math.hypot(v[0],v[1]) || 1;
+  const ux = u[0]/nu, uy = u[1]/nu;
+  const vx = v[0]/nv, vy = v[1]/nv;
+  const p1 = [V[0] + ux*s, V[1] + uy*s];
+  const p2 = [V[0] + vx*s, V[1] + vy*s];
+  const sweep = (ux*vy - uy*vx) > 0 ? 1 : 0;
+  let mx = ux + vx, my = uy + vy;
+  const nm = Math.hypot(mx,my) || 1;
+  return {
+    path: `M${p1[0]} ${p1[1]} A${s} ${s} 0 0 ${sweep} ${p2[0]} ${p2[1]}`,
+    t:    [V[0] + mx/nm*(s+22), V[1] + my/nm*(s+22)]
+  };
+}
+
+/* ---------- render ---------- */
+function render(){
+  const A = P(a), B = P(b), C = P(c), D = P(d);
+
+  const arcBD  = d - b;              // ccw arc B → D  (the one ∠A faces)
+  const arcDB  = 360 - arcBD;        // ccw arc D → B  (the one ∠C faces)
+  const arcBDi = Number(arcBD.toFixed(4));
+  const arcDBi = Number((360 - arcBDi).toFixed(4));
+  const angA   = arcBDi / 2;
+  const angC   = Number((180 - angA).toFixed(4));
+  angleInput.value = angA;
+
+  const rr = R + 22;
+
+  // the two arcs drawn as a split ring
+  const s1 = P(b, rr), e1 = P(d, rr);
+  const s2 = P(d, rr), e2 = P(b, rr);
+  const d1 = `M${s1[0]} ${s1[1]} A${rr} ${rr} 0 ${arcBD > 180 ? 1 : 0} 0 ${e1[0]} ${e1[1]}`;
+  const d2 = `M${s2[0]} ${s2[1]} A${rr} ${rr} 0 ${arcDB > 180 ? 1 : 0} 0 ${e2[0]} ${e2[1]}`;
+
+  const m1 = P(b + arcBD/2, rr);
+  const m2 = P(d + arcDB/2, rr);
+
+  const aa = angleArc(A, B, D, 34);   // angle at A
+  const ac = angleArc(C, B, D, 34);   // angle at C
+
+  const vl = (t, txt) => {
+    const p = P(t, R + 40);
+    return `<text x="${p[0]}" y="${p[1]}" fill="#e2e8f0" font-size="17"
+      font-weight="700" text-anchor="middle" dominant-baseline="middle">${txt}</text>`;
+  };
+
+  svg.innerHTML = `
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="#0ea5e90d" stroke="#334a6b" stroke-width="1.5"/>
+
+    <path d="${d1}" fill="none" stroke="#fbbf24" stroke-width="9" opacity=".8" stroke-linecap="round"/>
+    <path d="${d2}" fill="none" stroke="#f472b6" stroke-width="9" opacity=".8" stroke-linecap="round"/>
+
+    <polygon points="${A} ${B} ${C} ${D}" fill="#38bdf818" stroke="#38bdf8"
+             stroke-width="2.5" stroke-linejoin="round"/>
+
+    <path d="${aa.path}" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="${ac.path}" fill="none" stroke="#f472b6" stroke-width="2.5" stroke-linecap="round"/>
+
+    <text x="${aa.t[0]}" y="${aa.t[1]}" fill="#fbbf24" font-size="15" font-weight="700"
+      text-anchor="middle" dominant-baseline="middle"
+      paint-order="stroke" stroke="#151f33" stroke-width="4">${angA}°</text>
+    <text x="${ac.t[0]}" y="${ac.t[1]}" fill="#f472b6" font-size="15" font-weight="700"
+      text-anchor="middle" dominant-baseline="middle"
+      paint-order="stroke" stroke="#151f33" stroke-width="4">${angC}°</text>
+
+    <text x="${m1[0]}" y="${m1[1]}" fill="#fbbf24" font-size="12" font-weight="700"
+      text-anchor="middle" dominant-baseline="middle"
+      paint-order="stroke" stroke="#151f33" stroke-width="4">${arcBDi}°</text>
+    <text x="${m2[0]}" y="${m2[1]}" fill="#f472b6" font-size="12" font-weight="700"
+      text-anchor="middle" dominant-baseline="middle"
+      paint-order="stroke" stroke="#151f33" stroke-width="4">${arcDBi}°</text>
+
+    ${vl(a,'A')}${vl(b,'B')}${vl(c,'C')}${vl(d,'D')}
+
+    <circle cx="${A[0]}" cy="${A[1]}" r="6" fill="#e2e8f0"/>
+    <circle cx="${B[0]}" cy="${B[1]}" r="6" fill="#e2e8f0"/>
+    <circle cx="${C[0]}" cy="${C[1]}" r="6" fill="#e2e8f0"/>
+    <circle cx="${D[0]}" cy="${D[1]}" r="6" fill="#e2e8f0"/>
+
+    <circle data-drag="a" cx="${A[0]}" cy="${A[1]}" r="20" fill="transparent" style="cursor:grab"/>
+    <circle data-drag="b" cx="${B[0]}" cy="${B[1]}" r="20" fill="transparent" style="cursor:grab"/>
+    <circle data-drag="c" cx="${C[0]}" cy="${C[1]}" r="20" fill="transparent" style="cursor:grab"/>
+    <circle data-drag="d" cx="${D[0]}" cy="${D[1]}" r="20" fill="transparent" style="cursor:grab"/>
+  `;
+
+  eq.innerHTML = `
+    <div>arc facing <b>A</b> <span class="am">(amber)</span> = <span class="am">${arcBDi}°</span>
+      &nbsp;→&nbsp; ∠A = ${arcBDi}° ÷ 2 = <b>${angA}°</b></div>
+    <div>arc facing <b>C</b> <span class="pk">(pink)</span> = <span class="pk">${arcDBi}°</span>
+      &nbsp;→&nbsp; ∠C = ${arcDBi}° ÷ 2 = <b>${angC}°</b></div>
+    <div style="margin-top:6px;border-top:1px solid #23324a;padding-top:6px">
+      <span class="am">${arcBDi}°</span> + <span class="pk">${arcDBi}°</span> = 360°
+      &nbsp;⟹&nbsp; ∠A + ∠C = 360° ÷ 2 = <b>180°</b>
+    </div>
+  `;
+}
+
+/* ---------- dragging ---------- */
+let drag = null;
+
+function pointerAngle(e){
+  const r = svg.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width  * VB;
+  const y = (e.clientY - r.top ) / r.height * VB;
+  return norm(Math.atan2(cy - y, x - cx) * 180 / Math.PI);
+}
+
+/* pick the representation of θ (θ, θ±360, θ±720…) closest to current value */
+function nearest(theta, cur){
+  let best = theta, bd = Infinity;
+  for (const k of [-720,-360,0,360,720]){
+    const v = theta + k, dist = Math.abs(v - cur);
+    if (dist < bd){ bd = dist; best = v; }
+  }
+  return best;
+}
+
+svg.addEventListener('pointerdown', e => {
+  const el = e.target.closest('[data-drag]');
+  if (!el) return;
+  drag = el.dataset.drag;
+  svg.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+
+svg.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const th  = pointerAngle(e);
+  const cur = { a, b, c, d }[drag];
+  const t   = nearest(th, cur);
+
+  if      (drag === 'a') a = t;
+  else if (drag === 'b') b = t;
+  else if (drag === 'c') c = t;
+  else                   d = t;
+
+  fix();
+  render();
+});
+
+function endDrag(e){
+  if (!drag) return;
+  drag = null;
+  try { svg.releasePointerCapture(e.pointerId); } catch(_) {}
+}
+svg.addEventListener('pointerup', endDrag);
+svg.addEventListener('pointercancel', endDrag);
+
+angleInput.addEventListener('change', () => {
+  const value = Number(angleInput.value);
+  if (!Number.isFinite(value) || value <= 0 || value >= 180) {
+    angleInput.setCustomValidity('Enter an angle greater than 0° and less than 180°.');
+    angleInput.reportValidity();
+    return;
+  }
+  angleInput.setCustomValidity('');
+  b = 0; c = value; d = 2 * value; a = value + 180;
+  render();
+});
+angleInput.addEventListener('input', () => angleInput.setCustomValidity(''));
+
+/* ---------- go ---------- */
+fix();
+render();
+</script>
+</body>
+</html>
