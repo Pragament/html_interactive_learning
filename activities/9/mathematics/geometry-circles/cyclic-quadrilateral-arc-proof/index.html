@@ -34,6 +34,16 @@
   .angle-control{display:flex;align-items:center;gap:10px;margin:12px 0;font-size:13px}
   input{width:85px;padding:7px;border:1px solid #456080;border-radius:7px;background:#0d1626;color:#e2e8f0;font:inherit}
   input:focus-visible{outline:2px solid #38bdf8}
+  .proof{margin-top:22px;padding-top:18px;border-top:1px solid #334a6b}
+  .proof h2{font-size:17px;margin:0 0 8px}
+  .proof p{font-size:13px;color:#b9c8dd}
+  .proof-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+  .proof-tabs button{font:inherit;font-size:12px;color:#e2e8f0;background:#0d1626;border:1px solid #456080;border-radius:8px;padding:8px;cursor:pointer}
+  .proof-tabs button[aria-pressed="true"]{background:#075985;border-color:#38bdf8}
+  .proof-tabs button:focus-visible{outline:2px solid #fbbf24;outline-offset:3px}
+  .proof-caption{background:#0d1626;border-radius:10px;padding:12px;min-height:150px}
+  .proof-caption strong{color:#fbbf24}
+  #proof-diagram{max-height:350px}
   .hint{font-size:12px;color:#6b7f9c;margin-top:8px;text-align:center}
 </style>
 <script type="application/json" id="activity-metadata">
@@ -48,6 +58,7 @@
   "title": "Cyclic Quadrilateral — Arc Proof",
   "description": "Drag vertices around a circle and explore how opposite angles intercept arcs totaling 360°, proving their sum is 180°. Set the starting angle with angle_one in the URL.",
   "activityType": "exploration",
+  "activity_url_parameters": "angle_one=75",
   "status": "active"
 }
 </script>
@@ -68,6 +79,20 @@
     Those two arcs together make the whole circle (360°), so
     ∠A + ∠C = 360°/2 = <b>180°</b>.
   </div>
+
+  <section class="proof" aria-label="Step-by-step proof of the inscribed angle theorem">
+    <h2>But why is the angle half the arc?</h2>
+    <p>Follow the proof in a simpler arrangement with the same ∠A. O is the centre; E is the other end of the diameter through A.</p>
+    <div class="proof-tabs" role="group" aria-label="Proof steps">
+      <button data-proof="0" aria-pressed="true">1 · Same arc</button>
+      <button data-proof="1" aria-pressed="false">2 · Equal radii</button>
+      <button data-proof="2" aria-pressed="false">3 · Double angles</button>
+      <button data-proof="3" aria-pressed="false">4 · Add them</button>
+    </div>
+    <svg id="proof-diagram" viewBox="0 0 400 400" role="img" aria-label="Inscribed angle proof using two isosceles triangles and a diameter"></svg>
+    <div id="proof-caption" class="proof-caption" aria-live="polite"></div>
+    <p>An arc’s degree measure means the angle it sweeps at the centre, not its length. For an arc larger than a semicircle, use the reflex central angle.</p>
+  </section>
 
   <p class="hint">Drag A, B, C or D — the sum never changes. You can also set ∠A above.</p>
 </div>
@@ -122,6 +147,44 @@ function angleArc(V, P1, P2, s){
   };
 }
 
+let proofStep = 0;
+const fmt = v => Number(v.toFixed(2));
+function renderProof(alpha){
+  const point = t => [200 + 125*Math.cos(rad(t)), 200 - 125*Math.sin(rad(t))];
+  const A = point(270), E = point(90), B = point(90-alpha), D = point(90+alpha), O = [200,200];
+  const label = (p,text,color='#e2e8f0',dx=0,dy=0) => `<text x="${p[0]+dx}" y="${p[1]+dy}" text-anchor="middle" dominant-baseline="middle" fill="${color}" font-size="14" font-weight="700" paint-order="stroke" stroke="#151f33" stroke-width="4">${text}</text>`;
+  const arc = (start,span,r,color,width=3) => {
+    const pt=t=>[200+r*Math.cos(rad(t)),200-r*Math.sin(rad(t))];
+    return `<path d="M${pt(start)} A${r} ${r} 0 ${span>180?1:0} 0 ${pt(start+span)}" fill="none" stroke="${color}" stroke-width="${width}"/>`;
+  };
+  const base = angleArc(A,B,D,27);
+  let drawing = `<circle cx="200" cy="200" r="125" fill="none" stroke="#456080"/>${arc(90-alpha,2*alpha,125,'#fbbf24',7)}<path d="M${B} L${A} L${D}" fill="none" stroke="#38bdf8" stroke-width="3"/><path d="M${B} L${O} L${D}" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5 5"/><path d="${base.path}" fill="none" stroke="#38bdf8" stroke-width="3"/>`;
+  if(proofStep===0) drawing+=label(base.t,`${fmt(alpha)}°`,'#38bdf8');
+  if(proofStep>=1){
+    drawing+=`<polygon points="${A} ${O} ${B}" fill="#38bdf818"/><polygon points="${A} ${O} ${D}" fill="#a78bfa18"/><path d="M${A} L${O} L${B} M${O} L${D}" fill="none" stroke="#9bd4ff" stroke-width="2"/>`;
+    // Equal-radius tick marks at the midpoint of OA, OB and OD.
+    for(const V of [A,B,D]){const dx=V[0]-200,dy=V[1]-200,len=Math.hypot(dx,dy),mx=200+dx/2,my=200+dy/2;drawing+=`<path d="M${mx-dy/len*5} ${my+dx/len*5} L${mx+dy/len*5} ${my-dx/len*5}" stroke="#e2e8f0" stroke-width="2"/>`;}
+    for(const [V,W,t,color] of [[A,B,'x','#38bdf8'],[B,A,'x','#38bdf8'],[A,D,'y','#a78bfa'],[D,A,'y','#a78bfa']]){const a=angleArc(V,O,W,18);drawing+=`<path d="${a.path}" fill="none" stroke="${color}" stroke-width="2"/>`+label(a.t,t,color);}
+  }
+  if(proofStep>=2){drawing+=`<path d="M${A} L${E}" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 5"/>${arc(90-alpha,alpha,37,'#38bdf8')}${arc(90,alpha,51,'#a78bfa')}`+label(point(90),'E','#e2e8f0',0,-18)+label([200+66*Math.cos(rad(90-alpha/2)),200-66*Math.sin(rad(90-alpha/2))],'2x','#38bdf8')+label([200+79*Math.cos(rad(90+alpha/2)),200-79*Math.sin(rad(90+alpha/2))],'2y','#a78bfa');}
+  drawing+=label(A,'A',undefined,0,22)+label(B,'B',undefined,18,0)+label(D,'D',undefined,-18,0)+label(O,'O',undefined,12,14);
+  document.getElementById('proof-diagram').innerHTML=drawing;
+  const texts=[
+    `<b>One arc, two viewpoints.</b> The angle at the edge is ∠BAD = <strong>${fmt(alpha)}°</strong>. The amber arc runs from B to D without passing through A. Radii OB and OD measure that same arc from the centre. Its measure is <strong>${fmt(2*alpha)}°</strong>. Why twice as much? Build the triangles next.`,
+    `<b>Equal radii make equal base angles.</b> OA = OB = OD (matching tick marks). So triangle AOB has two equal base angles, labelled <span style="color:#38bdf8">x</span>. Triangle AOD has two equal base angles, labelled <span style="color:#a78bfa">y</span>. At A, these two angles add: <strong>∠BAD = x + y</strong>.`,
+    `<b>A straight line reveals the doubling.</b> Extend AO to E. In triangle AOB, ∠AOB = 180° − 2x. Because A–O–E is a straight line, ∠BOE = 180° − (180° − 2x) = <strong>2x</strong>. The same reasoning gives ∠EOD = <strong>2y</strong>.`,
+    `<b>Add the two central pieces.</b> The amber arc has measure 2x + 2y = <strong>2(x + y)</strong>. But the angle at A is x + y. Therefore <strong>∠A = arc BD ÷ 2</strong>.<br>Here: ${fmt(2*alpha)}° ÷ 2 = <strong>${fmt(alpha)}°</strong>. The equal split in this drawing is convenient; the addition also works when x and y differ. If the centre lies outside the inscribed angle, subtract the two pieces instead—the factor of 2 remains.`
+  ];
+  document.getElementById('proof-caption').innerHTML=texts[proofStep];
+}
+document.querySelector('.proof-tabs').addEventListener('click', e => {
+  const button = e.target.closest('[data-proof]');
+  if(!button)return;
+  proofStep=Number(button.dataset.proof);
+  document.querySelectorAll('[data-proof]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.proof)===proofStep)));
+  renderProof((d-b)/2);
+});
+
 /* ---------- render ---------- */
 function render(){
   const A = P(a), B = P(b), C = P(c), D = P(d);
@@ -133,6 +196,7 @@ function render(){
   const angA   = arcBDi / 2;
   const angC   = Number((180 - angA).toFixed(4));
   angleInput.value = angA;
+  renderProof(angA);
 
   const rr = R + 22;
 

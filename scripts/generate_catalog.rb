@@ -73,6 +73,8 @@ def build_activity(path)
   activity["subtopic"] = metadata["subtopic"].to_s unless metadata["subtopic"].to_s.strip.empty?
   activity["source_path"] = path.relative_path_from(ROOT).to_s
   activity["activity_path"] = path.relative_path_from(ROOT).to_s if metadata["status"] == "active"
+  parameters = metadata["activity_url_parameters"].to_s.strip
+  activity["activity_url_parameters"] = parameters unless parameters.empty?
   [order, activity, path]
 rescue ArgumentError, TypeError
   raise "#{path.relative_path_from(ROOT)}: order must be an integer"
