@@ -16,9 +16,10 @@
   "title": "Virtual pH Indicator Lab - Acids, Bases & Neutralization",
   "description": "Interactive chemistry simulation allowing students to test household liquids with Red/Blue litmus paper and Universal Indicator, visualize H+ vs OH- ions, and perform titration.",
   "activityType": "simulation",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "chemical=lemon&indicator=litmus&focus=neutralization"
 }
-  </script>
+</script>
     <style>
         * {
             box-sizing: border-box;
@@ -458,6 +459,67 @@
 
         applyChem(chems.lemon);
     </script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"chemical": {"label": "Solution", "default": "lemon", "options": ["lemon", "vinegar", "water", "baking", "soap"]}, "indicator": {"label": "Indicator", "default": "litmus", "options": ["litmus", "turmeric"]}, "focus": {"label": "Explore", "default": "indicator", "options": ["indicator", "neutralization", "soil", "ant-bite", "antacid", "lichens"]}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore acids, bases and indicators";
+
+  const solutions={lemon:{name:'Lemon juice',ph:2.2},vinegar:{name:'Vinegar',ph:3},water:{name:'Pure water',ph:7},baking:{name:'Baking soda solution',ph:8.5},soap:{name:'Soap solution',ph:10}};
+  function render(s){const c=solutions[s.chemical],acid=c.ph<7,base=c.ph>7,nature=acid?'acidic':base?'basic':'neutral';const color=s.indicator==='turmeric'?(base?'#9a3412':'#eab308'):(acid?'#ef4444':base?'#3b82f6':'#a855f7');
+    const application={soil:'Acidic soil has excess acidity. Lime, such as calcium carbonate, neutralizes some of that acidity and raises the pH. The aim is a suitable soil pH, not necessarily pH 7.','ant-bite':'The classroom model pairs the acid associated with an ant bite with a mild base, illustrating neutralization.',antacid:'An antacid contains a base that reacts with excess stomach acid, illustrating neutralization.',lichens:'Litmus is a natural indicator obtained from lichens. Turmeric is also a natural indicator.'};
+    return svg(`<path d="M170 50v160q0 20 20 20h110q20 0 20-20V50" fill="#eff6ff" stroke="#64748b" stroke-width="3"/><path d="M173 120h144v90q0 17-17 17H190q-17 0-17-17Z" fill="#93c5fd"/><rect x="370" y="70" width="50" height="150" rx="5" fill="${color}"/>${text(250,270,`${c.name}: pH ${c.ph}, ${nature}`)}${text(420,35,s.indicator)}`)+note('Predict the indicator colour',s.indicator==='turmeric'?`Turmeric remains yellow in acidic and neutral solutions; it turns red-brown in a base. Here: <strong>${base?'red-brown':'yellow'}</strong>.`:`Blue litmus ${acid?'turns red':'stays blue'}. Red litmus ${base?'turns blue':'stays red'}. In neutral water, each strip keeps its original colour. The purple strip represents litmus solution at neutral pH.`)+note('Acids and bases','pH below 7 indicates an acid; pH above 7 indicates a base. Indicators change colour to help distinguish them.')+(s.focus==='neutralization'||application[s.focus]?note('Neutralization',`<span class="preset-equation">Acid + base → salt + water<br>HCl + NaOH → NaCl + H₂O</span><br>For a strong acid and strong base in equivalent amounts, the final solution is approximately neutral. The final pH depends on the acid, base and amounts; a colour change alone does not prove complete neutralization. ${application[s.focus]||''}`):'');
+  }
+  function sync(s){if(typeof selectChemical==='function')selectChemical(s.chemical);}
+
+  function mount() {
+    const style=document.createElement('style');style.textContent=`#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
+</script>
 </body>
 
 </html>

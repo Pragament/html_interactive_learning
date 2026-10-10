@@ -375,7 +375,8 @@
   "title": "Pythagoras Theorem — 2D Challenge",
   "description": "Arrange square cut-outs to verify that a² + b² = c² in a right-angled triangle.",
   "activityType": "challenge",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "leg_a=15&focus=missing-leg&hypotenuse=17"
 }
 </script>
 </head>
@@ -404,10 +405,10 @@
                         <span><span class="side-label">a</span> (leg)</span>
                         <span class="val" id="valA">3.0</span>
                     </label>
-                    <input type="range" id="sliderA" min="0.5" max="8" step="0.1" value="3" />
+                    <input type="range" id="sliderA" min="0.5" max="100" step="0.1" value="3" />
                     <div class="side-controls" aria-label="Adjust side a">
                         <button type="button" class="step-btn" data-target="A" data-step="-0.1" aria-label="Decrease side a">−</button>
-                        <input type="number" id="numberA" min="0.5" max="8" step="0.1" value="3" aria-label="Side a value" />
+                        <input type="number" id="numberA" min="0.5" max="100" step="0.1" value="3" aria-label="Side a value" />
                         <button type="button" class="step-btn" data-target="A" data-step="0.1" aria-label="Increase side a">+</button>
                     </div>
                 </div>
@@ -416,10 +417,10 @@
                         <span><span class="side-label">b</span> (leg)</span>
                         <span class="val" id="valB">4.0</span>
                     </label>
-                    <input type="range" id="sliderB" min="0.5" max="8" step="0.1" value="4" />
+                    <input type="range" id="sliderB" min="0.5" max="100" step="0.1" value="4" />
                     <div class="side-controls" aria-label="Adjust side b">
                         <button type="button" class="step-btn" data-target="B" data-step="-0.1" aria-label="Decrease side b">−</button>
-                        <input type="number" id="numberB" min="0.5" max="8" step="0.1" value="4" aria-label="Side b value" />
+                        <input type="number" id="numberB" min="0.5" max="100" step="0.1" value="4" aria-label="Side b value" />
                         <button type="button" class="step-btn" data-target="B" data-step="0.1" aria-label="Increase side b">+</button>
                     </div>
                 </div>
@@ -519,8 +520,8 @@
         function round2(v) { return Math.round(v * 100) / 100; }
         function clampSide(v) {
             const min = 0.5;
-            const max = 8;
-            return Math.min(max, Math.max(min, Math.round(v * 10) / 10));
+            const max = 100;
+            return Math.min(max, Math.max(min, v));
         }
 
         function clearRevealAfterSideChange() {
@@ -536,11 +537,11 @@
             }
             const next = clampSide(value);
             if (side === 'A') {
-                sliderA.value = next.toFixed(1);
-                numberA.value = next.toFixed(1);
+                sliderA.value = String(next);
+                numberA.value = String(next);
             } else {
-                sliderB.value = next.toFixed(1);
-                numberB.value = next.toFixed(1);
+                sliderB.value = String(next);
+                numberB.value = String(next);
             }
             clearRevealAfterSideChange();
             updateAll();
@@ -800,6 +801,71 @@
         // ─── Init ───
         updateAll();
     })();
+</script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"leg_a": {"label": "Leg a", "default": 3, "min": 0.5, "max": 100, "integer": false}, "leg_b": {"label": "Leg b", "default": 4, "min": 0.5, "max": 100, "integer": false}, "hypotenuse": {"label": "Hypotenuse to check", "default": 5, "min": 0.5, "max": 150, "integer": false}, "focus": {"label": "Explore", "default": "hypotenuse", "options": ["hypotenuse", "missing-leg", "check", "proof"]}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore the Pythagorean theorem";
+
+  function render(s){if(s.focus==='missing-leg'&&s.hypotenuse>s.leg_a)s={...s,leg_b:Math.sqrt(s.hypotenuse*s.hypotenuse-s.leg_a*s.leg_a)};const a=s.leg_a,b=s.leg_b,c=Math.hypot(a,b),k=150/Math.max(a,b),x=150,y=220;
+    let picture=polygon(`${x},${y} ${x+b*k},${y} ${x},${y-a*k}`)+`<path d="M${x+12} ${y}v-12h-12" fill="none" stroke="#172033"/>`+text(x-30,y-a*k/2,`a=${fmt(a)}`,'#db2777')+text(x+b*k/2,y+28,`b=${fmt(b)}`,'#059669')+text(x+b*k/2+32,y-a*k/2-15,`c=${fmt(c)}`)+text(410,65,`a² = ${fmt(a*a)}`,'#db2777')+text(410,100,`b² = ${fmt(b*b)}`,'#059669')+text(410,135,`c² = ${fmt(c*c)}`);
+    let result=svg(picture)+note('The squares of the side lengths',`<span class="preset-equation">a² + b² = c²<br>${fmt(a*a)} + ${fmt(b*b)} = ${fmt(c*c)} → c = ${fmt(c)}</span><br>c is always the side opposite the 90° angle.`);
+    if(s.focus==='missing-leg')result+=note('Find the missing leg',s.hypotenuse>s.leg_a?`b = √(c² − a²) = √(${fmt(s.hypotenuse*s.hypotenuse)} − ${fmt(a*a)}) = ${fmt(Math.sqrt(s.hypotenuse*s.hypotenuse-a*a))}. Subtract the known leg’s square, then take the square root.`:'The hypotenuse must be longer than either leg.');
+    if(s.focus==='check')result+=note('Test the proposed side lengths',`Compare ${fmt(a*a+b*b)} with ${fmt(s.hypotenuse*s.hypotenuse)}. ${Math.abs(a*a+b*b-s.hypotenuse*s.hypotenuse)<1e-8?'Equal: these lengths form a right triangle.':'Unequal: these three lengths cannot form a right triangle with this hypotenuse. The blue triangle above uses the actual required hypotenuse.'}`);
+    if(s.focus==='proof'){const altitude=a*b/c,m=a*a/c,n=b*b/c,fx=x+a*a*b*k/(c*c),fy=y-a*b*b*k/(c*c);result+=svg(polygon(`${x},${y} ${x+b*k},${y} ${x},${y-a*k}`)+line(x,y,fx,fy,'#db2777','6 4')+text(410,100,`m = ${fmt(m)}; n = ${fmt(n)}`)+text(410,140,`Altitude = ${fmt(altitude)}`)+text(300,270,'The altitude divides the right triangle into two similar triangles.'))+note('Proof by similar triangles',`Draw the altitude to the hypotenuse, splitting c into m and n. Similarity gives a² = cm and b² = cn. Add them: a² + b² = c(m + n) = c × c = c².`);}
+    return result;
+  }
+  function sync(s){if(s.focus==='missing-leg'&&s.hypotenuse>s.leg_a)s={...s,leg_b:Math.sqrt(s.hypotenuse*s.hypotenuse-s.leg_a*s.leg_a)};setInput('sliderA',s.leg_a);setInput('sliderB',s.leg_b);}
+
+  function mount() {
+    document.body.classList.add('topic-preset-open');
+    const style=document.createElement('style');style.textContent=`body.topic-preset-open{flex-direction:column}#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
 </script>
 </body>
 </html>
