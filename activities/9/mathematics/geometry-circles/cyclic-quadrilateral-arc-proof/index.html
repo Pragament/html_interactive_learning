@@ -13,9 +13,9 @@
   }
   .card{
     background:#151f33;border:1px solid #24334d;border-radius:18px;
-    padding:18px;width:min(96vw,470px);box-shadow:0 20px 50px #0009;
+    padding:clamp(16px,2vw,32px);width:100%;box-shadow:0 20px 50px #0009;
   }
-  h1{font-size:17px;margin:0 0 4px}
+  h1{font-size:clamp(20px,2.4vw,30px);margin:0 0 4px}
   .sub{color:#8fa3bf;font-size:13px;margin:0 0 10px}
   svg{width:100%;height:auto;display:block;touch-action:none;user-select:none}
   .eq{
@@ -37,13 +37,16 @@
   .proof{margin-top:22px;padding-top:18px;border-top:1px solid #334a6b}
   .proof h2{font-size:17px;margin:0 0 8px}
   .proof p{font-size:13px;color:#b9c8dd}
-  .proof-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
-  .proof-tabs button{font:inherit;font-size:12px;color:#e2e8f0;background:#0d1626;border:1px solid #456080;border-radius:8px;padding:8px;cursor:pointer}
-  .proof-tabs button[aria-pressed="true"]{background:#075985;border-color:#38bdf8}
-  .proof-tabs button:focus-visible{outline:2px solid #fbbf24;outline-offset:3px}
-  .proof-caption{background:#0d1626;border-radius:10px;padding:12px;min-height:150px}
+  .visual-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,4vw,64px);align-items:start}
+  .explore,.proof{min-width:0}
+  .proof{margin:0;border:0;padding:0}
+  #s{max-height:480px}
+  #proof-diagram{max-height:540px}
+  .proof-caption{background:#0d1626;border-radius:10px;padding:16px;font-size:14px}
   .proof-caption strong{color:#fbbf24}
-  #proof-diagram{max-height:350px}
+  .proof-caption p{margin:7px 0}
+  .proof-caption .result{font-size:18px;color:#fbbf24;border-top:1px solid #334a6b;padding-top:12px}
+  @media(max-width:760px){body{padding:10px}.visual-layout{grid-template-columns:1fr}.proof{border-top:1px solid #334a6b;padding-top:20px}#s{max-height:380px}#proof-diagram{max-height:440px}}
   .hint{font-size:12px;color:#6b7f9c;margin-top:8px;text-align:center}
 </style>
 <script type="application/json" id="activity-metadata">
@@ -66,6 +69,7 @@
 <body>
 <div class="card">
   <h1>Why are opposite angles supplementary?</h1>
+  <div class="visual-layout"><section class="explore" aria-label="Explore the cyclic quadrilateral">
   <p class="sub">Drag any vertex around the circle and watch what happens.</p>
 
   <label class="angle-control" for="angle-one">Set ∠A <input id="angle-one" type="number" min="0.1" max="179.9" step="any" value="75"> degrees</label>
@@ -80,20 +84,16 @@
     ∠A + ∠C = 360°/2 = <b>180°</b>.
   </div>
 
-  <section class="proof" aria-label="Step-by-step proof of the inscribed angle theorem">
+  </section>
+  <section class="proof" aria-label="Visual proof of the inscribed angle theorem">
     <h2>But why is the angle half the arc?</h2>
-    <p>Follow the proof in a simpler arrangement with the same ∠A. O is the centre; E is the other end of the diameter through A.</p>
-    <div class="proof-tabs" role="group" aria-label="Proof steps">
-      <button data-proof="0" aria-pressed="true">1 · Same arc</button>
-      <button data-proof="1" aria-pressed="false">2 · Equal radii</button>
-      <button data-proof="2" aria-pressed="false">3 · Double angles</button>
-      <button data-proof="3" aria-pressed="false">4 · Add them</button>
-    </div>
-    <svg id="proof-diagram" viewBox="0 0 400 400" role="img" aria-label="Inscribed angle proof using two isosceles triangles and a diameter"></svg>
+    <p>One picture shows why. Matching ticks mean equal radii; matching x or y labels mean equal angles. This simpler arrangement has the same ∠A as your quadrilateral.</p>
+    <svg id="proof-diagram" viewBox="0 0 400 460" role="img" aria-label="Inscribed angle proof using two isosceles triangles and a diameter"></svg>
     <div id="proof-caption" class="proof-caption" aria-live="polite"></div>
     <p>An arc’s degree measure means the angle it sweeps at the centre, not its length. For an arc larger than a semicircle, use the reflex central angle.</p>
   </section>
 
+  </div>
   <p class="hint">Drag A, B, C or D — the sum never changes. You can also set ∠A above.</p>
 </div>
 
@@ -147,7 +147,7 @@ function angleArc(V, P1, P2, s){
   };
 }
 
-let proofStep = 0;
+
 const fmt = v => Number(v.toFixed(2));
 function renderProof(alpha){
   const point = t => [200 + 125*Math.cos(rad(t)), 200 - 125*Math.sin(rad(t))];
@@ -159,31 +159,27 @@ function renderProof(alpha){
   };
   const base = angleArc(A,B,D,27);
   let drawing = `<circle cx="200" cy="200" r="125" fill="none" stroke="#456080"/>${arc(90-alpha,2*alpha,125,'#fbbf24',7)}<path d="M${B} L${A} L${D}" fill="none" stroke="#38bdf8" stroke-width="3"/><path d="M${B} L${O} L${D}" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5 5"/><path d="${base.path}" fill="none" stroke="#38bdf8" stroke-width="3"/>`;
-  if(proofStep===0) drawing+=label(base.t,`${fmt(alpha)}°`,'#38bdf8');
-  if(proofStep>=1){
+  {
     drawing+=`<polygon points="${A} ${O} ${B}" fill="#38bdf818"/><polygon points="${A} ${O} ${D}" fill="#a78bfa18"/><path d="M${A} L${O} L${B} M${O} L${D}" fill="none" stroke="#9bd4ff" stroke-width="2"/>`;
     // Equal-radius tick marks at the midpoint of OA, OB and OD.
     for(const V of [A,B,D]){const dx=V[0]-200,dy=V[1]-200,len=Math.hypot(dx,dy),mx=200+dx/2,my=200+dy/2;drawing+=`<path d="M${mx-dy/len*5} ${my+dx/len*5} L${mx+dy/len*5} ${my-dx/len*5}" stroke="#e2e8f0" stroke-width="2"/>`;}
     for(const [V,W,t,color] of [[A,B,'x','#38bdf8'],[B,A,'x','#38bdf8'],[A,D,'y','#a78bfa'],[D,A,'y','#a78bfa']]){const a=angleArc(V,O,W,18);drawing+=`<path d="${a.path}" fill="none" stroke="${color}" stroke-width="2"/>`+label(a.t,t,color);}
   }
-  if(proofStep>=2){drawing+=`<path d="M${A} L${E}" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 5"/>${arc(90-alpha,alpha,37,'#38bdf8')}${arc(90,alpha,51,'#a78bfa')}`+label(point(90),'E','#e2e8f0',0,-18)+label([200+66*Math.cos(rad(90-alpha/2)),200-66*Math.sin(rad(90-alpha/2))],'2x','#38bdf8')+label([200+79*Math.cos(rad(90+alpha/2)),200-79*Math.sin(rad(90+alpha/2))],'2y','#a78bfa');}
+  {drawing+=`<path d="M${A} L${E}" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="5 5"/>${arc(90-alpha,alpha,37,'#38bdf8')}${arc(90,alpha,51,'#a78bfa')}`+label(point(90),'E','#e2e8f0',0,-18)+label([200+66*Math.cos(rad(90-alpha/2)),200-66*Math.sin(rad(90-alpha/2))],'2x','#38bdf8')+label([200+79*Math.cos(rad(90+alpha/2)),200-79*Math.sin(rad(90+alpha/2))],'2y','#a78bfa');}
   drawing+=label(A,'A',undefined,0,22)+label(B,'B',undefined,18,0)+label(D,'D',undefined,-18,0)+label(O,'O',undefined,12,14);
   document.getElementById('proof-diagram').innerHTML=drawing;
-  const texts=[
-    `<b>One arc, two viewpoints.</b> The angle at the edge is ∠BAD = <strong>${fmt(alpha)}°</strong>. The amber arc runs from B to D without passing through A. Radii OB and OD measure that same arc from the centre. Its measure is <strong>${fmt(2*alpha)}°</strong>. Why twice as much? Build the triangles next.`,
-    `<b>Equal radii make equal base angles.</b> OA = OB = OD (matching tick marks). So triangle AOB has two equal base angles, labelled <span style="color:#38bdf8">x</span>. Triangle AOD has two equal base angles, labelled <span style="color:#a78bfa">y</span>. At A, these two angles add: <strong>∠BAD = x + y</strong>.`,
-    `<b>A straight line reveals the doubling.</b> Extend AO to E. In triangle AOB, ∠AOB = 180° − 2x. Because A–O–E is a straight line, ∠BOE = 180° − (180° − 2x) = <strong>2x</strong>. The same reasoning gives ∠EOD = <strong>2y</strong>.`,
-    `<b>Add the two central pieces.</b> The amber arc has measure 2x + 2y = <strong>2(x + y)</strong>. But the angle at A is x + y. Therefore <strong>∠A = arc BD ÷ 2</strong>.<br>Here: ${fmt(2*alpha)}° ÷ 2 = <strong>${fmt(alpha)}°</strong>. The equal split in this drawing is convenient; the addition also works when x and y differ. If the centre lies outside the inscribed angle, subtract the two pieces instead—the factor of 2 remains.`
-  ];
-  document.getElementById('proof-caption').innerHTML=texts[proofStep];
+  // Keep the central doubling and the final relationship in the same visual.
+  drawing+=label([200,370],`At A: x + y = ${fmt(alpha)}°`,'#38bdf8')
+    +label([200,400],`Amber arc: 2x + 2y = ${fmt(2*alpha)}°`,'#fbbf24')
+    +label([200,433],`Arc = 2 × angle at A`,'#e2e8f0');
+  document.getElementById('proof-diagram').innerHTML=drawing;
+  document.getElementById('proof-caption').innerHTML=`
+    <p><b>1. Equal radii:</b> OA = OB makes both blue base angles x. OA = OD makes both purple base angles y.</p>
+    <p><b>2. Straight diameter A–O–E:</b> triangle AOB has central angle 180° − 2x. The angle next to it is therefore 2x. On the other side, the same reasoning gives 2y.</p>
+    <p><b>3. Add:</b> the angle at A is x + y; its amber arc measures 2x + 2y = 2(x + y).</p>
+    <p class="result">∠A = arc ÷ 2 = <strong>${fmt(2*alpha)}° ÷ 2 = ${fmt(alpha)}°</strong></p>
+    <p>The symmetric picture splits x and y equally for clarity. Unequal parts still add the same way. If the centre is outside the angle, subtract the two parts instead; both are still doubled.</p>`;
 }
-document.querySelector('.proof-tabs').addEventListener('click', e => {
-  const button = e.target.closest('[data-proof]');
-  if(!button)return;
-  proofStep=Number(button.dataset.proof);
-  document.querySelectorAll('[data-proof]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.proof)===proofStep)));
-  renderProof((d-b)/2);
-});
 
 /* ---------- render ---------- */
 function render(){
