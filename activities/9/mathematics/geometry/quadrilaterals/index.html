@@ -392,7 +392,8 @@
   "title": "Properties of Quadrilaterals",
   "description": "Form different quadrilaterals (parallelogram, rhombus, rectangle, square) with strips. Verify opposite sides, angles, and diagonal properties.",
   "activityType": "exploration",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "shape=rectangle&focus=diagonals"
 }
 </script>
 </head>
@@ -654,6 +655,10 @@
                 pts.B = { x: cx + s * 0.8, y: cy - s * 0.8 };
                 pts.C = { x: cx + s * 1.5, y: cy + s * 0.8 };
                 pts.D = { x: cx - s * 1.4, y: cy + s * 0.8 };
+            }
+            if (window.presetQuadAngle && ['parallelogram','rhombus'].includes(type)) {
+                const rad=window.presetQuadAngle*Math.PI/180,len=Math.min(width,height)*.25,base=type==='rhombus'?len:len*1.6,dx=len*Math.cos(rad),dy=len*Math.sin(rad);
+                pts={A:{x:cx-(base+dx)/2,y:cy+dy/2},B:{x:cx+(base-dx)/2,y:cy+dy/2},C:{x:cx+(base+dx)/2,y:cy-dy/2},D:{x:cx+(dx-base)/2,y:cy-dy/2}};
             }
             calculateProperties();
         }
@@ -1281,5 +1286,84 @@
             updateDiscoverQuestion();
         };
     </script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"shape": {"label": "Quadrilateral", "default": "parallelogram", "options": ["quadrilateral", "parallelogram", "rectangle", "rhombus", "square", "kite", "trapezium"]}, "angle": {"label": "Parallelogram angle A (°)", "default": 70, "min": 10, "max": 170, "integer": false}, "angle_a": {"label": "General angle A (°)", "default": 80, "min": 1, "max": 179, "integer": false}, "angle_b": {"label": "General angle B (°)", "default": 90, "min": 1, "max": 179, "integer": false}, "angle_c": {"label": "General angle C (°)", "default": 100, "min": 1, "max": 179, "integer": false}, "compare": {"label": "Compare with", "default": "none", "options": ["none", "rectangle", "rhombus", "square", "parallelogram", "kite", "trapezium"]}, "focus": {"label": "Explore", "default": "properties", "options": ["properties", "angles", "diagonals", "classification"]}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore quadrilateral properties";
+
+  function render(s){let points,angles;const rad=s.angle*Math.PI/180,shift=90*Math.cos(rad),rise=90*Math.sin(rad);
+    const map={rectangle:[[140,220],[400,220],[400,70],[140,70]],square:[[180,220],[330,220],[330,70],[180,70]],rhombus:[[170,220],[170+150,220],[170+150+150*Math.cos(rad),220-150*Math.sin(rad)],[170+150*Math.cos(rad),220-150*Math.sin(rad)]],parallelogram:[[130,220],[380,220],[380+shift,220-rise],[130+shift,220-rise]],kite:[[285,250],[185,150],[285,30],[385,150]],trapezium:[[140,220],[440,220],[365,70],[215,70]]};
+    points=map[s.shape];
+    const properties={rectangle:'Opposite sides equal and parallel; all angles 90°. Diagonals equal and bisect each other.',rhombus:'Four equal sides; opposite angles equal. Diagonals bisect each other at right angles; they need not be equal.',square:'Four equal sides and four right angles. Diagonals equal, perpendicular and bisect each other. A square is both a rectangle and a rhombus.',parallelogram:'Opposite sides equal and parallel; opposite angles equal; adjacent angles total 180°. Diagonals bisect each other.',kite:'Two pairs of adjacent equal sides. Diagonals are perpendicular; one bisects the other. Equal diagonals are not required.',trapezium:'One pair of opposite sides parallel. The other pair need not be parallel. No general equality of sides or diagonals follows.',quadrilateral:'Every simple quadrilateral has four interior angles totalling 360°. Drawing a diagonal divides it into two triangles: 180° + 180°.'};
+    let picture;
+    if(s.shape==='quadrilateral'){
+      const fourth=360-s.angle_a-s.angle_b-s.angle_c;
+      if(fourth<=0||fourth>=180)return note('Use a convex quadrilateral','Each angle, including the fourth, must be between 0° and 180°.');
+      // Construct a convex quadrilateral from its turning angles and choose positive side lengths.
+      const directions=[0,(180-s.angle_b)*Math.PI/180,(360-s.angle_b-s.angle_c)*Math.PI/180,(s.angle_a-180)*Math.PI/180];
+      let found;
+      for(let l=0.1;l<=10&&!found;l+=.05){const x=1+l*Math.cos(directions[1]),y=l*Math.sin(directions[1]),u=directions[2],v=directions[3],det=Math.sin(v-u);if(Math.abs(det)<1e-8)continue;const m=(-x*Math.sin(v)+y*Math.cos(v))/det,n=(-y*Math.cos(u)+x*Math.sin(u))/det;if(m>0&&n>0)found=[[0,0],[1,0],[x,y],[x+m*Math.cos(u),y+m*Math.sin(u)]];}
+      if(found){const xs=found.map(p=>p[0]),ys=found.map(p=>p[1]),minX=Math.min(...xs),minY=Math.min(...ys),k=Math.min(320/(Math.max(...xs)-minX),170/(Math.max(...ys)-minY));points=found.map(([x,y])=>[130+(x-minX)*k,235-(y-minY)*k]);}
+      else return note('Angle sum',`Fourth angle = 360° − ${s.angle_a}° − ${s.angle_b}° − ${s.angle_c}° = ${fmt(fourth)}°.`);
+      angles=[s.angle_a,s.angle_b,s.angle_c,fourth];
+    }
+    else if(['square','rectangle'].includes(s.shape))angles=[90,90,90,90];
+    else if(['parallelogram','rhombus'].includes(s.shape))angles=[s.angle,180-s.angle,s.angle,180-s.angle];
+    picture=polygon(points.map(p=>p.join(',')).join(' '));
+    if(s.focus==='diagonals'||s.shape==='quadrilateral'){picture+=line(...points[0],...points[2],'#db2777','7 4');if(s.focus==='diagonals')picture+=line(...points[1],...points[3],'#059669','7 4');}
+    picture+=points.map(([x,y],i)=>text(x,y+(i<2?25:-14),`${'ABCD'[i]}${angles?' '+fmt(angles[i])+'°':''}`)).join('');
+    return svg(picture)+note(s.shape.replaceAll('-',' '),properties[s.shape])+(angles?`<p class="preset-equation">${angles.map(fmt).join('° + ')}° = 360°</p>`:'')+note('Why these angles add to 360°','One diagonal splits the quadrilateral into two triangles. Each contributes 180°, so the total is 360°. In a parallelogram, parallel sides also force adjacent angles to be supplementary.')+(s.compare!=='none'?note(`Compare: ${s.compare}`,properties[s.compare]):'');
+  }
+  function sync(s){if(typeof selectShape==='function'&&['rectangle','square','rhombus','parallelogram','trapezium'].includes(s.shape)){window.presetQuadAngle=s.angle;selectShape(s.shape);if(['parallelogram','rhombus'].includes(s.shape)){const rad=s.angle*Math.PI/180,len=Math.min(width,height)*.25,base=s.shape==='rhombus'?len:len*1.6,cx=width/2,cy=height/2,dx=len*Math.cos(rad),dy=len*Math.sin(rad);pts={A:{x:cx-(base+dx)/2,y:cy+dy/2},B:{x:cx+(base-dx)/2,y:cy+dy/2},C:{x:cx+(base+dx)/2,y:cy-dy/2},D:{x:cx+(dx-base)/2,y:cy-dy/2}};calculateProperties();draw();}}}
+
+  function mount() {
+    const style=document.createElement('style');style.textContent=`#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
+</script>
 </body>
 </html>

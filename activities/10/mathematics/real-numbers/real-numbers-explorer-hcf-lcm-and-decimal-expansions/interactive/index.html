@@ -297,7 +297,8 @@
   "title": "Real Numbers Explorer - HCF, LCM and Decimal Expansions — Interactive",
   "description": "Three linked mini-tools for NCERT Class X Chapter 1 (Real Numbers). Students\nfind the HCF of two numbers step by step with Euclid's Division Algorithm,\nbuild a prime-factorisation ladder for two numbers to derive HCF and LCM from\nthe Fundamental Theorem of Arithmetic, and test any fraction to predict -\nbefore dividing - whether its decimal expansion terminates or repeats, based\non the prime factors of the denominator.\n\nA second, five-stage variation (Explore, Learn, Guided Practice, Challenge\nZone, Exam Practice) walks through the same HCF/LCM/prime-factorisation\nskills with a self-paced step-by-step format, a quick multiple-choice\nchallenge, and two self-contained CBSE-style case studies.",
   "activityType": "exploration",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "numbers=72%2C120&focus=hcf-lcm"
 }
 </script>
 </head>
@@ -840,6 +841,68 @@
     analyse();
   })();
 })();
+</script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"numbers": {"label": "Integers, separated by commas", "default": "72,120", "type": "text", "pattern": /^\d{1,6}(,\d{1,6}){1,5}$/}, "focus": {"label": "Explore", "default": "hcf-lcm", "options": ["hcf-lcm", "lcm", "euclid", "irrational"]}, "number": {"label": "Irrational example", "default": "sqrt2", "options": ["sqrt2", "sqrt3", "pi"]}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore HCF, LCM and decimals";
+
+  function render(s){if(s.focus==='irrational'){const value={sqrt2:Math.SQRT2,sqrt3:Math.sqrt(3),pi:Math.PI}[s.number],symbol={sqrt2:'√2',sqrt3:'√3',pi:'π'}[s.number];return svg(line(80,170,520,170)+text(80,205,Math.floor(value))+text(520,205,Math.ceil(value))+text(80+(value%1)*440,140,symbol,'#db2777'))+note('Irrational decimal expansions',`<span class="preset-equation">${symbol} = ${value.toFixed(14)}…</span><br>The digits continue without a repeating block. This finite display is an approximation, not the exact number.`)+note('Why √2 cannot be a fraction','If √2 = p/q in lowest terms, p² = 2q² makes p even. Substituting p = 2r makes q even too, contradicting lowest terms. Every rational fraction has a terminating or eventually repeating decimal; irrational numbers have neither.');}
+    const nums=s.numbers.split(',').map(Number);if(nums.some(n=>!Number.isInteger(n)||n<1||n>100000))return note('Use positive integers','Enter two to six integers between 1 and 100000.');const h=nums.reduce(gcd),l=nums.reduce((a,b)=>a/gcd(a,b)*b);
+    if(!Number.isSafeInteger(l))return note('Values are too large','Choose smaller integers so the LCM remains an exact safe integer.');
+    let a=Math.max(nums[0],nums[1]),b=Math.min(nums[0],nums[1]),steps=[];while(b){const remainder=a%b;steps.push(`${a} = ${b} × ${Math.floor(a/b)} + ${remainder}`);[a,b]=[b,remainder];}
+    return note('Break each number into prime factors',nums.map(n=>`<span class="preset-equation">${n} = ${n===1?'1':primes(n).join(' × ')}</span>`).join('<br>'))+note('Choose factors for the HCF and LCM','HCF: take the common primes with the smallest exponent. LCM: include every prime using its largest exponent. The LCM is the smallest number divisible by every supplied integer.')+`<p class="preset-equation">HCF = ${h}<br>LCM = ${l}</p>`+note('Euclid’s algorithm for the first pair',steps.join('<br>')+`<br>The last nonzero remainder (or divisor in the final step) is ${a}.`)+(nums.length===2?note('Check the product rule',`HCF × LCM = ${h} × ${l} = ${h*l} = ${nums[0]} × ${nums[1]}. ${h===1?'These two numbers are co-prime.':''}`):'');
+  }
+  function sync(s){const nums=s.numbers.split(',').map(Number);if(s.focus==='irrational'||nums.some(n=>n<1||n>100000))return;for(const prefix of ['euc-','lad-']){setInput(prefix+'a',nums[0]);setInput(prefix+'b',nums[1]);document.getElementById(prefix+'start')?.click();}}
+
+  function mount() {
+    const style=document.createElement('style');style.textContent=`#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
 </script>
 </body>
 </html>

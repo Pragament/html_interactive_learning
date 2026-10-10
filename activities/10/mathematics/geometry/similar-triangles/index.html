@@ -435,7 +435,8 @@
   "title": "Area of Similar Triangles — Interactive Geometry",
   "description": "Explore pairs of similar triangles and change their scale factor to compare\ncorresponding side lengths, perimeters, and areas. Prediction and challenge\nmodes reinforce that when side lengths scale by a factor of k, areas scale by\nk².",
   "activityType": "exploration",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "scale=1.5&criterion=AAA"
 }
 </script>
 </head>
@@ -940,5 +941,71 @@
             app = new GeometryApp();
         });
     </script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"scale": {"label": "Scale: second ÷ first", "default": 1.5, "min": 0.1, "max": 10, "integer": false}, "side": {"label": "First corresponding side", "default": 6, "min": 0.1, "max": 100, "integer": false}, "other_side": {"label": "Another first side", "default": 8, "min": 0.1, "max": 100, "integer": false}, "perimeter": {"label": "First perimeter", "default": 18, "min": 0.1, "max": 1000, "integer": false}, "angle_a": {"label": "Angle A (°)", "default": 50, "min": 1, "max": 178, "integer": false}, "angle_b": {"label": "Angle B (°)", "default": 60, "min": 1, "max": 178, "integer": false}, "labels": {"label": "Vertex correspondence", "default": "ABC,DEF", "options": ["ABC,DEF", "ABC,PQR"]}, "criterion": {"label": "Similarity criterion", "default": "all", "options": ["all", "AA", "AAA", "SAS", "SSS"]}, "focus": {"label": "Explore", "default": "correspondence", "options": ["correspondence", "area", "altitude", "median", "perimeter", "side", "angles"]}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore triangle similarity";
+
+  function render(s){if(s.angle_a+s.angle_b>=180)return note('Invalid triangle angles','A + B must be less than 180°.');const k=s.scale,letters=s.labels.split(',');
+    const a=s.angle_a*Math.PI/180,b=s.angle_b*Math.PI/180,c=Math.PI-a-b;
+    let coords=s.focus==='side'?[[0,0],[s.side,0],[s.side,s.other_side]]:s.focus==='angles'?[[0,0],[s.side,0],[s.side*Math.sin(b)/Math.sin(c)*Math.cos(a),s.side*Math.sin(b)/Math.sin(c)*Math.sin(a)]]:[[0,0],[s.side,0],[s.side*.35,s.side*.7]];
+    const xs=coords.map(p=>p[0]),ys=coords.map(p=>p[1]),minX=Math.min(...xs),maxX=Math.max(...xs),maxY=Math.max(...ys),unit=Math.min(200/((maxX-minX)*Math.max(1,k)),170/(maxY*Math.max(1,k)));
+    const drawTriangle=(origin,factor,color,names)=>{const points=coords.map(([x,y])=>[origin+(x-minX)*unit*factor,220-y*unit*factor]);return polygon(points.map(p=>p.join(',')).join(' '),color)+points.map(([x,y],i)=>text(x,y+(i===2?-14:24),names[i],color)).join('');};
+    let picture=svg(drawTriangle(50,1,'#2563eb',letters[0])+drawTriangle(340,k,'#db2777',letters[1])+text(140,278,`Side ${fmt(s.side)}`)+text(425,278,`Side ${fmt(s.side*k)}`,'#db2777')+text(300,25,`Multiply every length by ${fraction(k)}`));
+    const criteria={AA:'Two corresponding angles are equal. The third angles then agree because each triangle totals 180°.',AAA:'All corresponding angles agree. Two angles already suffice (AA).',SAS:'Two pairs of sides have the same ratio AND the included angle is equal. An angle elsewhere is insufficient.',SSS:'All three pairs of corresponding sides have the same ratio.'};
+    const [A,B,C]=letters[0],[D,E,F]=letters[1];
+    return picture+note('Match corresponding vertices',`${A} ↔ ${D}, ${B} ↔ ${E}, ${C} ↔ ${F}. ${A}${B}/${D}${E} = ${B}${C}/${E}${F} = ${A}${C}/${D}${F} = ${fraction(1/k)}. Corresponding angles stay equal.`)+note('Similarity criteria',s.criterion==='all'?Object.entries(criteria).filter(([key])=>key!=='AAA').map(([key,value])=>`<strong>${key}</strong>: ${value}`).join('<br>'):`<strong>${s.criterion}</strong>: ${criteria[s.criterion]}`)+`<p class="preset-equation">Length, altitude, median and perimeter factor = ${fraction(k)}<br>Area factor = k² = ${fraction(k*k)}</p>`+note('Why area scales twice','Both base and height are multiplied by k. Area₂ = ½(k × base₁)(k × height₁) = k² × Area₁. To recover a length factor from an area ratio, take its square root.')+note('Apply the factor',`Corresponding side: ${fmt(s.other_side)} × ${fraction(k)} = ${fmt(s.other_side*k)}.<br>Perimeter: ${fmt(s.perimeter)} × ${fraction(k)} = ${fmt(s.perimeter*k)}.${s.focus==='angles'?`<br>Third angle: 180° − ${fmt(s.angle_a)}° − ${fmt(s.angle_b)}° = ${fmt(180-s.angle_a-s.angle_b)}°. Equal to the matching angle ${F}.`:''}`);
+  }
+  function sync(s){if(typeof app!=='undefined'&&app){setInput('scale-slider',s.scale);app.onScaleChange(s.scale);}}
+
+  function mount() {
+    const style=document.createElement('style');style.textContent=`#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
+</script>
 </body>
 </html>

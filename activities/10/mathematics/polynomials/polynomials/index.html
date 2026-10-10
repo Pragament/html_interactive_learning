@@ -126,7 +126,8 @@
   "title": "Polynomials — Guided Path: Parabola Explorer",
   "description": "A five-stage walk through quadratic polynomials for NCERT Class X Chapter 2.\nStudents drag sliders on a live, auto-scaling parabola to see how the\ncoefficients a, b and c change its shape, zeroes, and vertex; learn the\nrelationship between zeroes and coefficients; practise forming a quadratic\nfrom its zeroes step by step; take a quick multiple-choice challenge; and\nfinish with two self-contained CBSE-style case studies (a fountain's water\npath and a parabolic arch) that need no outside reference material.",
   "activityType": "guided-practice",
-  "status": "active"
+  "status": "active",
+  "activity_url_parameters": "a=2&b=-5&c=3&focus=zeros&known_zero=1"
 }
 </script>
 </head>
@@ -705,6 +706,76 @@
     quizBlock(document.getElementById("exam2-area"), exam2, document.getElementById("exam2-reset"));
   })();
 })();
+</script>
+<script id="topic-preset-script">
+/* Topic presets use reusable mathematical values, never question identifiers. */
+(() => {
+  'use strict';
+  const schema = {"a": {"label": "Coefficient a", "default": 1, "min": -100, "max": 100, "integer": false}, "b": {"label": "Coefficient b", "default": -5, "min": -100, "max": 100, "integer": false}, "c": {"label": "Coefficient c", "default": 6, "min": -100, "max": 100, "integer": false}, "known_zero": {"label": "A zero to test", "default": 2, "min": -100, "max": 100, "integer": false}, "focus": {"label": "Explore", "default": "zeros", "options": ["zeros", "sum", "product", "reciprocals", "mixed-product", "squares", "product-squared", "difference", "discriminant"]}, "given": {"label": "Given information", "default": "coefficients", "options": ["coefficients", "zeros", "sum-product", "known-zero", "sum", "product", "repeated-root"]}, "unknown": {"label": "Unknown coefficient", "default": "c", "options": ["b", "c"]}, "second_zero": {"label": "Second given zero", "default": 3, "min": -100, "max": 100, "integer": false}, "sum_zeros": {"label": "Given sum of zeros", "default": 5, "min": -100, "max": 100, "integer": false}, "product_zeros": {"label": "Given product of zeros", "default": 6, "min": -100, "max": 100, "integer": false}};
+  const params = new URLSearchParams(location.search);
+  if (!Object.keys(schema).some(key => params.has(key))) return;
+  const state = {}, invalid = [];
+  for (const [key, spec] of Object.entries(schema)) {
+    const raw = params.get(key);
+    let value = spec.default;
+    if (raw !== null) {
+      if (spec.options) { if (spec.options.includes(raw)) value = raw; else invalid.push(key); }
+      else if (spec.type === 'text') { if (raw.length <= 180 && spec.pattern.test(raw)) value = raw; else invalid.push(key); }
+      else { const number = Number(raw); if (raw.trim() && Number.isFinite(number) && number >= spec.min && number <= spec.max && (!spec.integer || Number.isInteger(number))) value = number; else invalid.push(key); }
+    }
+    state[key] = value;
+  }
+  const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const fmt = value => Number.isFinite(value) ? String(Number(value.toFixed(6))) : 'undefined';
+  const gcd = (a,b) => b ? gcd(b,a%b) : a;
+  const fraction = value => { for(let d=1;d<=144;d++){const n=Math.round(value*d);if(Math.abs(n/d-value)<1e-8)return d===1?String(n):`${n}/${d}`;}return fmt(value); };
+  const svg = body => `<svg viewBox="0 0 600 280" role="img" aria-label="${esc(title)} diagram">${body}</svg>`;
+  const line = (x1,y1,x2,y2,color='#2563eb',dash='') => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="3" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+  const text = (x,y,value,color='#172033') => `<text x="${x}" y="${y}" fill="${color}" font-size="18" text-anchor="middle">${esc(value)}</text>`;
+  const polygon = (points,color='#2563eb') => `<polygon points="${points}" fill="${color}18" stroke="${color}" stroke-width="3"/>`;
+  const note = (heading,body) => `<h3>${esc(heading)}</h3><p>${body}</p>`;
+  const factors = n => { const out=[]; for(let i=1;i<=Math.sqrt(n);i++)if(n%i===0){out.push(i);if(i*i!==n)out.push(n/i);}return out.sort((a,b)=>a-b); };
+  const primes = n => {const out=[];for(let p=2;p*p<=n;p++)while(n%p===0){out.push(p);n/=p;}if(n>1)out.push(n);return out;};
+  const setInput = (id,value,event='input') => {const el=document.getElementById(id);if(!el)return;if(el.type==='range'){el.min=Math.min(Number(el.min),value);el.max=Math.max(Number(el.max),value);el.step='any';}el.value=value;el.dispatchEvent(new Event(event,{bubbles:true}));};
+  const title = "Explore polynomial zeros";
+
+
+  function resolve(s){if(s.a===0)return s;switch(s.given){case 'zeros':return {...s,b:-s.a*(s.known_zero+s.second_zero),c:s.a*s.known_zero*s.second_zero};case 'sum-product':return {...s,b:-s.a*s.sum_zeros,c:s.a*s.product_zeros};case 'known-zero':if(s.unknown==='b'&&s.known_zero!==0)return {...s,b:-(s.a*s.known_zero*s.known_zero+s.c)/s.known_zero};if(s.unknown==='c')return {...s,c:-s.a*s.known_zero*s.known_zero-s.b*s.known_zero};return s;case 'sum':return {...s,b:-s.a*s.sum_zeros};case 'product':return {...s,c:s.a*s.product_zeros};case 'repeated-root':return {...s,c:s.b*s.b/(4*s.a)};default:return s;}}
+  function givens(s){switch(s.given){case 'zeros':return `Given zeros ${fmt(s.known_zero)} and ${fmt(s.second_zero)}: p(x) = a(x − ${fmt(s.known_zero)})(x − ${fmt(s.second_zero)}). Their sum determines b = −a(α + β), and their product determines c = aαβ.`;case 'sum-product':return `Given sum S = ${fmt(s.sum_zeros)} and product P = ${fmt(s.product_zeros)}: p(x) = a(x² − Sx + P).`;case 'known-zero':return `Given p(${fmt(s.known_zero)}) = 0. Substitute this zero: a × ${fmt(s.known_zero*s.known_zero)} + b × ${fmt(s.known_zero)} + c = 0, then solve for ${s.unknown}. ${s.unknown==='b'&&s.known_zero===0?'A zero at x = 0 does not determine b; it only forces c = 0.':''}`;case 'sum':return `Given α + β = ${fmt(s.sum_zeros)} and a = ${fmt(s.a)}. Since α + β = −b/a, b = −a × ${fmt(s.sum_zeros)}.`;case 'product':return `Given αβ = ${fmt(s.product_zeros)} and a = ${fmt(s.a)}. Since αβ = c/a, c = a × ${fmt(s.product_zeros)}.`;case 'repeated-root':return `Equal roots mean D = b² − 4ac = 0. Solve for c: c = b²/(4a).`;default:return '';}}
+
+  function render(given){
+    const explanation=givens(given),s=resolve(given);
+    if(s.a===0)return note('A quadratic needs a ≠ 0','Choose a nonzero coefficient of x².');
+    const sum=-s.b/s.a,product=s.c/s.a,D=s.b*s.b-4*s.a*s.c;
+    const expression=`${s.a}x² ${s.b<0?'−':'+'} ${Math.abs(s.b)}x ${s.c<0?'−':'+'} ${Math.abs(s.c)}`;
+    const roots=D<0?'No real zeros (the curve does not cross the x-axis).':D===0?`One distinct zero: ${fraction(-s.b/(2*s.a))}; a repeated root.`:`Zeros: ${fraction((-s.b-Math.sqrt(D))/(2*s.a))} and ${fraction((-s.b+Math.sqrt(D))/(2*s.a))}.`;
+    const extras={reciprocals:product===0?'A zero root has no reciprocal.':`1/α + 1/β = (α + β)/(αβ) = ${fraction(sum/product)}`,'mixed-product':`α²β + αβ² = αβ(α + β) = ${fraction(product*sum)}`,squares:`α² + β² = (α + β)² − 2αβ = ${fraction(sum*sum-2*product)}`,'product-squared':`α²β² = (αβ)² = ${fraction(product*product)}`,difference:D<0?'There are no real roots to subtract.':`α − β can be ±${fraction(Math.sqrt(D)/Math.abs(s.a))}; the sign depends on the order of the roots.`,discriminant:`D = b² − 4ac = ${fmt(D)}. ${D===0?'The two roots coincide.':D>0?'Two distinct real roots.':'No real roots.'}`};
+    const tested=s.a*s.known_zero*s.known_zero+s.b*s.known_zero+s.c;
+    return (explanation?note('Start with the given information',explanation):'')+note('Connect the coefficients to the zeros',`<span class="preset-equation">p(x) = ${expression}</span>`)+note('Why the relationships work',`p(x) = a(x − α)(x − β) = ax² − a(α + β)x + aαβ. Match the coefficients of x and the constant term.`)+`<p class="preset-equation">α + β = −b/a = ${fraction(sum)}<br>αβ = c/a = ${fraction(product)}</p><p>${roots}</p>${extras[s.focus]?note('Use the relationship',extras[s.focus]):''}`+note('Check a proposed zero',`p(${fmt(s.known_zero)}) = ${fmt(tested)}. ${Math.abs(tested)<1e-8?`This is a zero. ${product===0&&s.known_zero===0?'Use the sum to find the other root.':`The other zero is ${fraction(sum-s.known_zero)}.`}`:'A zero must make p(x) equal 0.'}`);
+  }
+  function sync(given){const s=resolve(given);for(const key of ['a','b','c'])setInput('sl-'+key,s[key]);}
+
+  function mount() {
+    const style=document.createElement('style');style.textContent=`#topic-preset{box-sizing:border-box;max-width:1200px;width:calc(100% - 24px);margin:18px auto;padding:20px;border:2px solid #2563eb;border-radius:16px;background:#f8fafc;color:#172033;font:16px/1.5 system-ui,sans-serif;text-align:left}#topic-preset h2{margin:0 0 6px;font-size:24px;color:#172033}#topic-preset h3{margin:16px 0 6px;font-size:19px;color:#172033}#topic-preset p{margin:8px 0;color:#172033}#topic-preset .preset-controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}#topic-preset label{display:flex;flex-direction:column;gap:4px;flex:1 1 140px;min-width:0;font-size:14px;color:#172033}#topic-preset input,#topic-preset select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #64748b;border-radius:6px;background:white;color:#172033;font:inherit;min-width:0}#topic-preset svg{display:block;width:100%;max-height:340px;background:white;border-radius:8px}#topic-preset .preset-result{overflow-wrap:anywhere}#topic-preset .preset-equation{font-size:20px;font-weight:700;color:#174aa0}#topic-preset a{color:#174aa0;text-decoration:underline}#topic-preset .preset-error{color:#9f1239}#topic-preset .preset-tiles{display:flex;flex-wrap:wrap;gap:8px}#topic-preset .preset-tile{background:#dbeafe;border-radius:8px;padding:6px 12px}#topic-preset table{width:100%;border-collapse:collapse;font-size:15px}#topic-preset th,#topic-preset td{border:1px solid #cbd5e1;padding:6px;text-align:center;color:#172033}#topic-preset .preset-scroll{overflow-x:auto} @media(max-width:480px){#topic-preset{padding:12px}#topic-preset .preset-equation{font-size:17px}}`;
+    document.head.append(style);
+    const section=document.createElement('section');section.id='topic-preset';section.setAttribute('aria-label','Explore the URL setup');
+    section.innerHTML=`<h2>${esc(title)}</h2><p>Change the values to explore this topic. The link below shares the current setup.</p>${invalid.length?`<p class="preset-error">Invalid URL values for ${esc(invalid.join(', '))}; using the defaults shown below.</p>`:''}<form class="preset-controls"></form><div class="preset-result" aria-live="polite"></div><p><a class="preset-share">Open or copy this setup</a></p>`;
+    document.body.insertBefore(section,document.body.firstChild);
+    const form=section.querySelector('form');const more=document.createElement('details');more.innerHTML='<summary>More exploration settings</summary>';const extra=document.createElement('div');extra.className='preset-controls';more.append(extra);section.insertBefore(more,section.querySelector('.preset-result'));form.addEventListener('submit',event=>event.preventDefault());
+    for(const [key,spec] of Object.entries(schema)){
+      const label=document.createElement('label');label.textContent=spec.label;
+      const input=document.createElement(spec.options?'select':'input');input.name=key;input.id='preset-'+key;
+      if(spec.options)for(const value of spec.options){const option=document.createElement('option');option.value=value;option.textContent=value.replaceAll('-',' ');input.append(option);}
+      else {input.type=spec.type==='text'?'text':'number';if(input.type==='number'){input.min=spec.min;input.max=spec.max;input.step=spec.integer?'1':'any';}}
+      input.value=state[key];label.append(input);(params.has(key)?form:extra).append(label);
+      input.addEventListener('change',()=>{const value=input.type==='number'?Number(input.value):input.value;const valid=spec.options?spec.options.includes(value):spec.type==='text'?value.length<=180&&spec.pattern.test(value):input.value.trim()&&Number.isFinite(value)&&value>=spec.min&&value<=spec.max&&(!spec.integer||Number.isInteger(value));if(!valid){input.value=state[key];return;}state[key]=value;refresh();});
+    }
+    function refresh(){const result=section.querySelector('.preset-result');result.innerHTML=render(state);const url=new URL(location.href);for(const key of Object.keys(schema))url.searchParams.set(key,state[key]);section.querySelector('.preset-share').href=url.href;sync(state);}
+    refresh();
+  }
+  if(document.readyState==='complete')mount();else window.addEventListener('load',mount,{once:true});
+})();
+
 </script>
 </body>
 </html>
