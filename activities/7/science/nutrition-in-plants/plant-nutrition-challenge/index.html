@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plant Nutrition Challenge | Class VII Science</title>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-nutrition-in-plants-plant-nutrition-challenge",
+  "order": 317,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Nutrition in Plants",
+  "subtopic": null,
+  "title": "Plant Nutrition Challenge",
+  "description": "Explore how sunlight, water, carbon dioxide, and minerals support plant growth through an interactive simulator, resource challenges, and a quiz.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+<style>
+:root{--green:#207747;--dark:#174d32;--pale:#edf8ef;--ink:#20352a;--gold:#f5c95d}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f8f3;color:var(--ink);line-height:1.6}
+header{background:linear-gradient(120deg,#14532d,#48a568);color:white;padding:28px 16px;text-align:center}
+header h1{font-size:clamp(1.7rem,4vw,2.5rem);margin:0}
+header p{max-width:720px;margin:8px auto}
+main{max-width:950px;padding:0 14px;margin:22px auto}
+.card{background:white;padding:20px;border-radius:15px;margin-bottom:18px;box-shadow:0 4px 16px #193b2710}
+h2{color:#1d6b40;margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+label{display:block;font-weight:bold;margin:12px 0 5px}
+select,button{font:inherit;padding:10px;border-radius:8px}
+select{width:100%;border:1px solid #b7c8b9;background:white}
+button{border:0;background:var(--green);color:white;font-weight:bold;cursor:pointer;margin:5px 4px 5px 0}
+button:hover{background:var(--dark)}
+button:focus,select:focus{outline:3px solid var(--gold);outline-offset:2px}
+.secondary{background:#596b60}
+.plant-stage{min-height:240px;border:2px dashed #a4c7a6;border-radius:14px;background:linear-gradient(#effaff 0 65%,#e6d7a8 65%);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:14px}
+.plant{font-size:clamp(3rem,9vw,6rem);transition:transform .4s;line-height:1.2}
+.stage-label{font-weight:bold;margin-top:8px}
+.stat{padding:12px;background:var(--pale);border-radius:10px;margin-top:12px}
+.meter{height:14px;background:#dbe8dd;border-radius:20px;overflow:hidden;margin:7px 0}
+.meter span{display:block;height:100%;width:25%;background:#36a264;transition:width .3s}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.resource{background:#f3f8f4;padding:12px;border:1px solid #d3e4d5;border-radius:10px}
+.resource strong{display:block}
+.question{padding:14px;background:#f5f8fb;border-radius:10px;margin:12px 0}
+.question p{font-weight:bold;margin:0 0 8px}
+.question label{font-weight:normal;margin:7px 0}
+.feedback{font-weight:bold;margin-top:8px}
+.small{font-size:.92rem;color:#52665a}
+footer{text-align:center;padding:20px;color:#5b6e62}
+</style>
+</head>
+<body>
+<header>
+<h1>🌱 Plant Nutrition Challenge</h1>
+<p>Become a plant-care scientist! Discover what plants need to make food and grow.</p>
+<p><strong>Class VII · Science · Nutrition in Plants</strong></p>
+</header>
+<main>
+<section class="card">
+<h2>🎯 Learning goals</h2>
+<ul>
+<li>Identify the materials and conditions plants need for photosynthesis.</li>
+<li>Understand the roles of sunlight, water, carbon dioxide, and chlorophyll.</li>
+<li>Recognize that minerals from soil support healthy plant growth.</li>
+</ul>
+</section>
+
+<section class="card">
+<h2>🪴 Challenge 1: Grow your virtual plant</h2>
+<p>Adjust each condition, then click <strong>Check plant health</strong>. See how your choices affect the simulated growth score.</p>
+<div class="grid">
+<div>
+<label for="sun">Sunlight</label>
+<select id="sun">
+<option value="low">Very low</option>
+<option value="medium" selected>Moderate</option>
+<option value="high">Bright</option>
+</select>
+<label for="water">Water availability</label>
+<select id="water">
+<option value="low">Too little</option>
+<option value="medium" selected>Suitable</option>
+<option value="high">Excessive</option>
+</select>
+<label for="air">Carbon dioxide availability</label>
+<select id="air">
+<option value="low">Low</option>
+<option value="medium" selected>Suitable</option>
+<option value="high">High</option>
+</select>
+<label for="minerals">Minerals in soil</label>
+<select id="minerals">
+<option value="low">Low</option>
+<option value="medium" selected>Sufficient</option>
+<option value="high">Sufficient</option>
+</select>
+<button id="checkGrowth">Check plant health</button>
+<button class="secondary" id="reset">Reset</button>
+</div>
+<div>
+<div class="plant-stage">
+<div id="plant" class="plant" aria-hidden="true">🌱</div>
+<div id="plantLabel" class="stage-label">Young plant</div>
+<div class="small">Virtual growth model</div>
+</div>
+<div class="stat">
+<strong>Plant growth score</strong>
+<div class="meter"><span id="meter"></span></div>
+<strong id="score">50 / 100</strong>
+<p id="growthFeedback" aria-live="polite">Adjust conditions and check your plant.</p>
+</div>
+</div>
+</div>
+<p class="small">This is an educational model, not a scientific measurement. Real growth depends on species, soil, temperature, and other factors.</p>
+</section>
+
+<section class="card">
+<h2>🔎 Challenge 2: Match each resource to its role</h2>
+<p>Choose the correct role for each resource and check your answers.</p>
+<div class="resource-grid">
+<div class="resource">
+<strong>☀️ Sunlight</strong>
+<label for="r1">Its main role</label>
+<select id="r1">
+<option value="">Choose role</option>
+<option value="energy">Provides energy</option>
+<option value="soil">Provides minerals</option>
+<option value="gas">Provides carbon dioxide</option>
+</select>
+</div>
+<div class="resource">
+<strong>💧 Water</strong>
+<label for="r2">Its main role</label>
+<select id="r2">
+<option value="">Choose role</option>
+<option value="energy">Provides energy</option>
+<option value="photosynthesis">Raw material used in photosynthesis</option>
+<option value="soil">Provides minerals</option>
+</select>
+</div>
+<div class="resource">
+<strong>🌬️ Carbon dioxide</strong>
+<label for="r3">Its main role</label>
+<select id="r3">
+<option value="">Choose role</option>
+<option value="gas">Raw material used in photosynthesis</option>
+<option value="energy">Provides light energy</option>
+<option value="soil">Absorbed as minerals from soil</option>
+</select>
+</div>
+<div class="resource">
+<strong>🪨 Soil minerals</strong>
+<label for="r4">Their main role</label>
+<select id="r4">
+<option value="">Choose role</option>
+<option value="soil">Support healthy growth</option>
+<option value="energy">Provide sunlight</option>
+<option value="gas">Provide carbon dioxide</option>
+</select>
+</div>
+</div>
+<button id="checkMatch">Check matches</button>
+<div id="matchFeedback" class="feedback" aria-live="polite"></div>
+</section>
+
+<section class="card">
+<h2>🧠 Challenge 3: Quick quiz</h2>
+<div class="question">
+<p>1. Where does a plant mainly obtain carbon dioxide?</p>
+<label><input type="radio" name="q1" value="a"> From the air</label>
+<label><input type="radio" name="q1" value="b"> From sunlight</label>
+<label><input type="radio" name="q1" value="c"> From minerals in the soil</label>
+<div id="f1" class="feedback"></div>
+</div>
+<div class="question">
+<p>2. Which green substance absorbs light for photosynthesis?</p>
+<label><input type="radio" name="q2" value="a"> Starch</label>
+<label><input type="radio" name="q2" value="b"> Chlorophyll</label>
+<label><input type="radio" name="q2" value="c"> Iodine</label>
+<div id="f2" class="feedback"></div>
+</div>
+<div class="question">
+<p>3. Plants obtain most of the material for their growth in dry mass mainly from:</p>
+<label><input type="radio" name="q3" value="a"> Carbon dioxide in the air</label>
+<label><input type="radio" name="q3" value="b"> Soil alone</label>
+<label><input type="radio" name="q3" value="c"> Sunlight alone</label>
+<div id="f3" class="feedback"></div>
+</div>
+<button id="grade">Check quiz answers</button>
+<button class="secondary" id="retry">Try again</button>
+<div id="quizScore" class="stat" aria-live="polite">Your quiz score will appear here.</div>
+</section>
+
+<section class="card">
+<h2>💡 Remember</h2>
+<p>Green plants make food through photosynthesis using light energy, water, and carbon dioxide. Chlorophyll captures light energy. Roots absorb water and mineral nutrients from soil, while carbon dioxide enters mainly through tiny openings in leaves called stomata.</p>
+<p>Plants also need suitable conditions to grow. Too little or too much water, insufficient light, or limited carbon dioxide can restrict growth. Minerals are essential for healthy development but are not a substitute for the raw materials of photosynthesis.</p>
+</section>
+</main>
+<footer>Plant Nutrition Challenge · Explore · Match · Test · Learn</footer>
+<script>
+const ids=['sun','water','air','minerals'];
+function growthScore(){
+  const values={
+    sun:{low:20,medium:65,high:100},
+    water:{low:20,medium:100,high:45},
+    air:{low:30,medium:100,high:100},
+    minerals:{low:45,medium:100,high:100}
+  };
+  const rates=ids.map(id=>values[id][document.getElementById(id).value]);
+  return Math.round(Math.min(...rates));
+}
+document.getElementById('checkGrowth').addEventListener('click',()=>{
+  const score=growthScore();
+  document.getElementById('meter').style.width=score+'%';
+  document.getElementById('score').textContent=score+' / 100';
+  document.getElementById('plant').style.transform='scale('+(0.65+score/200)+')';
+  document.getElementById('plant').textContent=score<40?'🥀':score<70?'🌱':'🌿';
+  document.getElementById('plantLabel').textContent=score<40?'Plant is struggling':score<70?'Plant is growing':'Plant conditions look suitable';
+  let msg;
+  if(document.getElementById('sun').value==='low')msg='Low light limits photosynthesis in this model.';
+  else if(document.getElementById('water').value==='low')msg='The plant needs enough water for healthy growth.';
+  else if(document.getElementById('water').value==='high')msg='Excessive water can harm roots by reducing available oxygen in soil.';
+  else if(document.getElementById('air').value==='low')msg='Low carbon dioxide limits the simulated photosynthesis rate.';
+  else if(document.getElementById('minerals').value==='low')msg='Low mineral availability can restrict healthy plant growth.';
+  else msg='Good work! These conditions support plant growth in this simplified model.';
+  document.getElementById('growthFeedback').textContent=msg;
+});
+document.getElementById('reset').addEventListener('click',()=>{
+  document.getElementById('sun').value='medium';
+  document.getElementById('water').value='medium';
+  document.getElementById('air').value='medium';
+  document.getElementById('minerals').value='medium';
+  document.getElementById('plant').textContent='🌱';
+  document.getElementById('plant').style.transform='scale(1)';
+  document.getElementById('plantLabel').textContent='Young plant';
+  document.getElementById('meter').style.width='50%';
+  document.getElementById('score').textContent='50 / 100';
+  document.getElementById('growthFeedback').textContent='Adjust conditions and check your plant.';
+});
+document.getElementById('checkMatch').addEventListener('click',()=>{
+  const answers={r1:'energy',r2:'photosynthesis',r3:'gas',r4:'soil'};
+  let score=0;
+  Object.entries(answers).forEach(([id,ans])=>{if(document.getElementById(id).value===ans)score++;});
+  document.getElementById('matchFeedback').textContent='You matched '+score+' out of 4 resources correctly.'+(score===4?' Excellent!':' Review the roles and try again.');
+  document.getElementById('matchFeedback').style.color=score===4?'#207747':'#9a5a12';
+});
+const quizAnswers={q1:'a',q2:'b',q3:'a'};
+document.getElementById('grade').addEventListener('click',()=>{
+  let score=0;
+  Object.entries(quizAnswers).forEach(([q,answer],i)=>{
+    const selected=document.querySelector('input[name="'+q+'"]:checked');
+    const f=document.getElementById('f'+(i+1));
+    if(!selected){f.textContent='Choose an answer.';f.style.color='#9a5a12';}
+    else if(selected.value===answer){score++;f.textContent='Correct!';f.style.color='#207747';}
+    else{f.textContent='Not quite. Review the Remember section and try again.';f.style.color='#a33b2d';}
+  });
+  document.getElementById('quizScore').innerHTML='<strong>Your score: '+score+' / 3</strong> '+(score===3?'Excellent work!':'Review the feedback and try again.');
+});
+document.getElementById('retry').addEventListener('click',()=>{
+  document.querySelectorAll('input[type="radio"]').forEach(x=>x.checked=false);
+  ['f1','f2','f3'].forEach(id=>document.getElementById(id).textContent='');
+  document.getElementById('quizScore').textContent='Your quiz score will appear here.';
+});
+</script>
+</body>
+</html>
