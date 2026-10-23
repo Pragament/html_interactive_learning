@@ -5,19 +5,19 @@ An independent robotics course with 17 lessons, story activities, a printable pa
 ## Code playground
 
 - **Move buttons** preserves the movement queue, whole-sequence repetition, GO, Undo, CLEAR and Stop. Lesson demonstrations load into this builder. Its practice board has fixed edges.
-- **Code & patterns** provides editable robot movement programs using variables, `if / else`, `repeat`, `for` and `while`. Every supplied example makes the robot travel and draw a path. The first example is a curved Fibonacci spiral.
+- **Code & patterns** provides editable robot movement programs using variables, `if / else`, `repeat`, `for` and `while`. All 50 supplied examples make the robot travel and draw a path. The first example is a curved Fibonacci spiral; class and subject filters organize the wider CBSE/NCERT-inspired library.
 
 Both styles share the simulated robot. Switching styles interrupts a run; returning to Move buttons resets the displayed path. Loading an example resets the robot and results. If it changes movement mode, the button sequence is cleared. Run code starts at the centre with fresh variables. This page does not connect to a physical robot.
 
 ### Try a pattern
 
-1. Open **Code & patterns**, choose an example and press **Load example**.
+1. Open **Code & patterns**. Filter by suggested Class 1–10 and Mathematics or Physics/movement foundations, or search a topic; choose an example and press **Load example**. Filtering does not replace the loaded program until you press Load example.
 2. Change **Pattern size / repetitions**, or edit the code.
 3. Predict the path and press **Run code**.
 4. Watch the robot leave its actual travelled trail. The complete trail remains after the run.
 5. Compare the start marker, current-position arrow, length/radius labels and travelled-distance summary. Use **Stop code** to keep a partial path. Open **Inspect decisions, variables & journey notes** for debugging.
 
-Code paths automatically fit the board, so expanding spirals remain visible. The dot spacing adapts to the camera scale. Segment labels can be switched off; overlapping labels are omitted. Arc labels give the radius in step units, not the length of the curved segment. Arc distance is calculated as πr/2 for a quarter circle.
+Code paths automatically fit the board, zooming into small drawings and out for expanding spirals. The dot spacing adapts to the camera scale. Segment labels can be switched off; overlapping labels are omitted. Arc labels give the radius in step units, not the length of the curved segment. Arc distance is calculated as πr/2 for a quarter circle.
 
 | Example | Movement pattern | Input |
 | --- | --- | --- |
@@ -32,6 +32,34 @@ Code paths automatically fit the board, so expanding spirals remain visible. The
 | Growing squares | An outer loop increases the side length; an inner repeat draws each square | Number of squares; default 4 |
 
 The curved Fibonacci example is a joined-quarter-circle approximation, not an exact logarithmic golden spiral. All example defaults produce a visible movement pattern; invalid guarded inputs may instead show a message in Journey notes.
+
+## Class-wise concept paths
+
+The nine original favourites remain, with 41 additional paths. Every class has at least four new activities, including mathematics and physics-related movement or diagram ideas. Each loaded example has its own input label/range, concept explanation, observation/change prompt, and model note where needed.
+
+| Suggested class | New mathematics paths | Physics / movement paths |
+| --- | --- | --- |
+| 1 | Counted steps, addition of two lengths, L-shaped directions | Forward/reverse movement |
+| 2 | Skip-count staircase, subtraction, repeating square motifs | Straight versus curved paths |
+| 3 | Multiplication-array scan, rectangle perimeter, diamond symmetry | Equal spatial intervals |
+| 4 | Half-circle fractions, area versus boundary, quarter-turn pinwheel | Circular movement |
+| 5 | Four-circle rotational flower, scaled rectangles, compass map | Straight-ray light foundation |
+| 6 | Hexagon exterior turns, 1:2 ratio staircase | Curved-path measurement, 45° mirror reflection |
+| 7 | Equilateral triangle angles, positive/negative directed steps | Uniform-motion distance–time graph, variable-angle reflection |
+| 8 | Regular polygons, odd-number length sums | Two-mirror periscope, pressure/contact-area comparison |
+| 9 | Coordinate rectangle, linear-equation graph | Uniform-acceleration distance–time graph, distance versus displacement |
+| 10 | Arithmetic-progression spiral, 3:4:5 trigonometry triangle | Glass-slab refraction, circular magnetic-field diagrams, a closed circuit |
+
+These are independent teaching adaptations, not complete or officially prescribed class syllabuses. Classes 1–5 physics-related entries are movement/EVS foundations. Suggested placements draw on the [CBSE learning frameworks](https://cbseacademic.nic.in/cbe/learning-framework.html), its [Classes 6–10 assessment framework](https://cbseacademic.nic.in/cbe/documents/Assessment-Framework-March-2021.pdf), and the [NCERT foundational framework](https://www.ncert.nic.in/pdf/NCF_for_Foundational_Stage_20_October_2022.pdf); the linked documents have their own publication dates, and textbook editions may differ.
+
+### What a physics path represents
+
+- The **solid teal line** is always robot travel. Gray/dashed axes, mirrors, normals, slab boundaries and displacement guides are reference diagrams, not extra robot movement.
+- Motion graphs have labelled Time/Distance axes. The robot traces sampled graph points; its drawing-path length and animation speed are not the physical distance or speed being graphed. Acceleration uses `s = ½at²` with zero initial speed and position.
+- The slab example fixes refractive index 1.5 and incidence 45°. Its internal angle is about 28.13°, and its emerging ray is parallel to the incoming ray.
+- Circular magnetic-field parts are clockwise for current **into** the page, shown by a × at the wire. Straight radial robot links are explicitly repositioning moves, not magnetic field lines.
+- The circuit path is a closed-loop diagram with cell/resistor reference symbols, not a circuit solver or measured electron trajectory.
+- Pressure examples outline contact areas under the same assumed force. The robot’s heading is not a force vector.
 
 ### Fibonacci spiral code
 
@@ -75,13 +103,15 @@ action();           // A simulated light effect
 Draw mode also supports:
 
 ```text
+turn(60);           // Clockwise turn; negative angles turn left
+moveTo(3, 4);       // Travel to x=3, y=4 relative to Start, never teleport
 arcRight(8);        // Right quarter-circle, radius 8 steps
 arcLeft(3);         // Left quarter-circle, radius 3 steps
 left45(); right45(); left30(); right30();
 wideLeft(); wideRight();
 ```
 
-`forward`, `reverse`, `arcLeft` and `arcRight` accept at most one positive numeric length/radius up to 1000. Their default is one step unit. Other commands take no arguments. A Grid unit is 50 model coordinates; a Draw unit is 25. Wide arcs have radius two Draw steps. Turns change heading without extending the travelled path.
+`forward`, `reverse`, `arcLeft` and `arcRight` accept at most one positive numeric length/radius up to 1000. Their default is one step unit. `turn(angle)` requires one finite angle from −360° to 360°; `moveTo(x, y)` requires two coordinates from −1000 to 1000 step units. The x-axis points right and the y-axis points up. Other commands take no arguments. A Grid unit is 50 model coordinates; a Draw unit is 25. Wide arcs have radius two Draw steps. Turns change heading without extending the travelled path.
 
 ## Limits and feedback
 
@@ -99,4 +129,23 @@ ruby -E UTF-8:UTF-8 scripts/generate_catalog.rb
 ruby -E UTF-8:UTF-8 scripts/generate_catalog.rb --check
 ```
 
-Tests cover all nine robot-travel examples, Fibonacci radii, joined arc geometry, closed shapes, conditional turns, variable scope, bounds, cancellation and syntax feedback. Browser checks cover the visible travelled paths, auto-fit, example loading, Stop, button-builder compatibility and mobile layout.
+Tests cover all 50 default paths, class/subject coverage, Fibonacci radii, joined arc geometry, closed shapes, graph coordinates, refraction, distance/displacement, conditional turns, scope, bounds, cancellation and syntax feedback. Browser checks cover filters, representative paths from all ten classes, reference diagrams, auto-fit, Stop, button-builder compatibility and narrow-screen layout.
+
+## Number Series MCQ paths
+
+Choose **Number Series MCQ** in the playground for 25 questions across Classes 6–10 (five per class). Previous/Next visits all questions, and the class selector jumps to its first question. Questions include arithmetic and geometric progressions, squares, cubes, alternating differences, affine recurrences and sums of previous terms.
+
+- **Draw known terms** traces only the prefix before the blank; neither the missing value nor later terms are drawn.
+- Select an option to **Draw my choice**. A trial route does not establish correctness; **Check answer** tests the intended rule. Incorrect attempts can be retried.
+- **Hint** suggests a pattern to investigate without revealing the missing number.
+- **Show explanation** reveals the answer and rule, then **Draw solved path** traces the completed series.
+- In **Turning path**, each leg length represents a term at a common scale. Quarter turns only separate terms. In **Series graph**, the robot travels between term heights with equally spaced term positions. Labels show actual series values, not drawing-step distances.
+- **Stop path** keeps the partial travelled route. Changing questions clears the trial and explanation. Switching tabs preserves the code editor draft.
+
+This practice mode uses the shared animated robot and auto-fit camera. It does not connect to hardware or store assessment results. Question levels follow the supplied practice grouping.
+
+```sh
+node scripts/test_wizbot_number_series.js
+```
+
+The series tests independently reconstruct all given and missing terms, check all four candidate routes per question, and verify that unanswered previews stop at the blank.

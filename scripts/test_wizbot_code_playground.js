@@ -13,8 +13,16 @@ for(const match of html.matchAll(/<script(?: id="wizbot-code-language")?>([\s\S]
 async function run(source,input=7,extra={}){const output=[],trace=[],moves=[],travel=[];const result=await engine.run(source,{input,onPrint:text=>output.push(text),onTrace:event=>trace.push(event),onMove:(command,args)=>{moves.push(command);travel.push({command,args:[...args]});return true;},yieldControl:async()=>{},...extra});return {output,trace,moves,travel,result};}
 const example=id=>engine.examples.find(item=>item.id===id).code;
 (async()=>{
- for(const item of engine.examples){const result=await run(item.code,item.input);assert.ok(result.travel.some(move=>['F','B','AL','AR','WL','WR'].includes(move.command)),item.id+' must make the robot travel.');}
- assert.equal(engine.examples.length,9);
+ for(const item of engine.examples){const result=await run(item.code,item.input);assert.ok(result.travel.some(move=>['F','B','AL','AR','WL','WR','P'].includes(move.command)),item.id+' must make the robot travel.');}
+ assert.equal(engine.examples.length,50);
+ assert.equal(new Set(engine.examples.map(item=>item.id)).size,50);
+ for(let level=1;level<=10;level++){
+  const items=engine.examples.filter(item=>!item.favourite&&item.classes.includes(level));
+  assert.ok(items.length>=4,'Class '+level+' needs a varied set of new paths.');
+  assert.ok(items.some(item=>item.subject==='math'));
+  assert.ok(items.some(item=>item.subject==='physics'));
+ }
+ for(const item of engine.examples)assert.ok(item.concept&&item.challenge&&item.topic&&item.classes.length);
  const fib=[1,1,2,3,5,8,13,21];
  for(const id of ['fibonacci-spiral','fibonacci-steps']){
   const result=await run(example(id),8);
@@ -37,11 +45,36 @@ const example=id=>engine.examples.find(item=>item.id===id).code;
  // Test geometry independently of the DOM and animation, including complete loops.
  function route(travel,mode='draw'){
   let pose={x:300,y:300,a:0},distance=0;
-  for(const move of travel){const c=move.command;if(c==='A')continue;if(['L','R','L45','R45','L30','R30'].includes(c)){pose.a+=(c.startsWith('L')?-1:1)*(c.includes('45')?45:c.includes('30')?30:90);continue;}
+  for(const move of travel){const c=move.command;if(c==='A')continue;if(c==='T'){pose.a+=move.args[0];continue;}if(['L','R','L45','R45','L30','R30'].includes(c)){pose.a+=(c.startsWith('L')?-1:1)*(c.includes('45')?45:c.includes('30')?30:90);continue;}
    const path=engine.motion(pose,c,move.args,mode);const first=path.point(0);assert.ok(Math.hypot(first.x-pose.x,first.y-pose.y)<1e-8,'Travel segments must join without a jump.');distance+=path.distance;pose=path.point(1);
   }return {pose,distance};
  }
- for(const id of ['square','rectangle','growing-squares']){const result=route((await run(example(id),3)).travel);assert.ok(Math.hypot(result.pose.x-300,result.pose.y-300)<1e-8,id+' should return to its starting corner.');}
+ for(const id of ['square','rectangle','growing-squares','c3-perimeter','c3-symmetry','c4-area','c4-pinwheel','c4-circle','c5-flower','c5-scale','c5-map','c6-hexagon','c7-triangle','c8-polygon','c8-pressure','c9-coordinate','c10-trig','c10-circuit']){const result=route((await run(example(id),3)).travel);assert.ok(Math.hypot(result.pose.x-300,result.pose.y-300)<1e-8,id+' should return to its starting corner.');}
+ // Independently check concept-specific geometry, not just successful execution.
+ const pathFor=async(id,input)=>route((await run(example(id),input)).travel);
+ const near=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-7,`${actual} != ${expected}`);
+ near((await pathFor('c1-add',3)).distance/25,5);
+ const subtraction=await pathFor('c2-subtract',6);near(subtraction.distance/25,8);near((300-subtraction.pose.y)/25,4);
+ near((await pathFor('c3-array',4)).distance/25,14);
+ near((await pathFor('c4-half-circle',3)).distance/25,3*Math.PI);
+ near((await pathFor('c5-scale',3)).distance/25,30);
+ near((await pathFor('c6-hexagon',3)).distance/25,18);
+ near((await pathFor('c6-ratio',2)).distance/25,18);
+ near((await pathFor('c6-reflection',3)).distance/25,6*Math.SQRT2);
+ near((await pathFor('c7-triangle',3)).distance/25,9);
+ const uniform=await pathFor('c7-uniform-graph',2);near((uniform.pose.x-300)/25,5);near((300-uniform.pose.y)/25,10);
+ near((await pathFor('c8-odd-squares',5)).distance/25,25);
+ const displacement=await pathFor('c9-displacement',4);near(displacement.distance/25,7);near(Math.hypot(displacement.pose.x-300,displacement.pose.y-300)/25,5);
+ const acceleration=await pathFor('c9-acceleration',1);near((acceleration.pose.x-300)/25,6);near((300-acceleration.pose.y)/25,18);
+ near((await pathFor('c10-ap',2)).distance/25,36);
+ near((await pathFor('c10-trig',4)).distance/25,12);
+ const slab=(await run(example('c10-slab'),2)).travel.map(move=>move.args);
+ near(slab[1][0]-slab[0][0],.5345224838*2);near(slab[2][0]-slab[1][0],2);near(slab[2][1]-slab[1][1],-2);
+ assert.ok(Math.abs((Math.SQRT1_2)/(.5345224838/Math.hypot(1,.5345224838))-1.5)<1e-9,'Refraction must agree with the stated refractive index.');
+ near((await pathFor('c10-field',3)).distance/25,3+12*Math.PI);
+ near((await pathFor('c10-circuit',4)).distance/25,12);
+ assert.deepEqual((await run('moveTo(3, 4); turn(-45);')).moves,['P','T']);
+ const waypoint=engine.motion({x:300,y:300,a:0},'P',[3,4],'draw');near(waypoint.distance/25,5);near(waypoint.point(1).x,375);near(waypoint.point(1).y,200);
  const spiral=route((await run(example('fibonacci-spiral'),8)).travel);
  assert.ok(Math.abs(spiral.distance/25-fib.reduce((a,b)=>a+b)*Math.PI/2)<1e-8);
  assert.equal(spiral.pose.a,720);
@@ -72,6 +105,10 @@ const example=id=>engine.examples.find(item=>item.id===id).code;
   ['forward(1001);',/Movement length/],
   ['forward(1,2);',/at most one/],
   ['right(45);',/no arguments/],
+  ['turn(361);',/Turn angle/],
+  ['turn();',/requires 1/],
+  ['moveTo(1);',/requires 2/],
+  ['moveTo(1001,0);',/Coordinates/],
   ['let x = 1;\nif (x > 0) { print(x);',/Line 2.*Close this block/],
   ['print('+ '('.repeat(100)+'1'+')'.repeat(100)+');',/nested/]
  ])await assert.rejects(()=>run(source),message,source.slice(0,50));
@@ -79,5 +116,5 @@ const example=id=>engine.examples.find(item=>item.id===id).code;
  await assert.rejects(()=>run('while (true) {}',0,{shouldStop:()=>yields>=2,yieldControl:async()=>{yields++;}}),/Stopped/);
  assert.equal(yields,2,'Empty infinite loops must yield and permit cancellation.');
  await assert.rejects(()=>run('forward();',0,{onMove:()=>false}),/board edge/);
- console.log('Verified nine robot-travel patterns, Fibonacci radii, joined arcs, closed shapes, conditional turns, scope, limits, cancellation and syntax errors.');
+ console.log('Verified 50 robot paths across Classes 1–10, concept geometry, graph coordinates, refraction, Fibonacci radii, scope, limits, cancellation and syntax errors.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
