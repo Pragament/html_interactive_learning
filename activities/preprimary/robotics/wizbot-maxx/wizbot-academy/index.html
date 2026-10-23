@@ -13,7 +13,7 @@
   "topic": "Wizbot Maxx",
   "subtopic": null,
   "title": "Wizbot Academy — Interactive Robotics Course",
-  "description": "Learn Wizbot setup, button coding, movement modes, angles, loops, line following, block coding and calibration through 17 lessons and five story-based practice activities, quizzes and an interactive simulator.",
+  "description": "Learn Wizbot setup, button coding, movement modes, angles, loops, line following, block coding and calibration through 17 lessons and five story-based practice activities, quizzes, an interactive simulator, and a bounded code playground with if/else, repeat, for and while loops plus robot-travel patterns including Fibonacci spirals, zigzags and conditional turns.",
   "activityType": "guided-practice",
   "status": "active"
 }
@@ -46,6 +46,10 @@
 .curriculum-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.curriculum-card{background:#f4f8f3;border-radius:14px;padding:18px}.curriculum-card h3{font-size:18px}.curriculum-card p{font-size:14px}.curriculum-card button{font-size:13px;margin-top:8px}
 .learning-details{border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0;background:#fafbf7}.learning-details h3{font-size:16px}.learning-details p,.learning-details li{font-size:14px}.learning-details ul{padding-left:20px}.learning-details details{margin-top:12px}.learning-details summary{cursor:pointer;font-weight:700}.number-scroll{overflow-x:auto}.number-track{grid-template-columns:repeat(var(--number-count,11),minmax(30px,1fr));margin:16px 0}
 @media(max-width:800px){.curriculum-cards{grid-template-columns:1fr}.curriculum-guide{padding:20px}}
+@media(min-width:801px){.lab-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.lab-layout .board-wrap{position:sticky;top:16px;align-self:start}}.controls{min-width:0}[hidden]{display:none!important}.playground-tabs{display:flex;gap:8px;margin-bottom:18px}.playground-tabs button{flex:1;font-size:13px}.playground-tabs [aria-pressed=true]{background:var(--ink);color:white;border-color:var(--ink)}.code-example-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin:16px 0}.code-example-controls label:first-child{flex:1 1 220px}.code-example-controls input{width:140px}.code-example-controls select{width:100%}#code-source{display:block;width:100%;min-height:280px;max-height:650px;resize:vertical;padding:16px;margin:8px 0;border:1px solid #b6cdbf;border-radius:12px;background:#173e38;color:#f1f8ef;font:14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2;white-space:pre;overflow:auto}#code-status{font-size:14px;min-height:28px;overflow-wrap:anywhere}.code-help{font-size:13px;border-top:1px solid var(--line);padding-top:12px}.code-help summary{font-weight:700;cursor:pointer}.code-help dt{font-weight:750;margin-top:14px}.code-help dd{margin:4px 0;overflow-wrap:anywhere}.code-results{border-top:1px solid var(--line);padding-top:22px;margin-top:22px}.code-results summary{cursor:pointer;font-weight:700}.code-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.code-results h3{font-size:17px}.code-results .hint{margin-top:0}.code-results ol{padding:14px 14px 14px 38px;border:1px solid var(--line);border-radius:12px;background:#f7f9f2;min-height:90px;max-height:260px;overflow:auto;overflow-wrap:anywhere;font:13px/1.8 ui-monospace,Consolas,monospace}.code-results ol:empty:before{content:attr(data-empty);color:var(--muted)}.code-results pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;background:#f7f9f2;padding:14px;border-radius:12px}.code-results section{min-width:0}.code-results code{overflow-wrap:anywhere}@media(max-width:800px){.code-result-grid{grid-template-columns:1fr}}@media(max-width:520px){#code-source{font-size:13px;padding:12px}.playground-tabs button{padding:10px 8px}}
+
+
+.path-summary{padding:0 18px;font-size:12px;color:var(--muted)}.path-label-control{display:flex;gap:8px;align-items:center;padding:0 18px 16px}.path-label-control input{margin:0;display:inline-block}#path-labels{pointer-events:none}
 </style>
 
 </head>
@@ -65,10 +69,149 @@
 <div id="curriculum-cards" class="curriculum-cards"></div>
 <p class="source-note">Use familiar words in your teaching language, physical cards and spoken directions. Browser exercises practise planning; the real robot follows button sequences on your own mat.</p>
 </section>
-<section class="lab" id="lab"><div class="section-heading"><div><p class="eyebrow">TRY YOUR IDEAS</p><h2>Code playground</h2><p>A browser practice model. It does not connect to a real robot; distances and curves are illustrative.</p></div><label>Movement mode<select id="mode"><option value="grid">Grid · 90° turns</option><option value="draw">Draw · angles & curves</option></select></label></div><div class="lab-layout"><div class="board-wrap"><svg id="board" viewBox="0 0 600 600" role="img" aria-label="Robot practice grid and programmed path"><defs><pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="#c7d8d3"/></pattern></defs><rect width="600" height="600" fill="url(#dots)"/><g id="goal"></g><path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round"/><g id="bot"><circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/><path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/><circle cx="-6" cy="-4" r="2"/><circle cx="6" cy="-4" r="2"/></g></svg><p id="sim-status" role="status" aria-live="polite">Facing up. Add moves, then press GO.</p></div><div class="controls"><h3>Your commands</h3><div id="command-buttons" class="command-buttons"></div><div class="repeat-control"><label>Repeat sequence <input id="repeat-count" type="number" min="1" max="8" value="1"></label><span>times</span></div><ol id="queue" class="queue" aria-label="Program sequence"></ol><div class="run-buttons"><button id="clear">CLEAR</button><button id="undo">Undo</button><button id="go" class="primary">GO ▶</button><button id="stop">Stop</button></div><p class="hint">Turns change direction. Forward and reverse change position. CLEAR removes your program and resets the robot.</p></div></div></section>
+<section class="lab" id="lab"><div class="section-heading"><div><p class="eyebrow">TRY YOUR IDEAS</p><h2>Code playground</h2><p>A browser practice model. It does not connect to a real robot; distances and curves are illustrative.</p></div><label>Movement mode<select id="mode"><option value="grid">Grid · 90° turns</option><option value="draw">Draw · angles & curves</option></select></label></div><div class="lab-layout"><div class="board-wrap"><svg id="board" viewBox="0 0 600 600" role="img" aria-label="Robot practice grid and programmed path"><defs><pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="#c7d8d3"/></pattern></defs><rect id="board-background" width="600" height="600" fill="url(#dots)"/><g id="goal"></g><path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/><g id="path-start"></g><g id="path-labels" aria-hidden="true"></g><g id="bot"><circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/><path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/><circle cx="-6" cy="-4" r="2"/><circle cx="6" cy="-4" r="2"/></g></svg><p id="sim-status" role="status" aria-live="polite">Facing up. Add moves, then press GO.</p><p id="path-summary" class="path-summary"></p><label class="path-label-control"><input id="path-label-toggle" type="checkbox" checked> Show segment lengths / arc radii</label></div><div class="controls"><div class="playground-tabs" role="group" aria-label="Choose a programming style"><button type="button" id="button-mode" aria-pressed="true">Move buttons</button><button type="button" id="code-mode" aria-pressed="false">Code &amp; patterns</button></div>
+<section id="text-program" hidden aria-label="Code editor">
+<h3>Code a pattern. Follow its trail.</h3><p class="hint">A small practice language with variables, <code>if / else</code>, <code>repeat</code>, <code>for</code> and <code>while</code>. Every example moves the robot and leaves a travelled path. This runs only in your browser.</p>
+<div class="code-example-controls"><label>Choose an example<select id="code-example"></select></label><button type="button" id="load-code-example">Load example</button><label>Pattern size / repetitions<input id="code-input" type="number" min="0" max="1000" step="1" value="8"></label></div>
+<p id="code-example-hint" class="hint"></p>
+<label for="code-source">Your program</label><textarea id="code-source" rows="15" maxlength="12000" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="code-syntax-hint"></textarea>
+<p id="code-syntax-hint" class="hint">Use <code>;</code> after declarations, assignments and commands. Put blocks inside <code>{ }</code>. <code>input</code> reads the number above. Names are case-sensitive.</p>
+<div class="run-buttons"><button type="button" id="run-code" class="primary">Run code ▶</button><button type="button" id="stop-code" disabled>Stop code</button></div><p id="code-status" role="status" aria-live="polite">Load an example, make a prediction, then run it.</p>
+<details class="code-help"><summary>Language and movement reference</summary><dl><dt>Decisions</dt><dd><code>if (input % 2 == 0) { print("even"); } else { print("odd"); }</code></dd><dt>Loops</dt><dd><code>repeat (4) { forward(); right(); }</code><br><code>for (let i = 1; i &lt;= 5; i++) { print(i); }</code><br><code>let n = 3; while (n &gt; 0) { print(n); n--; }</code></dd><dt>Variables and operators</dt><dd><code>let total = 0; total = total + 1;</code><br><code>+ - * / %</code> calculate; <code>== != &lt; &lt;= &gt; &gt;=</code> compare; <code>&amp;&amp; || !</code> combine conditions. <code>+= -= ++ --</code> update numbers. <code>true</code> and <code>false</code> are Boolean values. <code>//</code> starts a comment. Variables declared in a block stay in that block; use different names for nested loops.</dd><dt>Robot commands</dt><dd><code>forward(steps); reverse(steps); left(); right(); action();</code><br>In Draw mode: <code>left45(); right45(); left30(); right30(); arcLeft(radius); arcRight(radius); wideLeft(); wideRight();</code></dd><dt>Run limits</dt><dd>10,000 execution steps, 200 printed lines and 200 movement commands. A limit stops the run and keeps the travelled path. Code paths auto-fit the board; the button builder retains its fixed edge. Stop code interrupts loops. Numbers must stay within ±1,000,000,000,000. Lengths and radii are 0–1000 step units, excluding zero. The default is one step. This is a teaching language, not a full JavaScript editor.</dd></dl></details>
+</section><div id="button-program">
+<h3>Your commands</h3><div id="command-buttons" class="command-buttons"></div><div class="repeat-control"><label>Repeat sequence <input id="repeat-count" type="number" min="1" max="8" value="1"></label><span>times</span></div><ol id="queue" class="queue" aria-label="Program sequence"></ol><div class="run-buttons"><button id="clear">CLEAR</button><button id="undo">Undo</button><button id="go" class="primary">GO ▶</button><button id="stop">Stop</button></div><p class="hint">Turns change direction. Forward and reverse change position. CLEAR removes your program and resets the robot.</p></div></div></div><details id="code-results" class="code-results" hidden><summary>Inspect decisions, variables &amp; journey notes</summary><div class="code-result-grid"><section><h3>Journey notes (optional)</h3><p class="hint">Results from <code>print(...)</code>. The robot’s travelled path is shown on the board. Use print() for optional journey notes.</p><ol id="code-output" aria-label="Printed program output" data-empty="Watch the travelled path on the board above."></ol><h3>Final variables</h3><pre id="code-variables">Variables appear after a successful run.</pre></section><section><h3>Execution trace</h3><p class="hint">The latest 80 decisions, loop checks and variable changes. Follow why a branch ran.</p><ol id="code-trace" aria-label="Program execution trace" data-empty="Run a program to follow its decisions."></ol></section></div></details></section>
 <section class="reference" id="advanced"><div class="section-heading"><div><p class="eyebrow">KEEP EXPLORING</p><h2>Command reference</h2></div><label>Find a command<input id="search" type="search" placeholder="Try arc, battery, calibration…"></label></div><div id="reference-list"></div><p class="source-note">Robot commands are based on the supplied Wizbot Maxx manual and command guide. The practice missions use newly written stories and layouts to teach number-line subtraction, width comparison, shapes, route planning, area and cost. Level guidance also draws on the supplied Classroom Learning Objectives and Kindergarten Curriculum brochures. All suggested stories, task wording and online layouts are independently written. The simulator is a teaching model; check results on your own robot.</p></section>
 </main><footer>Wizbot Academy · Plan → Code → Observe → Improve</footer>
 <noscript><p class="noscript">Enable JavaScript to use the lessons and playground. The <a href="a4sheet.html">printable quick-start sheet</a> is available without JavaScript.</p></noscript>
+<script id="wizbot-code-language">
+/* A small teaching language. Student text is parsed, never evaluated as JavaScript. */
+(() => {
+  'use strict';
+  const LIMITS = {source:12000,tokens:4000,depth:64,steps:10000,output:200,moves:200,value:1e12};
+  const MOVES = {forward:'F',reverse:'B',left:'L',right:'R',action:'A',left45:'L45',right45:'R45',left30:'L30',right30:'R30',arcLeft:'AL',arcRight:'AR',wideLeft:'WL',wideRight:'WR'};
+  class CodeError extends Error {constructor(message,line){super((line?'Line '+line+': ':'')+message);this.name='CodeError';this.line=line;}}
+  function tokenize(source){
+    if(source.length>LIMITS.source)throw new CodeError('Keep your program under '+LIMITS.source+' characters.');
+    const tokens=[];let at=0,line=1;
+    const add=(type,value)=>{tokens.push({type,value,line});if(tokens.length>LIMITS.tokens)throw new CodeError('This program has too many tokens.',line);};
+    while(at<source.length){
+      const c=source[at];if(/\s/.test(c)){if(c==='\n')line++;at++;continue;}
+      if(source.slice(at,at+2)==='//'){while(at<source.length&&source[at]!=='\n')at++;continue;}
+      if(c==='"'||c==="'"){
+        const quote=c,start=line;let value='',closed=false;at++;
+        while(at<source.length){let ch=source[at++];if(ch===quote){closed=true;break;}if(ch==='\n')throw new CodeError('Close the text quote before starting a new line.',start);if(ch==='\\'){ch=source[at++];const escapes={n:'\n',t:'\t','\\':'\\','"':'"',"'":"'"};if(!Object.hasOwn(escapes,ch))throw new CodeError('Unsupported text escape.',line);ch=escapes[ch];}value+=ch;}
+        if(!closed)throw new CodeError('Close the text quote.',start);add('string',value);continue;
+      }
+      const number=source.slice(at).match(/^\d+(?:\.\d+)?/);if(number){add('number',Number(number[0]));at+=number[0].length;continue;}
+      const name=source.slice(at).match(/^[A-Za-z_][A-Za-z_0-9]*/);if(name){add('name',name[0]);at+=name[0].length;continue;}
+      const op=['===','!==','<=','>=','==','!=','&&','||','++','--','+=','-='].find(value=>source.startsWith(value,at));if(op){add('symbol',op);at+=op.length;continue;}
+      if('{}();,+-*/%<>=!'.includes(c)){add('symbol',c);at++;continue;}
+      throw new CodeError('Unexpected character '+JSON.stringify(c)+'. Use the commands in the reference.',line);
+    }
+    tokens.push({type:'end',value:'<end>',line});return tokens;
+  }
+  function parse(source){
+    const tokens=tokenize(source);let pos=0,depth=0;
+    const peek=()=>tokens[pos],is=value=>peek().type!=='string'&&peek().value===value;
+    const take=()=>tokens[pos++];
+    const expect=value=>{if(!is(value))throw new CodeError('Expected “'+value+'”, found “'+peek().value+'”.',peek().line);return take();};
+    function name(){const t=take();if(t.type!=='name'||['let','if','else','while','for','repeat','true','false','print',...Object.keys(MOVES)].includes(t.value))throw new CodeError('Choose a variable name such as number, count or total.',t.line);return t;}
+    function nested(fn){if(++depth>LIMITS.depth)throw new CodeError('Too many nested brackets or blocks.',peek().line);try{return fn();}finally{depth--;}}
+    const precedence={'||':1,'&&':2,'==':3,'!=':3,'===':3,'!==':3,'<':4,'>':4,'<=':4,'>=':4,'+':5,'-':5,'*':6,'/':6,'%':6};
+    function expression(min=1){
+      let left=nested(()=>{const t=take();if(t.type==='number'||t.type==='string')return {kind:'literal',value:t.value,line:t.line};if(t.value==='true'||t.value==='false')return {kind:'literal',value:t.value==='true',line:t.line};if(t.value==='('){const node=expression();expect(')');return node;}if(['!','-','+'].includes(t.value))return {kind:'unary',op:t.value,value:expression(7),line:t.line};if(t.type==='name')return {kind:'variable',name:t.value,line:t.line};throw new CodeError('Expected a number, text, variable or condition.',t.line);});
+      while(peek().type==='symbol'&&precedence[peek().value]>=min){const op=take();left={kind:'binary',op:op.value,left,right:expression(precedence[op.value]+1),line:op.line};}return left;
+    }
+    function assignment(declare=false){
+      const token=name();if(!declare&&(is('++')||is('--'))){const op=take();return {kind:'assign',name:token.value,op:op.value,line:token.line};}
+      const op=take();if(!(declare?op.value==='=':['=','+=','-='].includes(op.value)))throw new CodeError('Use =, +=, -=, ++ or -- to update a variable.',op.line);
+      return {kind:declare?'let':'assign',name:token.value,op:op.value,value:expression(),line:token.line};
+    }
+    function block(){expect('{');return nested(()=>{const body=[];while(!is('}')){if(peek().type==='end')throw new CodeError('Close this block with }.',peek().line);body.push(statement());}take();return body;});}
+    function statement(){
+      const t=peek();
+      if(is('let')){take();const node=assignment(true);expect(';');return node;}
+      if(is('if')){take();expect('(');const test=expression();expect(')');const yes=block();let no=[];if(is('else')){take();no=is('if')?[nested(statement)]:block();}return {kind:'if',test,yes,no,line:t.line};}
+      if(is('repeat')||is('while')){take();expect('(');const test=expression();expect(')');return {kind:t.value,test,body:block(),line:t.line};}
+      if(is('for')){take();expect('(');const declare=is('let');if(declare)take();const init=assignment(declare);expect(';');const test=expression();expect(';');const update=assignment();expect(')');return {kind:'for',init,test,update,body:block(),line:t.line};}
+      if(t.type==='name'&&tokens[pos+1].value==='('){take();expect('(');const args=[];if(!is(')')){args.push(expression());while(is(',')){take();args.push(expression());}}expect(')');expect(';');if(t.value!=='print'&&!Object.hasOwn(MOVES,t.value))throw new CodeError('Unknown command '+t.value+'. Try print(), forward() or right().',t.line);if(t.value!=='print'&&args.length>(['forward','reverse','arcLeft','arcRight'].includes(t.value)?1:0))throw new CodeError(t.value+'() takes '+(['forward','reverse','arcLeft','arcRight'].includes(t.value)?'at most one length or radius':'no arguments')+'.',t.line);return {kind:'call',name:t.value,args,line:t.line};}
+      if(t.type==='name'){const node=assignment();expect(';');return node;}
+      throw new CodeError('Start with let, if, repeat, for, while, print or a movement command.',t.line);
+    }
+    const ast=[];while(peek().type!=='end')ast.push(statement());
+    // Bound expression trees too, including very long left-associated arithmetic.
+    const stack=ast.map(node=>[node,1]);while(stack.length){const [node,d]=stack.pop();if(d>LIMITS.depth)throw new CodeError('Simplify this deeply nested expression.',node.line);for(const value of Object.values(node)){if(Array.isArray(value))value.forEach(child=>{if(child&&typeof child==='object')stack.push([child,d+1]);});else if(value&&typeof value==='object')stack.push([value,d+1]);}}
+    return ast;
+  }
+  async function run(source,options={}){
+    const ast=parse(source),vars=new Map([['input',options.input??7]]);let steps=0,output=0,moves=0,turns=0;
+    const trace=event=>options.onTrace?.(event);
+    function spend(line){if(options.shouldStop?.())throw new CodeError('Stopped.',line);if(++steps>LIMITS.steps)throw new CodeError('Run limit reached ('+LIMITS.steps+' steps). Check whether your loop condition can become false.',line);}
+    function bounded(value,line){if(typeof value==='number'&&(!Number.isFinite(value)||Math.abs(value)>LIMITS.value))throw new CodeError('Number is too large or not finite. Use smaller inputs (maximum magnitude '+LIMITS.value+').',line);if(typeof value==='string'&&value.length>500)throw new CodeError('Keep each text value under 500 characters.',line);return value;}
+    function numeric(value,line){if(typeof value!=='number')throw new CodeError('This calculation needs numbers.',line);return value;}
+    const read=(name,line)=>{if(!vars.has(name))throw new CodeError('Define '+name+' with let before using it.',line);return vars.get(name);};
+    function evaluate(node){
+      spend(node.line);if(node.kind==='literal')return bounded(node.value,node.line);if(node.kind==='variable')return read(node.name,node.line);
+      if(node.kind==='unary'){const value=evaluate(node.value);return node.op==='!'?!value:bounded(node.op==='-'?-numeric(value,node.line):numeric(value,node.line),node.line);}
+      const a=evaluate(node.left);if(node.op==='&&')return a&&evaluate(node.right);if(node.op==='||')return a||evaluate(node.right);const b=evaluate(node.right);
+      if(node.op==='=='||node.op==='===')return a===b;if(node.op==='!='||node.op==='!==')return a!==b;
+      if(node.op==='+'&&(typeof a==='string'||typeof b==='string'))return bounded(String(a)+String(b),node.line);
+      numeric(a,node.line);numeric(b,node.line);let value;
+      switch(node.op){case '+':value=a+b;break;case '-':value=a-b;break;case '*':value=a*b;break;case '/':if(b===0)throw new CodeError('Cannot divide by zero.',node.line);value=a/b;break;case '%':if(b===0)throw new CodeError('Cannot find a remainder with divisor zero.',node.line);value=a%b;break;case '<':return a<b;case '>':return a>b;case '<=':return a<=b;case '>=':return a>=b;}
+      return bounded(value,node.line);
+    }
+    async function checkpoint(line){spend(line);if(++turns%40===0){await (options.yieldControl?options.yieldControl():new Promise(resolve=>setTimeout(resolve,0)));if(options.shouldStop?.())throw new CodeError('Stopped.',line);}}
+    async function execute(node){
+      await checkpoint(node.line);
+      if(node.kind==='let'||node.kind==='assign'){
+        if(node.name==='input')throw new CodeError('input is read-only. Copy it into your own variable.',node.line);
+        if(node.kind==='let'&&vars.has(node.name))throw new CodeError(node.name+' is already defined in this block.',node.line);
+        let value;if(node.kind==='let'||node.op==='='){if(node.kind==='assign')read(node.name,node.line);value=evaluate(node.value);}else{const old=numeric(read(node.name,node.line),node.line);value=old+(node.op==='++'?1:node.op==='--'?-1:(node.op==='+='?1:-1)*numeric(evaluate(node.value),node.line));}
+        vars.set(node.name,bounded(value,node.line));trace({line:node.line,text:node.name+' = '+value});return;
+      }
+      if(node.kind==='call'){
+        if(node.name==='print'){if(++output>LIMITS.output)throw new CodeError('Output limit reached ('+LIMITS.output+' lines). Try a smaller loop.',node.line);const text=node.args.map(evaluate).join(' ');if(text.length>1000)throw new CodeError('Print fewer values on one line.',node.line);options.onPrint?.(text);}
+        else {if(++moves>LIMITS.moves)throw new CodeError('Movement limit reached. Use a shorter route.',node.line);const args=node.args.map(evaluate);if(args.some(value=>typeof value!=='number'||!Number.isFinite(value)||value<=0||value>1000))throw new CodeError('Movement length or radius must be greater than 0 and at most 1000 step units.',node.line);trace({line:node.line,text:node.name+'('+args.join(', ')+')'});if(await options.onMove?.(MOVES[node.name],args)===false)throw new CodeError('Movement stopped at the board edge. Shorten the route or turn.',node.line);}return;
+      }
+      if(node.kind==='if'){const yes=Boolean(evaluate(node.test));trace({line:node.line,text:'if → '+yes+'; '+(yes?'then':'else')+' branch'});await block(yes?node.yes:node.no);return;}
+      if(node.kind==='repeat'){const count=evaluate(node.test);if(!Number.isInteger(count)||count<0||count>1000)throw new CodeError('repeat count must be a whole number from 0 to 1000.',node.line);for(let i=0;i<count;i++){await checkpoint(node.line);trace({line:node.line,text:'repeat '+(i+1)+' of '+count});await block(node.body);}return;}
+      if(node.kind==='while'){while(true){await checkpoint(node.line);const test=Boolean(evaluate(node.test));trace({line:node.line,text:'while → '+test});if(!test)break;await block(node.body);}return;}
+      if(node.kind==='for'){
+        const previous=new Map(vars);await execute(node.init);const local=node.init.kind==='let'?node.init.name:null;
+        try{while(true){await checkpoint(node.line);const test=Boolean(evaluate(node.test));trace({line:node.line,text:'for condition → '+test});if(!test)break;await block(node.body);await execute(node.update);}}
+        finally{if(local){if(previous.has(local))vars.set(local,previous.get(local));else vars.delete(local);}}return;
+      }
+    }
+    async function block(nodes){const existing=new Set(vars.keys());try{for(const node of nodes)await execute(node);}finally{for(const key of vars.keys())if(!existing.has(key))vars.delete(key);}}
+    // Top-level declarations remain available in the final variables panel.
+    for(const node of ast)await execute(node);
+    return {variables:Object.fromEntries(vars),steps,output,moves};
+  }
+  const examples=[
+    {id:'fibonacci-spiral',title:'Fibonacci spiral · curved path',input:8,mode:'draw',hint:'Trace quarter-circle arcs with radii 1, 1, 2, 3, 5, 8… step units. Input chooses 1–12 arcs. This joined-arc Fibonacci spiral is an approximation, not an exact golden spiral.',code:`let a = 1;\nlet b = 1;\nif (input >= 1 && input <= 12) {\n  for (let arc = 0; arc < input; arc++) {\n    arcRight(a);\n    let next = a + b;\n    a = b;\n    b = next;\n  }\n} else {\n  print("Choose 1 to 12 arcs.");\n}`},
+    {id:'fibonacci-steps',title:'Fibonacci spiral · straight sides',input:8,mode:'draw',hint:'Travel 1, 1, 2, 3, 5… steps, turning right after each side. Compare the straight-sided path with the curved Fibonacci spiral. Choose 1–12 sides.',code:`let a = 1;\nlet b = 1;\nif (input >= 1 && input <= 12) {\n  for (let side = 0; side < input; side++) {\n    forward(a);\n    right();\n    let next = a + b;\n    a = b;\n    b = next;\n  }\n} else {\n  print("Choose 1 to 12 sides.");\n}`},
+    {id:'square-spiral',title:'Growing square spiral · for',input:10,mode:'draw',hint:'Each new side is one step longer: 1, 2, 3, 4… . Turn right after every side and watch the spiral expand. Try 4–20 sides.',code:`for (let length = 1; length <= input; length++) {\n  forward(length);\n  right();\n}`},
+    {id:'square',title:'Square route · repeat',input:3,mode:'grid',hint:'Input is the length of each side. Repeat forward and right four times to close the square. Try 1–8 steps per side.',code:`repeat (4) {\n  forward(input);\n  right();\n}`},
+    {id:'rectangle',title:'Rectangle route · repeat',input:4,mode:'grid',hint:'Input is the long side. A short side is one step. Two repeats draw all four sides and return to the start.',code:`repeat (2) {\n  forward(input);\n  right();\n  forward(1);\n  right();\n}`},
+    {id:'even-odd',title:'Even/odd zigzag · if / else',input:8,mode:'draw',hint:'Move one step, then test the segment number. Odd segments turn right; even segments turn left. The decisions create a staircase-shaped zigzag.',code:`for (let segment = 1; segment <= input; segment++) {\n  forward(1);\n  if (segment % 2 == 0) {\n    left();\n  } else {\n    right();\n  }\n}`},
+    {id:'prime-composite',title:'Prime/composite turns · decisions',input:12,mode:'draw',hint:'For each number from 2 to the input, move one step. Prime numbers turn right 45°; composite numbers turn left 45°. Try 2–30 and follow each decision in the trace.',code:`if (input >= 2 && input <= 30) {\n  for (let number = 2; number <= input; number++) {\n    let divisor = 2;\n    let isPrime = true;\n    while (divisor * divisor <= number && isPrime) {\n      if (number % divisor == 0) {\n        isPrime = false;\n      }\n      divisor++;\n    }\n    forward(1);\n    if (isPrime) {\n      right45();\n    } else {\n      left45();\n    }\n  }\n} else {\n  print("Choose a last number from 2 to 30.");\n}`},
+    {id:'staircase',title:'Shrinking staircase · while',input:5,mode:'draw',hint:'Travel input steps, go one step to the right, and repeat with a shorter forward run. The while condition stops when no forward steps remain.',code:`let steps = input;\nwhile (steps > 0) {\n  forward(steps);\n  right();\n  forward(1);\n  left();\n  steps--;\n}`},
+    {id:'growing-squares',title:'Growing squares · nested loops',input:4,mode:'draw',hint:'The outer loop chooses the side length. The inner repeat draws four sides. All squares share the same starting corner.',code:`for (let size = 1; size <= input; size++) {\n  repeat (4) {\n    forward(size);\n    right();\n  }\n}`}
+  ];
+  // Shared, pure geometry: one unit is one step in the selected movement mode.
+  function motion(start,command,args=[],mode='draw'){
+    const unit=mode==='grid'?50:25, radians=a=>a*Math.PI/180;
+    const arc=['AL','AR','WL','WR'].includes(command),sign=command.endsWith('L')?-1:1;
+    const amount=args[0]??(command.startsWith('W')?2:1),radius=amount*unit;
+    const cx=start.x+sign*radius*Math.cos(radians(start.a)),cy=start.y+sign*radius*Math.sin(radians(start.a));
+    return {arc,radius,amount,distance:arc?Math.PI*radius/2:amount*unit,
+      point(t){const a=start.a+(arc?sign*90*t:0);if(arc)return {x:cx-sign*radius*Math.cos(radians(a)),y:cy-sign*radius*Math.sin(radians(a)),a};const distance=(command==='B'?-1:1)*amount*unit*t;return {x:start.x+Math.sin(radians(a))*distance,y:start.y-Math.cos(radians(a))*distance,a};}
+    };
+  }
+  globalThis.WizbotCode={parse,run,examples,motion,LIMITS,CodeError};
+})();
+
+</script>
 <script>
 'use strict';
 const lessons = [
@@ -107,19 +250,114 @@ const commands={F:{label:'▲ Forward',mode:'both'},B:{label:'▼ Reverse',mode:
 let queue=[],running=false,runToken=0,pose={x:300,y:500,a:0},trail='',goal=null;
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function renderCommands(){$('command-buttons').innerHTML=Object.entries(commands).filter(([,c])=>c.mode==='both'||$('mode').value==='draw').map(([key,c])=>`<button data-command="${key}" ${running?'disabled':''}>${c.label}</button>`).join('');}
-function renderQueue(){$('queue').innerHTML=queue.length?queue.map(c=>`<li>${commands[c].label}</li>`).join(''):'<li class="empty">No moves yet. Add your first command.</li>';$('undo').disabled=running||!queue.length;$('go').disabled=running||!queue.length;$('mode').disabled=running;$('repeat-count').disabled=running;renderCommands();}
-function drawBot(){$('bot').setAttribute('transform',`translate(${pose.x} ${pose.y}) rotate(${pose.a})`);$('trail').setAttribute('d',trail);}
-function resetPose(){pose={x:300,y:500,a:0};trail='M300 500';drawBot();}
-function cancel(){runToken++;running=false;renderQueue();}
+function renderQueue(){$('queue').innerHTML=queue.length?queue.map(c=>`<li>${commands[c].label}</li>`).join(''):'<li class="empty">No moves yet. Add your first command.</li>';$('undo').disabled=running||!queue.length;$('go').disabled=running||!queue.length;$('mode').disabled=running;$('repeat-count').disabled=running;renderCommands();renderCodeControls();}
+let pathBounds={minX:300,maxX:300,minY:500,maxY:500},cameraScale=1,travelDistance=0,travelSegments=0,segmentMarks=[],pathStart={x:300,y:500};
+function fitTravelledPath(){
+ const span=Math.max(600,Math.max(pathBounds.maxX-pathBounds.minX,pathBounds.maxY-pathBounds.minY)/.8);
+ cameraScale=span/600;const half=.4*span;
+ const cx=Math.max(pathBounds.maxX-half,Math.min(300,pathBounds.minX+half));
+ const cy=Math.max(pathBounds.maxY-half,Math.min(300,pathBounds.minY+half));
+ const x=cx-span/2,y=cy-span/2;
+ const box=`${x} ${y} ${span} ${span}`;if($('board').getAttribute('viewBox')===box)return;
+ $('board').setAttribute('viewBox',box);
+ for(const [key,value] of Object.entries({x,y,width:span,height:span}))$('board-background').setAttribute(key,value);
+ const spacing=50*Math.pow(2,Math.ceil(Math.log2(cameraScale)));const dots=$('dots');dots.setAttribute('width',spacing);dots.setAttribute('height',spacing);const dot=dots.querySelector('circle');dot.setAttribute('cx',spacing/2);dot.setAttribute('cy',spacing/2);dot.setAttribute('r',2*cameraScale);
+ renderPathMarks();
+}
+function renderPathMarks(){
+ const scale=cameraScale;
+ $('path-start').innerHTML=`<circle cx="${pathStart.x}" cy="${pathStart.y}" r="${6*scale}" fill="#ffc968" stroke="#173e38" stroke-width="${2*scale}"/><text x="${pathStart.x+12*scale}" y="${pathStart.y+18*scale}" font-size="${12*scale}" fill="#173e38">Start</text>`;
+ const visible=[];
+ $('path-labels').innerHTML=$('path-label-toggle').checked?segmentMarks.slice(-40).reverse().filter(mark=>{if(visible.some(other=>Math.hypot(other.x-mark.x,other.y-mark.y)<45*scale))return false;visible.push(mark);return true;}).map(mark=>`<text x="${mark.x+8*scale}" y="${mark.y-8*scale}" font-size="${12*scale}" fill="#173e38" stroke="white" stroke-width="${4*scale}" paint-order="stroke">${mark.text}</text>`).join(''):'';
+}
+function renderPathSummary(){
+ const unit=$('mode').value==='grid'?50:25;
+ $('path-summary').textContent=`Travelled: ${travelSegments} segment${travelSegments===1?'':'s'} · ${(travelDistance/unit).toFixed(2)} step units. ${$('text-program').hidden?'Fixed practice board.':'Auto-fit keeps the travelled path visible. Arc labels show radius (r).'} The arrow marks the robot’s current position.`;
+}
+
+function drawBot(){$('bot').setAttribute('transform',`translate(${pose.x} ${pose.y}) rotate(${pose.a}) scale(${cameraScale})`);$('trail').setAttribute('d',trail);}
+function resetPose(forCode=false){pose={x:300,y:forCode?300:500,a:0};trail=`M${pose.x} ${pose.y}`;cameraScale=1;travelDistance=0;travelSegments=0;segmentMarks=[];pathStart={x:pose.x,y:pose.y};pathBounds={minX:pose.x,maxX:pose.x,minY:pose.y,maxY:pose.y};$('board').setAttribute('viewBox','0 0 600 600');for(const [key,value] of Object.entries({x:0,y:0,width:600,height:600}))$('board-background').setAttribute(key,value);$('dots').setAttribute('width',50);$('dots').setAttribute('height',50);const dot=$('dots').querySelector('circle');dot.setAttribute('cx',25);dot.setAttribute('cy',25);dot.setAttribute('r',2);renderPathMarks();drawBot();renderPathSummary();}
+$('path-label-toggle').addEventListener('change',renderPathMarks);
+function cancel(){runToken++;running=false;if(codeRunning){codeRunning=false;$('code-status').textContent='Stopped. Run code restarts your program from the beginning.';$('code-variables').textContent='Stopped before completion. See the trace for the latest values.';}renderQueue();}
 function renderGoal(){$('goal').innerHTML=goal?`<text x="${goal[0]}" y="${goal[1]+12}" text-anchor="middle" font-size="34" fill="#d79925">★</text>`:'';}
-function loadDemo(l){cancel();queue=[...l.demo];$('mode').value=l.mode;$('repeat-count').value=l.repeat||1;goal=l.goal||null;renderGoal();resetPose();renderQueue();$('sim-status').textContent='Example loaded. Predict the path, then press GO.';$('lab').scrollIntoView();$('go').focus({preventScroll:true});}
+function loadDemo(l){cancel();showProgramMode('buttons');queue=[...l.demo];$('mode').value=l.mode;$('repeat-count').value=l.repeat||1;goal=l.goal||null;renderGoal();resetPose();renderQueue();$('sim-status').textContent='Example loaded. Predict the path, then press GO.';$('lab').scrollIntoView();$('go').focus({preventScroll:true});}
 $('command-buttons').addEventListener('click',e=>{const b=e.target.closest('[data-command]');if(b&&!running){if(queue.length>=64){$('sim-status').textContent='This practice program is limited to 64 commands.';return;}queue.push(b.dataset.command);renderQueue();}});
 $('clear').addEventListener('click',()=>{cancel();queue=[];goal=null;renderGoal();resetPose();renderQueue();$('sim-status').textContent='Cleared. Facing up. Add moves, then press GO.';});
 $('undo').addEventListener('click',()=>{if(!running){queue.pop();renderQueue();}});
 $('stop').addEventListener('click',()=>{cancel();$('sim-status').textContent='Stopped. GO restarts the stored sequence from the starting point.';});
 $('mode').addEventListener('change',()=>{cancel();queue=[];goal=null;renderGoal();resetPose();renderQueue();$('sim-status').textContent='Mode changed. Program cleared so you can compare movement.';});
-async function execute(c,token){const radians=a=>a*Math.PI/180;if(['L','R','L45','R45','L30','R30'].includes(c)){pose.a+=(c.startsWith('L')?-1:1)*(c.includes('45')?45:c.includes('30')?30:90);drawBot();return true;}if(c==='A'){$('bot').querySelector('circle').setAttribute('fill','#b4a5ee');await delay(180);$('bot').querySelector('circle').setAttribute('fill','#ffc968');return token===runToken;}const step=$('mode').value==='grid'?50:25;const arc=['AL','AR','WL','WR'].includes(c);const start={...pose};const sign=c.endsWith('L')?-1:1;const radius=c.startsWith('W')?50:25;const cx=start.x+sign*radius*Math.cos(radians(start.a));const cy=start.y+sign*radius*Math.sin(radians(start.a));for(let i=1;i<=10;i++){if(token!==runToken)return false;let x,y,a=start.a;if(arc){a=start.a+sign*90*i/10;x=cx-sign*radius*Math.cos(radians(a));y=cy-sign*radius*Math.sin(radians(a));}else{const dist=(c==='B'?-1:1)*step*i/10;x=start.x+Math.sin(radians(a))*dist;y=start.y-Math.cos(radians(a))*dist;}if(x<22||x>578||y<22||y>578){$('sim-status').textContent='Edge reached. Shorten the route or change direction and try again.';return false;}pose={x,y,a};trail+=` L${x.toFixed(2)} ${y.toFixed(2)}`;drawBot();await delay(20);}return true;}
+async function execute(c,token,args=[]){
+ if(['L','R','L45','R45','L30','R30'].includes(c)){pose.a+=(c.startsWith('L')?-1:1)*(c.includes('45')?45:c.includes('30')?30:90);drawBot();return true;}
+ if(c==='A'){$('bot').querySelector('circle').setAttribute('fill','#b4a5ee');await delay(180);$('bot').querySelector('circle').setAttribute('fill','#ffc968');return token===runToken;}
+ const movement=WizbotCode.motion({...pose},c,args,$('mode').value),isCode=codeRunning;
+ let marked=false;
+ for(let i=1;i<=16;i++){
+  if(token!==runToken)return false;
+  const next=movement.point(i/16);
+  if(!isCode&&(next.x<22||next.x>578||next.y<22||next.y>578)){$('sim-status').textContent='Edge reached. Shorten the route or change direction and try again.';return false;}
+  if(!marked){travelSegments++;marked=true;}
+  pose=next;travelDistance+=movement.distance/16;
+  if(movement.arc)trail+=` A${movement.radius} ${movement.radius} 0 0 ${c.endsWith('L')?0:1} ${pose.x.toFixed(3)} ${pose.y.toFixed(3)}`;
+  else trail+=` L${pose.x.toFixed(3)} ${pose.y.toFixed(3)}`;
+  pathBounds.minX=Math.min(pathBounds.minX,pose.x);pathBounds.maxX=Math.max(pathBounds.maxX,pose.x);pathBounds.minY=Math.min(pathBounds.minY,pose.y);pathBounds.maxY=Math.max(pathBounds.maxY,pose.y);
+  if(isCode)fitTravelledPath();drawBot();renderPathSummary();await delay(16);
+ }
+ const mid=movement.point(.5);segmentMarks.push({x:mid.x,y:mid.y,text:(movement.arc?'r = ':'')+movement.amount+(movement.arc?'':' steps')});renderPathMarks();
+ return true;
+}
 $('go').addEventListener('click',async()=>{if(running||!queue.length)return;let count=Number($('repeat-count').value);if(!Number.isInteger(count)||count<1||count>8){$('sim-status').textContent='Choose a whole-number repeat count from 1 to 8.';return;}running=true;const token=++runToken;resetPose();renderQueue();const program=Array.from({length:count},()=>queue).flat();for(let i=0;i<program.length;i++){if(token!==runToken)return;$('sim-status').textContent=`Move ${i+1} of ${program.length}: ${commands[program[i]].label}`;if(!await execute(program[i],token)){if(token===runToken){running=false;renderQueue();}return;}await delay(150);}if(token!==runToken)return;running=false;renderQueue();const reached=goal&&Math.hypot(pose.x-goal[0],pose.y-goal[1])<12;$('sim-status').textContent=goal?(reached?'Star reached! Explain why your plan worked.':'Finished. The star is still waiting—adjust your program and try again.'):`Finished ${program.length} commands. Facing ${((pose.a%360)+360)%360}° clockwise from up. Compare with your prediction.`;});
+// The code tab shares the same robot, cancellation token and movement model.
+let codeRunning=false,codePrepared=false;
+function renderCodeControls(){
+ $('run-code').disabled=running;$('stop-code').disabled=!codeRunning;
+ for(const id of ['code-example','load-code-example','code-input'])$(id).disabled=running;
+ $('code-source').readOnly=running;
+}
+function showProgramMode(kind){
+ if(running){cancel();$('sim-status').textContent='Stopped. Choose a program and run it from the start.';}const code=kind==='code';$('text-program').hidden=!code;$('button-program').hidden=code;
+ $('code-mode').setAttribute('aria-pressed',String(code));$('button-mode').setAttribute('aria-pressed',String(!code));
+ $('code-results').hidden=!code;if(!code)resetPose();if(code&&!codePrepared)loadCodeExample();renderCodeControls();renderPathSummary();
+}
+$('button-mode').addEventListener('click',()=>showProgramMode('buttons'));
+$('code-mode').addEventListener('click',()=>showProgramMode('code'));
+$('code-example').innerHTML=WizbotCode.examples.map(example=>`<option value="${example.id}">${example.title}</option>`).join('');
+function loadCodeExample(){
+ if(running)return;codePrepared=true;const example=WizbotCode.examples.find(item=>item.id===$('code-example').value);
+ $('code-source').value=example.code;$('code-input').value=example.input;$('code-example-hint').textContent=example.hint;
+ if($('mode').value!==example.mode){queue=[];$('repeat-count').value=1;}
+ $('mode').value=example.mode;goal=null;renderGoal();resetPose(true);renderQueue();
+ $('code-output').replaceChildren();$('code-trace').replaceChildren();$('code-variables').textContent='Variables appear after a successful run.';
+ $('code-status').textContent='Pattern loaded. Change its size or code, then Run code.';$('sim-status').textContent='Pattern loaded. Run code to watch the robot trace its path.';
+}
+$('load-code-example').addEventListener('click',loadCodeExample);
+function appendCodeLine(id,text,limit){const list=$(id),line=document.createElement('li');line.textContent=text||'(empty line)';list.append(line);while(list.children.length>limit)list.firstElementChild.remove();list.scrollTop=list.scrollHeight;}
+$('run-code').addEventListener('click',async()=>{
+ if(running)return;const input=Number($('code-input').value),source=$('code-source').value;
+ if(!$('code-input').value.trim()||!Number.isInteger(input)||input<0||input>1000){$('code-status').textContent='Use a whole-number input from 0 to 1000.';return;}
+ if(!source.trim()){$('code-status').textContent='Write a program or load an example first.';return;}
+ $('code-output').replaceChildren();$('code-trace').replaceChildren();$('code-variables').textContent='Running…';
+ $('code-results').hidden=false;goal=null;renderGoal();resetPose(true);running=true;codeRunning=true;const token=++runToken;renderQueue();
+ $('code-status').textContent='Running. Watch the output and decisions, or press Stop code.';$('sim-status').textContent='Code running. Watch the robot and the travelled trail; the board auto-fits your pattern.';
+ try{
+  const result=await WizbotCode.run(source,{input,shouldStop:()=>token!==runToken,
+   onPrint:text=>appendCodeLine('code-output',text,200),
+   onTrace:event=>appendCodeLine('code-trace',`Line ${event.line}: ${event.text}`,80),
+   onMove:async (command,args)=>{if(token!==runToken)return false;if(commands[command].mode==='draw'&&$('mode').value!=='draw')throw new WizbotCode.CodeError('Choose Draw mode to use angled turns or arcs.');return execute(command,token,args);}
+  });
+  if(token!==runToken)return;
+  $('code-variables').textContent=JSON.stringify(result.variables,null,2);
+  $('code-status').textContent=`Finished: ${result.output} printed line${result.output===1?'':'s'}, ${result.moves} robot move${result.moves===1?'':'s'}, ${result.steps} execution steps.`;
+  $('sim-status').textContent=travelSegments?'Pattern finished. The complete travelled path stays on the board.':'Finished without travelling. Add forward() or an arc command to draw a path.';
+ }catch(error){
+  if(token!==runToken)return;
+  $('code-status').textContent=error.message;$('code-variables').textContent='Run ended early. See the trace for values before it stopped.';
+  $('sim-status').textContent='Code stopped. Output and the robot path so far are kept.';
+ }finally{if(token===runToken){running=false;codeRunning=false;renderQueue();}}
+});
+$('stop-code').addEventListener('click',()=>{if(codeRunning){cancel();$('code-variables').textContent='Stopped before completion. See the trace for the latest values.';$('sim-status').textContent='Stopped. Run code starts again from the starting point.';}});
+// Keep the sample ready without changing the beginner button program or its robot.
+$('code-source').value=WizbotCode.examples[0].code;$('code-example-hint').textContent=WizbotCode.examples[0].hint;
+
 const reference=[
  ['Power & batteries','Setup','Three AAA batteries; flat minus ends against springs. Middle switch position: button coding. Replace all three batteries together when low.'],
  ['CLEAR, GO & ACTION','Buttons','CLEAR wipes memory. Enter commands in order, then GO executes them. ACTION adds light and sound effects.'],
