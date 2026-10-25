@@ -118,4 +118,410 @@ function lineGraph(id,points,xMax,yMax,xLabel,yLabel,reference=null){
 }
 
 init();renderPath();
-</script></body></html>
+</script><style>
+.boat-guide-launch[hidden],.boat-guide-panel[hidden]{display:none!important}.boat-guide-launch{position:fixed;right:22px;bottom:20px;z-index:600;display:flex;align-items:center;gap:10px;border:1px solid #cedecc;border-radius:40px;background:#235c47;color:#fff;padding:10px 17px 10px 10px;box-shadow:0 5px 24px #183e352b;font-size:13px}.boat-guide-launch:hover:not(:disabled){background:#184632}.guide-avatar{width:38px;height:38px;flex-shrink:0}.boat-guide-panel{position:fixed;right:20px;bottom:20px;z-index:610;width:360px;max-height:min(78vh,760px);overflow:auto;border:1px solid #b9cdb8;border-radius:18px;background:#fffefa;box-shadow:0 12px 60px #183e3540;color:#202924;font-size:13px}.guide-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#e9f0e4;border-bottom:1px solid #d4dfce;position:sticky;top:0;z-index:2}.guide-head strong{font-size:14px}.guide-head small{display:block;font-size:10px;color:#576d5b}.guide-head button{margin-left:auto;padding:5px 10px;font-size:20px;background:transparent;border:0}.guide-body{padding:14px 16px}.guide-tour{width:100%;text-align:left;display:block;margin:9px 0;padding:12px;background:#f5f7ef;border-color:#dde6d6}.guide-tour strong{font-size:13px;display:block}.guide-tour span{font-size:11px;font-weight:400;color:#647168;display:block;margin-top:4px}.guide-tour .guide-tour-meta{font-size:10px;color:#235c47}.guide-options{display:flex;gap:10px;align-items:end;margin-top:12px;flex-wrap:wrap}.guide-options label{font-size:11px;display:block;color:#52644f}.guide-options select{font-size:11px;padding:6px}.guide-options .voice-select{flex:1;min-width:150px}.guide-options input{accent-color:#235c47}.guide-options .guide-audio{display:flex;align-items:center;gap:5px;margin-bottom:7px}.guide-player-title{font-size:11px;color:#235c47;font-weight:750;margin-bottom:5px}.guide-scene{font-size:17px;line-height:1.3;margin:8px 0}.guide-caption{font-size:15px;line-height:1.9;margin:12px 0;max-height:150px;overflow:auto;scrollbar-width:thin}.guide-word{border-radius:3px;padding:1px 0;transition:background .08s}.guide-word.spoken{color:#71816e}.guide-word.speaking{background:#f9d891;color:#202924;box-shadow:0 0 0 2px #f9d891}.guide-progress{height:4px;border-radius:4px;background:#e7ecdf;overflow:hidden;margin:9px 0}.guide-progress i{height:100%;display:block;background:#235c47;width:0}.guide-transport{display:flex;gap:7px;flex-wrap:wrap}.guide-transport button{font-size:12px;padding:8px 12px}.guide-status{font-size:11px;color:#52644f;min-height:18px;margin-top:8px}.guide-help{font-size:10px;line-height:1.5;color:#647168;margin:7px 0}.guide-spotlight{outline:3px solid #d16d3f!important;outline-offset:6px!important;box-shadow:0 0 0 8px #f3c98955!important;border-radius:8px}.guide-demo-running main{padding-bottom:300px}.guide-complete{background:#edf3e5;border-radius:8px;padding:10px;margin-bottom:10px}.guide-quick-rate{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:11px}.guide-quick-rate select{width:auto;padding:4px 8px;font-size:11px}.guide-seek-label{display:flex;justify-content:space-between;font-size:10px;color:#52644f}#guideSeek{min-height:20px;margin:0}.guide-settings{margin:10px 0 0;padding:7px 0 0;border:0;border-top:1px solid #dde5d5;background:transparent}.guide-settings summary{font-size:11px}.boat-guide-panel.is-playing .guide-caption{max-height:100px;font-size:14px;line-height:1.75}.boat-guide-panel.is-playing .guide-scene{font-size:15px}.boat-guide-panel.is-playing .guide-head{padding:10px 14px}.guide-tour:focus-visible,.boat-guide-launch:focus-visible,.boat-guide-panel button:focus-visible{outline:3px solid #c34d2c;outline-offset:3px}@media(max-width:600px){.boat-guide-panel{right:10px;bottom:10px;width:calc(100vw - 20px);max-height:74vh}.boat-guide-launch{right:12px;bottom:12px}.boat-guide-panel.is-playing .guide-head{padding:8px 12px}.boat-guide-panel.is-playing .guide-body{padding:10px 12px}.boat-guide-panel.is-playing .guide-caption{max-height:96px;font-size:13px;line-height:1.8;margin:8px 0}.boat-guide-panel.is-playing .guide-scene{font-size:14px;margin:4px 0}.boat-guide-panel.is-playing .guide-avatar{width:30px;height:30px}}@media(prefers-reduced-motion:reduce){.guide-word{transition:none}}
+
+.guide-view-tools{display:flex;gap:8px;padding:8px 16px 0}.guide-view-tools button{font-size:11px;padding:6px 10px;flex:1}.guide-compact-tools{display:none}.boat-guide-panel.is-caption-only{max-height:280px;width:min(420px,calc(100vw - 20px))}.is-caption-only .guide-head,.is-caption-only .guide-view-tools,.is-caption-only .guide-body>:not(#guidePlayer),.is-caption-only #guidePlayer>:not(#guideCaption){display:none!important}.is-caption-only .guide-compact-tools{display:flex;justify-content:flex-end;gap:5px;padding:5px 8px 0}.guide-compact-tools button{padding:3px 9px;font-size:13px;background:transparent}.is-caption-only .guide-body{padding:4px 14px 10px}.boat-guide-panel.is-caption-only .guide-caption{max-height:175px;margin:4px 0;font-size:15px;line-height:1.8}.boat-guide-launch.is-narrating::after{content:"";width:7px;height:7px;border-radius:50%;background:#f9d891}
+</style>
+<button id="boatGuideLaunch" class="boat-guide-launch" aria-expanded="false" aria-controls="boatGuidePanel"><svg class="guide-avatar" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#e8edcc"/><path d="M9 46c1-13 29-13 30 0" fill="#d87850"/><ellipse cx="24" cy="23" rx="12" ry="14" fill="#eebc8c"/><path d="M12 23C6 0 43 1 36 24l-5-10-14 3Z" fill="#365549"/><circle cx="20" cy="23" r="1.5" fill="#284134"/><circle cx="29" cy="23" r="1.5" fill="#284134"/><path d="M20 29q4 4 8 0" fill="none" stroke="#8c4934" stroke-width="1.5"/></svg><span id="guideLaunchLabel">Guide</span></button>
+<aside id="boatGuidePanel" class="boat-guide-panel" aria-label="Guide and guided tours" hidden>
+ <div class="guide-head"><svg class="guide-avatar" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#dce8c6"/><path d="M9 46c1-13 29-13 30 0" fill="#d87850"/><ellipse cx="24" cy="23" rx="12" ry="14" fill="#eebc8c"/><path d="M12 23C6 0 43 1 36 24l-5-10-14 3Z" fill="#365549"/><circle cx="20" cy="23" r="1.5" fill="#284134"/><circle cx="29" cy="23" r="1.5" fill="#284134"/><path d="M20 29q4 4 8 0" fill="none" stroke="#8c4934" stroke-width="1.5"/></svg><div><strong>Mira · guide</strong><small>A guided demonstration. Just watch and listen.</small></div><button id="guideClose" aria-label="Close guide and stop tour">×</button></div>
+ <div class="guide-view-tools"><button id="guideTextOnly" disabled title="Show highlighted narration only">▤ Text only</button><button id="guideMinimize" title="Hide guide and keep narration playing">— Minimize</button></div>
+ <div class="guide-compact-tools"><button id="guideExpand" aria-label="Expand guide" title="Expand guide">↗</button><button id="guideCompactPause" aria-label="Pause narration" title="Pause or resume narration">Ⅱ</button><button id="guideCompactMinimize" aria-label="Minimize guide and continue narration" title="Minimize, keep playing">—</button><button id="guideCompactStop" aria-label="Stop guided tour" title="Stop tour">■</button></div>
+ <div class="guide-body"><label class="guide-quick-rate" for="guideMode">Narration mode<select id="guideMode"><option value="sentence" selected>Sentence by sentence</option><option value="word">Word by word</option><option value="continuous">Continuous</option></select></label><p id="guideModeHint" class="guide-help"></p><div id="guideLibrary"><h2 style="font-size:17px">Choose a guided tour</h2><p class="guide-help">Mira will change the controls, explain the results, and save demo garden plans. Your existing notebook entries stay intact. Stop at any time to explore.</p><div id="guideTourList"></div></div>
+ <div id="guidePlayer" hidden><div id="guideTourTitle" class="guide-player-title"></div><div id="guideStepCount" class="mini"></div><h2 id="guideSceneTitle" class="guide-scene"></h2><div class="guide-progress" role="progressbar" aria-label="Tour progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="guideProgress"><i id="guideProgressFill"></i></div><label class="guide-quick-rate" for="guideQuickRate">Playback speed <select id="guideQuickRate"></select></label><label class="guide-seek-label" for="guideSeek">Rewind / forward <output id="guideSeekLabel">Scene 1</output></label><input id="guideSeek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Tour position"><div id="guideCaption" class="guide-caption" aria-label="Narration transcript"></div><div class="guide-transport"><button id="guidePause" class="primary">Ⅱ Pause</button><button id="guideReplay">↻ Replay</button><button id="guideStop">■ Stop</button></div><p id="guideStatus" class="guide-status" role="status" aria-live="polite"></p></div>
+ <details id="guideSettings" class="guide-settings" open><summary>Voice settings</summary><div class="guide-options"><label class="voice-select" for="guideVoice">Voice<select id="guideVoice"><option value="">Device English voice</option></select></label><label for="guideRate">Pace<select id="guideRate"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option><option value="2.5">2.5×</option><option value="3">3×</option></select></label><label class="guide-audio"><input id="guideAudio" type="checkbox" checked> Voice on</label></div><p id="guideVoiceNote" class="guide-help">Sentence mode highlights each sentence while it is spoken. Word by word highlights each separate utterance at its speech start. Continuous mode uses only timing supplied by the voice; it never estimates word positions.</p></details></div>
+</aside>
+<script id="activity-guide-script">
+'use strict';
+// Guided-tour engine: speech, timer and animation callbacks are guarded against stale runs.
+class BoatTourEngine {
+ static sentenceRange(words,index){let start=Math.max(0,index),end=Math.max(0,index);const ends=word=>/[.!?][”"')\]]*$/.test(word);while(start>0&&!ends(words[start-1]))start--;while(end<words.length-1&&!ends(words[end]))end++;return {start,end};}
+
+ constructor(host){this.host=host;this.run=0;this.speechRun=0;this.active=false;this.paused=false;this.index=0;this.word=0;this.timer=null;this.frame=null;this.lastFrame=null;this.elapsed=0;this.animationDone=true;this.wordsDone=false;this.utterance=null;this.savedScenes=new Set();}
+ start(tour){this.stop(false);this.tour=tour;this.active=true;this.paused=false;this.savedScenes.clear();this.host.begin(tour);this.scene(0);}
+ clearSpeech(){this.speechRun++;if(this.timer!==null)this.host.clearTimeout(this.timer);this.timer=null;this.host.cancelSpeech();this.utterance=null;}
+ scene(index,fraction=0,paused=false,seeking=false){
+  if(!this.active)return;if(index>=this.tour.steps.length){this.finish();return;}
+  this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.index=index;this.paused=paused;this.lastFrame=null;this.wordsDone=false;
+  const step=this.tour.steps[index];this.words=step.text.match(/\S+/g)||[];this.word=Math.min(this.words.length-1,Math.floor(this.words.length*fraction));this.elapsed=(Math.max(900,this.words.length*280)/(this.host.playbackRate?.()||1))*fraction;this.animationDone=!step.tween;
+  this.host.scene(step,index,this.tour.steps.length,this.words);this.host.apply(step,{skipSave:seeking||this.savedScenes.has(index)});if(step.save&&!seeking)this.savedScenes.add(index);
+  if(step.tween&&fraction)this.host.tween(step.tween,fraction);this.host.lock();this.host.pause(paused);
+  if(paused){this.host.word(this.word,this.words.length);return;}
+  if(step.tween){const id=this.run;this.frame=this.host.requestFrame(now=>this.animate(now,id));}this.speak();
+ }
+ seek(percent){
+  if(!this.tour)return;const paused=this.paused,position=Math.max(0,Math.min(99.999,percent))/100*this.tour.steps.length,index=Math.floor(position);
+  this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.active=true;this.host.begin(this.tour);this.host.restore?.(this.tour,index);this.scene(index,position-index,paused,true);
+ }
+ animate(now,id){
+  if(!this.active||this.paused||id!==this.run)return;
+  if(this.lastFrame!==null)this.elapsed+=Math.max(0,now-this.lastFrame);this.lastFrame=now;
+  const step=this.tour.steps[this.index],duration=(Math.max(900,this.words.length*280)/(this.host.playbackRate?.()||1)),fraction=Math.min(1,this.elapsed/duration);
+  this.host.tween(step.tween,fraction);if(fraction>=1){this.animationDone=true;this.frame=null;this.advance();}else this.frame=this.host.requestFrame(time=>this.animate(time,id));
+ }
+ speak(){
+  if(!this.active||this.paused)return;
+  if(this.word>=this.words.length){this.wordsDone=true;this.advance();return;}
+  const run=this.run,serial=++this.speechRun,valid=()=>this.active&&!this.paused&&run===this.run&&serial===this.speechRun;
+  const advanceWord=()=>{if(!valid())return;if(this.timer!==null)this.host.clearTimeout(this.timer);this.timer=null;this.word++;this.speak();};
+  if(this.host.audioEnabled()&&this.host.speakSentence&&this.host.narrationMode?.()==='sentence'){
+   const range=BoatTourEngine.sentenceRange(this.words,this.word),sentence=this.words.slice(range.start,range.end+1);this.word=range.start;
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('Voice playback stalled. Continuing with timed captions.');this.clearSpeech();this.speak();},Math.max(15000,sentence.length*2000));
+   this.utterance=this.host.speakSentence(sentence,()=>{if(valid())this.host.word(range.start,this.words.length);},()=>{if(!valid())return;this.host.clearTimeout(this.timer);this.timer=null;this.word=range.end+1;this.speak();},()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});return;
+  }
+  if(this.host.audioEnabled()&&this.host.speakPhrase&&this.host.narrationMode?.()!=='word'){
+   const offset=this.word,remaining=this.words.slice(offset);
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('Voice playback stalled. Continuing with timed captions.');this.clearSpeech();this.speak();},Math.max(15000,remaining.length*2000));
+   this.utterance=this.host.speakPhrase(remaining,index=>{if(valid()){this.word=offset+index;this.host.word(this.word,this.words.length);}},()=>{if(!valid())return;this.host.clearTimeout(this.timer);this.timer=null;this.word=this.words.length;this.wordsDone=true;this.advance();},()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});return;
+  }
+  const word=this.words[this.word];
+  if(this.host.audioEnabled()){
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('The device voice did not respond. Continuing with timed captions.');this.clearSpeech();this.speak();},6000);
+   this.utterance=this.host.speakWord(word,()=>{if(valid())this.host.word(this.word,this.words.length);},advanceWord,()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});
+  }else{this.host.word(this.word,this.words.length);this.timer=this.host.setTimeout(advanceWord,this.host.wordDelay(word));}
+ }
+ advance(){if(!this.active||this.paused||!this.wordsDone||!this.animationDone)return;const run=this.run;this.timer=this.host.setTimeout(()=>{this.timer=null;if(this.active&&!this.paused&&run===this.run)this.scene(this.index+1);},650);}
+ pause(){if(!this.active||this.paused)return;this.paused=true;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.lastFrame=null;this.host.pause(true);}
+ resume(){if(!this.active||!this.paused)return;this.paused=false;this.lastFrame=null;this.host.pause(false);if(!this.animationDone){const run=this.run;this.frame=this.host.requestFrame(now=>this.animate(now,run));}if(this.wordsDone)this.advance();else this.speak();}
+ voiceChanged(){if(!this.active||this.paused)return;this.clearSpeech();if(this.wordsDone)this.advance();else this.speak();}
+ stop(notify=true){this.active=false;this.paused=false;this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.lastFrame=null;this.host.release();if(notify)this.host.stopped();}
+ finish(){this.active=false;this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.host.release();this.host.finished(this.tour);}
+}
+// End guided-tour engine.
+(()=>{
+ const guide=id=>document.getElementById(id),synth=window.speechSynthesis,speechAvailable=!!(synth&&window.SpeechSynthesisUtterance),controls=new Map();
+ let highlighted=null,lastTour=null,voices=[],captionWords=[],phraseCleanup=null,scrubbing=false,guideView='full';
+ const defaults={"width": 10, "length": 8, "soil": "loam", "climate": 4, "rain": 1, "sun": 6, "method": 0.9, "irrigation": 200};
+ const tours=[
+ {
+  "id": "layout",
+  "title": "Design and measure a garden",
+  "classes": "VI–VII",
+  "summary": "Tour the scale plan, paint a bed, and calculate area and perimeter.",
+  "steps": [
+   {
+    "title": "Meet the scale plan",
+    "text": "Welcome to our school garden. Each square is one metre by one metre. Colours show vegetables, flowers, herbs, and paths. I will plan the garden while you watch.",
+    "target": "#gardenGrid",
+    "level": 7,
+    "set": {
+     "width": 10,
+     "length": 8,
+     "soil": "loam",
+     "climate": 4,
+     "rain": 1,
+     "sun": 6,
+     "method": 0.9,
+     "irrigation": 200
+    }
+   },
+   {
+    "title": "Count area and boundary",
+    "text": "The plot is ten metres wide and eight metres long. Multiplying gives eighty square metres of area. Twice the sum of the side lengths gives thirty-six metres of perimeter.",
+    "target": ".metrics"
+   },
+   {
+    "title": "Replant one square",
+    "text": "I am changing the first vegetable square into flowers. Total plot area stays the same. The numbers of plant spaces and the planting ratio change because different crops use different spacing in this teaching model.",
+    "target": "#gardenGrid",
+    "paint": [
+     {
+      "index": 0,
+      "crop": "flowers"
+     }
+    ]
+   },
+   {
+    "title": "Save the plan",
+    "text": "The garden plan is saved with its layout and growing conditions. Area measures the surface inside the boundary, while perimeter measures the boundary itself. These are different quantities.",
+    "target": ".notebook",
+    "save": true,
+    "level": 7,
+    "quiz": 2
+   }
+  ]
+ },
+ {
+  "id": "ratios",
+  "title": "Share the space fairly",
+  "classes": "VII–VIII",
+  "summary": "Change planting ratios while keeping paths and unplanted ground separate.",
+  "steps": [
+   {
+    "title": "Look at the planted area",
+    "text": "We begin with the starter layout. Paths provide access, but they are not part of the planted area. Our ratios compare vegetable, flower, and herb areas.",
+    "target": "#ratio",
+    "level": 8,
+    "set": {
+     "width": 10,
+     "length": 8,
+     "soil": "loam",
+     "climate": 4,
+     "rain": 1,
+     "sun": 6,
+     "method": 0.9,
+     "irrigation": 200
+    }
+   },
+   {
+    "title": "Add a flower strip",
+    "text": "I replace one row of vegetable beds with flowers. The total planted area is unchanged. The flower share increases because we have reallocated planted space.",
+    "target": "#gardenGrid",
+    "paint": [
+     {
+      "index": 0,
+      "crop": "flowers"
+     },
+     {
+      "index": 1,
+      "crop": "flowers"
+     },
+     {
+      "index": 2,
+      "crop": "flowers"
+     },
+     {
+      "index": 3,
+      "crop": "flowers"
+     },
+     {
+      "index": 4,
+      "crop": "flowers"
+     }
+    ]
+   },
+   {
+    "title": "Leave one square unplanted",
+    "text": "Now I leave one planted square empty. The plot still has the same total area, but planted area and plant count decrease. Ratios must use the correct denominator.",
+    "target": "#flowerShare",
+    "paint": [
+     {
+      "index": 10,
+      "crop": "empty"
+     }
+    ]
+   },
+   {
+    "title": "Check the fraction",
+    "text": "Six square metres of flowers out of thirty square metres planted is twenty percent. In our live plan, the displayed share uses the actual painted beds. I have answered the example and saved this design.",
+    "target": "#answers",
+    "level": 8,
+    "quiz": 0,
+    "save": true
+   }
+  ]
+ },
+ {
+  "id": "water",
+  "title": "Balance the daily water budget",
+  "classes": "VIII–X",
+  "summary": "Compare rainfall, irrigation efficiency, soil storage, and water shortfall.",
+  "steps": [
+   {
+    "title": "Begin with no irrigation",
+    "text": "The garden has the same planting plan, but I turn off irrigation and rainfall. Soil starts with stored water. Plants can use this reserve before they experience a shortfall.",
+    "target": "#waterGraph",
+    "level": 9,
+    "set": {
+     "width": 10,
+     "length": 8,
+     "soil": "loam",
+     "climate": 4,
+     "rain": 0,
+     "sun": 6,
+     "method": 0.9,
+     "irrigation": 0
+    }
+   },
+   {
+    "title": "Advance one week",
+    "text": "Seven days have passed. Soil storage has fallen. When the reserve is depleted, plant water demand cannot be fully met and growth slows. The graph records that loss of stored water.",
+    "target": "#waterGraph",
+    "days": 7
+   },
+   {
+    "title": "Save the dry comparison",
+    "text": "This dry-week plan is saved. I will now restore mild rainfall and a useful daily water supply so we can compare conditions.",
+    "target": ".notebook",
+    "save": true
+   },
+   {
+    "title": "Supply water efficiently",
+    "text": "I choose drip irrigation and two hundred litres of gross water supply each day. Only the stated delivery fraction reaches the beds. Effective rain contributes additional water.",
+    "target": "#recommendation",
+    "set": {
+     "irrigation": 200,
+     "rain": 1,
+     "method": 0.9
+    }
+   },
+   {
+    "title": "Watch a watered week",
+    "text": "After another model week, plant demand is met and soil storage is maintained. This is a different simulation starting from day zero, so its conditions are consistent for the comparison.",
+    "target": "#waterGraph",
+    "days": 7
+   },
+   {
+    "title": "Compare irrigation methods",
+    "text": "I switch to the less efficient watering can and simulate a week. The same gross supply now delivers less useful water. Stored soil water can buffer that deficit, but it cannot do so forever.",
+    "target": "#delivered",
+    "set": {
+     "method": 0.65
+    },
+    "days": 7
+   },
+   {
+    "title": "Keep the useful lesson",
+    "text": "The plan is saved. For the same net need, better irrigation efficiency reduces gross supply. Actual garden irrigation needs depend on plant species, weather, and soil, beyond this simplified model.",
+    "target": ".notebook",
+    "level": 10,
+    "quiz": 2,
+    "save": true
+   }
+  ]
+ },
+ {
+  "id": "growth",
+  "title": "Soil, seeds, and sunlight",
+  "classes": "VI–IX",
+  "summary": "Follow germination, leaf growth, water storage, and drainage.",
+  "steps": [
+   {
+    "title": "Start with seeds",
+    "text": "Our seeds begin in loamy soil with suitable moisture, air, and temperature. Germination needs those conditions. Later leaf growth also depends on sunlight in this model.",
+    "target": "#gardenGrid",
+    "level": 6,
+    "set": {
+     "width": 10,
+     "length": 8,
+     "soil": "loam",
+     "climate": 4,
+     "rain": 1,
+     "sun": 6,
+     "method": 0.9,
+     "irrigation": 200
+    }
+   },
+   {
+    "title": "Watch germination",
+    "text": "Three model days have passed with enough water. The seeds have become seedlings. Real germination times vary by species and conditions, so these timings are classroom assumptions.",
+    "target": "#growth",
+    "days": 3
+   },
+   {
+    "title": "Follow leaf growth",
+    "text": "I advance another week. The seedlings now develop leaves. Photosynthesis uses light, water, and carbon dioxide to produce sugars. Our model represents only water and light limitations on growth.",
+    "target": "#gardenGrid",
+    "days": 7
+   },
+   {
+    "title": "Compare lower sunlight",
+    "text": "I reduce sunlight to two hours a day and restart the daily model. After ten days, growth is slower after germination. The plot size and planting layout have not changed.",
+    "target": "#growthNote",
+    "set": {
+     "sun": 2
+    },
+    "days": 10
+   },
+   {
+    "title": "More water is not always useful",
+    "text": "Now I choose sandy soil and a very large irrigation supply. After a week, extra water drains beyond the root storage capacity. Supplying more water does not create unlimited stored water.",
+    "target": "#drainage",
+    "set": {
+     "soil": "sand",
+     "sun": 6,
+     "irrigation": 1000
+    },
+    "days": 7
+   },
+   {
+    "title": "Finish with a balanced plan",
+    "text": "I return to loamy soil and the original water supply, then simulate a week and save the plan. Seeds need suitable conditions, and growing plants need a balanced supply of resources.",
+    "target": ".notebook",
+    "set": {
+     "soil": "loam",
+     "irrigation": 200
+    },
+    "days": 7,
+    "save": true,
+    "level": 6,
+    "quiz": 1
+   }
+  ]
+ }
+];
+ tours.push({id:"complete",title:"Complete school garden lesson",classes:"VI–X",summary:"All four guided tours, played in sequence.",steps:tours.flatMap(tour=>tour.steps)});
+ function settings(values){Object.entries(values||{}).forEach(([id,value])=>guide(id).value=String(value));if('width'in(values||{})||'length'in(values||{}))buildPlot();else{resetDays();update();}}
+ function applyDemo(step,options={}){
+  if(step.level){guide('level').value=String(step.level);renderPath();}if(step.set)settings(step.set);
+  if(step.paint){step.paint.forEach(({index,crop})=>{if(index>=0&&index<cells.length)cells[index]=crop;});resetDays();drawPlot();update();}
+  if(step.days)advance(step.days);
+  if(step.save&&!options.skipSave){const c=config(),p=GardenModel.plan(c);records.push({width:c.width,length:c.length,planted:p.planted,ratio:[p.counts.vegetables,p.counts.flowers,p.counts.herbs].join(':'),soil:c.soil,gross:p.grossIrrigation,irrigation:c.irrigation,day:dayNumber,stored:waterState.stored,cost:p.cost,cells:[...cells],config:{...c,cells:undefined},history:history.map(p=>[...p])});renderRecords();}
+  if(step.quiz!==undefined){const button=guide('answers').children[step.quiz];if(button){button.disabled=false;button.click();}}
+ }
+
+ function lock(){document.querySelectorAll('main input, main select, main button').forEach(el=>{if(!controls.has(el))controls.set(el,el.disabled);el.disabled=true;});document.body.classList.add('guide-demo-running');}
+ function release(){controls.forEach((disabled,el)=>{if(el.isConnected)el.disabled=disabled;});controls.clear();document.body.classList.remove('guide-demo-running');if(highlighted)highlighted.classList.remove('guide-spotlight');highlighted=null;renderRecords();}
+ function spotlight(selector){if(highlighted)highlighted.classList.remove('guide-spotlight');highlighted=document.querySelector(selector);if(!highlighted)return;highlighted.classList.add('guide-spotlight');const target=highlighted.closest('.metric')||highlighted;target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});}
+ function populateVoices(){if(!speechAvailable)return;voices=synth.getVoices().filter(v=>/^en(?:-|$)/i.test(v.lang));const selected=guide('guideVoice').value;guide('guideVoice').replaceChildren(new Option('Device English voice',''));voices.forEach(v=>guide('guideVoice').appendChild(new Option(v.name+' · '+v.lang,v.voiceURI)));if(voices.some(v=>v.voiceURI===selected))guide('guideVoice').value=selected;}
+ const host={
+  setTimeout:(fn,ms)=>window.setTimeout(fn,ms),clearTimeout:id=>window.clearTimeout(id),requestFrame:fn=>requestAnimationFrame(fn),cancelFrame:id=>cancelAnimationFrame(id),
+  cancelSpeech:()=>{if(phraseCleanup){phraseCleanup();phraseCleanup=null;}if(speechAvailable)synth.cancel();},audioEnabled:()=>speechAvailable&&guide('guideAudio').checked,
+  narrationMode:()=>guide('guideMode').value,
+  playbackRate:()=>Number(guide('guideRate').value),
+  wordDelay:word=>Math.max(230,Math.min(650,word.length*45))/Number(guide('guideRate').value),
+  speakPhrase:(words,onWord,onEnd,onError,options={})=>{
+   const text=words.join(' '),u=new SpeechSynthesisUtterance(text),starts=[];let position=0;words.forEach(word=>{starts.push(position);position+=word.length+1;});
+   const voice=voices.find(v=>v.voiceURI===guide('guideVoice').value)||voices.find(v=>v.localService)||voices[0];u.lang=voice?.lang||'en-US';if(voice)u.voice=voice;u.rate=Number(guide('guideRate').value);
+   let boundarySeen=false,timer=null,ended=false;
+   const clear=()=>{if(timer!==null)clearTimeout(timer);timer=null;};
+   u.onstart=()=>{if(options.sentenceStart){options.sentenceStart();return;}clearCaptionHighlight();timer=setTimeout(()=>{if(!ended&&!boundarySeen)guide('guideModeHint').textContent='This voice has not supplied word timing. Speech continues without highlighting. Choose Word by word for synchronized highlighting.';},1200);};
+   u.onboundary=event=>{if(ended||options.sentenceStart||(event.name&&event.name!=='word'))return;boundarySeen=true;clear();updateModeNote();let index=0;while(index+1<starts.length&&starts[index+1]<=event.charIndex)index++;onWord(index);};
+   u.onend=()=>{ended=true;clear();onEnd();};u.onerror=()=>{ended=true;clear();onError();};
+   phraseCleanup=()=>{ended=true;clear();};synth.resume();synth.speak(u);return u;
+  },
+  speakSentence:(words,start,end,error)=>host.speakPhrase(words,()=>{},end,error,{sentenceStart:start}),
+  speakWord:(word,start,end,error)=>{const u=new SpeechSynthesisUtterance(word);u.lang='en-US';const voice=voices.find(v=>v.voiceURI===guide('guideVoice').value)||voices.find(v=>v.localService)||voices[0];if(voice){u.voice=voice;u.lang=voice.lang;}u.rate=Number(guide('guideRate').value);u.onstart=start;u.onend=end;u.onerror=error;synth.resume();synth.speak(u);return u;},
+  audioFailed:message=>{guide('guideAudio').checked=false;guide('guideVoiceNote').textContent=message;},
+  begin:tour=>{lastTour=tour;guide('guideTextOnly').disabled=false;guide('guideQuickRate').value=guide('guideRate').value;guide('guideSettings').open=false;guide('guideLibrary').hidden=true;guide('guidePlayer').hidden=false;guide('boatGuidePanel').classList.add('is-playing');guide('guideTourTitle').textContent=tour.title;guide('guidePause').disabled=false;guide('guidePause').textContent='Ⅱ Pause';guide('guideStatus').textContent='Hands-free demonstration. Controls are operated by Mira.';updateGuideDock();if(guideView==='full')guide('guidePause').focus();},
+  scene:(step,index,total,words)=>{guide('guideSceneTitle').textContent=step.title;guide('guideStepCount').textContent='Scene '+(index+1)+' of '+total;guide('guideCaption').replaceChildren();captionWords=words.map(word=>{const span=document.createElement('span');span.className='guide-word';span.textContent=word;guide('guideCaption').append(span,document.createTextNode(' '));return span;});guide('guideCaption').setAttribute('aria-label',step.text);guide('guideSeekLabel').textContent='Scene '+(index+1)+' / '+total;guide('guideSeek').value=String(index/total*100);guide('guideProgressFill').style.width=(index/total*100)+'%';guide('guideProgress').setAttribute('aria-valuenow',String(Math.round(index/total*100)));},
+  apply:(step,options={})=>{applyDemo(step,options);spotlight(step.target);},
+  restore:(tour,index)=>{settings(defaults);for(let i=0;i<index;i++){const step=tour.steps[i];applyDemo(step,{skipSave:true});if(step.tween)settings({[step.tween.id]:step.tween.to});}},
+  lock,release,
+  tween:(spec,fraction)=>{if(spec.id==='demoTime')settings({demoTime:spec.from+(spec.to-spec.from)*fraction});else{const field=guide(spec.id),size=Number(field.step)||1;settings({[spec.id]:Math.round((spec.from+(spec.to-spec.from)*fraction)/size)*size});}},
+  word:(index,total)=>{const range=guide('guideMode').value==='sentence'?BoatTourEngine.sentenceRange(captionWords.map(span=>span.textContent),index):{start:index,end:index};captionWords.forEach((span,i)=>{span.classList.toggle('speaking',i>=range.start&&i<=range.end);span.classList.toggle('spoken',i<range.start);if(i===index)span.setAttribute('aria-current','true');else span.removeAttribute('aria-current');});const current=captionWords[index],box=guide('guideCaption');if(current){const wordRect=current.getBoundingClientRect(),boxRect=box.getBoundingClientRect();if(wordRect.top<boxRect.top||wordRect.bottom>boxRect.bottom)box.scrollTop+=wordRect.top-boxRect.top-20;}const percent=(engine.index+(index+1)/total)/engine.tour.steps.length*100;if(!scrubbing)guide('guideSeek').value=String(percent);guide('guideProgressFill').style.width=percent+'%';guide('guideProgress').setAttribute('aria-valuenow',String(Math.round(percent)));},
+  pause:paused=>{updateGuideDock();guide('guidePause').textContent=paused?'▶ Resume':'Ⅱ Pause';guide('guideStatus').textContent=paused?'Paused. Resume to continue from this word.':'Hands-free demonstration. Controls are operated by Mira.';},
+  stopped:()=>{setGuideView('full');guide('guideTextOnly').disabled=true;guide('guideSettings').open=true;guide('guideLibrary').hidden=false;guide('guidePlayer').hidden=true;guide('boatGuidePanel').classList.remove('is-playing');guide('liveStatus').textContent='Guided tour stopped. You can now explore the controls yourself.';guide('guideTourList').querySelector('button')?.focus();},
+  finished:tour=>{updateGuideDock();guide('guidePause').disabled=true;guide('guideSceneTitle').textContent='Tour complete';guide('guideStatus').textContent='Your controls are unlocked. Replay this tour, or choose Stop to browse the others.';guide('guideStepCount').textContent=tour.steps.length+' scenes completed';guide('guideSeek').value='100';guide('guideProgressFill').style.width='100%';guide('guideProgress').setAttribute('aria-valuenow','100');captionWords.forEach(span=>{span.classList.remove('speaking');span.classList.add('spoken');span.removeAttribute('aria-current');});guide('boatGuidePanel').classList.remove('is-playing');guide('liveStatus').textContent='Guided tour complete. Demo plans are in the notebook. Explore or choose another tour.';updateGuideDock();}
+ };
+ function updateGuideDock(){const label=engine.active?(engine.paused?'Guide · Paused':'Guide · Playing'):guide('guideSceneTitle').textContent==='Tour complete'?'Guide · Complete':'Guide';guide('guideLaunchLabel').textContent=label;guide('boatGuideLaunch').classList.toggle('is-narrating',engine.active&&!engine.paused);guide('guideCompactPause').textContent=engine.paused?'▶':'Ⅱ';guide('guideCompactPause').setAttribute('aria-label',engine.paused?'Resume narration':'Pause narration');guide('guideCompactPause').disabled=!engine.active;}
+ function setGuideView(view){guideView=view;guide('boatGuidePanel').classList.toggle('is-caption-only',view==='caption');guide('boatGuidePanel').hidden=view==='minimized';guide('boatGuideLaunch').hidden=view!=='minimized';guide('boatGuideLaunch').setAttribute('aria-expanded',String(view!=='minimized'));updateGuideDock();if(view==='minimized')guide('boatGuideLaunch').focus();}
+ function clearCaptionHighlight(){captionWords.forEach(span=>{span.classList.remove('speaking');span.removeAttribute('aria-current');});}
+ function updateModeNote(){guide('guideModeHint').textContent=guide('guideMode').value==='sentence'?'Each sentence is spoken in one passage and highlighted for the duration of its speech.':guide('guideMode').value==='word'?'Each word is spoken separately and highlights when its speech starts.':'Smooth speech for the full scene. Word highlighting requires timing from the selected voice.';}
+ const engine=new BoatTourEngine(host);
+ tours.forEach(tour=>{const button=document.createElement('button');button.className='guide-tour';const name=document.createElement('strong');name.textContent='▶ '+tour.title;const description=document.createElement('span');description.textContent=tour.summary;const meta=document.createElement('span');meta.className='guide-tour-meta';meta.textContent='Classes '+tour.classes+' · '+tour.steps.length+' scenes';button.append(name,description,meta);button.addEventListener('click',()=>engine.start(tour));guide('guideTourList').appendChild(button);});
+ guide('boatGuideLaunch').addEventListener('click',()=>{setGuideView('full');guide('guideClose').focus();});
+ guide('guideClose').addEventListener('click',()=>{engine.stop();setGuideView('minimized');});
+ guide('guideTextOnly').addEventListener('click',()=>{setGuideView('caption');guide('guideExpand').focus();});
+ guide('guideMinimize').addEventListener('click',()=>setGuideView('minimized'));
+ guide('guideCompactMinimize').addEventListener('click',()=>setGuideView('minimized'));
+ guide('guideExpand').addEventListener('click',()=>{setGuideView('full');guide('guideClose').focus();});
+ guide('guideCompactPause').addEventListener('click',()=>engine.paused?engine.resume():engine.pause());
+ guide('guideCompactStop').addEventListener('click',()=>engine.stop());
+ guide('guideSeek').addEventListener('input',()=>{scrubbing=true;guide('guideSeekLabel').textContent=Math.round(Number(guide('guideSeek').value))+'%';});
+ guide('guideSeek').addEventListener('change',()=>{const position=Number(guide('guideSeek').value);scrubbing=false;engine.seek(position);});
+ guide('guidePause').addEventListener('click',()=>engine.paused?engine.resume():engine.pause());guide('guideStop').addEventListener('click',()=>engine.stop());guide('guideReplay').addEventListener('click',()=>{if(lastTour)engine.start(lastTour);});
+ guide('guideMode').addEventListener('change',()=>{clearCaptionHighlight();updateModeNote();engine.voiceChanged();});
+ updateModeNote();
+ guide('guideQuickRate').innerHTML=guide('guideRate').innerHTML;
+ guide('guideQuickRate').addEventListener('change',()=>{guide('guideRate').value=guide('guideQuickRate').value;engine.voiceChanged();});
+ for(const id of ['guideVoice','guideRate','guideAudio'])guide(id).addEventListener('change',()=>{guide('guideQuickRate').value=guide('guideRate').value;engine.voiceChanged();});
+ guide('boatGuidePanel').addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();guide('guideClose').click();}});
+ window.addEventListener('pagehide',()=>engine.stop(false));
+ if(speechAvailable){populateVoices();synth.addEventListener('voiceschanged',populateVoices);}else{guide('guideAudio').checked=false;guide('guideAudio').disabled=true;guide('guideVoice').disabled=true;guide('guideVoiceNote').textContent='Speech is not available in this browser. Tours still run automatically with timed word highlighting.';}
+})();
+</script>
+
+
+</body></html>
