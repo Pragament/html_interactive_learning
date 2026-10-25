@@ -149,3 +149,39 @@ node scripts/test_wizbot_number_series.js
 ```
 
 The series tests independently reconstruct all given and missing terms, check all four candidate routes per question, and verify that unanswered previews stop at the blank.
+
+## Custom worksheets and real-bot practice
+
+In **Print, practise & compete**, choose black dots, black grid lines or no background, grid spacing of 5–40 mm on paper, path weight, and whether to include the target path. Settings also change the playground background. The worksheet uses the **loaded example's reference program and current input**, rather than an edited draft; series worksheets use the completed intended series. Button routes use the current queue and repeat count. An active competition's worksheet uses its locked target.
+
+**Download worksheet PDF** creates a vector PDF locally, with no external PDF service or library. **Preview A4 PDF** displays an in-page SVG preview of the same one-page layout, including on browsers without embedded PDF support. The PDF contains only black/white drawing operators, no gray shading or opacity: a route, START/FINISH, starting heading, concept and challenge, and ruled spaces for a coding plan and predictions/measurements. Physics/graph reference guides are dashed and labelled separately from actual travel. No solution code is printed.
+
+**Fit route** preserves proportions and states the resulting mm per drawing step. **Calibrated step size** uses the entered 1–200 mm drawing step and rejects routes that will not fit A4. Print at **100% / Actual size**, measure the result and calibrate the real bot. One graph unit or simulator step does not automatically equal a hardware movement. Long routes may require a smaller scale or a simpler example for an A4 real-bot exercise. The existing `a4sheet.html` remains the general quick-start sheet.
+
+## Competition simulator
+
+Load an example, series or button route, then open **Competition simulator** and **Start new round & coding timer**. This snapshots the reference route, input, speed (0.1–10 drawing steps/second) and turning speed (15–360 degrees/second), clears only the competition editor, and begins a monotonic coding timer. Use the dedicated editor and **Run & score attempt**; its `input` is shown in the locked target budget. Stop preserves partial travel and awards no score. Failed/stopped attempts and earlier runs remain part of elapsed coding time. End the round or start a new round to reset it. Results are local to the current page, with no account or shared leaderboard.
+
+A successful attempt follows the ordered target route, stays within 0.08 drawing step at 160 sampled positions, has total distance within the larger of 0.08 step or 1.5%, and finishes within 5° of the target heading. This allows equivalent segmentation, including loops, while rejecting endpoint-only shortcuts, empty programs and extra detours. Arc geometry is sampled at 64 points per command. Competition paths auto-fit; this does not alter the fixed bounds of the button practice board.
+
+Up to **1,000 points**, rounded per component:
+
+- **Code (400):** `min(400, 400 × reference statements / submitted statements)`. Parsed statements count calls, declarations, assignments and control statements, including for-loop initialization/update; formatting and comments cannot reduce this count.
+- **Bot time (400):** `min(400, 400 × reference seconds / submitted seconds)`. The model adds straight/arc distance divided by speed, explicit turns divided by turning speed, one second per action, and heading alignment for `moveTo`. Animation frame rate does not affect this estimate.
+- **Coding time (200):** `200 / (1 + elapsed seconds / 120)`, measured from round start to the attempt's Run click.
+
+A mismatch or runtime error receives no points. Speed settings stay locked until the round ends. These are practice simulator estimates, not measured hardware times or tamper-proof competition results.
+
+```sh
+node scripts/test_wizbot_workshop.js
+```
+
+Tests generate PDFs for all 50 code examples and both views of all 25 series; check single-page A4 structure, cross-reference offsets, black/white operators and calibration overflow; and verify equivalent routes, shortcut/detour/final-heading rejection, statement counts, timing and scores. Browser checks cover download, grid changes, competition success/retry/Stop and mobile layout. Rendered Fibonacci, motion-graph and refraction PDFs are inspected for print layout.
+
+### Worksheet orientation and optional sections
+
+Choose **Portrait** or **Landscape** before previewing/downloading. The same orientation is used for the SVG preview and the single A4 PDF page. Under **Include sections on paper**, independently toggle the heading/name/scale, CONCEPT, TRY, CODE / BUTTON PLAN, PREDICT - MEASURE - EXPLAIN, test results, printing/calibration instructions, illustrative model note, and reference-guide explanation. Defaults include all sections.
+
+Excluded sections reserve no space: the grid and route expand into the released area. A single remaining writing section spans the available width. With all sections off, the grid fills the A4 page within 28-point printer-safe margins, retaining START, FINISH and the heading arrow. Fit mode scales to the new area; calibrated mode preserves mm per step and continues to reject oversized routes. Tests exercise all 1,024 section/orientation combinations.
+
+Code-efficiency example: `repeat (4) { forward(input); reverse(input); right(); }` is **4 logical statements**, whether written on one line or formatted across multiple lines. The equivalent unrolled program has 12 movement statements. Tests verify identical scores for compact, multiline and commented versions of the same algorithm.

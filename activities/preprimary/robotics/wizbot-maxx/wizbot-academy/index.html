@@ -13,7 +13,7 @@
   "topic": "Wizbot Maxx",
   "subtopic": null,
   "title": "Wizbot Academy — Interactive Robotics Course",
-  "description": "Learn Wizbot setup, button coding, movement modes, angles, loops, line following, block coding and calibration through 17 lessons and five story-based practice activities, quizzes, an interactive simulator, and a bounded code playground with if/else, repeat, for and while loops plus 50 robot-travel patterns for suggested Classes 1–10, including Fibonacci spirals, geometry, coordinate graphs and physics-inspired diagrams.",
+  "description": "Learn Wizbot setup, button coding, movement modes, angles, loops, line following, block coding and calibration through 17 lessons and five story-based practice activities, quizzes, an interactive simulator, and a bounded code playground with if/else, repeat, for and while loops plus 50 robot-travel patterns for suggested Classes 1–10, including Fibonacci spirals, geometry, coordinate graphs and physics-inspired diagrams, number-series MCQs, customizable black-and-white A4 PDF worksheets, and a route-validated coding competition simulator.",
   "activityType": "guided-practice",
   "status": "active"
 }
@@ -53,6 +53,7 @@
 
 .pattern-filters{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pattern-filters label:last-child{grid-column:1/-1}.pattern-filters input,.pattern-filters select{width:100%}.pattern-learning{padding:16px;background:#eef5ec;border:1px solid var(--line);border-radius:12px;margin:16px 0}.pattern-learning h4{margin:0 0 6px;font-size:16px}.pattern-learning p{margin:8px 0;font-size:13px;line-height:1.65}.pattern-level-note{font-size:12px;margin-bottom:16px;color:var(--muted)}.pattern-level-note summary{cursor:pointer;font-weight:700}#pattern-count{margin:8px 0}#pattern-guides{pointer-events:none}@media(max-width:520px){.pattern-filters{grid-template-columns:1fr}.pattern-learning{padding:12px}}
 .series-terms{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.series-terms span{padding:9px 12px;background:#edf3ed;border-radius:8px;font-weight:750}.series-terms .missing{border:2px dashed #0f8278;background:#fff4d9}.series-options{border:0;padding:0;margin:16px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px}.series-options legend{margin-bottom:10px;font-weight:700}.series-options label{display:flex;gap:9px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:10px;cursor:pointer}.series-options input{width:auto}.series-options label:has(input:checked){background:#fff0cd;border-color:#9b6a1b}.series-feedback{padding:12px;background:#edf3ed;border-radius:10px;min-height:50px}.series-nav{display:flex;gap:8px;align-items:center;margin:18px 0}.series-nav button{flex:1}.series-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.playground-tabs{flex-wrap:wrap}#series-program h3{margin-top:0}
+.workshop{margin-top:24px;border-top:1px solid var(--line);padding-top:22px}.workshop>details{padding:16px 0;border-top:1px solid var(--line)}.workshop summary{font-weight:750;cursor:pointer}.workshop-settings{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0;align-items:end}.workshop-settings label{flex:1 1 160px}.workshop-settings input:not([type=checkbox]),.workshop-settings select{width:100%}.workshop-settings input[type=checkbox]{width:auto}#competition-source{display:block;width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;font:14px/1.6 ui-monospace,monospace;min-height:170px}#competition-results{padding-left:24px;overflow-wrap:anywhere}#competition-results li{margin:12px 0}.worksheet-sections{display:flex;flex-wrap:wrap;gap:10px 20px;border:1px solid var(--line);border-radius:10px;padding:14px}.worksheet-sections legend{font-weight:700}.worksheet-sections label{display:flex;align-items:center;gap:8px;font-size:14px}.worksheet-sections input{width:auto}#worksheet-svg{max-width:700px;margin:16px auto;border:1px solid var(--line)}#worksheet-svg svg{display:block;width:100%;height:auto}
 </style>
 
 </head>
@@ -72,7 +73,7 @@
 <div id="curriculum-cards" class="curriculum-cards"></div>
 <p class="source-note">Use familiar words in your teaching language, physical cards and spoken directions. Browser exercises practise planning; the real robot follows button sequences on your own mat.</p>
 </section>
-<section class="lab" id="lab"><div class="section-heading"><div><p class="eyebrow">TRY YOUR IDEAS</p><h2>Code playground</h2><p>A browser practice model. It does not connect to a real robot; distances and curves are illustrative.</p></div><label>Movement mode<select id="mode"><option value="grid">Grid · 90° turns</option><option value="draw">Draw · angles & curves</option></select></label></div><div class="lab-layout"><div class="board-wrap"><svg id="board" viewBox="0 0 600 600" role="img" aria-label="Robot practice grid and programmed path"><defs><pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="#c7d8d3"/></pattern></defs><rect id="board-background" width="600" height="600" fill="url(#dots)"/><g id="goal"></g><g id="pattern-guides" aria-hidden="true"></g><path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/><g id="path-start"></g><g id="path-labels" aria-hidden="true"></g><g id="bot"><circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/><path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/><circle cx="-6" cy="-4" r="2"/><circle cx="6" cy="-4" r="2"/></g></svg><p id="sim-status" role="status" aria-live="polite">Facing up. Add moves, then press GO.</p><p id="path-summary" class="path-summary"></p><p id="pattern-guide-note" class="path-summary" hidden>Gray/dashed guides are references, not robot travel. The solid teal line is the travelled path.</p><label class="path-label-control"><input id="path-label-toggle" type="checkbox" checked> Show segment markers &amp; lengths / radii</label></div><div class="controls"><div class="playground-tabs" role="group" aria-label="Choose a programming style"><button type="button" id="button-mode" aria-pressed="true">Move buttons</button><button type="button" id="code-mode" aria-pressed="false">Code &amp; patterns</button><button type="button" id="series-mode" aria-pressed="false">Number Series MCQ</button></div>
+<section class="lab" id="lab"><div class="section-heading"><div><p class="eyebrow">TRY YOUR IDEAS</p><h2>Code playground</h2><p>A browser practice model. It does not connect to a real robot; distances and curves are illustrative.</p></div><label>Movement mode<select id="mode"><option value="grid">Grid · 90° turns</option><option value="draw">Draw · angles & curves</option></select></label></div><div class="lab-layout"><div class="board-wrap"><svg id="board" viewBox="0 0 600 600" role="img" aria-label="Robot practice grid and programmed path"><defs><pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="2" fill="#c7d8d3"/></pattern></defs><rect id="board-background" width="600" height="600" fill="url(#dots)"/><g id="goal"></g><g id="competition-target" aria-hidden="true"></g><g id="pattern-guides" aria-hidden="true"></g><path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/><g id="path-start"></g><g id="path-labels" aria-hidden="true"></g><g id="bot"><circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/><path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/><circle cx="-6" cy="-4" r="2"/><circle cx="6" cy="-4" r="2"/></g></svg><p id="sim-status" role="status" aria-live="polite">Facing up. Add moves, then press GO.</p><p id="path-summary" class="path-summary"></p><p id="pattern-guide-note" class="path-summary" hidden>Gray/dashed guides are references, not robot travel. The solid teal line is the travelled path.</p><label class="path-label-control"><input id="path-label-toggle" type="checkbox" checked> Show segment markers &amp; lengths / radii</label></div><div class="controls"><div class="playground-tabs" role="group" aria-label="Choose a programming style"><button type="button" id="button-mode" aria-pressed="true">Move buttons</button><button type="button" id="code-mode" aria-pressed="false">Code &amp; patterns</button><button type="button" id="series-mode" aria-pressed="false">Number Series MCQ</button></div>
 <section id="series-program" hidden>
 <p class="eyebrow">READ · PREDICT · TRACE</p><h3>Mental Aptitude Test – Number Series</h3>
 <p>Find the missing number in each series. Choose the correct option.</p>
@@ -94,7 +95,23 @@
 <div class="run-buttons"><button type="button" id="run-code" class="primary">Run code ▶</button><button type="button" id="stop-code" disabled>Stop code</button></div><p id="code-status" role="status" aria-live="polite">Load an example, make a prediction, then run it.</p>
 <details class="code-help"><summary>Language and movement reference</summary><dl><dt>Decisions</dt><dd><code>if (input % 2 == 0) { print("even"); } else { print("odd"); }</code></dd><dt>Loops</dt><dd><code>repeat (4) { forward(); right(); }</code><br><code>for (let i = 1; i &lt;= 5; i++) { print(i); }</code><br><code>let n = 3; while (n &gt; 0) { print(n); n--; }</code></dd><dt>Variables and operators</dt><dd><code>let total = 0; total = total + 1;</code><br><code>+ - * / %</code> calculate; <code>== != &lt; &lt;= &gt; &gt;=</code> compare; <code>&amp;&amp; || !</code> combine conditions. <code>+= -= ++ --</code> update numbers. <code>true</code> and <code>false</code> are Boolean values. <code>//</code> starts a comment. Variables declared in a block stay in that block; use different names for nested loops.</dd><dt>Robot commands</dt><dd><code>forward(steps); reverse(steps); left(); right(); action();</code><br>In Draw mode: <code>turn(degrees); moveTo(x, y);</code> (positive turn is clockwise; x is right and y is up from Start). <code>moveTo</code> travels along a straight segment; it never teleports. <code>left45(); right45(); left30(); right30(); arcLeft(radius); arcRight(radius); wideLeft(); wideRight();</code></dd><dt>Run limits</dt><dd>10,000 execution steps, 200 printed lines and 200 movement commands. A limit stops the run and keeps the travelled path. Code paths auto-fit the board; the button builder retains its fixed edge. Stop code interrupts loops. Numbers must stay within ±1,000,000,000,000. Lengths and radii are 0–1000 step units, excluding zero. The default is one step. Turns accept −360° to 360°; coordinates accept −1000 to 1000. This is a teaching language, not a full JavaScript editor.</dd></dl></details>
 </section><div id="button-program">
-<h3>Your commands</h3><div id="command-buttons" class="command-buttons"></div><div class="repeat-control"><label>Repeat sequence <input id="repeat-count" type="number" min="1" max="8" value="1"></label><span>times</span></div><ol id="queue" class="queue" aria-label="Program sequence"></ol><div class="run-buttons"><button id="clear">CLEAR</button><button id="undo">Undo</button><button id="go" class="primary">GO ▶</button><button id="stop">Stop</button></div><p class="hint">Turns change direction. Forward and reverse change position. CLEAR removes your program and resets the robot.</p></div></div></div><details id="code-results" class="code-results" hidden><summary>Inspect decisions, variables &amp; journey notes</summary><div class="code-result-grid"><section><h3>Journey notes (optional)</h3><p class="hint">Results from <code>print(...)</code>. The robot’s travelled path is shown on the board. Use print() for optional journey notes.</p><ol id="code-output" aria-label="Printed program output" data-empty="Watch the travelled path on the board above."></ol><h3>Final variables</h3><pre id="code-variables">Variables appear after a successful run.</pre></section><section><h3>Execution trace</h3><p class="hint">The latest 80 decisions, loop checks and variable changes. Follow why a branch ran.</p><ol id="code-trace" aria-label="Program execution trace" data-empty="Run a program to follow its decisions."></ol></section></div></details></section>
+<h3>Your commands</h3><div id="command-buttons" class="command-buttons"></div><div class="repeat-control"><label>Repeat sequence <input id="repeat-count" type="number" min="1" max="8" value="1"></label><span>times</span></div><ol id="queue" class="queue" aria-label="Program sequence"></ol><div class="run-buttons"><button id="clear">CLEAR</button><button id="undo">Undo</button><button id="go" class="primary">GO ▶</button><button id="stop">Stop</button></div><p class="hint">Turns change direction. Forward and reverse change position. CLEAR removes your program and resets the robot.</p></div></div></div><section class="workshop" aria-labelledby="workshop-title"><h3 id="workshop-title">Print, practise &amp; compete</h3><p class="hint">Uses the loaded code example and its input, the selected number series, or your button route. A worksheet shows the complete target route; write your own plan below it. During a competition, downloads use its locked target.</p>
+<details open><summary>Customize &amp; download an A4 worksheet</summary><div class="workshop-settings">
+<label>Background grid<select id="worksheet-grid"><option value="dots">Black dots</option><option value="lines">Black lines</option><option value="none">No grid</option></select></label>
+<label>Grid spacing (mm on paper)<input id="worksheet-gap" type="number" min="5" max="40" value="10"></label>
+<label>Page orientation<select id="worksheet-orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
+<label>Route scale<select id="worksheet-scale"><option value="fit">Fit route to A4</option><option value="calibrated">Calibrated step size</option></select></label>
+<label>Drawing step size (mm)<input id="worksheet-step" type="number" min="1" max="200" value="10"></label>
+<label>Path weight<select id="worksheet-width"><option value="1">Fine</option><option value="2" selected>Medium</option><option value="3">Bold</option></select></label>
+<label><input id="worksheet-path" type="checkbox" checked> Include target path on paper</label></div><fieldset class="worksheet-sections"><legend>Include sections on paper</legend><label><input type="checkbox" id="worksheet-section-header" checked> Worksheet heading, name & scale</label><label><input type="checkbox" id="worksheet-section-concept" checked> CONCEPT</label><label><input type="checkbox" id="worksheet-section-try" checked> TRY</label><label><input type="checkbox" id="worksheet-section-code" checked> CODE / BUTTON PLAN</label><label><input type="checkbox" id="worksheet-section-explain" checked> PREDICT - MEASURE - EXPLAIN</label><label><input type="checkbox" id="worksheet-section-test" checked> Test: predicted / observed time & improvement</label><label><input type="checkbox" id="worksheet-section-print" checked> Print size & calibration instructions</label><label><input type="checkbox" id="worksheet-section-model" checked> Illustrative model note</label><label><input type="checkbox" id="worksheet-section-guidesNote" checked> Reference-guide explanation</label></fieldset><p class="hint">Unchecked sections are removed and their space becomes part of the grid. Turn every section off for a full-page route with START/FINISH, within printer-safe margins.</p><p id="worksheet-scale-note" class="hint"></p>
+<div class="series-actions"><button id="worksheet-preview" type="button">Preview A4 PDF</button><button id="worksheet-download" type="button" class="primary">Download worksheet PDF</button></div><p id="worksheet-status" role="status" aria-live="polite">Single A4 page in your chosen orientation. Solid black ink on white; no gray fills or transparent artwork.</p>
+<div id="worksheet-pdf-preview" hidden><div id="worksheet-svg" role="img" aria-label="Single A4 worksheet preview"></div></div></details>
+<details><summary>Competition simulator · start to finish</summary><p>Start a round to lock the current target and clear the competition editor. The coding clock begins after the target is ready. Input is available as <code>input</code>. The dashed route is the target; teal shows actual travel.</p>
+<div class="workshop-settings"><label>Bot speed (drawing steps / second)<input id="competition-speed" type="number" min="0.1" max="10" step="0.1" value="1"></label><label>Turning speed (degrees / second)<input id="competition-turn" type="number" min="15" max="360" value="90"></label></div>
+<div class="series-actions"><button id="competition-start" type="button">Start new round &amp; coding timer</button><button id="competition-end" type="button" disabled>End round</button></div><p id="competition-clock" class="hint" role="timer">Coding timer: not started</p><p id="competition-budget" class="hint"></p><h4 id="competition-title">Choose a target example first</h4>
+<p class="hint" id="competition-efficiency-note"><strong>Efficiency means fewer logical statements, not fewer displayed lines.</strong> Newlines, spaces and comments do not affect points. Use loops to replace repeated commands while preserving the target route.</p><label for="competition-source">Your competition program</label><textarea id="competition-source" aria-describedby="competition-efficiency-note" rows="8" maxlength="12000" spellcheck="false" placeholder="repeat (4) { forward(); right(); }"></textarea>
+<div class="series-actions"><button id="competition-run" type="button" class="primary" disabled>Run &amp; score attempt ▶</button><button type="button" id="competition-stop">Stop attempt</button></div><p id="competition-status" role="status" aria-live="polite">Local practice competition; simulated timings are estimates, not hardware measurements.</p><ol id="competition-results" aria-label="Round attempt results"></ol>
+<details><summary>Transparent scoring rules</summary><p>A route must match the ordered target travel, total distance (within 1.5% or 0.08 step), and final heading (within 5°). Up to 1,000 points: code = min(400, 400 × reference statements / your statements); bot = min(400, 400 × reference bot seconds / your bot seconds); coding = 200 / (1 + elapsed coding seconds / 120). Values are rounded.</p><p>Code efficiency counts parsed statements, including loop headers and assignments; squeezing statements onto one line does not help. For example, <code>repeat (4) { forward(input); reverse(input); right(); }</code> counts as 4 logical statements: one repeat and three movement commands. Formatting those statements across multiple lines gives exactly the same score. Bot time includes distance ÷ speed, turns ÷ turning speed, a 1-second action delay, and heading alignment for coordinate moves. Arc travel uses arc length. Coding time runs from round start until each Run click, including earlier attempts. Speed settings stay locked for the round. Scores are local, editable practice results.</p></details></details></section><details id="code-results" class="code-results" hidden><summary>Inspect decisions, variables &amp; journey notes</summary><div class="code-result-grid"><section><h3>Journey notes (optional)</h3><p class="hint">Results from <code>print(...)</code>. The robot’s travelled path is shown on the board. Use print() for optional journey notes.</p><ol id="code-output" aria-label="Printed program output" data-empty="Watch the travelled path on the board above."></ol><h3>Final variables</h3><pre id="code-variables">Variables appear after a successful run.</pre></section><section><h3>Execution trace</h3><p class="hint">The latest 80 decisions, loop checks and variable changes. Follow why a branch ran.</p><ol id="code-trace" aria-label="Program execution trace" data-empty="Run a program to follow its decisions."></ol></section></div></details></section>
 <section class="reference" id="advanced"><div class="section-heading"><div><p class="eyebrow">KEEP EXPLORING</p><h2>Command reference</h2></div><label>Find a command<input id="search" type="search" placeholder="Try arc, battery, calibration…"></label></div><div id="reference-list"></div><p class="source-note">Robot commands are based on the supplied Wizbot Maxx manual and command guide. The practice missions use newly written stories and layouts to teach number-line subtraction, width comparison, shapes, route planning, area and cost. Level guidance also draws on the supplied Classroom Learning Objectives and Kindergarten Curriculum brochures. All suggested stories, task wording and online layouts are independently written. The simulator is a teaching model; check results on your own robot.</p></section>
 </main><footer>Wizbot Academy · Plan → Code → Observe → Improve</footer>
 <noscript><p class="noscript">Enable JavaScript to use the lessons and playground. The <a href="a4sheet.html">printable quick-start sheet</a> is available without JavaScript.</p></noscript>
@@ -105,6 +122,115 @@ function values(q,choice=null){return q.terms.flatMap((n,i)=>n===null?(choice===
 function scale(q){return Math.max(...q.terms.filter(n=>n!==null),...q.options)/6;}
 return {questions,values,scale};
 })();
+</script>
+<script id="wizbot-workshop-model">
+// Shared deterministic geometry, scoring and dependency-free vector PDF writer.
+const WizbotWorkshop=(()=>{
+ const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+ function model(mode='draw',start={x:0,y:0,a:0},speed=1,turnSpeed=90){
+  const unit=mode==='grid'?50:25,points=[{...start}],moves=[];let pose={...start},length=0,seconds=0;
+  function move(command,args=[]){
+   moves.push({command,args:[...args]});
+   if(command==='A'){seconds+=1;return true;}
+   const turn=command==='T'?args[0]:['L','R','L45','R45','L30','R30'].includes(command)?(command[0]==='L'?-1:1)*(command.includes('45')?45:command.includes('30')?30:90):null;
+   if(turn!==null){pose.a+=turn;seconds+=Math.abs(turn)/turnSpeed;return true;}
+   const motion=WizbotCode.motion(pose,command,args,mode,{x:0,y:0});
+   if(command==='P'&&motion.distance){const angle=((motion.point(1).a-pose.a+540)%360+360)%360-180;seconds+=Math.abs(angle)/turnSpeed;}
+   if(motion.distance){for(let i=1;i<=64;i++)points.push(motion.point(i/64));pose=motion.point(1);length+=motion.distance;seconds+=motion.distance/unit/speed;}
+   return true;
+  }
+  return {move,finish:()=>({mode,unit,points,moves,pose:{...pose},length,seconds})};
+ }
+ async function trace(source,input,mode,speed=1,turnSpeed=90){const route=model(mode,undefined,speed,turnSpeed);await WizbotCode.run(source,{input,onMove:route.move,yieldControl:async()=>{}});return route.finish();}
+ function series(q,kind){const scale=WizbotSeries.scale(q),graph=kind==='graph',start={x:0,y:graph?-q.terms[0]/scale*25:0,a:graph?90:0},route=model('draw',start);q.terms.forEach((n,i)=>{const v=n===null?q.options[q.answer]:n;if(graph){if(i)route.move('P',[i*2,v/scale]);}else{route.move('F',[v/scale]);route.move('R');}});return route.finish();}
+ function statements(source){let count=0;function visit(node){if(Array.isArray(node)){node.forEach(visit);return;}if(!node||typeof node!=='object')return;if(['let','assign','if','repeat','while','for','call'].includes(node.kind))count++;Object.values(node).forEach(visit);}visit(WizbotCode.parse(source));return count;}
+ function resample(points,n=160){const cumulative=[0];for(let i=1;i<points.length;i++)cumulative.push(cumulative.at(-1)+distance(points[i-1],points[i]));const total=cumulative.at(-1);if(!total)return Array.from({length:n},()=>points[0]);let j=1;return Array.from({length:n},(_,i)=>{const d=total*i/(n-1);while(j<cumulative.length-1&&cumulative[j]<d)j++;const ratio=(d-cumulative[j-1])/(cumulative[j]-cumulative[j-1]||1),a=points[j-1],b=points[j];return{x:a.x+(b.x-a.x)*ratio,y:a.y+(b.y-a.y)*ratio};});}
+ function matches(target,actual){if(target.length<=0||actual.length<=0)return false;const tolerance=target.unit*.08;if(Math.abs(target.length-actual.length)>Math.max(tolerance,target.length*.015))return false;const a=resample(target.points),b=resample(actual.points);return a.every((p,i)=>distance(p,b[i])<=tolerance)&&Math.abs(((target.pose.a-actual.pose.a)%360+540)%360-180)<=5;}
+ function score(target,actual,source,referenceStatements,codingSeconds){
+  const valid=matches(target,actual),lines=statements(source),code=valid?Math.min(400,Math.round(400*referenceStatements/Math.max(1,lines))):0,time=valid?Math.min(400,Math.round(400*target.seconds/Math.max(.001,actual.seconds))):0,coding=valid?Math.round(200/(1+Math.max(0,codingSeconds)/120)):0;
+  return{valid,lines,robotSeconds:actual.seconds,codingSeconds,code,time,coding,total:code+time+coding};
+ }
+ const ascii=text=>String(text).replace(/[²³½πθ°√→÷×]/g,c=>({'²':'^2','³':'^3','½':'1/2','π':'pi','θ':'theta','°':' deg','√':'sqrt ','→':'->','÷':'/','×':'x'}[c])).normalize('NFKD').replace(/[–—−]/g,'-').replace(/[^\x20-\x7e]/g,'');
+ function references(route,details){
+  const lines=[],words=[],u=route.unit,n=details.input||1;
+  const line=(x1,y1,x2,y2)=>lines.push([{x:x1*u,y:-y1*u},{x:x2*u,y:-y2*u}]);
+  const word=(x,y,label)=>words.push({x:x*u,y:-y*u,label});
+  const xs=route.points.map(p=>p.x/u),ys=route.points.map(p=>-p.y/u),loX=Math.min(...xs),hiX=Math.max(...xs),loY=Math.min(...ys),hiY=Math.max(...ys);
+  if(details.axes){
+   line(Math.min(0,loX)-.5,0,hiX+.5,0);line(0,Math.min(0,loY)-.5,0,hiY+.5);
+   word(hiX+.2,-.8,details.axes.x);word(.2,hiY+.9,details.axes.y);
+   const dx=Math.max(1,Math.ceil((hiX-loX)/6)),dy=Math.max(1,Math.ceil((hiY-loY)/6));
+   for(let x=Math.ceil(loX/dx)*dx;x<=hiX;x+=dx)word(x,-.3,String(x));
+   for(let y=Math.ceil(loY/dy)*dy;y<=hiY;y+=dy)if(y)word(.15,y,String(y));
+  }
+  if(['mirror','mirror45'].includes(details.scene)){const y=details.scene==='mirror45'?-n:-3;line(-1,y,2*n+1,y);word(2*n,y-.5,'Mirror');line(n,y-2,n,y+2);word(n+.2,y+1.7,'Normal');}
+  if(details.scene==='periscope')for(const [i,y] of [0,-n].entries()){line(1.2,y+.8,2.8,y-.8);word(2.9,y+.3,'Mirror '+(i+1));}
+  if(details.scene==='slab'){for(const y of [-2,-2-n])line(loX-1,y,hiX+1,y);word(loX,-1.5,'Air');word(loX,-2-n/2,'Glass n = 1.5');word(loX,-3-n,'Air');line(2,-1,2,-3);line(2+.5345224838*n,-1-n,2+.5345224838*n,-3-n);}
+  if(details.scene==='displacement'){line(0,0,n,3);word(n/2,2,'Displacement');}
+  if(details.scene==='right-triangle'){line(n-.3,0,n-.3,.3);line(n-.3,.3,n,.3);}
+  if(details.scene==='wire')word(-.2,.7,'Current into page (x)');
+  if(details.scene==='circuit'){line(n/2-.12,-.35,n/2-.12,.35);line(n/2+.12,-.2,n/2+.12,.2);word(n/2,-.8,'Cell');line(n/2-.4,1.82,n/2+.4,1.82);line(n/2-.4,2.18,n/2+.4,2.18);word(n/2,2.5,'Resistor');}
+  return {lines,words};
+ }
+ const escape=text=>ascii(text).replace(/([\\()])/g,'\\$1');
+ function pdf(route,details,settings){
+  const mm=72/25.4,landscape=settings.orientation==='landscape',W=(landscape?297:210)*mm,H=(landscape?210:297)*mm,margin=28;
+  const include=key=>settings.sections?.[key]!==false;
+  function wrapLines(value,max){const rows=[];let row='';for(const word of ascii(value).split(/\s+/)){if((row+' '+word).length>max&&row){rows.push(row);row='';}row+=(row?' ':'')+word;}if(row)rows.push(row);return rows;}
+  const chars=Math.floor((W-2*margin)/5),guides=references(route,details),footer=[];
+  if(include('concept'))footer.push({lines:wrapLines('CONCEPT: '+details.concept,chars),size:9});
+  if(include('try'))footer.push({lines:wrapLines('TRY: '+details.challenge,chars),size:9});
+  if(include('guidesNote')&&guides.lines.length)footer.push({lines:['Dashed lines are references, not travelled paths.'],size:8});
+  const workspace=include('code')||include('explain');
+  const notes=[];
+  if(include('test'))notes.push('Test: predicted time ____ s   observed time ____ s   error / improvement __________________');
+  if(include('print'))notes.push('Print A4 at 100% / Actual size. Measure the printed step; calibrate the real bot before running.');
+  if(include('model'))notes.push('Illustrative model: a drawing unit or graph value is not automatically a real robot step.');
+  const noteRows=notes.flatMap(note=>wrapLines(note,Math.floor((W-2*margin)/4.4)));
+  const footerHeight=footer.reduce((total,block)=>total+block.lines.length*(block.size+3)+5,0)+(workspace?118:0)+noteRows.length*12;
+  const bottom=margin+(footerHeight?footerHeight+12:0),top=H-margin-(include('header')?84:0);
+  const box={x:margin,y:bottom,w:W-2*margin,h:top-bottom};
+  if(box.h<100)throw Error('Too much worksheet text for this orientation. Exclude some sections.');
+  const allPoints=[...route.points,...guides.lines.flat(),...guides.words],xs=allPoints.map(p=>p.x),ys=allPoints.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),spanX=Math.max(maxX-minX,route.unit),spanY=Math.max(maxY-minY,route.unit);
+  const fit=Math.min((box.w-60)/spanX,(box.h-60)/spanY),scale=settings.scale==='calibrated'?settings.stepMM*mm/route.unit:fit;
+  if(spanX*scale>box.w-60+.01||spanY*scale>box.h-60+.01)throw Error('This calibrated route will not fit one A4 page. Reduce mm per step or choose Fit route.');
+  const ox=box.x+box.w/2-(minX+maxX)/2*scale,oy=box.y+box.h/2+(minY+maxY)/2*scale;
+  const X=x=>ox+x*scale,Y=y=>oy-y*scale,num=n=>Number(n.toFixed(3));let c='0 G 0 g 1 w\n';const svg=[],xml=value=>ascii(value).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+  const line=(x1,y1,x2,y2,width=.6)=>{svg.push(`<line x1="${x1}" y1="${H-y1}" x2="${x2}" y2="${H-y2}" stroke="black" stroke-width="${width}"/>`);c+=`${width} w ${num(x1)} ${num(y1)} m ${num(x2)} ${num(y2)} l S\n`;};
+  const text=(x,y,value,size=10)=>{svg.push(`<text x="${x}" y="${H-y}" font-family="Arial,Helvetica,sans-serif" font-size="${size}" fill="black">${xml(value)}</text>`);c+=`BT /F1 ${size} Tf ${num(x)} ${num(y)} Td (${escape(value)}) Tj ET\n`;};
+  function wrapped(value,x,y,max=90,size=9,maxLines=3){const words=ascii(value).split(/\s+/);let row='',lines=0;for(const word of words){if((row+' '+word).length>max&&row){text(x,y,row,size);y-=size+3;row='';if(++lines>=maxLines)return y;}row+=(row?' ':'')+word;}if(row)text(x,y,row,size);return y-size-3;}
+  if(include('header')){
+   text(margin,H-margin-14,'WIZBOT | PLAN - CODE - TEST',14);
+   text(margin,H-margin-33,details.title.slice(0,Math.floor((W-2*margin)/6)),11);
+   text(margin,H-margin-52,'Name: ____________________   Class: ______   Date: __________',10);
+   text(margin,H-margin-69,`${route.mode.toUpperCase()} model | Printed step = ${num(route.unit*scale/mm)} mm | Grid gap = ${settings.gridMM} mm`,9);
+  }
+  svg.push(`<rect x="${box.x}" y="${H-box.y-box.h}" width="${box.w}" height="${box.h}" fill="none" stroke="black" stroke-width=".65"/>`);
+  c+=`.65 w ${box.x} ${box.y} ${num(box.w)} ${box.h} re S\nq ${box.x} ${box.y} ${num(box.w)} ${box.h} re W n\n`;
+  const gap=settings.gridMM*mm;
+  if(settings.grid==='lines'){for(let x=box.x+gap;x<box.x+box.w;x+=gap)line(x,box.y,x,box.y+box.h,.25);for(let y=box.y+gap;y<box.y+box.h;y+=gap)line(box.x,y,box.x+box.w,y,.25);}
+  if(settings.grid==='dots'){for(let x=box.x+gap;x<box.x+box.w;x+=gap)for(let y=box.y+gap;y<box.y+box.h;y+=gap){c+=`${num(x-.5)} ${num(y-.5)} 1 1 re f\n`;svg.push(`<rect x="${x-.5}" y="${H-y-.5}" width="1" height="1" fill="black"/>`);}}
+  if(guides.lines.length||guides.words.length){c+='[3 3] 0 d\n';guides.lines.forEach(([a,b])=>{line(X(a.x),Y(a.y),X(b.x),Y(b.y),.6);svg[svg.length-1]=svg.at(-1).replace('/>',' stroke-dasharray="3 3"/>');});c+='[] 0 d\n';guides.words.forEach(p=>text(X(p.x),Y(p.y),p.label,7));}
+  if(settings.path){svg.push(`<path d="${route.points.map((p,i)=>`${i?'L':'M'}${num(X(p.x))} ${num(H-Y(p.y))}`).join(' ')}" fill="none" stroke="black" stroke-width="${settings.width}"/>`);c+=`${settings.width} w [] 0 d\n`+route.points.map((p,i)=>`${num(X(p.x))} ${num(Y(p.y))} ${i?'l':'m'}`).join('\n')+'\nS\n';}
+  c+='Q\n';const start=route.points[0],finish=route.points.at(-1),sx=X(start.x),sy=Y(start.y),fx=X(finish.x),fy=Y(finish.y);
+  svg.push(`<rect x="${sx-3}" y="${H-sy-3}" width="6" height="6" fill="white" stroke="black"/><rect x="${fx-3}" y="${H-fy-3}" width="6" height="6" fill="white" stroke="black"/>`);
+  c+=`1 g 0 G 1.2 w ${num(sx-3)} ${num(sy-3)} 6 6 re B\n0 g\n`;text(sx+7,sy+9,'START',8);
+  const angle=(start.a||0)*Math.PI/180,ax=sx+Math.sin(angle)*18,ay=sy+Math.cos(angle)*18;line(sx,sy,ax,ay,1.2);line(ax,ay,ax-Math.sin(angle+.55)*7,ay-Math.cos(angle+.55)*7,1.2);line(ax,ay,ax-Math.sin(angle-.55)*7,ay-Math.cos(angle-.55)*7,1.2);
+  c+=`${num(fx-3)} ${num(fy-3)} 6 6 re S\n`;text(fx+7,fy-14,distance(start,finish)<.01?'FINISH (return)':'FINISH',8);
+  let y=box.y-16;
+  for(const block of footer){for(const row of block.lines){text(margin,y,row,block.size);y-=block.size+3;}y-=5;}
+  if(workspace){
+   const columns=include('code')&&include('explain')?2:1,gap=20,width=(box.w-gap*(columns-1))/columns;
+   const labels=[...(include('code')?['CODE / BUTTON PLAN']:[]),...(include('explain')?['PREDICT - MEASURE - EXPLAIN']:[])];
+   labels.forEach((label,index)=>{const x=margin+index*(width+gap);text(x,y,label,10);for(let i=0;i<6;i++)line(x,y-14-i*16,x+width,y-14-i*16,.4);});y-=118;
+  }
+  for(const row of noteRows){text(margin,y,row,8);y-=12;}
+  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>',`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${num(W)} ${num(H)}] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>`,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',`<< /Length ${c.length} >>\nstream\n${c}endstream`];
+  let output='%PDF-1.4\n',offsets=[0];objects.forEach((obj,i)=>{offsets.push(output.length);output+=`${i+1} 0 obj\n${obj}\nendobj\n`;});const xref=output.length;output+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`+offsets.slice(1).map(offset=>String(offset).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;const bytes=new TextEncoder().encode(output);bytes.layout={width:W,height:H,grid:{...box},printedStepMM:route.unit*scale/mm};bytes.preview=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="white"/>${svg.join('')}</svg>`;return bytes;
+ }
+ return{model,trace,series,statements,matches,score,pdf,resample};
+})();
+
 </script>
 <script id="wizbot-code-language">
 /* A small teaching language. Student text is parsed, never evaluated as JavaScript. */
@@ -326,7 +452,7 @@ function fitTravelledPath(){
  const box=`${x} ${y} ${span} ${span}`;if($('board').getAttribute('viewBox')===box)return;
  $('board').setAttribute('viewBox',box);
  for(const [key,value] of Object.entries({x,y,width:span,height:span}))$('board-background').setAttribute(key,value);
- const spacing=50*Math.pow(2,Math.ceil(Math.log2(cameraScale)));const dots=$('dots');dots.setAttribute('width',spacing);dots.setAttribute('height',spacing);const dot=dots.querySelector('circle');dot.setAttribute('cx',spacing/2);dot.setAttribute('cy',spacing/2);dot.setAttribute('r',2*cameraScale);
+ const spacing=50*Math.pow(2,Math.ceil(Math.log2(cameraScale)));const dots=$('dots');dots.setAttribute('width',spacing);dots.setAttribute('height',spacing);const dot=dots.querySelector('circle')||document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('cx',spacing/2);dot.setAttribute('cy',spacing/2);dot.setAttribute('r',2*cameraScale);globalThis.WizbotWorkshopUI?.grid();
  renderPathMarks();
 }
 function renderPatternGuides(){
@@ -377,6 +503,7 @@ function renderPatternGuides(){
 }
 
 function renderPathMarks(){
+ globalThis.WizbotWorkshopUI?.target();
  if(isSeriesMode()){renderSeriesMarks();return;}
  const scale=cameraScale;
  $('path-start').innerHTML=`<circle cx="${pathStart.x}" cy="${pathStart.y}" r="${6*scale}" fill="#ffc968" stroke="#173e38" stroke-width="${2*scale}"/><text x="${pathStart.x+12*scale}" y="${pathStart.y+18*scale}" font-size="${12*scale}" fill="#173e38">Start</text>`;
@@ -394,7 +521,7 @@ function renderPathSummary(){
 }
 
 function drawBot(){$('bot').setAttribute('transform',`translate(${pose.x} ${pose.y}) rotate(${pose.a}) scale(${cameraScale})`);$('trail').setAttribute('d',trail);}
-function resetPose(forCode=false){pose={x:300,y:forCode?300:500,a:0};trail=`M${pose.x} ${pose.y}`;cameraScale=1;travelDistance=0;travelSegments=0;segmentMarks=[];pathStart={x:pose.x,y:pose.y};pathBounds={minX:pose.x,maxX:pose.x,minY:pose.y,maxY:pose.y};$('board').setAttribute('viewBox','0 0 600 600');for(const [key,value] of Object.entries({x:0,y:0,width:600,height:600}))$('board-background').setAttribute(key,value);$('dots').setAttribute('width',50);$('dots').setAttribute('height',50);const dot=$('dots').querySelector('circle');dot.setAttribute('cx',25);dot.setAttribute('cy',25);dot.setAttribute('r',2);renderPathMarks();drawBot();renderPathSummary();}
+function resetPose(forCode=false){pose={x:300,y:forCode?300:500,a:0};trail=`M${pose.x} ${pose.y}`;cameraScale=1;travelDistance=0;travelSegments=0;segmentMarks=[];pathStart={x:pose.x,y:pose.y};pathBounds={minX:pose.x,maxX:pose.x,minY:pose.y,maxY:pose.y};$('board').setAttribute('viewBox','0 0 600 600');for(const [key,value] of Object.entries({x:0,y:0,width:600,height:600}))$('board-background').setAttribute(key,value);$('dots').setAttribute('width',50);$('dots').setAttribute('height',50);const dot=$('dots').querySelector('circle')||document.createElementNS('http://www.w3.org/2000/svg','circle');dot.setAttribute('cx',25);dot.setAttribute('cy',25);dot.setAttribute('r',2);globalThis.WizbotWorkshopUI?.grid();renderPathMarks();drawBot();renderPathSummary();}
 $('path-label-toggle').addEventListener('change',renderPathMarks);
 function cancel(){runToken++;running=false;if(seriesRunning){seriesRunning=false;$('series-feedback').textContent='Path stopped. Draw again to restart.';}if(codeRunning){codeRunning=false;$('code-status').textContent='Stopped. Run code restarts your program from the beginning.';$('code-variables').textContent='Stopped before completion. See the trace for the latest values.';}renderQueue();}
 function renderGoal(){$('goal').innerHTML=goal?`<text x="${goal[0]}" y="${goal[1]+12}" text-anchor="middle" font-size="34" fill="#d79925">★</text>`:'';}
@@ -434,7 +561,7 @@ function renderCodeControls(){
  $('run-code').disabled=running;$('stop-code').disabled=!codeRunning;
  for(const id of ['code-example','load-code-example','code-input','pattern-class','pattern-subject','pattern-search'])$(id).disabled=running;
  $('load-code-example').disabled=running||!$('code-example').value;
- $('code-source').readOnly=running;renderSeriesControls();
+ $('code-source').readOnly=running;renderSeriesControls();globalThis.WizbotWorkshopUI?.render();
 }
 function showProgramMode(kind){
  if(running)cancel();const code=kind==='code',series=kind==='series';
@@ -657,5 +784,91 @@ $('series-run').addEventListener('click',async()=>{
 showLesson(current);resetPose();renderQueue();renderReference();
 if(location.hash==='#advanced')requestAnimationFrame(()=>$('advanced').scrollIntoView());
 
+</script>
+<script id="wizbot-workshop-ui">
+(()=>{
+ const sectionKeys=['header','concept','try','code','explain','test','print','model','guidesNote'];
+ const controls=[...sectionKeys.map(key=>'worksheet-section-'+key),'worksheet-orientation','worksheet-grid','worksheet-gap','worksheet-scale','worksheet-step','worksheet-width','worksheet-path'];
+ let preview=null,challenge=null,attemptRunning=false,preparing=false,sessionId=0;
+ const readSettings=()=>({orientation:$('worksheet-orientation').value,sections:Object.fromEntries(sectionKeys.map(key=>[key,$('worksheet-section-'+key).checked])),grid:$('worksheet-grid').value,gridMM:Number($('worksheet-gap').value),scale:$('worksheet-scale').value,stepMM:Number($('worksheet-step').value),width:Number($('worksheet-width').value),path:$('worksheet-path').checked});
+ function settings(){const s=readSettings();if(!Number.isFinite(s.gridMM)||s.gridMM<5||s.gridMM>40||!Number.isFinite(s.stepMM)||s.stepMM<1||s.stepMM>200)throw Error('Use grid gaps of 5–40 mm and steps of 1–200 mm.');return s;}
+ function grid(){
+  const [x,y,span]=$('board').getAttribute('viewBox').split(' ').map(Number),s=readSettings(),gap=span*Math.min(40,Math.max(5,s.gridMM||10))/180;
+  $('dots').setAttribute('width',gap);$('dots').setAttribute('height',gap);
+  $('dots').innerHTML=s.grid==='none'?'':s.grid==='lines'?`<path d="M${gap} 0 H0 V${gap}" fill="none" stroke="#000" stroke-width="${span/1800}"/>`:`<circle cx="${gap/2}" cy="${gap/2}" r="${span/650}" fill="#000"/>`;
+  $('worksheet-scale-note').textContent=s.scale==='fit'?'Fit route preserves proportions. The PDF states the resulting mm per drawing step; measure and calibrate the real robot.':'Calibrated scale preserves your mm per drawing step. Oversized routes are rejected, not shrunk.';
+ }
+ function render(){for(const id of ['worksheet-download','worksheet-preview','competition-start'])$(id).disabled=running||preparing;controls.forEach(id=>$(id).disabled=running||preparing);$('competition-run').disabled=running||!challenge||preparing;$('competition-end').disabled=!challenge&&!preparing;$('competition-source').readOnly=running||preparing;$('competition-stop').disabled=!attemptRunning;for(const id of ['competition-speed','competition-turn'])$(id).disabled=!!challenge||preparing;}
+ async function selection(){
+  if(isSeriesMode()){
+   const q=seriesQuestion(),kind=$('series-model').value,route=WizbotWorkshop.series(q,kind);
+   const scale=WizbotSeries.scale(q),terms=q.terms.map(n=>n===null?q.options[q.answer]:n),source=kind==='graph'?terms.slice(1).map((v,i)=>`moveTo(${(i+1)*2}, ${v/scale});`).join('\n'):terms.map(v=>`forward(${v/scale}); right();`).join('\n');
+   return{route,source,input:0,details:{title:`Class ${q.level} | Number Series Q${q.id}: `+q.terms.map(n=>n===null?'?':n).join(', '),concept:kind==='graph'?'Read the pattern from term heights; horizontal positions count terms.':'Each leg length represents one term; quarter turns only separate terms.',challenge:'Find the missing term. State a rule and use it to plan the complete route. Explain how it fits every known term.'}};
+  }
+  if(!$('text-program').hidden&&activeCodeExample){
+   const e=activeCodeExample,input=Number($('code-input').value);if(!$('code-input').value.trim()||!Number.isInteger(input)||input<(e.inputMin??0)||input>(e.inputMax??1000))throw Error('Choose a valid input for the loaded example first.');
+   const route=await WizbotWorkshop.trace(e.code,input,e.mode);return{route,source:e.code,input,details:{title:e.title+' | input '+input,concept:e.concept,challenge:e.challenge,axes:e.axes,scene:e.scene,input}};
+  }
+  if(!queue.length)throw Error('Load a code example, choose a number series or add a button route first.');
+  const times=Number($('repeat-count').value);if(!Number.isInteger(times)||times<1||times>8)throw Error('Use a repeat count from 1 to 8.');
+  const names={F:'forward',B:'reverse',L:'left',R:'right',A:'action',L45:'left45',R45:'right45',L30:'left30',R30:'right30',AL:'arcLeft',AR:'arcRight',WL:'wideLeft',WR:'wideRight'},source=Array.from({length:times},()=>queue.map(c=>names[c]+'();').join('\n')).join('\n'),mode=$('mode').value;
+  return{route:await WizbotWorkshop.trace(source,0,mode),source,input:0,details:{title:'My button route',concept:'Plan turns and distances from START to FINISH.',challenge:'Predict distance and time. Record a button plan, test it, then explain one improvement.'}};
+ }
+ async function prepare(){if(running||preparing)return null;preparing=true;render();try{const result=await selection();if(result.route.length<=0)throw Error('Choose a route with actual travel.');return result;}finally{preparing=false;render();}}
+ async function sheet(download=false){
+  try{const s=settings(),selected=challenge||await prepare();if(!selected)return;const bytes=WizbotWorkshop.pdf(selected.route,selected.details,s),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+   if(preview)URL.revokeObjectURL(preview);preview=url;
+   if(download){const a=document.createElement('a');a.href=url;a.download='wizbot-'+selected.details.title.toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,70)+'.pdf';a.click();$('worksheet-status').textContent='Downloaded one A4 page. Print Actual size / 100%; all artwork uses solid black and white.';}
+   else{$('worksheet-svg').innerHTML=bytes.preview;$('worksheet-pdf-preview').hidden=false;$('worksheet-status').textContent='One-page worksheet preview. Use Download worksheet PDF to save the same layout.';}
+  }catch(error){$('worksheet-status').textContent=error.message;}
+ }
+ $('worksheet-download').addEventListener('click',()=>sheet(true));$('worksheet-preview').addEventListener('click',()=>sheet());
+ for(const id of ['load-code-example','series-next','series-prev','series-class','series-model','button-mode','code-mode','series-mode','code-input'])$(id).addEventListener(['series-class','series-model','code-input'].includes(id)?'change':'click',()=>{$('worksheet-pdf-preview').hidden=true;});
+ controls.forEach(id=>$(id).addEventListener('change',()=>{try{settings();grid();$('worksheet-pdf-preview').hidden=true;$('worksheet-status').textContent='Settings updated. Preview or download to use the new settings.';}catch(error){$('worksheet-status').textContent=error.message;}}));
+ function end(){sessionId++;challenge=null;preparing=false;if(attemptRunning){cancel();attemptRunning=false;}target();render();$('competition-status').textContent='Competition ended. Choose an example and start a new round.';}
+ function target(){
+  const group=$('competition-target');if(!challenge||$('text-program').hidden){group.innerHTML='';return;}
+  const r=challenge.route,points=r.points,start=points[0],finish=points.at(-1),s=cameraScale;
+  group.innerHTML=`<path d="${points.map((p,i)=>`${i?'L':'M'}${p.x+300} ${p.y+300}`).join(' ')}" fill="none" stroke="#173e38" stroke-dasharray="7 7" stroke-width="2" vector-effect="non-scaling-stroke"/><text x="${start.x+300+10*s}" y="${start.y+300+20*s}" font-size="${12*s}" fill="#173e38">START</text><text x="${finish.x+300+10*s}" y="${finish.y+300-10*s}" font-size="${12*s}" fill="#173e38">FINISH</text>`;
+ }
+ $('competition-start').addEventListener('click',async()=>{
+  const id=++sessionId;
+  try{const speed=Number($('competition-speed').value),turn=Number($('competition-turn').value);if(!Number.isFinite(speed)||speed<.1||speed>10||!Number.isFinite(turn)||turn<15||turn>360)throw Error('Use 0.1–10 steps/second and 15–360 degrees/second.');
+   const chosen=await prepare();if(!chosen||id!==sessionId)return;
+   // Timing is modelled from movement and turn costs, never animation frame rate.
+   const ref=WizbotWorkshop.model(chosen.route.mode,chosen.route.points[0],speed,turn);chosen.route.moves.forEach(m=>ref.move(m.command,m.args));chosen.route=ref.finish();
+   if(running)cancel();showProgramMode('code');
+   challenge={...chosen,speed,turn,referenceStatements:WizbotWorkshop.statements(chosen.source),started:performance.now(),attempt:0};
+   $('competition-budget').textContent=`Locked input: ${chosen.input}. Reference: ${challenge.referenceStatements} statements, ${chosen.route.seconds.toFixed(2)} simulated bot seconds. Speed: ${speed} steps/s; turn: ${turn}°/s.`;
+   $('worksheet-pdf-preview').hidden=true;
+   $('competition-source').value='';$('competition-title').textContent=chosen.details.title;$('competition-results').replaceChildren();$('competition-status').textContent='Timer running. Write your own program below. Follow the dashed target in order and finish facing the same way. Stopped and failed attempts keep the clock running.';
+   resetCompetitionBoard();render();$('competition-source').focus();
+  }catch(error){$('competition-status').textContent=error.message;}
+ });
+ function resetCompetitionBoard(){
+  $('mode').value=challenge.route.mode;resetPose(true);const start=challenge.route.points[0];pose={x:start.x+300,y:start.y+300,a:start.a||0};trail=`M${pose.x} ${pose.y}`;
+  pathBounds={minX:Math.min(...challenge.route.points.map(p=>p.x+300)),maxX:Math.max(...challenge.route.points.map(p=>p.x+300)),minY:Math.min(...challenge.route.points.map(p=>p.y+300)),maxY:Math.max(...challenge.route.points.map(p=>p.y+300))};fitTravelledPath();drawBot();target();
+ }
+ $('competition-end').addEventListener('click',end);
+ $('competition-run').addEventListener('click',async()=>{
+  if(!challenge||running)return;const round=challenge,id=sessionId,source=$('competition-source').value,codingSeconds=(performance.now()-round.started)/1000;
+  if(!source.trim()){$('competition-status').textContent='Write a program first. The coding clock is still running.';return;}
+  resetCompetitionBoard();running=true;codeRunning=true;attemptRunning=true;const token=++runToken;renderQueue();render();
+  const actual=WizbotWorkshop.model(round.route.mode,round.route.points[0],round.speed,round.turn);
+  try{await WizbotCode.run(source,{input:round.input,shouldStop:()=>token!==runToken,onMove:async(command,args)=>{
+   if((commands[command]?.mode==='draw'||['T','P'].includes(command))&&round.route.mode!=='draw')throw Error('This target uses Grid mode. Use its supported moves.');actual.move(command,args);return execute(command,token,args);
+  }});
+   if(token!==runToken||id!==sessionId)return;
+   const result=WizbotWorkshop.score(round.route,actual.finish(),source,round.referenceStatements,codingSeconds);round.attempt++;
+   const row=document.createElement('li');row.textContent=`Attempt ${round.attempt}: ${result.valid?'route passed':'route mismatch — 0 points'} | ${result.lines} code statements | bot ${result.robotSeconds.toFixed(2)} s | coding ${result.codingSeconds.toFixed(1)} s | code ${result.code}/400 + bot ${result.time}/400 + coding ${result.coding}/200 = ${result.total}/1000`;$('competition-results').prepend(row);
+   $('competition-status').textContent=result.valid?'Route passed. Improve the code and try again, or end the round.':'Route mismatch. Match the whole route in order, distance and final heading. Reaching FINISH alone is not enough.';
+  }catch(error){if(token===runToken)$('competition-status').textContent='No score: '+error.message+' The coding clock continues.';}
+  finally{if(token===runToken||!running)attemptRunning=false;if(token===runToken){running=false;codeRunning=false;renderQueue();}render();}
+ });
+ setInterval(()=>{$('competition-clock').textContent=challenge?`Coding timer: ${((performance.now()-challenge.started)/1000).toFixed(1)} s (continues through retries)`:'Coding timer: not running';},500);
+ globalThis.WizbotWorkshopUI={grid,render,target};grid();render();
+})();
+
+$('competition-stop').addEventListener('click',()=>{if(running){cancel();$('competition-status').textContent='Attempt stopped without a score. The coding clock keeps running.';}});
 </script>
 </body></html>
