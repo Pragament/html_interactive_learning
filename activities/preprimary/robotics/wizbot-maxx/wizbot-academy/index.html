@@ -90,6 +90,7 @@
 <h3>Code a pattern. Follow its trail.</h3><p class="hint">A small practice language with variables, <code>if / else</code>, <code>repeat</code>, <code>for</code> and <code>while</code>. Every example moves the robot and leaves a travelled path. This runs only in your browser.</p>
 <div class="pattern-filters" role="group" aria-label="Find a curriculum path"><label>Suggested class<select id="pattern-class"><option value="all">All classes 1–10</option><option value="1">Class 1</option><option value="2">Class 2</option><option value="3">Class 3</option><option value="4">Class 4</option><option value="5">Class 5</option><option value="6">Class 6</option><option value="7">Class 7</option><option value="8">Class 8</option><option value="9">Class 9</option><option value="10">Class 10</option></select></label><label>Subject<select id="pattern-subject"><option value="all">All subjects</option><option value="math">Mathematics</option><option value="physics">Physics / movement foundations</option></select></label><label>Find a topic<input id="pattern-search" type="search" placeholder="Try fractions, light, motion…"></label></div><p id="pattern-count" class="hint" role="status"></p><details class="pattern-level-note"><summary>About the suggested levels</summary><p>These independently written paths practise concepts found in CBSE/NCERT learning progressions, not every syllabus chapter. Class placement is a teaching suggestion. For Classes 1–5, physics-related paths are movement/EVS foundations. <a href="https://cbseacademic.nic.in/cbe/learning-framework.html" target="_blank" rel="noopener noreferrer">CBSE learning frameworks</a> · <a href="https://www.ncert.nic.in/pdf/NCF_for_Foundational_Stage_20_October_2022.pdf" target="_blank" rel="noopener noreferrer">NCERT foundational framework</a>.</p></details><div class="code-example-controls"><label>Choose an example<select id="code-example"></select></label><button type="button" id="load-code-example">Load example</button><label><span id="code-input-label">Pattern size / repetitions</span><input id="code-input" type="number" min="0" max="1000" step="1" value="8"></label></div>
 <p id="code-example-hint" class="hint"></p><section class="pattern-learning" aria-label="Pattern learning notes"><h4 id="active-pattern-name"></h4><p id="active-pattern-topic" class="hint"></p><p id="pattern-concept"></p><p><strong>Observe / change:</strong> <span id="pattern-challenge"></span></p><p id="pattern-model" class="hint"></p></section>
+<details class="pattern-learning"><summary>Algorithm &amp; flowchart · <span id="explanation-title"></span></summary><p class="hint">These explain the loaded example. Arrows show the order; diamonds ask questions. Yes enters a branch or loop; No continues. If you edit the code, load the example again to compare.</p><h4>Algorithm</h4><ol id="pattern-algorithm"></ol><h4>Flowchart</h4><div id="pattern-flowchart" style="max-height:560px;overflow:auto;border:1px solid #cbd9d0;background:white"></div></details>
 <label for="code-source">Your program</label><textarea id="code-source" rows="15" maxlength="12000" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="code-syntax-hint"></textarea>
 <p id="code-syntax-hint" class="hint">Use <code>;</code> after declarations, assignments and commands. Put blocks inside <code>{ }</code>. <code>input</code> reads the number above. Names are case-sensitive.</p>
 <div class="run-buttons"><button type="button" id="run-code" class="primary">Run code ▶</button><button type="button" id="stop-code" disabled>Stop code</button></div><p id="code-status" role="status" aria-live="polite">Load an example, make a prediction, then run it.</p>
@@ -403,6 +404,27 @@ const WizbotWorkshop=(()=>{
 })();
 
 </script>
+<script id="wizbot-code-explanations">
+const WizbotExplanations=(()=>{
+ function expr(n){if(!n)return '';if(n.kind==='literal')return typeof n.value==='string'?JSON.stringify(n.value):String(n.value);if(n.kind==='variable')return n.name;if(n.kind==='unary')return n.op+'('+expr(n.value)+')';return '('+expr(n.left)+' '+n.op+' '+expr(n.right)+')';}
+ function action(n){if(n.kind==='call'){const names={forward:'Move forward',reverse:'Move backward',right:'Turn right 90°',left:'Turn left 90°',right45:'Turn right 45°',left45:'Turn left 45°',right30:'Turn right 30°',left30:'Turn left 30°',arcRight:'Draw a right quarter-circle, radius',arcLeft:'Draw a left quarter-circle, radius',turn:'Turn by angle',moveTo:'Move to coordinates',print:'Display'};return (names[n.name]||n.name)+(n.args.length?' '+n.args.map(expr).join(', '):'');}if(n.op==='++')return 'Increase '+n.name+' by 1';if(n.op==='--')return 'Decrease '+n.name+' by 1';return (n.kind==='let'?'Set ':'Update ')+n.name+' '+n.op+' '+expr(n.value);}
+ function algorithm(body){return body.map(n=>n.kind==='if'?{text:'If '+expr(n.test)+', follow the Yes steps; otherwise follow the No steps.',yes:algorithm(n.yes),no:algorithm(n.no)}:n.kind==='for'?{text:action(n.init)+'. While '+expr(n.test)+', repeat these steps, then '+action(n.update)+'.',body:algorithm(n.body)}:n.kind==='while'?{text:'While '+expr(n.test)+', repeat these steps. Check again after every repetition.',body:algorithm(n.body)}:n.kind==='repeat'?{text:'Repeat these steps '+expr(n.test)+' times.',body:algorithm(n.body)}:{text:action(n)});}
+ function build(source){const ast=WizbotCode.parse(source),nodes=[],edges=[];const node=(text,kind='process')=>{const id=nodes.length;nodes.push({id,text,kind});return id;};const edge=(from,to,label='')=>edges.push({from,to,label});
+ const start=node('Start','terminal'),read=node('Read input (the pattern size)','input');edge(start,read);
+ function sequence(body,incoming){let tails=incoming;for(const n of body){if(n.kind==='if'){const test=node(expr(n.test)+'?','decision');tails.forEach(t=>edge(t,test));const yes=node('Yes branch'),no=node('No branch');edge(test,yes,'Yes');edge(test,no,'No');tails=[...sequence(n.yes,[yes]),...sequence(n.no,[no])];}else if(['repeat','while','for'].includes(n.kind)){if(n.kind==='for'){const init=node(action(n.init));tails.forEach(t=>edge(t,init));tails=[init];}if(n.kind==='repeat'){const init=node('Set repetition counter to 0; remember '+expr(n.test)+' repetitions');tails.forEach(t=>edge(t,init));tails=[init];}const test=node(n.kind==='repeat'?'Counter < repetitions?':expr(n.test)+'?','decision');tails.forEach(t=>edge(t,test));const entry=node('Loop body');edge(test,entry,'Yes');let ends=sequence(n.body,[entry]);if(n.kind!=='while'){const update=node(n.kind==='repeat'?'Increase repetition counter by 1':action(n.update));ends.forEach(t=>edge(t,update));ends=[update];}ends.forEach(t=>edge(t,test,'Repeat'));const exit=node('Continue after loop');edge(test,exit,'No');tails=[exit];}else{const id=node(action(n),n.kind==='call'&&n.name==='print'?'input':'process');tails.forEach(t=>edge(t,id));tails=[id];}}return tails;}
+ const ends=sequence(ast,[read]),end=node('End','terminal');ends.forEach(t=>edge(t,end));return {algorithm:[{text:'Start. Read input from Pattern size / repetitions.'},...algorithm(ast),{text:'End.'}],nodes,edges};}
+ function render(example){const model=build(example.code),list=document.getElementById('pattern-algorithm'),chart=document.getElementById('pattern-flowchart');list.replaceChildren();chart.replaceChildren();document.getElementById('explanation-title').textContent=example.title;
+ function items(target,steps){steps.forEach(step=>{const li=document.createElement('li');li.append(document.createTextNode(step.text));target.append(li);for(const [key,label]of [['body','Steps'],['yes','Yes'],['no','No']])if(step[key]?.length){const group=document.createElement('ol'),caption=document.createElement('strong');caption.textContent=label+':';li.append(caption,group);items(group,step[key]);}});}items(list,model.algorithm);
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),height=model.nodes.length*104+30;svg.setAttribute('viewBox','0 0 640 '+height);svg.setAttribute('role','img');svg.setAttribute('aria-label','Flowchart for '+example.title+'. Numbered steps and labelled arrows show decisions and loop returns.');
+ function add(tag,attrs,text){const el=document.createElementNS(ns,tag);for(const [k,v]of Object.entries(attrs))el.setAttribute(k,v);if(text!==undefined)el.textContent=text;svg.append(el);return el;}
+ const defs=add('defs',{}),marker=document.createElementNS(ns,'marker');for(const [k,v]of Object.entries({id:'flow-arrow',markerWidth:8,markerHeight:8,refX:7,refY:4,orient:'auto'}))marker.setAttribute(k,v);const tip=document.createElementNS(ns,'path');tip.setAttribute('d','M0,0 L8,4 L0,8 Z');tip.setAttribute('fill','#47695d');marker.append(tip);defs.append(marker);
+ model.edges.forEach((e,i)=>{const y1=e.from*104+68,y2=e.to*104+26,direct=e.to===e.from+1&&!e.label;const lane=e.to<e.from?30+(i%6)*10:610-(i%6)*10;add('path',{d:direct?`M320 ${y1} V${y2}`:`M${lane<320?145:495} ${y1-20} H${lane} V${y2+20} H${lane<320?145:495}`,fill:'none',stroke:'#47695d','stroke-width':1.5,'marker-end':'url(#flow-arrow)'});if(e.label)add('text',{x:lane<320?lane+5:lane-5,y:(y1+y2)/2,'text-anchor':lane<320?'start':'end',fill:'#254e3d','font-size':12},e.label);});
+ model.nodes.forEach(n=>{const y=n.id*104+26,decision=n.kind==='decision';if(decision)add('polygon',{points:`320,${y-12} 505,${y+21} 320,${y+54} 135,${y+21}`,fill:'#fff1cd',stroke:'#9a7637'});else add('rect',{x:145,y,width:350,height:42,rx:n.kind==='terminal'?21:5,fill:n.kind==='input'?'#e8effa':'#edf5ed',stroke:'#47695d'});const foreign=add('foreignObject',{x:170,y:y+2,width:300,height:40});const label=document.createElement('div');label.setAttribute('xmlns','http://www.w3.org/1999/xhtml');label.style.cssText='font:12px/1.2 system-ui;text-align:center;display:flex;align-items:center;justify-content:center;height:100%;overflow-wrap:anywhere';label.textContent=(n.id+1)+'. '+n.text;foreign.append(label);});chart.append(svg);
+ }
+ return {build,render};
+})();
+</script>
+
 <script>
 'use strict';
 const lessons = [
@@ -584,6 +606,7 @@ function renderPatternLibrary(){
  renderCodeControls();
 }
 function renderPatternLearning(example){
+ WizbotExplanations.render(example);
  $('active-pattern-name').textContent='Loaded: '+example.title;
  $('active-pattern-topic').textContent='Suggested '+(example.classes.length===1?'Class '+example.classes[0]:'Classes '+example.classes.join(', '))+' · '+patternSubject(example)+' · '+example.topic;
  $('pattern-concept').textContent=example.concept;
@@ -871,4 +894,388 @@ if(location.hash==='#advanced')requestAnimationFrame(()=>$('advanced').scrollInt
 
 $('competition-stop').addEventListener('click',()=>{if(running){cancel();$('competition-status').textContent='Attempt stopped without a score. The coding clock keeps running.';}});
 </script>
+<script id="wizbot-guide-model">
+const WizbotGuideModel=(()=>{
+ function plan(key){
+  const move=(command,...args)=>({command,args});
+  if(key==='buttons')return {kind:'buttons',mode:'grid',queue:['F','R','F','L','F'],moves:['F','R','F','L','F'].map(c=>move(c))};
+  if(key==='square')return {kind:'code',mode:'grid',example:'square',input:3,moves:Array.from({length:4},()=>[move('F',3),move('R')]).flat(),variables:{input:3}};
+  if(key==='fibonacci'){let a=1,b=1,moves=[];for(let i=0;i<6;i++){moves.push(move('AR',a));[a,b]=[b,a+b];}return {kind:'code',mode:'draw',example:'fibonacci-spiral',input:6,moves,variables:{input:6,a,b}};}
+  if(key==='decisions')return {kind:'code',mode:'draw',example:'even-odd',input:6,moves:Array.from({length:6},(_,i)=>[move('F',1),move(i%2===0?'R':'L')]).flat(),variables:{input:6}};
+  if(key==='series-prefix'||key==='series-solved'){
+   const q=WizbotSeries.questions[0],solved=key==='series-solved',terms=WizbotSeries.values(q,solved?q.answer:null),scale=WizbotSeries.scale(q);
+   return {kind:'series',mode:'draw',solved,moves:terms.flatMap(term=>[{...move('F',term.value/scale),term},move('R')])};
+  }
+  throw Error('Unknown guided pattern: '+key);
+ }
+ function frames(p){
+  const start={x:300,y:p.kind==='buttons'?500:300,a:0};let pose={...start},distance=0,segments=0;const frames=[{pose:{...pose},distance,segments,command:'Start'}],marks=[];
+  p.moves.forEach((move,index)=>{
+   const turn=['L','R'].includes(move.command)?(move.command==='L'?-90:90):null;
+   if(turn!==null){for(let i=1;i<=16;i++)frames.push({pose:{...pose,a:pose.a+turn*i/16},distance,segments,command:move.command});pose={...pose,a:pose.a+turn};return;}
+   const motion=WizbotCode.motion({...pose},move.command,move.args,p.mode,start),before=distance;segments++;
+   for(let i=1;i<=64;i++)frames.push({pose:motion.point(i/64),distance:before+motion.distance*i/64,segments,command:move.command});
+   distance+=motion.distance;pose=motion.point(1);const mid=motion.point(.5);marks.push({at:frames.length-1,x:mid.x,y:mid.y,endX:pose.x,endY:pose.y,text:move.term?`${move.term.index+1}: ${move.term.value}`:motion.label||((motion.arc?'r = ':'')+Number(motion.amount.toFixed(2))+(motion.arc?'':' steps'))});
+  });
+  return {frames,marks,start,pose,distance,segments};
+ }
+ return {plan,frames};
+})();
+
+</script>
+<style>
+.boat-guide-launch[hidden],.boat-guide-panel[hidden]{display:none!important}.boat-guide-launch{position:fixed;right:22px;bottom:20px;z-index:600;display:flex;align-items:center;gap:10px;border:1px solid #cedecc;border-radius:40px;background:#235c47;color:#fff;padding:10px 17px 10px 10px;box-shadow:0 5px 24px #183e352b;font-size:13px}.boat-guide-launch:hover:not(:disabled){background:#184632}.guide-avatar{width:38px;height:38px;flex-shrink:0}.boat-guide-panel{position:fixed;right:20px;bottom:20px;z-index:610;width:360px;max-height:min(78vh,760px);overflow:auto;border:1px solid #b9cdb8;border-radius:18px;background:#fffefa;box-shadow:0 12px 60px #183e3540;color:#202924;font-size:13px}.guide-head{display:flex;align-items:center;gap:10px;padding:14px 16px;background:#e9f0e4;border-bottom:1px solid #d4dfce;position:sticky;top:0;z-index:2}.boat-guide-panel button,.boat-guide-panel select{font-family:inherit;letter-spacing:normal}.guide-head strong{font-size:14px}.guide-head small{display:block;font-size:10px;color:#576d5b}.guide-head button{margin-left:auto;padding:5px 10px;font-size:20px;background:transparent;border:0}.guide-body{padding:14px 16px}.guide-tour{width:100%;text-align:left;display:block;margin:9px 0;padding:12px;background:#f5f7ef;border-color:#dde6d6}.guide-tour strong{font-size:13px;display:block}.guide-tour span{font-size:11px;font-weight:400;color:#647168;display:block;margin-top:4px}.guide-tour .guide-tour-meta{font-size:10px;color:#235c47}.guide-options{display:flex;gap:10px;align-items:end;margin-top:12px;flex-wrap:wrap}.guide-options label{font-size:11px;display:block;color:#52644f}.guide-options select{font-size:11px;padding:6px}.guide-options .voice-select{flex:1;min-width:150px}.guide-options input{accent-color:#235c47}.guide-options .guide-audio{display:flex;align-items:center;gap:5px;margin-bottom:7px}.guide-player-title{font-size:11px;color:#235c47;font-weight:750;margin-bottom:5px}.guide-scene{font-size:17px;line-height:1.3;margin:8px 0}.guide-caption{font-size:15px;line-height:1.9;margin:12px 0;max-height:150px;overflow:auto;scrollbar-width:thin}.guide-word{border-radius:3px;padding:1px 0;transition:background .08s}.guide-word.spoken{color:#71816e}.guide-word.speaking{background:#f9d891;color:#202924;box-shadow:0 0 0 2px #f9d891}.guide-progress{height:4px;border-radius:4px;background:#e7ecdf;overflow:hidden;margin:9px 0}.guide-progress i{height:100%;display:block;background:#235c47;width:0}.guide-transport{display:flex;gap:7px;flex-wrap:wrap}.guide-transport button{font-size:12px;padding:8px 12px}.guide-status{font-size:11px;color:#52644f;min-height:18px;margin-top:8px}.guide-help{font-size:10px;line-height:1.5;color:#647168;margin:7px 0}.guide-spotlight{outline:3px solid #d16d3f!important;outline-offset:6px!important;box-shadow:0 0 0 8px #f3c98955!important;border-radius:8px}.guide-demo-running main{padding-bottom:300px}.guide-complete{background:#edf3e5;border-radius:8px;padding:10px;margin-bottom:10px}.guide-quick-rate{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;font-size:11px}.guide-quick-rate select{width:auto;padding:4px 8px;font-size:11px}.guide-seek-label{display:flex;justify-content:space-between;font-size:10px;color:#52644f}#guideSeek{min-height:20px;margin:0}.guide-settings{margin:10px 0 0;padding:7px 0 0;border:0;border-top:1px solid #dde5d5;background:transparent}.guide-settings summary{font-size:11px}.boat-guide-panel.is-playing .guide-caption{max-height:100px;font-size:14px;line-height:1.75}.boat-guide-panel.is-playing .guide-scene{font-size:15px}.boat-guide-panel.is-playing .guide-head{padding:10px 14px}.guide-tour:focus-visible,.boat-guide-launch:focus-visible,.boat-guide-panel button:focus-visible{outline:3px solid #c34d2c;outline-offset:3px}@media(max-width:600px){.boat-guide-panel{right:10px;bottom:10px;width:calc(100vw - 20px);max-height:74vh}.boat-guide-launch{right:12px;bottom:12px}.boat-guide-panel.is-playing .guide-head{padding:8px 12px}.boat-guide-panel.is-playing .guide-body{padding:10px 12px}.boat-guide-panel.is-playing .guide-caption{max-height:96px;font-size:13px;line-height:1.8;margin:8px 0}.boat-guide-panel.is-playing .guide-scene{font-size:14px;margin:4px 0}.boat-guide-panel.is-playing .guide-avatar{width:30px;height:30px}}@media(prefers-reduced-motion:reduce){.guide-word{transition:none}}
+
+.guide-view-tools{display:flex;gap:8px;padding:8px 16px 0}.guide-view-tools button{font-size:11px;padding:6px 10px;flex:1}.guide-compact-tools{display:none}.boat-guide-panel.is-caption-only{max-height:280px;width:min(420px,calc(100vw - 20px))}.is-caption-only .guide-head,.is-caption-only .guide-view-tools,.is-caption-only .guide-body>:not(#guidePlayer),.is-caption-only #guidePlayer>:not(#guideCaption){display:none!important}.is-caption-only .guide-compact-tools{display:flex;justify-content:flex-end;gap:5px;padding:5px 8px 0}.guide-compact-tools button{padding:3px 9px;font-size:13px;background:transparent}.is-caption-only .guide-body{padding:4px 14px 10px}.boat-guide-panel.is-caption-only .guide-caption{max-height:175px;margin:4px 0;font-size:15px;line-height:1.8}.boat-guide-launch.is-narrating::after{content:"";width:7px;height:7px;border-radius:50%;background:#f9d891}
+</style>
+<button id="boatGuideLaunch" class="boat-guide-launch" aria-expanded="false" aria-controls="boatGuidePanel"><svg class="guide-avatar" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#e8edcc"/><path d="M9 46c1-13 29-13 30 0" fill="#d87850"/><ellipse cx="24" cy="23" rx="12" ry="14" fill="#eebc8c"/><path d="M12 23C6 0 43 1 36 24l-5-10-14 3Z" fill="#365549"/><circle cx="20" cy="23" r="1.5" fill="#284134"/><circle cx="29" cy="23" r="1.5" fill="#284134"/><path d="M20 29q4 4 8 0" fill="none" stroke="#8c4934" stroke-width="1.5"/></svg><span id="guideLaunchLabel">Guide</span></button>
+<aside id="boatGuidePanel" class="boat-guide-panel" aria-label="Guide and guided tours" hidden>
+ <div class="guide-head"><svg class="guide-avatar" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="23" fill="#dce8c6"/><path d="M9 46c1-13 29-13 30 0" fill="#d87850"/><ellipse cx="24" cy="23" rx="12" ry="14" fill="#eebc8c"/><path d="M12 23C6 0 43 1 36 24l-5-10-14 3Z" fill="#365549"/><circle cx="20" cy="23" r="1.5" fill="#284134"/><circle cx="29" cy="23" r="1.5" fill="#284134"/><path d="M20 29q4 4 8 0" fill="none" stroke="#8c4934" stroke-width="1.5"/></svg><div><strong>Mira · guide</strong><small>A guided demonstration. Just watch and listen.</small></div><button id="guideClose" aria-label="Close guide and stop tour">×</button></div>
+ <div class="guide-view-tools"><button id="guideTextOnly" disabled title="Show highlighted narration only">▤ Text only</button><button id="guideMinimize" title="Hide guide and keep narration playing">— Minimize</button></div>
+ <div class="guide-compact-tools"><button id="guideExpand" aria-label="Expand guide" title="Expand guide">↗</button><button id="guideCompactPause" aria-label="Pause narration" title="Pause or resume narration">Ⅱ</button><button id="guideCompactMinimize" aria-label="Minimize guide and continue narration" title="Minimize, keep playing">—</button><button id="guideCompactStop" aria-label="Return to tour list" title="Stop narration and return to the tour list">☷ Tour list</button></div>
+ <div class="guide-body"><label class="guide-quick-rate" for="guideMode">Narration mode<select id="guideMode"><option value="sentence" selected>Sentence by sentence</option><option value="word">Word by word</option><option value="continuous">Continuous</option></select></label><p id="guideModeHint" class="guide-help"></p><div id="guideLibrary"><h2 style="font-size:17px">Choose a guided tour</h2><p class="guide-help">Mira will change the controls, explain the results, and demonstrate complete robot paths. Your draft and movement queue are restored when the guide stops. Stop at any time to explore.</p><div id="guideTourList"></div></div>
+ <div id="guidePlayer" hidden><div id="guideTourTitle" class="guide-player-title"></div><div id="guideStepCount" class="mini"></div><h2 id="guideSceneTitle" class="guide-scene"></h2><div class="guide-progress" role="progressbar" aria-label="Tour progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="guideProgress"><i id="guideProgressFill"></i></div><label class="guide-quick-rate" for="guideQuickRate">Playback speed <select id="guideQuickRate"></select></label><label class="guide-seek-label" for="guideSeek">Rewind / forward <output id="guideSeekLabel">Scene 1</output></label><input id="guideSeek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Tour position"><div id="guideCaption" class="guide-caption" aria-label="Narration transcript"></div><div class="guide-transport"><button id="guidePause" class="primary">Ⅱ Pause</button><button id="guideReplay">↻ Replay</button><button id="guideStop" title="Stop narration and return to the tour list">☷ Tour list</button></div><p id="guideStatus" class="guide-status" role="status" aria-live="polite"></p></div>
+ <details id="guideSettings" class="guide-settings" open><summary>Voice settings</summary><div class="guide-options"><label class="voice-select" for="guideVoice">Voice<select id="guideVoice"><option value="">Device English voice</option></select></label><label for="guideRate">Pace<select id="guideRate"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option><option value="2.5">2.5×</option><option value="3">3×</option></select></label><label class="guide-audio"><input id="guideAudio" type="checkbox" checked> Voice on</label></div><p id="guideVoiceNote" class="guide-help">Sentence mode highlights each sentence while it is spoken. Word by word highlights each separate utterance at its speech start. Continuous mode uses only timing supplied by the voice; it never estimates word positions.</p></details></div>
+</aside>
+<script id="wizbot-guide-script">
+'use strict';
+// Guided-tour engine: speech, timer and animation callbacks are guarded against stale runs.
+class BoatTourEngine {
+ static sentenceRange(words,index){let start=Math.max(0,index),end=Math.max(0,index);const ends=word=>/[.!?][”"')\]]*$/.test(word);while(start>0&&!ends(words[start-1]))start--;while(end<words.length-1&&!ends(words[end]))end++;return {start,end};}
+
+ constructor(host){this.host=host;this.run=0;this.speechRun=0;this.active=false;this.paused=false;this.index=0;this.word=0;this.timer=null;this.frame=null;this.lastFrame=null;this.elapsed=0;this.animationDone=true;this.wordsDone=false;this.utterance=null;this.savedScenes=new Set();}
+ start(tour){this.stop(false);this.tour=tour;this.active=true;this.paused=false;this.savedScenes.clear();this.host.begin(tour);this.scene(0);}
+ clearSpeech(){this.speechRun++;if(this.timer!==null)this.host.clearTimeout(this.timer);this.timer=null;this.host.cancelSpeech();this.utterance=null;}
+ scene(index,fraction=0,paused=false,seeking=false){
+  if(!this.active)return;if(index>=this.tour.steps.length){this.finish();return;}
+  this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.index=index;this.paused=paused;this.lastFrame=null;this.wordsDone=false;
+  const step=this.tour.steps[index];this.words=step.text.match(/\S+/g)||[];this.word=Math.min(this.words.length-1,Math.floor(this.words.length*fraction));this.elapsed=(Math.max(900,this.words.length*280)/(this.host.playbackRate?.()||1))*fraction;this.animationDone=!step.tween;
+  this.host.scene(step,index,this.tour.steps.length,this.words);this.host.apply(step,{skipSave:seeking||this.savedScenes.has(index)});if(step.save&&!seeking)this.savedScenes.add(index);
+  if(step.tween&&fraction)this.host.tween(step.tween,fraction);this.host.lock();this.host.pause(paused);
+  if(paused){this.host.word(this.word,this.words.length);return;}
+  if(step.tween){const id=this.run;this.frame=this.host.requestFrame(now=>this.animate(now,id));}this.speak();
+ }
+ seek(percent){
+  if(!this.tour)return;const paused=this.paused,position=Math.max(0,Math.min(99.999,percent))/100*this.tour.steps.length,index=Math.floor(position);
+  this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.active=true;this.host.begin(this.tour);this.host.restore?.(this.tour,index);this.scene(index,position-index,paused,true);
+ }
+ animate(now,id){
+  if(!this.active||this.paused||id!==this.run)return;
+  if(this.lastFrame!==null)this.elapsed+=Math.max(0,now-this.lastFrame);this.lastFrame=now;
+  const step=this.tour.steps[this.index],duration=(Math.max(900,this.words.length*280)/(this.host.playbackRate?.()||1)),fraction=Math.min(1,this.elapsed/duration);
+  this.host.tween(step.tween,fraction);if(fraction>=1){this.animationDone=true;this.frame=null;this.advance();}else this.frame=this.host.requestFrame(time=>this.animate(time,id));
+ }
+ speak(){
+  if(!this.active||this.paused)return;
+  if(this.word>=this.words.length){this.wordsDone=true;this.advance();return;}
+  const run=this.run,serial=++this.speechRun,valid=()=>this.active&&!this.paused&&run===this.run&&serial===this.speechRun;
+  const advanceWord=()=>{if(!valid())return;if(this.timer!==null)this.host.clearTimeout(this.timer);this.timer=null;this.word++;this.speak();};
+  if(this.host.audioEnabled()&&this.host.speakSentence&&this.host.narrationMode?.()==='sentence'){
+   const range=BoatTourEngine.sentenceRange(this.words,this.word),sentence=this.words.slice(range.start,range.end+1);this.word=range.start;
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('Voice playback stalled. Continuing with timed captions.');this.clearSpeech();this.speak();},Math.max(15000,sentence.length*2000));
+   this.utterance=this.host.speakSentence(sentence,()=>{if(valid())this.host.word(range.start,this.words.length);},()=>{if(!valid())return;this.host.clearTimeout(this.timer);this.timer=null;this.word=range.end+1;this.speak();},()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});return;
+  }
+  if(this.host.audioEnabled()&&this.host.speakPhrase&&this.host.narrationMode?.()!=='word'){
+   const offset=this.word,remaining=this.words.slice(offset);
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('Voice playback stalled. Continuing with timed captions.');this.clearSpeech();this.speak();},Math.max(15000,remaining.length*2000));
+   this.utterance=this.host.speakPhrase(remaining,index=>{if(valid()){this.word=offset+index;this.host.word(this.word,this.words.length);}},()=>{if(!valid())return;this.host.clearTimeout(this.timer);this.timer=null;this.word=this.words.length;this.wordsDone=true;this.advance();},()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});return;
+  }
+  const word=this.words[this.word];
+  if(this.host.audioEnabled()){
+   this.timer=this.host.setTimeout(()=>{if(!valid())return;this.host.audioFailed('The device voice did not respond. Continuing with timed captions.');this.clearSpeech();this.speak();},6000);
+   this.utterance=this.host.speakWord(word,()=>{if(valid())this.host.word(this.word,this.words.length);},advanceWord,()=>{if(!valid())return;this.host.audioFailed('Voice playback is unavailable. Continuing with timed captions.');this.clearSpeech();this.speak();});
+  }else{this.host.word(this.word,this.words.length);this.timer=this.host.setTimeout(advanceWord,this.host.wordDelay(word));}
+ }
+ advance(){if(!this.active||this.paused||!this.wordsDone||!this.animationDone)return;const run=this.run;this.timer=this.host.setTimeout(()=>{this.timer=null;if(this.active&&!this.paused&&run===this.run)this.scene(this.index+1);},650);}
+ pause(){if(!this.active||this.paused)return;this.paused=true;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.lastFrame=null;this.host.pause(true);}
+ resume(){if(!this.active||!this.paused)return;this.paused=false;this.lastFrame=null;this.host.pause(false);if(!this.animationDone){const run=this.run;this.frame=this.host.requestFrame(now=>this.animate(now,run));}if(this.wordsDone)this.advance();else this.speak();}
+ voiceChanged(){if(!this.active||this.paused)return;this.clearSpeech();if(this.wordsDone)this.advance();else this.speak();}
+ stop(notify=true){this.active=false;this.paused=false;this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.lastFrame=null;this.host.release();if(notify)this.host.stopped();}
+ finish(){this.active=false;this.run++;this.clearSpeech();if(this.frame!==null)this.host.cancelFrame(this.frame);this.frame=null;this.host.release();this.host.finished(this.tour);}
+}
+// End guided-tour engine.
+(()=>{
+ const guide=id=>document.getElementById(id),synth=window.speechSynthesis,speechAvailable=!!(synth&&window.SpeechSynthesisUtterance),controls=new Map();
+ let highlighted=null,lastTour=null,voices=[],captionWords=[],phraseCleanup=null,scrubbing=false,guideView='full';
+ const defaults={plan:"buttons"};
+ const tours=[
+ {
+  "id": "buttons",
+  "title": "First moves and robot directions",
+  "classes": "Foundations",
+  "summary": "Read a queued program and watch turns change the robot’s direction.",
+  "steps": [
+   {
+    "title": "Meet the browser robot",
+    "text": "Welcome to Wizbot Academy. I am Mira, your guide. I will operate the browser simulator while you watch. This page does not connect to a physical robot. Your existing program will be restored when the guide stops.",
+    "target": "#board",
+    "set": {
+     "plan": "buttons"
+    }
+   },
+   {
+    "title": "Read the queued commands",
+    "text": "Our queue says forward, right, forward, left, forward. A turn changes which way the robot faces. It does not move the robot forward. The next forward command travels in the new direction.",
+    "target": "#queue"
+   },
+   {
+    "title": "Watch the whole route",
+    "text": "Watch the arrow on the robot. First it travels forward. It turns right, travels again, turns left, and travels once more. The teal trail shows the distance actually travelled.",
+    "target": "#board",
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Explain the result",
+    "text": "The order of commands matters. The robot follows instructions rather than guessing our intention. You can pause, replay, or minimize this guide while narration continues. Stopping restores your original program.",
+    "target": "#path-summary"
+   }
+  ]
+ },
+ {
+  "id": "loops",
+  "title": "A square with one repeated rule",
+  "classes": "Classes 2–7",
+  "summary": "Connect repeat, right angles, equal sides, and perimeter.",
+  "steps": [
+   {
+    "title": "Load the square example",
+    "text": "I have opened Code and patterns and loaded the square example. The input sets side length. Our input is three steps. The repeat block contains a forward command and a right turn.",
+    "target": "#code-source",
+    "set": {
+     "plan": "square"
+    }
+   },
+   {
+    "title": "Repeat the pair four times",
+    "text": "Each repetition draws one side and turns ninety degrees. Four repetitions draw four equal sides and return the robot to its starting position and heading. Watch the loop become a shape.",
+    "target": "#board",
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Connect code and perimeter",
+    "text": "The square has four sides of three steps, so its perimeter is twelve step units. Turning does not add travelled distance. The repeat block saves us from writing the same pair of instructions four times.",
+    "target": "#path-summary"
+   },
+   {
+    "title": "Inspect the program",
+    "text": "The displayed program is editable after the tour. Changing the input changes side length. The loop count remains four, so the shape is still a square. This is a useful link between an algorithm and geometry.",
+    "target": "#code-source"
+   }
+  ]
+ },
+ {
+  "id": "fibonacci",
+  "title": "Follow a Fibonacci spiral",
+  "classes": "Classes 6–10",
+  "summary": "Watch variables generate quarter-circle radii and a growing path.",
+  "steps": [
+   {
+    "title": "Load the curved Fibonacci example",
+    "text": "This example begins with two variables, both equal to one. Each new number is the sum of the previous two. We will draw six quarter-circle arcs.",
+    "target": "#code-source",
+    "set": {
+     "plan": "fibonacci"
+    }
+   },
+   {
+    "title": "Watch the radii grow",
+    "text": "The radii are one, one, two, three, five, and eight step units. Each arc turns through a quarter circle. The board automatically zooms out as the path expands.",
+    "target": "#board",
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Distinguish radius and length",
+    "text": "An arc label gives its radius, not its curved length. A quarter-circle arc has length pi times radius divided by two. The teal trail is the robot’s actual travel.",
+    "target": "#path-summary"
+   },
+   {
+    "title": "Read the variable updates",
+    "text": "The loop calculates the next value, then shifts the two stored numbers forward. This produces the Fibonacci sequence. The joined arcs are a classroom approximation, not an exact logarithmic golden spiral.",
+    "target": "#code-source"
+   }
+  ]
+ },
+ {
+  "id": "decisions",
+  "title": "Odd or even? Let code decide",
+  "classes": "Classes 2–8",
+  "summary": "Use if and else to choose alternating turns.",
+  "steps": [
+   {
+    "title": "Load a decision pattern",
+    "text": "This program moves forward and tests the segment number. An odd segment turns right. An even segment turns left. The input controls how many segments we draw.",
+    "target": "#code-source",
+    "set": {
+     "plan": "decisions"
+    }
+   },
+   {
+    "title": "Watch alternating decisions",
+    "text": "Six segments are being drawn. The turns alternate right and left because the segment numbers alternate odd and even. One condition creates a repeated zigzag pattern.",
+    "target": "#board",
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Find the condition",
+    "text": "The remainder after division by two identifies even numbers. A remainder of zero takes the even branch. Otherwise the program takes the odd branch. The loop and the condition do different jobs.",
+    "target": "#code-source"
+   },
+   {
+    "title": "Predict a useful change",
+    "text": "Swapping left and right would reflect the zigzag. Changing the input would change how many segments are drawn. Predict first, then test after the guide restores your workspace.",
+    "target": "#board"
+   }
+  ]
+ },
+ {
+  "id": "series",
+  "title": "Solve a number series with a path",
+  "classes": "Classes 6–10",
+  "summary": "Draw known terms, reveal a rule, and compare the completed journey.",
+  "steps": [
+   {
+    "title": "Read the known terms",
+    "text": "Our first practice question shows four, eight, twelve, sixteen, a missing number, and twenty-four. Before choosing an answer, look at the change between neighbouring terms.",
+    "target": "#series-terms",
+    "set": {
+     "plan": "series-prefix"
+    }
+   },
+   {
+    "title": "Draw only what is known",
+    "text": "The robot draws only the known prefix before the blank. Each leg represents a term at a common scale. The turns separate terms; they do not prove which number belongs in the blank.",
+    "target": "#board",
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Explain the rule",
+    "text": "Each term increases by four. The missing number is twenty. I have selected the intended answer and shown its explanation. Drawing a trial choice alone would not establish correctness.",
+    "target": "#series-feedback",
+    "reveal": true
+   },
+   {
+    "title": "Draw the solved series",
+    "text": "Now the full series is drawn, including twenty and twenty-four. Labels show the original term values, while robot distances use a shared scale to keep the path readable.",
+    "target": "#board",
+    "set": {
+     "plan": "series-solved"
+    },
+    "tween": {
+     "id": "demoTime",
+     "from": 0,
+     "to": 1
+    }
+   },
+   {
+    "title": "Keep models separate",
+    "text": "The turning path is a visual representation of number terms. Its heading is not part of the number rule. When the guide ends, your original draft and movement queue return. You can then explore other questions yourself.",
+    "target": "#series-model-note"
+   }
+  ]
+ }
+];
+ tours.push({id:"complete",title:"Complete Wizbot walkthrough",classes:"Foundations–10",summary:"All five tours in sequence: commands, loops, patterns, decisions, and number series.",steps:tours.flatMap(tour=>tour.steps)});
+ let draft=null,activePlan=null,playback=null;
+ function captureDraft(){return {notes:Object.fromEntries(['active-pattern-name','active-pattern-topic','pattern-concept','pattern-challenge','pattern-model','code-example-hint','code-status','code-variables','series-feedback','series-position','series-run'].map(id=>[id,guide(id).textContent])),output:guide('code-output').innerHTML,trace:guide('code-trace').innerHTML,queue:[...queue],mode:guide('mode').value,repeat:guide('repeat-count').value,source:guide('code-source').value,input:guide('code-input').value,example:activeCodeExample,prepared:codePrepared,patternInput:activePatternInput,kind:isSeriesMode()?'series':guide('text-program').hidden?'buttons':'code',seriesIndex,seriesChoice,seriesRevealed,seriesModel:guide('series-model').value,filters:['pattern-class','pattern-subject','pattern-search','code-example'].map(id=>[id,guide(id).value]),pose:{...pose},trail,pathBounds:{...pathBounds},pathStart:{...pathStart},travelDistance,travelSegments,segmentMarks:segmentMarks.map(m=>({...m})),seriesMarks:seriesMarks.map(m=>({...m})),cameraScale,board:guide('board').getAttribute('viewBox')};}
+ function restoreDraft(){if(!draft)return;const d=draft;draft=null;cancel();seriesIndex=d.seriesIndex;showProgramMode(d.kind);d.filters.forEach(([id,v])=>guide(id).value=v);renderPatternLibrary();guide('code-example').value=d.filters.at(-1)[1];activeCodeExample=d.example;codePrepared=d.prepared;activePatternInput=d.patternInput;queue=[...d.queue];guide('mode').value=d.mode;guide('repeat-count').value=d.repeat;guide('code-source').value=d.source;guide('code-input').value=d.input;guide('series-model').value=d.seriesModel;seriesChoice=d.seriesChoice;seriesRevealed=d.seriesRevealed;if(d.kind==='series'){if(d.seriesRevealed)checkSeries(true);else renderSeriesControls();}if(d.example)renderPatternLearning(d.example);pose={...d.pose};trail=d.trail;pathBounds={...d.pathBounds};pathStart={...d.pathStart};travelDistance=d.travelDistance;travelSegments=d.travelSegments;segmentMarks=d.segmentMarks;seriesMarks=d.seriesMarks;cameraScale=d.cameraScale;guide('board').setAttribute('viewBox',d.board);const [x,y,width,height]=d.board.split(' ').map(Number);for(const [key,value]of Object.entries({x,y,width,height}))guide('board-background').setAttribute(key,value);drawBot();renderPathMarks();renderPathSummary();renderQueue();Object.entries(d.notes).forEach(([id,text])=>guide(id).textContent=text);guide('code-output').innerHTML=d.output;guide('code-trace').innerHTML=d.trace;guide('sim-status').textContent='Guide stopped. Your program draft, queued moves, and previous path are restored.';}
+ function settings(values){
+  if(values.plan){activePlan=WizbotGuideModel.plan(values.plan);cancel();showProgramMode(activePlan.kind);guide('mode').value=activePlan.mode;goal=null;renderGoal();
+   if(activePlan.kind==='buttons'){queue=[...activePlan.queue];guide('repeat-count').value=1;renderQueue();}
+   if(activePlan.kind==='code'){guide('pattern-class').value='all';guide('pattern-subject').value='all';guide('pattern-search').value='';renderPatternLibrary();guide('code-example').value=activePlan.example;loadCodeExample();guide('code-input').value=activePlan.input;activePatternInput=activePlan.input;renderPatternGuides();}
+   if(activePlan.kind==='series'){seriesIndex=0;loadSeriesQuestion();guide('series-model').value='spiral';seriesChoice=activePlan.solved?seriesQuestion().answer:null;if(activePlan.solved)checkSeries(true);resetSeriesBoard();}
+   playback=WizbotGuideModel.frames(activePlan);resetPose(activePlan.kind!=='buttons');renderPlayback(0);renderQueue();
+  }
+  if(values.demoTime!==undefined&&playback)renderPlayback(values.demoTime);
+ }
+ function renderPlayback(fraction){
+  const end=Math.min(playback.frames.length-1,Math.floor(Math.max(0,Math.min(1,fraction))*(playback.frames.length-1))),frame=playback.frames[end];
+  pose={...frame.pose};pathStart={...playback.start};travelDistance=frame.distance;travelSegments=frame.segments;segmentMarks=playback.marks.filter(m=>m.at<=end).map(m=>({...m}));seriesMarks=segmentMarks.map(m=>({x:m.endX,y:m.endY,text:m.text}));
+  const points=playback.frames.slice(0,end+1);trail=points.map((p,i)=>`${i?'L':'M'}${p.pose.x.toFixed(3)} ${p.pose.y.toFixed(3)}`).join(' ');pathBounds={minX:Math.min(...points.map(p=>p.pose.x)),maxX:Math.max(...points.map(p=>p.pose.x)),minY:Math.min(...points.map(p=>p.pose.y)),maxY:Math.max(...points.map(p=>p.pose.y))};
+  fitTravelledPath();drawBot();renderPathMarks();renderPathSummary();guide('sim-status').textContent=fraction>=1?'Guided path complete. Notice the start, finish, turns, and travelled distance.':'Guided playback: '+frame.command+'. The Guide controls this browser demonstration.';
+  if(activePlan.kind==='code'){guide('code-status').textContent=fraction>=1?'Guided example complete. You can run or edit the loaded example after the tour.':'Guide is tracing the loaded example with its displayed input.';if(fraction>=1)guide('code-variables').textContent=JSON.stringify(activePlan.variables,null,2);}
+ }
+ function applyDemo(step){if(step.set)settings(step.set);if(step.tween)settings({[step.tween.id]:step.tween.from});if(step.reveal)checkSeries(true);}
+ function lock(){document.querySelectorAll('main input, main select, main button, main textarea').forEach(el=>{if(!controls.has(el))controls.set(el,el.disabled);el.disabled=true;});document.body.classList.add('guide-demo-running');}
+ function release(){controls.forEach((disabled,el)=>{if(el.isConnected)el.disabled=disabled;});controls.clear();document.body.classList.remove('guide-demo-running');if(highlighted)highlighted.classList.remove('guide-spotlight');highlighted=null;restoreDraft();}
+ function spotlight(selector){if(highlighted)highlighted.classList.remove('guide-spotlight');highlighted=document.querySelector(selector);if(!highlighted)return;highlighted.classList.add('guide-spotlight');const target=highlighted.closest('.metric')||highlighted;target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});}
+ function populateVoices(){if(!speechAvailable)return;voices=synth.getVoices().filter(v=>/^en(?:-|$)/i.test(v.lang));const selected=guide('guideVoice').value;guide('guideVoice').replaceChildren(new Option('Device English voice',''));voices.forEach(v=>guide('guideVoice').appendChild(new Option(v.name+' · '+v.lang,v.voiceURI)));if(voices.some(v=>v.voiceURI===selected))guide('guideVoice').value=selected;}
+ const host={
+  setTimeout:(fn,ms)=>window.setTimeout(fn,ms),clearTimeout:id=>window.clearTimeout(id),requestFrame:fn=>requestAnimationFrame(fn),cancelFrame:id=>cancelAnimationFrame(id),
+  cancelSpeech:()=>{if(phraseCleanup){phraseCleanup();phraseCleanup=null;}if(speechAvailable)synth.cancel();},audioEnabled:()=>speechAvailable&&guide('guideAudio').checked,
+  narrationMode:()=>guide('guideMode').value,
+  playbackRate:()=>Number(guide('guideRate').value),
+  wordDelay:word=>Math.max(230,Math.min(650,word.length*45))/Number(guide('guideRate').value),
+  speakPhrase:(words,onWord,onEnd,onError,options={})=>{
+   const text=words.join(' '),u=new SpeechSynthesisUtterance(text),starts=[];let position=0;words.forEach(word=>{starts.push(position);position+=word.length+1;});
+   const voice=voices.find(v=>v.voiceURI===guide('guideVoice').value)||voices.find(v=>v.localService)||voices[0];u.lang=voice?.lang||'en-US';if(voice)u.voice=voice;u.rate=Number(guide('guideRate').value);
+   let boundarySeen=false,timer=null,ended=false;
+   const clear=()=>{if(timer!==null)clearTimeout(timer);timer=null;};
+   u.onstart=()=>{if(options.sentenceStart){options.sentenceStart();return;}clearCaptionHighlight();timer=setTimeout(()=>{if(!ended&&!boundarySeen)guide('guideModeHint').textContent='This voice has not supplied word timing. Speech continues without highlighting. Choose Word by word for synchronized highlighting.';},1200);};
+   u.onboundary=event=>{if(ended||options.sentenceStart||(event.name&&event.name!=='word'))return;boundarySeen=true;clear();updateModeNote();let index=0;while(index+1<starts.length&&starts[index+1]<=event.charIndex)index++;onWord(index);};
+   u.onend=()=>{ended=true;clear();onEnd();};u.onerror=()=>{ended=true;clear();onError();};
+   phraseCleanup=()=>{ended=true;clear();};synth.resume();synth.speak(u);return u;
+  },
+  speakSentence:(words,start,end,error)=>host.speakPhrase(words,()=>{},end,error,{sentenceStart:start}),
+  speakWord:(word,start,end,error)=>{const u=new SpeechSynthesisUtterance(word);u.lang='en-US';const voice=voices.find(v=>v.voiceURI===guide('guideVoice').value)||voices.find(v=>v.localService)||voices[0];if(voice){u.voice=voice;u.lang=voice.lang;}u.rate=Number(guide('guideRate').value);u.onstart=start;u.onend=end;u.onerror=error;synth.resume();synth.speak(u);return u;},
+  audioFailed:message=>{guide('guideAudio').checked=false;guide('guideVoiceNote').textContent=message;},
+  begin:tour=>{if(!draft)draft=captureDraft();cancel();lastTour=tour;guide('guideTextOnly').disabled=false;guide('guideQuickRate').value=guide('guideRate').value;guide('guideSettings').open=false;guide('guideLibrary').hidden=true;guide('guidePlayer').hidden=false;guide('boatGuidePanel').classList.add('is-playing');guide('guideTourTitle').textContent=tour.title;guide('guidePause').disabled=false;guide('guidePause').textContent='Ⅱ Pause';guide('guideStatus').textContent='Hands-free demonstration. Controls are operated by Mira.';updateGuideDock();if(guideView==='full')guide('guidePause').focus();},
+  scene:(step,index,total,words)=>{guide('guideSceneTitle').textContent=step.title;guide('guideStepCount').textContent='Scene '+(index+1)+' of '+total;guide('guideCaption').replaceChildren();captionWords=words.map(word=>{const span=document.createElement('span');span.className='guide-word';span.textContent=word;guide('guideCaption').append(span,document.createTextNode(' '));return span;});guide('guideCaption').setAttribute('aria-label',step.text);guide('guideSeekLabel').textContent='Scene '+(index+1)+' / '+total;guide('guideSeek').value=String(index/total*100);guide('guideProgressFill').style.width=(index/total*100)+'%';guide('guideProgress').setAttribute('aria-valuenow',String(Math.round(index/total*100)));},
+  apply:(step)=>{applyDemo(step);spotlight(step.target);},
+  restore:(tour,index)=>{settings(defaults);for(let i=0;i<index;i++){const step=tour.steps[i];applyDemo(step);if(step.tween)settings({[step.tween.id]:step.tween.to});}},
+  lock,release,
+  tween:(spec,fraction)=>settings({[spec.id]:spec.from+(spec.to-spec.from)*fraction}),
+  word:(index,total)=>{const range=guide('guideMode').value==='sentence'?BoatTourEngine.sentenceRange(captionWords.map(span=>span.textContent),index):{start:index,end:index};captionWords.forEach((span,i)=>{span.classList.toggle('speaking',i>=range.start&&i<=range.end);span.classList.toggle('spoken',i<range.start);if(i===index)span.setAttribute('aria-current','true');else span.removeAttribute('aria-current');});const current=captionWords[index],box=guide('guideCaption');if(current){const wordRect=current.getBoundingClientRect(),boxRect=box.getBoundingClientRect();if(wordRect.top<boxRect.top||wordRect.bottom>boxRect.bottom)box.scrollTop+=wordRect.top-boxRect.top-20;}const percent=(engine.index+(index+1)/total)/engine.tour.steps.length*100;if(!scrubbing)guide('guideSeek').value=String(percent);guide('guideProgressFill').style.width=percent+'%';guide('guideProgress').setAttribute('aria-valuenow',String(Math.round(percent)));},
+  pause:paused=>{updateGuideDock();guide('guidePause').textContent=paused?'▶ Resume':'Ⅱ Pause';guide('guideStatus').textContent=paused?'Paused. Resume to continue from this word.':'Hands-free demonstration. Controls are operated by Mira.';},
+  stopped:()=>{setGuideView('full');guide('guideTextOnly').disabled=true;guide('guideSettings').open=true;guide('guideLibrary').hidden=false;guide('guidePlayer').hidden=true;guide('boatGuidePanel').classList.remove('is-playing');guide('sim-status').textContent='Guided tour stopped. You can now explore the controls yourself.';guide('guideTourList').querySelector('button')?.focus();},
+  finished:tour=>{updateGuideDock();guide('guidePause').disabled=true;guide('guideSceneTitle').textContent='Tour complete';guide('guideStatus').textContent='Your controls are unlocked. Replay this tour, or choose Stop to browse the others.';guide('guideStepCount').textContent=tour.steps.length+' scenes completed';guide('guideSeek').value='100';guide('guideProgressFill').style.width='100%';guide('guideProgress').setAttribute('aria-valuenow','100');captionWords.forEach(span=>{span.classList.remove('speaking');span.classList.add('spoken');span.removeAttribute('aria-current');});guide('boatGuidePanel').classList.remove('is-playing');guide('sim-status').textContent='Guided tour complete. Your original draft and queued program are restored. Explore or choose another tour.';updateGuideDock();}
+ };
+ function updateGuideDock(){const label=engine.active?(engine.paused?'Guide · Paused':'Guide · Playing'):guide('guideSceneTitle').textContent==='Tour complete'?'Guide · Complete':'Guide';guide('guideLaunchLabel').textContent=label;guide('boatGuideLaunch').classList.toggle('is-narrating',engine.active&&!engine.paused);guide('guideCompactPause').textContent=engine.paused?'▶':'Ⅱ';guide('guideCompactPause').setAttribute('aria-label',engine.paused?'Resume narration':'Pause narration');guide('guideCompactPause').disabled=!engine.active;}
+ function setGuideView(view){guideView=view;guide('boatGuidePanel').classList.toggle('is-caption-only',view==='caption');guide('boatGuidePanel').hidden=view==='minimized';guide('boatGuideLaunch').hidden=view!=='minimized';guide('boatGuideLaunch').setAttribute('aria-expanded',String(view!=='minimized'));updateGuideDock();if(view==='minimized')guide('boatGuideLaunch').focus();}
+ function clearCaptionHighlight(){captionWords.forEach(span=>{span.classList.remove('speaking');span.removeAttribute('aria-current');});}
+ function updateModeNote(){guide('guideModeHint').textContent=guide('guideMode').value==='sentence'?'Each sentence is spoken in one passage and highlighted for the duration of its speech.':guide('guideMode').value==='word'?'Each word is spoken separately and highlights when its speech starts.':'Smooth speech for the full scene. Word highlighting requires timing from the selected voice.';}
+ const engine=new BoatTourEngine(host);
+ tours.forEach(tour=>{const button=document.createElement('button');button.className='guide-tour';const name=document.createElement('strong');name.textContent='▶ '+tour.title;const description=document.createElement('span');description.textContent=tour.summary;const meta=document.createElement('span');meta.className='guide-tour-meta';meta.textContent=tour.classes+' · '+tour.steps.length+' scenes';button.append(name,description,meta);button.addEventListener('click',()=>{if(!guide('competition-end').disabled){guide('guideModeHint').textContent='End the current competition before starting a guided tour. Your competition has not been changed.';return;}engine.start(tour);});guide('guideTourList').appendChild(button);});
+ guide('boatGuideLaunch').addEventListener('click',()=>{setGuideView('full');guide('guideClose').focus();});
+ guide('guideClose').addEventListener('click',()=>{engine.stop();setGuideView('minimized');});
+ guide('guideTextOnly').addEventListener('click',()=>{setGuideView('caption');guide('guideExpand').focus();});
+ guide('guideMinimize').addEventListener('click',()=>setGuideView('minimized'));
+ guide('guideCompactMinimize').addEventListener('click',()=>setGuideView('minimized'));
+ guide('guideExpand').addEventListener('click',()=>{setGuideView('full');guide('guideClose').focus();});
+ guide('guideCompactPause').addEventListener('click',()=>engine.paused?engine.resume():engine.pause());
+ guide('guideCompactStop').addEventListener('click',()=>engine.stop());
+ guide('guideSeek').addEventListener('input',()=>{scrubbing=true;guide('guideSeekLabel').textContent=Math.round(Number(guide('guideSeek').value))+'%';});
+ guide('guideSeek').addEventListener('change',()=>{const position=Number(guide('guideSeek').value);scrubbing=false;engine.seek(position);});
+ guide('guidePause').addEventListener('click',()=>engine.paused?engine.resume():engine.pause());guide('guideStop').addEventListener('click',()=>engine.stop());guide('guideReplay').addEventListener('click',()=>{if(lastTour)engine.start(lastTour);});
+ guide('guideMode').addEventListener('change',()=>{clearCaptionHighlight();updateModeNote();engine.voiceChanged();});
+ updateModeNote();
+ guide('guideQuickRate').innerHTML=guide('guideRate').innerHTML;
+ guide('guideQuickRate').addEventListener('change',()=>{guide('guideRate').value=guide('guideQuickRate').value;engine.voiceChanged();});
+ for(const id of ['guideVoice','guideRate','guideAudio'])guide(id).addEventListener('change',()=>{guide('guideQuickRate').value=guide('guideRate').value;engine.voiceChanged();});
+ guide('boatGuidePanel').addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();guide('guideClose').click();}});
+ window.addEventListener('pagehide',()=>engine.stop(false));
+ if(speechAvailable){populateVoices();synth.addEventListener('voiceschanged',populateVoices);}else{guide('guideAudio').checked=false;guide('guideAudio').disabled=true;guide('guideVoice').disabled=true;guide('guideVoiceNote').textContent='Speech is not available in this browser. Tours still run automatically with timed word highlighting.';}
+})();
+</script>
+
+
 </body></html>
