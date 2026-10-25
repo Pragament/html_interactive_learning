@@ -1,0 +1,239 @@
+
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-nutrition-in-plants-test-for-starch",
+  "order": 315,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Nutrition in Plants",
+  "subtopic": "Test for Starch",
+  "title": "Test for Starch in Leaves",
+  "description": "Simulate the iodine test for starch in sunlight-exposed, dark-kept, and variegated leaves, then answer a quiz.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test for Starch in Leaves | Class VII Science</title>
+<style>
+:root{--green:#237a45;--light:#edf8ee;--ink:#20332a;--blue:#eaf3ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8f3;color:var(--ink);line-height:1.6}
+header{background:linear-gradient(120deg,#155d35,#47a365);color:white;padding:28px 18px;text-align:center}
+header h1{margin:0;font-size:clamp(1.6rem,4vw,2.4rem)}
+header p{margin:8px auto 0;max-width:700px}
+main{max-width:950px;margin:22px auto;padding:0 14px}
+.card{background:white;border-radius:15px;padding:20px;margin-bottom:18px;box-shadow:0 4px 15px #173c2010}
+h2{margin-top:0;color:#20653a;font-size:1.35rem}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+label{display:block;font-weight:bold;margin:10px 0 5px}
+select,button{font:inherit;padding:10px 13px;border-radius:8px;border:1px solid #a9b9aa}
+select{width:100%;background:white}
+button{background:var(--green);color:white;border:0;cursor:pointer;font-weight:bold}
+button:hover{background:#175c32}
+button:focus,select:focus{outline:3px solid #f1c75b;outline-offset:2px}
+.secondary{background:#52665a}
+.leaf-area{background:#f2faee;border:2px dashed #a6cda5;border-radius:14px;padding:18px;text-align:center;min-height:170px}
+.leaf{font-size:78px;display:block;filter:saturate(1);transition:filter .3s}
+.result{padding:12px;border-radius:9px;margin-top:12px;background:#eef5ee}
+.result strong{display:block}
+.iodine{display:inline-block;padding:8px 13px;background:#7b4a21;color:white;border-radius:8px;margin:8px}
+.question{padding:14px;background:#f6f8fb;border-radius:10px;margin:12px 0}
+.question p{font-weight:bold;margin:0 0 8px}
+.feedback{margin-top:8px;font-weight:bold}
+footer{text-align:center;padding:20px;color:#5a6b5d}
+.small{font-size:.92rem;color:#53675a}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌿 Test for Starch in Leaves</h1>
+  <p>Become a plant scientist! Investigate how a leaf can provide evidence of photosynthesis.</p>
+  <p><strong>Class VII · Science · Nutrition in Plants</strong></p>
+</header>
+<main>
+<section class="card">
+  <h2>🎯 Learning goals</h2>
+  <ul>
+    <li>Understand that leaves can store food as starch.</li>
+    <li>Learn how iodine solution is used to test for starch.</li>
+    <li>Connect the result with photosynthesis.</li>
+  </ul>
+  <p class="small"><strong>Safety:</strong> This is a virtual experiment. In a real laboratory, heating alcohol and handling hot water must only be done with a teacher using approved safety procedures.</p>
+</section>
+
+<section class="card">
+  <h2>🧪 Experiment simulator</h2>
+  <p>Choose a leaf sample, then add iodine solution to observe the simulated result.</p>
+  <div class="row">
+    <div>
+      <label for="sample">1. Select your leaf sample</label>
+      <select id="sample">
+        <option value="sun">Leaf exposed to sunlight</option>
+        <option value="dark">Leaf kept in darkness</option>
+        <option value="variegated">Variegated leaf (green and white areas)</option>
+      </select>
+      <label for="step">2. Choose the experiment step</label>
+      <select id="step">
+        <option value="observe">Observe the leaf</option>
+        <option value="decolorize">Remove the green pigment (simulated)</option>
+        <option value="iodine">Add iodine solution</option>
+      </select>
+      <button id="run" style="margin-top:14px;width:100%">Run experiment</button>
+    </div>
+    <div class="leaf-area">
+      <span class="leaf" id="leaf" aria-hidden="true">🍃</span>
+      <strong id="leaf-title">Green leaf sample</strong>
+      <div><span class="iodine" id="iodine-label">Iodine not added</span></div>
+      <p id="leaf-desc" class="small">Choose a step and run the experiment.</p>
+    </div>
+  </div>
+  <div class="result" id="result" aria-live="polite">
+    <strong>Observation</strong>
+    Your result will appear here.
+  </div>
+  <button class="secondary" id="reset" style="margin-top:12px">Reset experiment</button>
+</section>
+
+<section class="card">
+  <h2>🔍 Think like a scientist</h2>
+  <p>Before checking the explanation, predict what will happen.</p>
+  <label for="prediction">What colour indicates the presence of starch?</label>
+  <select id="prediction">
+    <option value="">Choose your prediction</option>
+    <option value="blueblack">Blue-black</option>
+    <option value="green">Green</option>
+    <option value="red">Red</option>
+  </select>
+  <button id="check-prediction" style="margin-top:12px">Check prediction</button>
+  <div id="prediction-feedback" class="feedback" aria-live="polite"></div>
+</section>
+
+<section class="card">
+  <h2>📝 Quick quiz</h2>
+  <div class="question">
+    <p>1. Which solution is used to test a leaf for starch?</p>
+    <label><input type="radio" name="q1" value="a"> Sugar solution</label>
+    <label><input type="radio" name="q1" value="b"> Iodine solution</label>
+    <label><input type="radio" name="q1" value="c"> Salt solution</label>
+    <div id="f1" class="feedback" aria-live="polite"></div>
+  </div>
+  <div class="question">
+    <p>2. A blue-black colour after adding iodine indicates:</p>
+    <label><input type="radio" name="q2" value="a"> Starch is present</label>
+    <label><input type="radio" name="q2" value="b"> No water is present</label>
+    <label><input type="radio" name="q2" value="c"> The leaf has no cells</label>
+    <div id="f2" class="feedback" aria-live="polite"></div>
+  </div>
+  <div class="question">
+    <p>3. Why is a plant sometimes kept in darkness before this experiment?</p>
+    <label><input type="radio" name="q3" value="a"> To make the leaf grow instantly</label>
+    <label><input type="radio" name="q3" value="b"> To reduce previously stored starch before testing</label>
+    <label><input type="radio" name="q3" value="c"> To add iodine naturally</label>
+    <div id="f3" class="feedback" aria-live="polite"></div>
+  </div>
+  <button id="grade">Check quiz answers</button>
+  <button class="secondary" id="retry">Try again</button>
+  <div id="score" class="result" aria-live="polite">Your score will appear here.</div>
+</section>
+
+<section class="card">
+  <h2>💡 What did you discover?</h2>
+  <p>Iodine solution turns blue-black when starch is present. A leaf exposed to light can make food by photosynthesis, and some of that food may be stored as starch.</p>
+  <p>A leaf kept in darkness may show less starch if stored starch was used up beforehand. In a variegated leaf, green regions usually contain chlorophyll and may form starch when exposed to light, while white regions generally do not.</p>
+  <p class="small">This simulator demonstrates typical results. Actual outcomes depend on the plant and the experiment conditions. In a classroom experiment, a teacher may destarch the plant and safely decolourize the leaf before adding iodine.</p>
+</section>
+</main>
+<footer>Interactive Science Lab · Learn by predicting, testing, and observing.</footer>
+
+<script>
+const sample=document.getElementById('sample');
+const step=document.getElementById('step');
+const leaf=document.getElementById('leaf');
+const leafTitle=document.getElementById('leaf-title');
+const iodineLabel=document.getElementById('iodine-label');
+const leafDesc=document.getElementById('leaf-desc');
+const result=document.getElementById('result');
+
+function runExperiment(){
+  const s=sample.value;
+  const st=step.value;
+  const names={sun:'Sunlight-exposed leaf',dark:'Leaf kept in darkness',variegated:'Variegated leaf'};
+  leafTitle.textContent=names[s];
+  iodineLabel.textContent=st==='iodine'?'Iodine added':'Iodine not added';
+  leaf.style.filter='none';
+
+  if(st==='observe'){
+    leaf.textContent=s==='variegated'?'🍃':s==='dark'?'🌿':'🍃';
+    leaf.style.filter=s==='dark'?'brightness(.7)':'none';
+    leafDesc.textContent='Observe the sample before adding iodine.';
+    result.innerHTML='<strong>Observation</strong> The leaf has been selected. Iodine has not been added, so starch cannot yet be identified by this test.';
+  }else if(st==='decolorize'){
+    leaf.textContent='🍂';
+    leaf.style.filter='grayscale(1)';
+    leafDesc.textContent='Green pigment removed in this simulated step.';
+    result.innerHTML='<strong>Observation</strong> The green pigment is shown as removed. In a real experiment, this step is performed safely by a teacher.';
+  }else{
+    if(s==='sun'){
+      leaf.textContent='🍃';
+      leaf.style.filter='sepia(1) saturate(8) hue-rotate(175deg) brightness(.65)';
+      leafDesc.textContent='Simulated blue-black colour: starch detected.';
+      result.innerHTML='<strong>Result: Starch detected</strong> A typical sunlight-exposed leaf may turn blue-black with iodine if starch is present.';
+    }else if(s==='dark'){
+      leaf.textContent='🍂';
+      leaf.style.filter='sepia(.6) saturate(2)';
+      leafDesc.textContent='Simulated weak brown result: little or no starch detected.';
+      result.innerHTML='<strong>Result: Little or no starch detected (typical)</strong> If the plant was destarched first, a leaf kept in darkness may have little starch. Results can vary.';
+    }else{
+      leaf.textContent='🍃';
+      leaf.style.filter='sepia(1) saturate(7) hue-rotate(175deg) brightness(.7)';
+      leafDesc.textContent='Simulated result: green areas blue-black; white areas stay brown.';
+      result.innerHTML='<strong>Result: Starch in green regions (typical)</strong> Green areas contain chlorophyll and may make starch in light. White areas generally do not.';
+    }
+  }
+}
+document.getElementById('run').addEventListener('click',runExperiment);
+document.getElementById('reset').addEventListener('click',()=>{
+  sample.value='sun';step.value='observe';
+  leaf.textContent='🍃';leaf.style.filter='none';
+  leafTitle.textContent='Green leaf sample';
+  iodineLabel.textContent='Iodine not added';
+  leafDesc.textContent='Choose a step and run the experiment.';
+  result.innerHTML='<strong>Observation</strong> Your result will appear here.';
+  document.getElementById('prediction').value='';
+  document.getElementById('prediction-feedback').textContent='';
+});
+
+document.getElementById('check-prediction').addEventListener('click',()=>{
+  const v=document.getElementById('prediction').value;
+  const out=document.getElementById('prediction-feedback');
+  if(!v){out.textContent='Choose an answer first.';out.style.color='#8a5b00';return;}
+  out.textContent=v==='blueblack'?'Correct! Iodine turns blue-black when starch is present.':'Not quite. Think of the blue-black colour that indicates starch.';
+  out.style.color=v==='blueblack'?'#237a45':'#a33b2d';
+});
+
+const answers={q1:'b',q2:'a',q3:'b'};
+document.getElementById('grade').addEventListener('click',()=>{
+  let score=0;
+  Object.entries(answers).forEach(([q,answer],i)=>{
+    const selected=document.querySelector('input[name="'+q+'"]:checked');
+    const feedback=document.getElementById('f'+(i+1));
+    if(!selected){feedback.textContent='Please choose an answer.';feedback.style.color='#8a5b00';}
+    else if(selected.value===answer){score++;feedback.textContent='Correct!';feedback.style.color='#237a45';}
+    else{feedback.textContent='Not quite. Review the explanation above and try again.';feedback.style.color='#a33b2d';}
+  });
+  document.getElementById('score').innerHTML='<strong>Your score: '+score+' / 3</strong> '+(score===3?'Excellent work, plant scientist!':'Review the feedback and try again.');
+});
+document.getElementById('retry').addEventListener('click',()=>{
+  document.querySelectorAll('input[type="radio"]').forEach(el=>el.checked=false);
+  ['f1','f2','f3'].forEach(id=>document.getElementById(id).textContent='');
+  document.getElementById('score').textContent='Your score will appear here.';
+});
+</script>
+</body>
+</html>
