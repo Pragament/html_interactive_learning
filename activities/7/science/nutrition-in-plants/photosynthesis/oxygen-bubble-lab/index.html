@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photosynthesis Oxygen Bubble Lab | Class VII</title>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-nutrition-in-plants-oxygen-bubble-lab",
+  "order": 316,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Nutrition in Plants",
+  "subtopic": "Photosynthesis",
+  "title": "Photosynthesis Oxygen Bubble Lab",
+  "description": "Explore how light affects simulated oxygen bubble production in an aquatic plant through interactive controls, predictions, and a quiz.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+<style>
+:root{--green:#197044;--pale:#eaf8ef;--ink:#18352a;--blue:#dff4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:var(--ink);background:#f3f8f5;line-height:1.6}
+header{background:linear-gradient(120deg,#105a3a,#36a477);color:white;text-align:center;padding:28px 16px}
+header h1{margin:0;font-size:clamp(1.7rem,4vw,2.5rem)}
+header p{max-width:700px;margin:8px auto}
+main{max-width:950px;margin:22px auto;padding:0 14px}
+.card{background:white;padding:20px;border-radius:15px;margin-bottom:18px;box-shadow:0 4px 16px #193b2710}
+h2{margin-top:0;color:#17683e}
+label{display:block;font-weight:bold;margin:12px 0 5px}
+input[type=range],select{width:100%}
+select,button{font:inherit;padding:10px;border-radius:8px}
+select{border:1px solid #b6cbbd;background:white}
+button{border:0;background:var(--green);color:white;font-weight:bold;cursor:pointer;margin:5px 4px 5px 0}
+button:hover{background:#105533}
+button:focus,select:focus,input:focus{outline:3px solid #f3c95e;outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.tank{height:290px;position:relative;overflow:hidden;border:5px solid #8cc7d8;border-radius:12px;background:linear-gradient(#dff8ff,#a7e4f1 65%,#6bc5dc);text-align:center}
+.plant{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:78px}
+.bubble{position:absolute;bottom:80px;width:12px;height:12px;border:2px solid white;border-radius:50%;background:#ffffff85;animation:rise 2.5s linear infinite}
+.b1{left:25%;animation-delay:0s}.b2{left:40%;animation-delay:.8s}.b3{left:58%;animation-delay:1.4s}.b4{left:72%;animation-delay:.4s}.b5{left:49%;animation-delay:1.8s}
+@keyframes rise{0%{transform:translateY(0) scale(.7);opacity:.2}30%{opacity:1}100%{transform:translateY(-190px) scale(1.1);opacity:0}}
+.stat{background:#edf8f0;padding:12px;border-radius:10px;margin-top:10px}
+.meter{height:14px;background:#dce7df;border-radius:10px;overflow:hidden;margin-top:6px}
+.meter span{display:block;height:100%;width:50%;background:#31a365;transition:width .3s}
+.feedback{font-weight:bold;margin-top:8px}
+.question{background:#f5f8fb;padding:14px;border-radius:10px;margin:12px 0}
+.question p{font-weight:bold;margin:0 0 8px}
+.small{font-size:.92rem;color:#52665a}
+footer{text-align:center;padding:20px;color:#5b6e62}
+</style>
+</head>
+<body>
+<header>
+<h1>🫧 Photosynthesis Oxygen Bubble Lab</h1>
+<p>Investigate how light affects oxygen production in an aquatic plant.</p>
+<p><strong>Class VII · Science · Nutrition in Plants</strong></p>
+</header>
+<main>
+<section class="card">
+<h2>🎯 Learning goals</h2>
+<ul>
+<li>Understand that photosynthesis uses light energy.</li>
+<li>Learn that oxygen is released during photosynthesis.</li>
+<li>Explore how light intensity can affect the rate of photosynthesis.</li>
+</ul>
+<p class="small">This is a simplified simulation, not a measurement of real oxygen production. Real results also depend on carbon dioxide, temperature, plant health, and other factors.</p>
+</section>
+
+<section class="card">
+<h2>🔬 Set up your virtual experiment</h2>
+<div class="grid">
+<div>
+<label for="light">Light intensity: <span id="lightValue">50%</span></label>
+<input id="light" type="range" min="0" max="100" value="50">
+<label for="co2">Carbon dioxide availability</label>
+<select id="co2">
+<option value="low">Low</option>
+<option value="medium" selected>Medium</option>
+<option value="high">High</option>
+</select>
+<label for="temp">Temperature condition</label>
+<select id="temp">
+<option value="cool">Cool</option>
+<option value="normal" selected>Moderate</option>
+<option value="hot">Very hot</option>
+</select>
+<button id="run">Run experiment</button>
+<button id="reset" style="background:#596b60">Reset</button>
+</div>
+<div>
+<div class="tank" aria-label="Aquatic plant in a virtual water tank">
+<span class="bubble b1"></span><span class="bubble b2"></span>
+<span class="bubble b3"></span><span class="bubble b4"></span><span class="bubble b5"></span>
+<div class="plant">🌿</div>
+</div>
+<div class="stat">
+<strong>Simulated photosynthesis rate</strong>
+<div class="meter"><span id="meter"></span></div>
+<p id="rate">50 / 100</p>
+<strong>Oxygen bubbles: <span id="bubbleCount">5</span></strong>
+<p id="result" aria-live="polite">Adjust the conditions, then run the experiment.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="card">
+<h2>🤔 Make a prediction</h2>
+<label for="prediction">What will usually happen when light intensity increases from low to high, while other conditions stay suitable?</label>
+<select id="prediction">
+<option value="">Choose your prediction</option>
+<option value="increase">The photosynthesis rate can increase</option>
+<option value="decrease">The rate must always decrease</option>
+<option value="stop">Photosynthesis always stops</option>
+</select>
+<button id="checkPrediction">Check prediction</button>
+<div class="feedback" id="predictionFeedback" aria-live="polite"></div>
+</section>
+
+<section class="card">
+<h2>📝 Quick quiz</h2>
+<div class="question">
+<p>1. Which gas is released during photosynthesis?</p>
+<label><input type="radio" name="q1" value="a"> Oxygen</label>
+<label><input type="radio" name="q1" value="b"> Nitrogen</label>
+<label><input type="radio" name="q1" value="c"> Carbon dioxide</label>
+<div id="f1" class="feedback"></div>
+</div>
+<div class="question">
+<p>2. What is the main role of light in photosynthesis?</p>
+<label><input type="radio" name="q2" value="a"> It provides energy</label>
+<label><input type="radio" name="q2" value="b"> It replaces water</label>
+<label><input type="radio" name="q2" value="c"> It creates soil</label>
+<div id="f2" class="feedback"></div>
+</div>
+<div class="question">
+<p>3. If carbon dioxide becomes very limited, what can happen?</p>
+<label><input type="radio" name="q3" value="a"> The rate may be limited</label>
+<label><input type="radio" name="q3" value="b"> The plant makes unlimited oxygen</label>
+<label><input type="radio" name="q3" value="c"> Light is no longer needed</label>
+<div id="f3" class="feedback"></div>
+</div>
+<button id="grade">Check answers</button>
+<button id="retry" style="background:#596b60">Try again</button>
+<div class="stat" id="score" aria-live="polite">Your score will appear here.</div>
+</section>
+
+<section class="card">
+<h2>💡 Conclusion</h2>
+<p>In aquatic plants, oxygen released during photosynthesis can sometimes be observed as bubbles. When light is very low, the rate of photosynthesis is often low. Increasing light can increase the rate, but only while other needs are sufficiently met. If carbon dioxide is limited or the temperature is unsuitable, the rate may remain low.</p>
+</section>
+</main>
+<footer>Interactive Science Lab · Observe · Predict · Test · Learn</footer>
+
+<script>
+const light=document.getElementById('light');
+const co2=document.getElementById('co2');
+const temp=document.getElementById('temp');
+const bubbles=[...document.querySelectorAll('.bubble')];
+
+function calculateRate(){
+  const l=Number(light.value)/100;
+  const c={low:.3,medium:.7,high:1}[co2.value];
+  const t={cool:.65,normal:1,hot:.35}[temp.value];
+  return Math.round(100*Math.min(l,c,t));
+}
+function updateDisplay(){
+  document.getElementById('lightValue').textContent=light.value+'%';
+  const rate=calculateRate();
+  document.getElementById('meter').style.width=rate+'%';
+  document.getElementById('rate').textContent=rate+' / 100';
+  document.getElementById('bubbleCount').textContent=Math.round(rate/10);
+  bubbles.forEach((b,i)=>{
+    b.style.animationDuration=(rate===0?'0s':Math.max(.7,3-rate/50+(i%3)*.15))+'s';
+    b.style.display=rate<10?'none':'block';
+  });
+}
+light.addEventListener('input',updateDisplay);
+co2.addEventListener('change',updateDisplay);
+temp.addEventListener('change',updateDisplay);
+document.getElementById('run').addEventListener('click',()=>{
+  const rate=calculateRate();
+  let explanation;
+  if(rate===0) explanation='With no light in this simplified model, the simulated photosynthesis rate is zero.';
+  else if(co2.value==='low' && rate<=30) explanation='Carbon dioxide is limited, so it restricts the simulated rate.';
+  else if(temp.value!=='normal' && rate<70) explanation='The selected temperature is less suitable in this simplified model.';
+  else if(Number(light.value)<30) explanation='Low light limits the simulated rate.';
+  else explanation='The conditions support a higher simulated rate. Bubbles represent oxygen release conceptually.';
+  document.getElementById('result').textContent=explanation;
+});
+document.getElementById('reset').addEventListener('click',()=>{
+  light.value=50;co2.value='medium';temp.value='normal';
+  document.getElementById('result').textContent='Adjust the conditions, then run the experiment.';
+  updateDisplay();
+});
+document.getElementById('checkPrediction').addEventListener('click',()=>{
+  const v=document.getElementById('prediction').value;
+  const f=document.getElementById('predictionFeedback');
+  if(!v){f.textContent='Choose a prediction first.';f.style.color='#8a5b00';return;}
+  f.textContent=v==='increase'?'Correct! More light can increase photosynthesis while other conditions are suitable.':'Not quite. Increasing light can help until another factor becomes limiting.';
+  f.style.color=v==='increase'?'#197044':'#a33b2d';
+});
+const answers={q1:'a',q2:'a',q3:'a'};
+document.getElementById('grade').addEventListener('click',()=>{
+  let score=0;
+  Object.entries(answers).forEach(([q,a],i)=>{
+    const selected=document.querySelector('input[name="'+q+'"]:checked');
+    const f=document.getElementById('f'+(i+1));
+    if(!selected){f.textContent='Choose an answer.';f.style.color='#8a5b00';}
+    else if(selected.value===a){score++;f.textContent='Correct!';f.style.color='#197044';}
+    else{f.textContent='Not quite. Review the conclusion and try again.';f.style.color='#a33b2d';}
+  });
+  document.getElementById('score').innerHTML='<strong>Your score: '+score+' / 3</strong> '+(score===3?'Excellent work!':'Review your answers and try again.');
+});
+document.getElementById('retry').addEventListener('click',()=>{
+  document.querySelectorAll('input[type="radio"]').forEach(x=>x.checked=false);
+  ['f1','f2','f3'].forEach(id=>document.getElementById(id).textContent='');
+  document.getElementById('score').textContent='Your score will appear here.';
+});
+updateDisplay();
+</script>
+</body>
+</html>
