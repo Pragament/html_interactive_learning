@@ -81,3 +81,10 @@ run(`state.className='III'`);
 assert.equal(run('activities.filter(matchesFilters).length'), 0);
 assert.deepEqual(array(`getOptions('className',{})`), ['VI','VII','VIII','IX','X']);
 console.log('Passed single-entry multi-class visibility and dependent options for Classes VI–X.');
+for (const id of ['9-science-gravitation-design-a-floating-boat','7-mathematics-perimeter-and-area-plan-a-school-garden']) {
+ const entries=catalog.activities.filter(a=>a.id===id);assert.equal(entries.length,1);
+ const entry=entries[0];context.sharedEntry=entry;
+ run(`activities=[{className:normalizeClass(sharedEntry.class),classNames:sharedEntry.classes.map(normalizeClass),subject:normalizeSubject(sharedEntry.subject),subjectNames:sharedEntry.subjects.map(normalizeSubject),topic:sharedEntry.topic,path:sharedEntry.activity_path}];state.topic='all';state.subtopic='all';`);
+ for (const level of entry.classes)for(const subject of entry.subjects){context.selectedClass=level;context.selectedSubject=subject;run('state.className=selectedClass;state.subject=selectedSubject');assert.equal(run('activities.filter(matchesFilters).length'),1,`${id}: ${level}/${subject}`);assert(array(`getOptions('subject',{className:state.className})`).includes(subject));assert(array(`hierarchyValues('topic',{className:state.className,subject:state.subject})`).includes(entry.topic));}
+}
+console.log('Passed new activities under every supported class and subject combination.');

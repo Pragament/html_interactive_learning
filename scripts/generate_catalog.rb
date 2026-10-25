@@ -73,6 +73,13 @@ def build_activity(path)
     "activity_name" => metadata["title"].to_s, "activity_details" => metadata["description"].to_s,
     "activity_type" => metadata["activityType"].to_s, "status" => metadata["status"].to_s
   }
+  if metadata.key?("subjects")
+    subjects = metadata["subjects"]
+    unless subjects.is_a?(Array) && !subjects.empty? && subjects.all? { |value| value.is_a?(String) && !value.strip.empty? } && subjects.include?(metadata["subject"]) && subjects.uniq == subjects
+      raise "#{path.relative_path_from(ROOT)}: subjects must be unique nonempty labels and include the primary subject"
+    end
+    activity["subjects"] = subjects
+  end
   if metadata.key?("classes")
     classes = metadata["classes"]
     unless classes.is_a?(Array) && !classes.empty? && classes.all? { |value| CLASS_SLUGS.key?(value) } && classes.include?(metadata["class"])

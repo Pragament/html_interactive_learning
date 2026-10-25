@@ -99,6 +99,10 @@ Optional `classes` lists every class supported by a shared activity, for example
 supported display labels, and retain the primary class in the folder path. The
 catalog shows this single activity under each listed class filter.
 
+Optional `subjects` lists every supported subject, including the primary `subject`,
+for example `["Science", "Mathematics"]`. Keep the primary subject in the path.
+A shared activity appears in every listed subject filter without duplicate records.
+
 Optional `activity_url_parameters` provides an example query string without a leading
 `?`, such as `"angle_one=75"`. The catalog copies it alongside `activity_path`.
 

@@ -1216,6 +1216,9 @@
     function activityClasses(activity) {
       return activity.classNames || [activity.className];
     }
+    function activitySubjects(activity) {
+      return activity.subjectNames || [activity.subject];
+    }
     // End canonical catalog labels.
 
     const pageSize = 12;
@@ -1293,6 +1296,7 @@
           className: normalizeClass(activity.class),
           classNames: [...new Set([activity.class, ...(activity.classes || [])].map(normalizeClass))].sort(sortClasses),
           subject: normalizeSubject(activity.subject),
+          subjectNames: [...new Set([activity.subject, ...(activity.subjects || [])].map(normalizeSubject))].sort(sortText),
           topic: normalizeTaxonomy(activity.topic, topicLabels, "Unspecified"),
           subtopic: normalizeTaxonomy(activity.subtopic, subtopicLabels),
           activityType: activity.activity_type || "exploration",
@@ -1573,9 +1577,10 @@
       const values = new Set();
       activities.forEach((activity) => {
         if (constraints.className && !activityClasses(activity).includes(constraints.className)) return;
-        if (constraints.subject && activity.subject !== constraints.subject) return;
+        if (constraints.subject && !activitySubjects(activity).includes(constraints.subject)) return;
         if (constraints.topic && activity.topic !== constraints.topic) return;
         if (key === "className") activityClasses(activity).forEach(value => values.add(value));
+        else if (key === "subject") activitySubjects(activity).forEach(value => values.add(value));
         else if (activity[key]) values.add(activity[key]);
       });
       return Array.from(values).sort(key === "className" ? sortClasses : sortText);
@@ -1703,9 +1708,10 @@
       activities.forEach((activity) => {
         if (state.availableOnly && !isAvailable(activity)) return;
         if (constraints.className && constraints.className !== "all" && !activityClasses(activity).includes(constraints.className)) return;
-        if (constraints.subject && constraints.subject !== "all" && activity.subject !== constraints.subject) return;
+        if (constraints.subject && constraints.subject !== "all" && !activitySubjects(activity).includes(constraints.subject)) return;
         if (constraints.topic && constraints.topic !== "all" && activity.topic !== constraints.topic) return;
         if (key === "className") activityClasses(activity).forEach(value => values.add(value));
+        else if (key === "subject") activitySubjects(activity).forEach(value => values.add(value));
         else if (activity[key]) values.add(activity[key]);
       });
       return Array.from(values).sort(key === "className" ? sortClasses : sortText);
@@ -1748,12 +1754,12 @@
     function matchesFilters(activity) {
       if (state.availableOnly && !isAvailable(activity)) return false;
       if (state.className !== "all" && !activityClasses(activity).includes(state.className)) return false;
-      if (state.subject !== "all" && activity.subject !== state.subject) return false;
+      if (state.subject !== "all" && !activitySubjects(activity).includes(state.subject)) return false;
       if (state.topic !== "all" && activity.topic !== state.topic) return false;
       if (state.subtopic !== "all" && activity.subtopic !== state.subtopic) return false;
 
       if (!state.search) return true;
-      const haystack = `${activity.name} ${activity.details} ${activityClasses(activity).join(" ")} ${activity.subject} ${activity.topic} ${activity.subtopic} ${activity.activityType}`.toLowerCase();
+      const haystack = `${activity.name} ${activity.details} ${activityClasses(activity).join(" ")} ${activitySubjects(activity).join(" ")} ${activity.topic} ${activity.subtopic} ${activity.activityType}`.toLowerCase();
       return haystack.includes(state.search);
     }
 
@@ -1788,7 +1794,7 @@
         card.innerHTML = `
           <div class="meta">
             <span class="pill">${escapeHtml(activityClasses(activity).join(" · "))}</span>
-            <span class="pill">${escapeHtml(activity.subject)}</span>
+            <span class="pill">${escapeHtml(activitySubjects(activity).join(" · "))}</span>
             <span class="pill">${escapeHtml(activity.topic)}</span>
             ${activity.subtopic ? `<span class="pill">${escapeHtml(activity.subtopic)}</span>` : ""}
             <span class="pill">${escapeHtml(activity.activityType)}</span>
