@@ -1166,6 +1166,58 @@
   </dialog>
 
   <script>
+    // Canonical catalog labels: normalize records before building any filters.
+    const classLabels = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+
+    function normalizeClass(value) {
+      const label = String(value ?? "").trim().replace(/^class\s+/i, "");
+      if (!label) return "Unspecified";
+      if (/^pre[\s-]*primary$/i.test(label)) return "Preprimary";
+      const number = /^\d+$/.test(label) ? Number(label) : NaN;
+      if (number >= 1 && number <= classLabels.length) return classLabels[number - 1];
+      const roman = label.toUpperCase();
+      return classLabels.includes(roman) ? roman : label;
+    }
+
+    function normalizeSubject(value) {
+      const label = String(value ?? "").trim().replace(/\s+/g, " ").toLowerCase();
+      if (!label) return "Unspecified";
+      if (["ict", "it", "evs", "stem"].includes(label)) return label.toUpperCase();
+      return label.replace(/(^|[\s-])\S/g, (letter) => letter.toUpperCase());
+    }
+
+    function sortClasses(a, b) {
+      const rank = (label) => label === "Preprimary" ? 0 : classLabels.includes(label) ? classLabels.indexOf(label) + 1 : Infinity;
+      return rank(a) - rank(b) || sortText(a, b);
+    }
+    function taxonomyKey(value) {
+      return String(value ?? "").normalize("NFKC").trim().toLowerCase()
+        .replace(/&/g, " and ").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    }
+
+    function buildTaxonomyLabels(records, field) {
+      const labels = new Map();
+      records.forEach((record) => {
+        const raw = String(record[field] ?? "").trim().replace(/\s+/g, " ");
+        const key = taxonomyKey(raw);
+        if (!key) return;
+        const score = (value) => /[A-Z]/.test(value) ? 2 : /\s/.test(value) ? 1 : 0;
+        if (!labels.has(key) || score(raw) > score(labels.get(key))) labels.set(key, raw);
+      });
+      for (const [key, label] of labels) {
+        if (!/[A-Z]/.test(label)) labels.set(key, normalizeSubject(label.replace(/-/g, " ")));
+      }
+      return labels;
+    }
+
+    function normalizeTaxonomy(value, labels, fallback = "") {
+      return labels.get(taxonomyKey(value)) || fallback;
+    }
+    function activityClasses(activity) {
+      return activity.classNames || [activity.className];
+    }
+    // End canonical catalog labels.
+
     const pageSize = 12;
     let activities = [];
     let currentPage = 1;
@@ -1233,12 +1285,16 @@
         return response.json();
       })
       .then((data) => {
-        activities = (data.activities || []).map((activity, index) => ({
+        const records = data.activities || [];
+        const topicLabels = buildTaxonomyLabels(records, "topic");
+        const subtopicLabels = buildTaxonomyLabels(records, "subtopic");
+        activities = records.map((activity, index) => ({
           id: index,
-          className: activity.class || "Unspecified",
-          subject: activity.subject || "Unspecified",
-          topic: activity.topic || "Unspecified",
-          subtopic: activity.subtopic || "",
+          className: normalizeClass(activity.class),
+          classNames: [...new Set([activity.class, ...(activity.classes || [])].map(normalizeClass))].sort(sortClasses),
+          subject: normalizeSubject(activity.subject),
+          topic: normalizeTaxonomy(activity.topic, topicLabels, "Unspecified"),
+          subtopic: normalizeTaxonomy(activity.subtopic, subtopicLabels),
           activityType: activity.activity_type || "exploration",
           name: activity.activity_name || "Untitled activity",
           details: activity.activity_details || "",
@@ -1516,12 +1572,13 @@
     function hierarchyValues(key, constraints = {}) {
       const values = new Set();
       activities.forEach((activity) => {
-        if (constraints.className && activity.className !== constraints.className) return;
+        if (constraints.className && !activityClasses(activity).includes(constraints.className)) return;
         if (constraints.subject && activity.subject !== constraints.subject) return;
         if (constraints.topic && activity.topic !== constraints.topic) return;
-        if (activity[key]) values.add(activity[key]);
+        if (key === "className") activityClasses(activity).forEach(value => values.add(value));
+        else if (activity[key]) values.add(activity[key]);
       });
-      return Array.from(values).sort(sortText);
+      return Array.from(values).sort(key === "className" ? sortClasses : sortText);
     }
 
     function populatePromptSelect(select, values, preferredValue, placeholder) {
@@ -1645,12 +1702,13 @@
       const values = new Set();
       activities.forEach((activity) => {
         if (state.availableOnly && !isAvailable(activity)) return;
-        if (constraints.className && constraints.className !== "all" && activity.className !== constraints.className) return;
+        if (constraints.className && constraints.className !== "all" && !activityClasses(activity).includes(constraints.className)) return;
         if (constraints.subject && constraints.subject !== "all" && activity.subject !== constraints.subject) return;
         if (constraints.topic && constraints.topic !== "all" && activity.topic !== constraints.topic) return;
-        if (activity[key]) values.add(activity[key]);
+        if (key === "className") activityClasses(activity).forEach(value => values.add(value));
+        else if (activity[key]) values.add(activity[key]);
       });
-      return Array.from(values).sort(sortText);
+      return Array.from(values).sort(key === "className" ? sortClasses : sortText);
     }
 
     function populateSelect(select, values, selectedValue, allLabel) {
@@ -1689,13 +1747,13 @@
 
     function matchesFilters(activity) {
       if (state.availableOnly && !isAvailable(activity)) return false;
-      if (state.className !== "all" && activity.className !== state.className) return false;
+      if (state.className !== "all" && !activityClasses(activity).includes(state.className)) return false;
       if (state.subject !== "all" && activity.subject !== state.subject) return false;
       if (state.topic !== "all" && activity.topic !== state.topic) return false;
       if (state.subtopic !== "all" && activity.subtopic !== state.subtopic) return false;
 
       if (!state.search) return true;
-      const haystack = `${activity.name} ${activity.details} ${activity.className} ${activity.subject} ${activity.topic} ${activity.subtopic} ${activity.activityType}`.toLowerCase();
+      const haystack = `${activity.name} ${activity.details} ${activityClasses(activity).join(" ")} ${activity.subject} ${activity.topic} ${activity.subtopic} ${activity.activityType}`.toLowerCase();
       return haystack.includes(state.search);
     }
 
@@ -1729,7 +1787,7 @@
 
         card.innerHTML = `
           <div class="meta">
-            <span class="pill">${escapeHtml(activity.className)}</span>
+            <span class="pill">${escapeHtml(activityClasses(activity).join(" · "))}</span>
             <span class="pill">${escapeHtml(activity.subject)}</span>
             <span class="pill">${escapeHtml(activity.topic)}</span>
             ${activity.subtopic ? `<span class="pill">${escapeHtml(activity.subtopic)}</span>` : ""}
@@ -1813,7 +1871,7 @@
       const sorters = {
         "name-asc": (a, b) => sortText(a.name, b.name),
         "name-desc": (a, b) => sortText(b.name, a.name),
-        "class-asc": (a, b) => sortText(a.className, b.className) || sortText(a.name, b.name),
+        "class-asc": (a, b) => sortClasses(a.className, b.className) || sortText(a.name, b.name),
         "subject-asc": (a, b) => sortText(a.subject, b.subject) || sortText(a.name, b.name),
         "topic-asc": (a, b) => sortText(a.topic, b.topic) || sortText(a.name, b.name)
       };

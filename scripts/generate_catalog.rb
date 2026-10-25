@@ -73,6 +73,14 @@ def build_activity(path)
     "activity_name" => metadata["title"].to_s, "activity_details" => metadata["description"].to_s,
     "activity_type" => metadata["activityType"].to_s, "status" => metadata["status"].to_s
   }
+  if metadata.key?("classes")
+    classes = metadata["classes"]
+    unless classes.is_a?(Array) && !classes.empty? && classes.all? { |value| CLASS_SLUGS.key?(value) } && classes.include?(metadata["class"])
+      raise "#{path.relative_path_from(ROOT)}: classes must list supported class labels and include the primary class"
+    end
+    raise "#{path.relative_path_from(ROOT)}: classes must be unique" unless classes.uniq == classes
+    activity["classes"] = classes
+  end
   activity["subtopic"] = metadata["subtopic"].to_s unless metadata["subtopic"].to_s.strip.empty?
   activity["source_path"] = path.relative_path_from(ROOT).to_s
   activity["activity_path"] = path.relative_path_from(ROOT).to_s if metadata["status"] == "active"

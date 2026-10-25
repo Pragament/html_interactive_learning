@@ -94,6 +94,11 @@ directory from its path.
 | `activityType` | Kind of learning experience |
 | `status` | `active` or `planned` |
 
+Optional `classes` lists every class supported by a shared activity, for example
+`["VI", "VII", "VIII", "IX", "X"]`. Include the primary `class`, use unique
+supported display labels, and retain the primary class in the folder path. The
+catalog shows this single activity under each listed class filter.
+
 Optional `activity_url_parameters` provides an example query string without a leading
 `?`, such as `"angle_one=75"`. The catalog copies it alongside `activity_path`.
 
