@@ -1,0 +1,470 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photosynthesis Lab - Become a Plant Scientist</title>
+
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "7-science-nutrition-in-plants-photosynthesis-lab",
+  "order": 314,
+  "class": "VII",
+  "subject": "Science",
+  "topic": "Nutrition in Plants",
+  "subtopic": "Photosynthesis",
+  "title": "Photosynthesis Lab - Become a Plant Scientist",
+  "description": "Explore how sunlight, water and carbon dioxide affect photosynthesis. Run virtual experiments, make predictions and solve science challenges.",
+  "activityType": "exploration",
+  "status": "active"
+}
+</script>
+
+<style>
+:root {
+  --green: #16794b;
+  --dark: #163b2b;
+  --light: #effaf1;
+  --blue: #eaf5ff;
+  --border: #d9e8dd;
+  --text: #25352c;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #f4f8f3;
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+}
+header {
+  background: linear-gradient(135deg, #145c3a, #29965b);
+  color: white;
+  padding: 30px 18px;
+  text-align: center;
+}
+header h1 { margin: 8px 0; line-height: 1.2; }
+header p { max-width: 680px; margin: 10px auto 0; }
+.eyebrow {
+  font-size: .8rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+main { width: min(1050px, 100%); margin: auto; padding: 18px; }
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 18px 0;
+  box-shadow: 0 5px 18px #173d2510;
+}
+h2 { margin-top: 0; color: var(--dark); font-size: 1.35rem; }
+h3 { margin-bottom: 6px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 14px;
+}
+.control {
+  background: #f7fbf7;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+}
+.control label { display: flex; justify-content: space-between; gap: 8px; font-weight: 700; }
+input[type="range"] { width: 100%; accent-color: var(--green); margin: 14px 0; }
+.small { font-size: .9rem; color: #596b60; }
+button, select {
+  font: inherit;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+button {
+  border: 0;
+  background: var(--green);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+button:hover { filter: brightness(.92); }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid #f1b82d;
+  outline-offset: 3px;
+}
+button.secondary { background: #e5f3e8; color: var(--dark); }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.lab {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+.plant-scene {
+  min-height: 255px;
+  border-radius: 16px;
+  background: linear-gradient(#dff3ff 0 68%, #a8d98e 68% 100%);
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.sun {
+  position: absolute;
+  right: 24px;
+  top: 18px;
+  font-size: 2.2rem;
+}
+.plant { font-size: clamp(5rem, 14vw, 8rem); transition: transform .25s; }
+.bubble {
+  position: absolute;
+  font-size: .82rem;
+  background: #ffffffdc;
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+.b1 { top: 25%; left: 12%; }
+.b2 { top: 44%; right: 9%; }
+.b3 { bottom: 9%; left: 10%; }
+.meter {
+  height: 16px;
+  background: #e5ece6;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.meter-fill { height: 100%; width: 0; background: #36a96b; transition: width .3s; }
+.result {
+  background: var(--light);
+  border-left: 5px solid var(--green);
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 14px;
+}
+.question {
+  padding: 15px 0;
+  border-bottom: 1px solid #e5ece6;
+}
+.question:last-child { border-bottom: 0; }
+.question label { display: block; margin: 8px 0; cursor: pointer; }
+.question input { accent-color: var(--green); margin-right: 8px; }
+.feedback { font-weight: 650; margin-top: 8px; }
+.challenge {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+}
+footer { text-align: center; color: #647568; padding: 20px; font-size: .9rem; }
+@media (max-width: 650px) {
+  .lab { grid-template-columns: 1fr; }
+  main { padding: 10px; }
+  .card { padding: 15px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="eyebrow">Class VII · Science Explorer</div>
+  <h1>🌱 Photosynthesis Lab</h1>
+  <p>Become a plant scientist! Change the conditions, predict what will happen, and discover how plants make their food.</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>🔬 Mission briefing</h2>
+    <p>Plants use light energy to make food from water and carbon dioxide. Chlorophyll, the green pigment in leaves, helps capture light energy. Oxygen is released during this process.</p>
+    <div class="result">
+      <strong>Remember:</strong> Light, water and carbon dioxide are important inputs. In this simplified model, the scarcest input limits the photosynthesis rate.
+    </div>
+    <p class="small">This is a learning simulation, not a precise biological calculator. Real plants are affected by many other factors too.</p>
+  </section>
+
+  <section class="card">
+    <h2>🧪 Experiment station</h2>
+    <p>Adjust each condition. Before running an experiment, predict whether the plant's photosynthesis rate will increase or decrease.</p>
+
+    <div class="grid">
+      <div class="control">
+        <label for="light">☀️ Sunlight <output id="lightValue">60%</output></label>
+        <input id="light" type="range" min="0" max="100" value="60">
+        <div class="small">How much light energy is available?</div>
+      </div>
+      <div class="control">
+        <label for="water">💧 Water <output id="waterValue">60%</output></label>
+        <input id="water" type="range" min="0" max="100" value="60">
+        <div class="small">Is enough water available?</div>
+      </div>
+      <div class="control">
+        <label for="co2">🌬️ Carbon dioxide <output id="co2Value">60%</output></label>
+        <input id="co2" type="range" min="0" max="100" value="60">
+        <div class="small">Is enough carbon dioxide available?</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="runExperiment">Run experiment</button>
+      <button class="secondary" id="reset">Reset conditions</button>
+    </div>
+
+    <div class="lab">
+      <div class="plant-scene" aria-label="Illustration of a plant in sunlight">
+        <span class="sun" id="sun">☀️</span>
+        <span class="bubble b1">CO₂ →</span>
+        <span class="bubble b2">O₂ ↑</span>
+        <span class="bubble b3">💧 Water</span>
+        <span class="plant" id="plant" aria-hidden="true">🌿</span>
+      </div>
+      <div>
+        <h3>Photosynthesis rate</h3>
+        <div class="meter" role="progressbar" id="rateBar" aria-label="Estimated photosynthesis rate" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
+          <div class="meter-fill" id="rateFill"></div>
+        </div>
+        <p><strong><span id="rate">60</span>%</strong> estimated relative rate</p>
+        <p><strong>Limiting factor:</strong> <span id="limiting">None; inputs are balanced</span></p>
+        <div class="result" id="experimentFeedback" aria-live="polite">
+          Run your first experiment to see the results and scientific explanation.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🎯 Scientist challenges</h2>
+    <p>Complete each challenge by changing the experiment conditions. Run the experiment after making your changes.</p>
+
+    <div class="challenge">
+      <h3>Challenge 1: Find the limiting factor</h3>
+      <p>Set sunlight to 90%, water to 80%, and carbon dioxide to 20%. Run the experiment. Which input limits the rate?</p>
+      <button class="secondary" data-challenge="1">Load challenge conditions</button>
+      <p class="feedback" id="challenge1">Challenge not attempted yet.</p>
+    </div>
+
+    <div class="challenge">
+      <h3>Challenge 2: Test the effect of light</h3>
+      <p>Keep water and carbon dioxide at 80%. Compare the rate at 20% sunlight and 80% sunlight.</p>
+      <button class="secondary" data-challenge="2">Load challenge conditions</button>
+      <p class="feedback" id="challenge2">Challenge not attempted yet.</p>
+    </div>
+
+    <div class="challenge">
+      <h3>Challenge 3: Can more light solve everything?</h3>
+      <p>Set sunlight to 100%, water to 15%, and carbon dioxide to 70%. Run the experiment. Explain why the rate remains low.</p>
+      <button class="secondary" data-challenge="3">Load challenge conditions</button>
+      <p class="feedback" id="challenge3">Challenge not attempted yet.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🧠 Check your understanding</h2>
+    <p>Choose one answer for each question, then select Check answers.</p>
+    <form id="quiz">
+      <div class="question">
+        <strong>1. Which green pigment helps leaves absorb light?</strong>
+        <label><input type="radio" name="q1" value="a"> Haemoglobin</label>
+        <label><input type="radio" name="q1" value="b"> Chlorophyll</label>
+        <label><input type="radio" name="q1" value="c"> Starch</label>
+        <div class="feedback" id="f1"></div>
+      </div>
+      <div class="question">
+        <strong>2. Which gas do plants take in for photosynthesis?</strong>
+        <label><input type="radio" name="q2" value="a"> Oxygen</label>
+        <label><input type="radio" name="q2" value="b"> Nitrogen</label>
+        <label><input type="radio" name="q2" value="c"> Carbon dioxide</label>
+        <div class="feedback" id="f2"></div>
+      </div>
+      <div class="question">
+        <strong>3. What is the main food produced by photosynthesis?</strong>
+        <label><input type="radio" name="q3" value="a"> Sugar (glucose)</label>
+        <label><input type="radio" name="q3" value="b"> Soil</label>
+        <label><input type="radio" name="q3" value="c"> Water</label>
+        <div class="feedback" id="f3"></div>
+      </div>
+      <div class="question">
+        <strong>4. If water is very scarce, what happens in our simplified model?</strong>
+        <label><input type="radio" name="q4" value="a"> The plant makes unlimited food</label>
+        <label><input type="radio" name="q4" value="b"> Water limits the photosynthesis rate</label>
+        <label><input type="radio" name="q4" value="c"> Sunlight becomes water</label>
+        <div class="feedback" id="f4"></div>
+      </div>
+      <div class="actions">
+        <button type="submit">Check answers</button>
+        <button type="button" class="secondary" id="clearQuiz">Try again</button>
+      </div>
+      <div class="result" id="quizResult" aria-live="polite">Your score will appear here.</div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>📝 Record your discovery</h2>
+    <p>Complete this sentence using your own experiment results:</p>
+    <label for="reflection"><strong>When I reduced __________, the photosynthesis rate __________ because __________.</strong></label>
+    <textarea id="reflection" rows="3" style="width:100%;margin-top:10px;padding:12px;border:1px solid #cbd9cf;border-radius:10px;font:inherit" placeholder="Write your observation and explanation here..."></textarea>
+    <div class="actions">
+      <button id="saveReflection">Show my reflection</button>
+    </div>
+    <div id="reflectionFeedback" class="result" aria-live="polite" hidden></div>
+  </section>
+</main>
+
+<footer>Photosynthesis Lab · Learn by predicting, testing and explaining 🌿</footer>
+
+<script>
+const ids = ["light", "water", "co2"];
+const $ = id => document.getElementById(id);
+let lastRate = null;
+let lastInputs = null;
+
+function values() {
+  return {
+    light: Number($("light").value),
+    water: Number($("water").value),
+    co2: Number($("co2").value)
+  };
+}
+
+function limitingFactor(v) {
+  const min = Math.min(v.light, v.water, v.co2);
+  const names = [];
+  if (v.light === min) names.push("sunlight");
+  if (v.water === min) names.push("water");
+  if (v.co2 === min) names.push("carbon dioxide");
+  return { min, names };
+}
+
+function updateLabels() {
+  ids.forEach(id => $(id + "Value").textContent = $(id).value + "%");
+}
+
+function runExperiment() {
+  const v = values();
+  const limit = limitingFactor(v);
+  const rate = limit.min;
+
+  lastRate = rate;
+  lastInputs = v;
+
+  $("rate").textContent = rate;
+  $("rateFill").style.width = rate + "%";
+  $("rateBar").setAttribute("aria-valuenow", rate);
+  $("limiting").textContent = rate === 100
+    ? "No shortage in this simplified model"
+    : limit.names.join(" and ");
+
+  $("sun").style.opacity = Math.max(.2, v.light / 100);
+  $("plant").style.transform = "scale(" + (0.75 + rate / 400) + ")";
+
+  let explanation;
+  if (rate === 0) {
+    explanation = "At least one essential input is unavailable. The model predicts no photosynthesis.";
+  } else if (rate < 30) {
+    explanation = "The rate is low because " + limit.names.join(" and ") +
+      " " + (limit.names.length > 1 ? "are" : "is") +
+      " the scarcest input. Increasing only a plentiful input may not help much.";
+  } else if (rate < 70) {
+    explanation = "Photosynthesis can occur, but " + limit.names.join(" and ") +
+      " " + (limit.names.length > 1 ? "are" : "is") +
+      " limiting the rate in this simplified model.";
+  } else {
+    explanation = "The plant has relatively favourable input levels in this model. Try reducing one input to see how the limiting factor changes.";
+  }
+
+  $("experimentFeedback").textContent = explanation;
+
+  if (v.light === 90 && v.water === 80 && v.co2 === 20) {
+    $("challenge1").textContent = "Correct conditions loaded. After running the experiment, identify carbon dioxide as the limiting input.";
+  }
+  if (v.water === 80 && v.co2 === 80 && v.light === 80) {
+    $("challenge2").textContent = "High-light conditions loaded. Run the experiment and compare the result with the low-light condition.";
+  }
+  if (v.light === 100 && v.water === 15 && v.co2 === 70) {
+    $("challenge3").textContent = "Correct conditions loaded. After running the experiment, explain why scarce water limits the rate.";
+  }
+}
+
+ids.forEach(id => $(id).addEventListener("input", updateLabels));
+
+$("runExperiment").addEventListener("click", runExperiment);
+
+$("reset").addEventListener("click", () => {
+  $("light").value = 60;
+  $("water").value = 60;
+  $("co2").value = 60;
+  updateLabels();
+  runExperiment();
+});
+
+document.querySelectorAll("[data-challenge]").forEach(button => {
+  button.addEventListener("click", () => {
+    const challenge = button.dataset.challenge;
+    const presets = {
+      1: { light: 90, water: 80, co2: 20 },
+      2: { light: 20, water: 80, co2: 80 },
+      3: { light: 100, water: 15, co2: 70 }
+    };
+    const v = presets[challenge];
+    ids.forEach(id => $(id).value = v[id]);
+    updateLabels();
+    $("challenge" + challenge).textContent =
+      "Conditions loaded. Run the experiment, observe the result, and explain it in your own words.";
+    runExperiment();
+  });
+});
+
+const answers = {
+  q1: { correct: "b", why: "Chlorophyll is the green pigment that absorbs light energy." },
+  q2: { correct: "c", why: "Plants take in carbon dioxide for photosynthesis." },
+  q3: { correct: "a", why: "Photosynthesis produces sugars such as glucose." },
+  q4: { correct: "b", why: "When water is scarce, it can limit photosynthesis." }
+};
+
+$("quiz").addEventListener("submit", event => {
+  event.preventDefault();
+  let score = 0;
+
+  Object.entries(answers).forEach(([name, answer], index) => {
+    const selected = document.querySelector('input[name="' + name + '"]:checked');
+    const feedback = $("f" + (index + 1));
+
+    if (selected && selected.value === answer.correct) {
+      score++;
+      feedback.textContent = "Correct! " + answer.why;
+      feedback.style.color = "#16794b";
+    } else {
+      feedback.textContent = "Not quite. " + answer.why;
+      feedback.style.color = "#a43c2b";
+    }
+  });
+
+  $("quizResult").textContent = "Your score: " + score + " out of 4. " +
+    (score === 4 ? "Excellent work, scientist!" :
+    score >= 2 ? "Good effort! Review the explanations and try again." :
+    "Keep exploring, review the explanations, and try again.");
+});
+
+$("clearQuiz").addEventListener("click", () => {
+  $("quiz").reset();
+  ["f1", "f2", "f3", "f4"].forEach(id => $(id).textContent = "");
+  $("quizResult").textContent = "Try the questions again.";
+});
+
+$("saveReflection").addEventListener("click", () => {
+  const answer = $("reflection").value.trim();
+  const box = $("reflectionFeedback");
+  box.hidden = false;
+  box.textContent = answer
+    ? "Your observation: " + answer + " Remember to support your explanation with the conditions you tested."
+    : "Write your observation first, then select this button to review it.";
+});
+
+updateLabels();
+runExperiment();
+</script>
+</body>
+</html>
+
+
