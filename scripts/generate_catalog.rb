@@ -7,7 +7,7 @@ ROOT = Pathname.new(__dir__).join("..").expand_path
 CATALOG = ROOT.join("list.json")
 ACTIVITY_GLOB = ROOT.join("activities", "**", "index.html").to_s
 REQUIRED_FIELDS = %w[schemaVersion id order class subject topic title description activityType status].freeze
-CLASS_SLUGS = { "III" => "3", "VI" => "6", "VII" => "7", "VIII" => "8", "IX" => "9", "X" => "10" }.freeze
+CLASS_SLUGS = { "III" => "3", "IV" => "4", "V" => "5", "VI" => "6", "VII" => "7", "VIII" => "8", "IX" => "9", "X" => "10" }.freeze
 VALID_STATUSES = %w[active planned].freeze
 # The requested translation widget is the only permitted external script.
 TRANSLATION_SCRIPT = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit".freeze
