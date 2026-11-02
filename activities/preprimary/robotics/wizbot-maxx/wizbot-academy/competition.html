@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizbot Robotics Competition Arena</title>
+<style>
+:root {
+  --ink: #173e38;
+  --muted: #58716b;
+  --teal: #0f8278;
+  --teal-dark: #09665f;
+  --paper: #f7f8f2;
+  --card-bg: #ffffff;
+  --line: #dbe4dc;
+  --gold: #ffc968;
+  --green: #259c60;
+  --red: #d34537;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  padding-bottom: 30px;
+}
+
+button, select, input { font: inherit; }
+button {
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+button:hover:not(:disabled) {
+  border-color: var(--teal);
+  background: #edf7f1;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+button.primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+button.primary:hover:not(:disabled) {
+  background: var(--teal-dark);
+}
+
+a { color: var(--teal); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Topbar */
+.topbar {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.brand span { color: var(--teal); }
+.topbar-nav {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Page Container */
+.arena-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-title-row {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.page-title-row h1 {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.page-title-row p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Two Column Layout: Question & Visual Arena */
+.arena-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .arena-grid { grid-template-columns: 1fr; }
+}
+
+/* Card Component */
+.arena-card {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 4px 14px rgba(23, 62, 56, 0.04);
+}
+
+.card-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.card-title-bar h2 {
+  font-size: 18px;
+  font-weight: 750;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Question Navigation */
+.question-nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.question-nav select {
+  flex: 1;
+  background: #fbfdfa;
+  border: 1px solid #c9d8ce;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.question-nav select:focus {
+  outline: 2px solid var(--teal);
+}
+
+/* Question Prompt Box */
+.question-box {
+  background: #f4f8f4;
+  border: 1px solid #d4e3d7;
+  border-radius: 14px;
+  padding: 20px;
+}
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.question-num {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.question-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #e1ede4;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.question-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.question-text {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #21352f;
+  margin-bottom: 16px;
+}
+.question-challenge-box {
+  background: #ffffff;
+  border-left: 4px solid var(--teal);
+  border-radius: 0 10px 10px 0;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #1a423b;
+}
+.question-meta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  padding-top: 14px;
+  border-top: 1px dashed #cadcd0;
+  color: var(--muted);
+}
+.question-meta-row strong {
+  color: var(--ink);
+}
+
+/* Visual Arena (Right Column) */
+.board-wrap {
+  background: #f4f8f4;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  position: relative;
+}
+#board {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: block;
+}
+.board-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #edf3ee;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.legend-items {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-line {
+  width: 18px;
+  height: 3px;
+  display: inline-block;
+}
+.legend-line.target {
+  border-top: 2px dashed #173e38;
+  height: 0;
+}
+.legend-line.travelled {
+  background: var(--teal);
+}
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 36px;
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="./index.html">W<span>✦</span> Wizbot Academy</a>
+  <nav class="topbar-nav" aria-label="Main Navigation">
+    <a href="./index.html">← Back to Academy</a>
+    <a href="./handbook.html">📖 Full Handbook page</a>
+    <a href="./a4sheet.html">↗ Printable Path Sheet</a>
+  </nav>
+</header>
+
+<main class="arena-container">
+  <div class="page-title-row">
+    <div>
+      <h1>Wizbot Robotics Competition Arena</h1>
+      <p>Explore robotics competition route questions and observe the target paths in the Visual Arena.</p>
+    </div>
+  </div>
+
+  <div class="arena-grid">
+    
+    <!-- LEFT: THE QUESTION -->
+    <section class="arena-card" aria-labelledby="question-heading">
+      <div class="card-title-bar">
+        <h2 id="question-heading">📝 The Question</h2>
+        <div class="question-nav">
+          <button type="button" id="btn-prev-q" title="Previous Question">← Prev</button>
+          <select id="question-selector" aria-label="Choose question"></select>
+          <button type="button" id="btn-next-q" title="Next Question">Next →</button>
+        </div>
+      </div>
+
+      <div class="question-box">
+        <div class="question-header">
+          <span class="question-num" id="q-number">Question 1 of 50</span>
+          <span class="question-badge" id="q-badge">Class 1 · Math</span>
+        </div>
+        <div class="question-title" id="q-title">Square Route</div>
+        <p class="question-text" id="q-text">
+          Four equal forward lengths and right turns.
+        </p>
+        <div class="question-challenge-box" id="q-challenge">
+          <strong>Challenge Goal:</strong> Predict the shape before running. Can you change it to a rectangle?
+        </div>
+        <div class="question-meta-row">
+          <span>Input parameter: <strong id="q-input">3</strong></span>
+          <span>Movement mode: <strong id="q-mode">GRID (90° turns)</strong></span>
+          <span>Target distance: <strong id="q-distance">12 steps</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: VISUAL ARENA -->
+    <section class="arena-card arena-visual" aria-labelledby="arena-heading">
+      <div class="card-title-bar">
+        <h2 id="arena-heading">🤖 Visual Arena</h2>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button type="button" id="btn-animate" class="primary" style="padding: 5px 12px; font-size: 13px;">▶ Trace Route</button>
+          <button type="button" id="btn-reset" style="padding: 5px 10px; font-size: 13px;">↺ Reset</button>
+          <label style="font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+            <input type="checkbox" id="toggle-dimensions" checked> Dimensions
+          </label>
+        </div>
+      </div>
+
+      <div class="board-wrap">
+        <svg id="board" viewBox="0 0 600 600" role="img" aria-label="Visual Arena Board">
+          <defs>
+            <pattern id="dots" width="50" height="50" patternUnits="userSpaceOnUse">
+              <circle cx="25" cy="25" r="2" fill="#c7d8d3"/>
+            </pattern>
+          </defs>
+          <rect id="board-background" width="600" height="600" fill="url(#dots)"/>
+          <!-- Benchmark Target Route (Dashed) -->
+          <g id="target-route" aria-hidden="true"></g>
+          <!-- Travelled Route (Solid Teal) -->
+          <path id="trail" fill="none" stroke="#0f8278" stroke-width="5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          <!-- Path Labels -->
+          <g id="path-labels" aria-hidden="true"></g>
+          <!-- Robot Sprite -->
+          <g id="bot">
+            <circle r="18" fill="#ffc968" stroke="#173e38" stroke-width="3"/>
+            <path d="M0 -27 L-7 -14 H7 Z" fill="#173e38"/>
+            <circle cx="-6" cy="-4" r="2" fill="#173e38"/>
+            <circle cx="6" cy="-4" r="2" fill="#173e38"/>
+          </g>
+        </svg>
+
+        <div class="board-footer">
+          <div class="legend-items">
+            <div class="legend-item"><span class="legend-line target"></span> Target Route</div>
+            <div class="legend-item"><span class="legend-line travelled"></span> Robot Trail</div>
+          </div>
+          <div id="pose-readout" style="font-family: ui-monospace, monospace; font-size: 11px;">Facing 0° · Start</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  Wizbot Robotics Competition Arena · <a href="./index.html">Wizbot Academy</a>
+</footer>
+
+<!-- EMBEDDED WIZBOT CODE ENGINE & INTERPRETER -->
+<script id="wizbot-code-language">
+
+/* A small teaching language. Student text is parsed, never evaluated as JavaScript. */
+(() => {
+  'use strict';
+  const LIMITS = {source:12000,tokens:4000,depth:64,steps:10000,output:200,moves:200,value:1e12};
+  const MOVES = {turn:'T',moveTo:'P',forward:'F',reverse:'B',left:'L',right:'R',action:'A',left45:'L45',right45:'R45',left30:'L30',right30:'R30',arcLeft:'AL',arcRight:'AR',wideLeft:'WL',wideRight:'WR'};
+  class CodeError extends Error {constructor(message,line){super((line?'Line '+line+': ':'')+message);this.name='CodeError';this.line=line;}}
+  function tokenize(source){
+    if(source.length>LIMITS.source)throw new CodeError('Keep your program under '+LIMITS.source+' characters.');
+    const tokens=[];let at=0,line=1;
+    const add=(type,value)=>{tokens.push({type,value,line});if(tokens.length>LIMITS.tokens)throw new CodeError('This program has too many tokens.',line);};
+    while(at<source.length){
+      const c=source[at];if(/\s/.test(c)){if(c==='\n')line++;at++;continue;}
+      if(source.slice(at,at+2)==='//'){while(at<source.length&&source[at]!=='\n')at++;continue;}
+      if(c==='"'||c==="'"){
+        const quote=c,start=line;let value='',closed=false;at++;
+        while(at<source.length){let ch=source[at++];if(ch===quote){closed=true;break;}if(ch==='\n')throw new CodeError('Close the text quote before starting a new line.',start);if(ch==='\\'){ch=source[at++];const escapes={n:'\n',t:'\t','\\':'\\','"':'"',"'":"'"};if(!Object.hasOwn(escapes,ch))throw new CodeError('Unsupported text escape.',line);ch=escapes[ch];}value+=ch;}
+        if(!closed)throw new CodeError('Close the text quote.',start);add('string',value);continue;
+      }
+      const number=source.slice(at).match(/^\d+(?:\.\d+)?/);if(number){add('number',Number(number[0]));at+=number[0].length;continue;}
+      const name=source.slice(at).match(/^[A-Za-z_][A-Za-z_0-9]*/);if(name){add('name',name[0]);at+=name[0].length;continue;}
+      const op=['===','!==','<=','>=','==','!=','&&','||','++','--','+=','-='].find(value=>source.startsWith(value,at));if(op){add('symbol',op);at+=op.length;continue;}
+      if('{}();,+-*/%<>=!'.includes(c)){add('symbol',c);at++;continue;}
+      throw new CodeError('Unexpected character '+JSON.stringify(c)+'. Use the commands in the reference.',line);
+    }
+    tokens.push({type:'end',value:'<end>',line});return tokens;
+  }
+  function parse(source){
+    const tokens=tokenize(source);let pos=0,depth=0;
+    const peek=()=>tokens[pos],is=value=>peek().type!=='string'&&peek().value===value;
+    const take=()=>tokens[pos++];
+    const expect=value=>{if(!is(value))throw new CodeError('Expected “'+value+'”, found “'+peek().value+'”.',peek().line);return take();};
+    function name(){const t=take();if(t.type!=='name'||['let','if','else','while','for','repeat','true','false','print',...Object.keys(MOVES)].includes(t.value))throw new CodeError('Choose a variable name such as number, count or total.',t.line);return t;}
+    function nested(fn){if(++depth>LIMITS.depth)throw new CodeError('Too many nested brackets or blocks.',peek().line);try{return fn();}finally{depth--;}}
+    const precedence={'||':1,'&&':2,'==':3,'!=':3,'===':3,'!==':3,'<':4,'>':4,'<=':4,'>=':4,'+':5,'-':5,'*':6,'/':6,'%':6};
+    function expression(min=1){
+      let left=nested(()=>{const t=take();if(t.type==='number'||t.type==='string')return {kind:'literal',value:t.value,line:t.line};if(t.value==='true'||t.value==='false')return {kind:'literal',value:t.value==='true',line:t.line};if(t.value==='('){const node=expression();expect(')');return node;}if(['!','-','+'].includes(t.value))return {kind:'unary',op:t.value,value:expression(7),line:t.line};if(t.type==='name')return {kind:'variable',name:t.value,line:t.line};throw new CodeError('Expected a number, text, variable or condition.',t.line);});
+      while(peek().type==='symbol'&&precedence[peek().value]>=min){const op=take();left={kind:'binary',op:op.value,left,right:expression(precedence[op.value]+1),line:op.line};}return left;
+    }
+    function assignment(declare=false){
+      const token=name();if(!declare&&(is('++')||is('--'))){const op=take();return {kind:'assign',name:token.value,op:op.value,line:token.line};}
+      const op=take();if(!(declare?op.value==='=':['=','+=','-='].includes(op.value)))throw new CodeError('Use =, +=, -=, ++ or -- to update a variable.',op.line);
+      return {kind:declare?'let':'assign',name:token.value,op:op.value,value:expression(),line:token.line};
+    }
+    function block(){expect('{');return nested(()=>{const body=[];while(!is('}')){if(peek().type==='end')throw new CodeError('Close this block with }.',peek().line);body.push(statement());}take();return body;});}
+    function statement(){
+      const t=peek();
+      if(is('let')){take();const node=assignment(true);expect(';');return node;}
+      if(is('if')){take();expect('(');const test=expression();expect(')');const yes=block();let no=[];if(is('else')){take();no=is('if')?[nested(statement)]:block();}return {kind:'if',test,yes,no,line:t.line};}
+      if(is('repeat')||is('while')){take();expect('(');const test=expression();expect(')');return {kind:t.value,test,body:block(),line:t.line};}
+      if(is('for')){take();expect('(');const declare=is('let');if(declare)take();const init=assignment(declare);expect(';');const test=expression();expect(';');const update=assignment();expect(')');return {kind:'for',init,test,update,body:block(),line:t.line};}
+      if(t.type==='name'&&tokens[pos+1].value==='('){take();expect('(');const args=[];if(!is(')')){args.push(expression());while(is(',')){take();args.push(expression());}}expect(')');expect(';');if(t.value!=='print'&&!Object.hasOwn(MOVES,t.value))throw new CodeError('Unknown command '+t.value+'. Try print(), forward() or right().',t.line);if(['turn','moveTo'].includes(t.value)){const count=t.value==='turn'?1:2;if(args.length!==count)throw new CodeError(t.value+'() requires '+count+' numeric argument'+(count===1?'':'s')+'.',t.line);}else if(t.value!=='print'&&args.length>(['forward','reverse','arcLeft','arcRight'].includes(t.value)?1:0))throw new CodeError(t.value+'() takes '+(['forward','reverse','arcLeft','arcRight'].includes(t.value)?'at most one length or radius':'no arguments')+'.',t.line);return {kind:'call',name:t.value,args,line:t.line};}
+      if(t.type==='name'){const node=assignment();expect(';');return node;}
+      throw new CodeError('Start with let, if, repeat, for, while, print or a movement command.',t.line);
+    }
+    const ast=[];while(peek().type!=='end')ast.push(statement());
+    // Bound expression trees too, including very long left-associated arithmetic.
+    const stack=ast.map(node=>[node,1]);while(stack.length){const [node,d]=stack.pop();if(d>LIMITS.depth)throw new CodeError('Simplify this deeply nested expression.',node.line);for(const value of Object.values(node)){if(Array.isArray(value))value.forEach(child=>{if(child&&typeof child==='object')stack.push([child,d+1]);});else if(value&&typeof value==='object')stack.push([value,d+1]);}}
+    return ast;
+  }
+  async function run(source,options={}){
+    const ast=parse(source),vars=new Map([['input',options.input??7]]);let steps=0,output=0,moves=0,turns=0;
+    const trace=event=>options.onTrace?.(event);
+    function spend(line){if(options.shouldStop?.())throw new CodeError('Stopped.',line);if(++steps>LIMITS.steps)throw new CodeError('Run limit reached ('+LIMITS.steps+' steps). Check whether your loop condition can become false.',line);}
+    function bounded(value,line){if(typeof value==='number'&&(!Number.isFinite(value)||Math.abs(value)>LIMITS.value))throw new CodeError('Number is too large or not finite. Use smaller inputs (maximum magnitude '+LIMITS.value+').',line);if(typeof value==='string'&&value.length>500)throw new CodeError('Keep each text value under 500 characters.',line);return value;}
+    function numeric(value,line){if(typeof value!=='number')throw new CodeError('This calculation needs numbers.',line);return value;}
+    const read=(name,line)=>{if(!vars.has(name))throw new CodeError('Define '+name+' with let before using it.',line);return vars.get(name);};
+    function evaluate(node){
+      spend(node.line);if(node.kind==='literal')return bounded(node.value,node.line);if(node.kind==='variable')return read(node.name,node.line);
+      if(node.kind==='unary'){const value=evaluate(node.value);return node.op==='!'?!value:bounded(node.op==='-'?-numeric(value,node.line):numeric(value,node.line),node.line);}
+      const a=evaluate(node.left);if(node.op==='&&')return a&&evaluate(node.right);if(node.op==='||')return a||evaluate(node.right);const b=evaluate(node.right);
+      if(node.op==='=='||node.op==='===')return a===b;if(node.op==='!='||node.op==='!==')return a!==b;
+      if(node.op==='+'&&(typeof a==='string'||typeof b==='string'))return bounded(String(a)+String(b),node.line);
+      numeric(a,node.line);numeric(b,node.line);let value;
+      switch(node.op){case '+':value=a+b;break;case '-':value=a-b;break;case '*':value=a*b;break;case '/':if(b===0)throw new CodeError('Cannot divide by zero.',node.line);value=a/b;break;case '%':if(b===0)throw new CodeError('Cannot find a remainder with divisor zero.',node.line);value=a%b;break;case '<':return a<b;case '>':return a>b;case '<=':return a<=b;case '>=':return a>=b;}
+      return bounded(value,node.line);
+    }
+    async function checkpoint(line){spend(line);if(++turns%40===0){await (options.yieldControl?options.yieldControl():new Promise(resolve=>setTimeout(resolve,0)));if(options.shouldStop?.())throw new CodeError('Stopped.',line);}}
+    async function execute(node){
+      await checkpoint(node.line);
+      if(node.kind==='let'||node.kind==='assign'){
+        if(node.name==='input')throw new CodeError('input is read-only. Copy it into your own variable.',node.line);
+        if(node.kind==='let'&&vars.has(node.name))throw new CodeError(node.name+' is already defined in this block.',node.line);
+        let value;if(node.kind==='let'||node.op==='='){if(node.kind==='assign')read(node.name,node.line);value=evaluate(node.value);}else{const old=numeric(read(node.name,node.line),node.line);value=old+(node.op==='++'?1:node.op==='--'?-1:(node.op==='+='?1:-1)*numeric(evaluate(node.value),node.line));}
+        vars.set(node.name,bounded(value,node.line));trace({line:node.line,text:node.name+' = '+value});return;
+      }
+      if(node.kind==='call'){
+        if(node.name==='print'){if(++output>LIMITS.output)throw new CodeError('Output limit reached ('+LIMITS.output+' lines). Try a smaller loop.',node.line);const text=node.args.map(evaluate).join(' ');if(text.length>1000)throw new CodeError('Print fewer values on one line.',node.line);options.onPrint?.(text);}
+        else {if(++moves>LIMITS.moves)throw new CodeError('Movement limit reached. Use a shorter route.',node.line);const args=node.args.map(evaluate);if(node.name==='turn'){if(args.some(value=>typeof value!=='number'||!Number.isFinite(value)||Math.abs(value)>360))throw new CodeError('Turn angle must be a number from -360 to 360 degrees.',node.line);}else if(node.name==='moveTo'){if(args.some(value=>typeof value!=='number'||!Number.isFinite(value)||Math.abs(value)>1000))throw new CodeError('Coordinates must be numbers from -1000 to 1000 step units.',node.line);}else if(args.some(value=>typeof value!=='number'||!Number.isFinite(value)||value<=0||value>1000))throw new CodeError('Movement length or radius must be greater than 0 and at most 1000 step units.',node.line);trace({line:node.line,text:node.name+'('+args.join(', ')+')'});if(await options.onMove?.(MOVES[node.name],args)===false)throw new CodeError('Movement stopped at the board edge. Shorten the route or turn.',node.line);}return;
+      }
+      if(node.kind==='if'){const yes=Boolean(evaluate(node.test));trace({line:node.line,text:'if → '+yes+'; '+(yes?'then':'else')+' branch'});await block(yes?node.yes:node.no);return;}
+      if(node.kind==='repeat'){const count=evaluate(node.test);if(!Number.isInteger(count)||count<0||count>1000)throw new CodeError('repeat count must be a whole number from 0 to 1000.',node.line);for(let i=0;i<count;i++){await checkpoint(node.line);trace({line:node.line,text:'repeat '+(i+1)+' of '+count});await block(node.body);}return;}
+      if(node.kind==='while'){while(true){await checkpoint(node.line);const test=Boolean(evaluate(node.test));trace({line:node.line,text:'while → '+test});if(!test)break;await block(node.body);}return;}
+      if(node.kind==='for'){
+        const previous=new Map(vars);await execute(node.init);const local=node.init.kind==='let'?node.init.name:null;
+        try{while(true){await checkpoint(node.line);const test=Boolean(evaluate(node.test));trace({line:node.line,text:'for condition → '+test});if(!test)break;await block(node.body);await execute(node.update);}}
+        finally{if(local){if(previous.has(local))vars.set(local,previous.get(local));else vars.delete(local);}}return;
+      }
+    }
+    async function block(nodes){const existing=new Set(vars.keys());try{for(const node of nodes)await execute(node);}finally{for(const key of vars.keys())if(!existing.has(key))vars.delete(key);}}
+    // Top-level declarations remain available in the final variables panel.
+    for(const node of ast)await execute(node);
+    return {variables:Object.fromEntries(vars),steps,output,moves};
+  }
+  const examples=[
+    {id:'fibonacci-spiral',classes:[6, 7, 8, 9, 10],subject:"math",topic:"Number patterns",concept:"The radii follow a = 1, b = 1, next = a + b. The curved path is a joined-quarter-circle Fibonacci approximation.",challenge:"Compare 6 and 8 arcs. Which two earlier radii add to the next one?",favourite:true,title:'Fibonacci spiral · curved path',input:8,mode:'draw',hint:'Trace quarter-circle arcs with radii 1, 1, 2, 3, 5, 8… step units. Input chooses 1–12 arcs. This joined-arc Fibonacci spiral is an approximation, not an exact golden spiral.',code:`let a = 1;\nlet b = 1;\nif (input >= 1 && input <= 12) {\n  for (let arc = 0; arc < input; arc++) {\n    arcRight(a);\n    let next = a + b;\n    a = b;\n    b = next;\n  }\n} else {\n  print("Choose 1 to 12 arcs.");\n}`},
+    {id:'fibonacci-steps',classes:[6, 7, 8, 9, 10],subject:"math",topic:"Number patterns",concept:"Each side follows the Fibonacci rule, while the heading changes by 90 degrees.",challenge:"How does changing arcs to straight sides change the visible spiral?",favourite:true,title:'Fibonacci spiral · straight sides',input:8,mode:'draw',hint:'Travel 1, 1, 2, 3, 5… steps, turning right after each side. Compare the straight-sided path with the curved Fibonacci spiral. Choose 1–12 sides.',code:`let a = 1;\nlet b = 1;\nif (input >= 1 && input <= 12) {\n  for (let side = 0; side < input; side++) {\n    forward(a);\n    right();\n    let next = a + b;\n    a = b;\n    b = next;\n  }\n} else {\n  print("Choose 1 to 12 sides.");\n}`},
+    {id:'square-spiral',classes:[4, 5, 6, 7, 8],subject:"math",topic:"Growing patterns",concept:"Side lengths increase by one; equal right turns make an expanding square spiral.",challenge:"Predict the next side length before adding another side.",favourite:true,title:'Growing square spiral · for',input:10,mode:'draw',hint:'Each new side is one step longer: 1, 2, 3, 4… . Turn right after every side and watch the spiral expand. Try 4–20 sides.',code:`for (let length = 1; length <= input; length++) {\n  forward(length);\n  right();\n}`},
+    {id:'square',classes:[2, 3, 4],subject:"math",topic:"Perimeter",concept:"Four equal sides and four right turns close the square. Perimeter is four times the input.",challenge:"Double the side length: what happens to the perimeter and enclosed area?",favourite:true,title:'Square route · repeat',input:3,mode:'grid',hint:'Input is the length of each side. Repeat forward and right four times to close the square. Try 1–8 steps per side.',code:`repeat (4) {\n  forward(input);\n  right();\n}`},
+    {id:'rectangle',classes:[3, 4, 5],subject:"math",topic:"Perimeter",concept:"Opposite sides match; the perimeter is twice the sum of a long side and a one-step short side.",challenge:"Change the long side while keeping the short side fixed.",favourite:true,title:'Rectangle route · repeat',input:4,mode:'grid',hint:'Input is the long side. A short side is one step. Two repeats draw all four sides and return to the start.',code:`repeat (2) {\n  forward(input);\n  right();\n  forward(1);\n  right();\n}`},
+    {id:'even-odd',classes:[2, 3, 4],subject:"math",topic:"Odd and even patterns",concept:"Odd and even segment numbers choose opposite turns, building a repeating zigzag.",challenge:"Swap left and right. Is the new path a reflection of the old path?",favourite:true,title:'Even/odd zigzag · if / else',input:8,mode:'draw',hint:'Move one step, then test the segment number. Odd segments turn right; even segments turn left. The decisions create a staircase-shaped zigzag.',code:`for (let segment = 1; segment <= input; segment++) {\n  forward(1);\n  if (segment % 2 == 0) {\n    left();\n  } else {\n    right();\n  }\n}`},
+    {id:'prime-composite',classes:[6, 7, 8],subject:"math",topic:"Factors and primes",concept:"Prime/composite classification controls the turn, so a number property becomes a visible route.",challenge:"Predict the turns for 2, 3, 4, 5 and 6 before running.",favourite:true,title:'Prime/composite turns · decisions',input:12,mode:'draw',hint:'For each number from 2 to the input, move one step. Prime numbers turn right 45°; composite numbers turn left 45°. Try 2–30 and follow each decision in the trace.',code:`if (input >= 2 && input <= 30) {\n  for (let number = 2; number <= input; number++) {\n    let divisor = 2;\n    let isPrime = true;\n    while (divisor * divisor <= number && isPrime) {\n      if (number % divisor == 0) {\n        isPrime = false;\n      }\n      divisor++;\n    }\n    forward(1);\n    if (isPrime) {\n      right45();\n    } else {\n      left45();\n    }\n  }\n} else {\n  print("Choose a last number from 2 to 30.");\n}`},
+    {id:'staircase',classes:[2, 3, 4],subject:"math",topic:"Decreasing patterns",concept:"Forward runs decrease by one while the sideways links stay one step long.",challenge:"Which part changes and which part stays constant?",favourite:true,title:'Shrinking staircase · while',input:5,mode:'draw',hint:'Travel input steps, go one step to the right, and repeat with a shorter forward run. The while condition stops when no forward steps remain.',code:`let steps = input;\nwhile (steps > 0) {\n  forward(steps);\n  right();\n  forward(1);\n  left();\n  steps--;\n}`},
+    {id:'growing-squares',classes:[4, 5, 6],subject:"math",topic:"Area and patterns",concept:"A nested loop draws squares of increasing side length from a shared corner.",challenge:"Compare the first and second squares: how do side length, perimeter and area change?",favourite:true,title:'Growing squares · nested loops',input:4,mode:'draw',hint:'The outer loop chooses the side length. The inner repeat draws four sides. All squares share the same starting corner.',code:`for (let size = 1; size <= input; size++) {\n  repeat (4) {\n    forward(size);\n    right();\n  }\n}`},
+    {"id": "c1-count", "title": "Count a step trail", "classes": [1], "subject": "math", "topic": "Counting", "input": 5, "inputLabel": "Number of steps", "inputMin": 1, "inputMax": 10, "mode": "draw", "concept": "Each marked segment is one step. Count the landing dots and match the total to the input.", "challenge": "Try 3, then 5. What stays the same about each step?", "code": "repeat (input) { forward(1); }", "hint": "Class 1 · Counting. Suggested input: 1–10."},
+    {"id": "c1-add", "title": "Join two lengths: add 2", "classes": [1], "subject": "math", "topic": "Addition", "input": 3, "inputLabel": "First length", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "Two moves in the same direction join lengths: input + 2 steps from Start.", "challenge": "Predict the end position for 4 + 2, then check the two length labels.", "code": "forward(input);\nforward(2);", "hint": "Class 1 · Addition. Suggested input: 1–8."},
+    {"id": "c1-corner", "title": "Follow an L-shaped route", "classes": [1], "subject": "math", "topic": "Directions and shapes", "input": 3, "inputLabel": "Length of each arm", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "A right turn changes direction. Two equal arms make a corner, not one straight line.", "challenge": "Replace right() with left(). Which way does the corner open?", "code": "forward(input);\nright();\nforward(input);", "hint": "Class 1 · Directions and shapes. Suggested input: 1–6."},
+    {"id": "c1-backtrack", "title": "Forward, then one step back", "classes": [1], "subject": "physics", "topic": "Movement foundations", "input": 4, "inputLabel": "Forward steps", "inputMin": 2, "inputMax": 8, "mode": "draw", "concept": "The robot moves forward and reverses along part of its own trail. A return movement does not erase the travelled line.", "challenge": "Point to the final arrow. Is it back at Start?", "code": "forward(input);\nreverse(1);", "hint": "Class 1 · Movement foundations. Suggested input: 2–8.", "model": "Movement/EVS foundation: a direction-and-position activity, not a force simulation."},
+    {"id": "c2-skip", "title": "Skip-count staircase", "classes": [2], "subject": "math", "topic": "Skip counting", "input": 4, "inputLabel": "Number of repeats", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "Each repeat travels two steps forward and one sideways. Repeated equal runs represent counting in twos.", "challenge": "Count only the long runs: how many forward steps are there?", "code": "repeat (input) {\n  forward(2); right();\n  forward(1); left();\n}", "hint": "Class 2 · Skip counting. Suggested input: 1–8."},
+    {"id": "c2-subtract", "title": "Take two steps away", "classes": [2], "subject": "math", "topic": "Subtraction", "input": 6, "inputLabel": "Starting number", "inputMin": 2, "inputMax": 10, "mode": "draw", "concept": "Travel to input, then reverse two steps. The landing position models input minus 2; the original trail remains.", "challenge": "Why is the total travelled distance larger than the landing number?", "code": "forward(input);\nreverse(2);", "hint": "Class 2 · Subtraction. Suggested input: 2–10."},
+    {"id": "c2-motif", "title": "Repeat a square motif", "classes": [2], "subject": "math", "topic": "Repeating patterns", "input": 3, "inputLabel": "Number of squares", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "A repeated square-and-link motif produces a chain of identical outlines.", "challenge": "How many turns draw each square? Which command links one square to the next?", "code": "repeat (input) {\n  repeat (4) { forward(1); right(); }\n  forward(2);\n}", "hint": "Class 2 · Repeating patterns. Suggested input: 1–6."},
+    {"id": "c2-straight-curve", "title": "Straight, curved, straight", "classes": [2], "subject": "physics", "topic": "Movement foundations", "input": 2, "inputLabel": "Length / arc radius", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "The route contains straight parts and a quarter-circle bend. The arrow follows the tangent while the robot curves.", "challenge": "Find where the path changes from straight to curved.", "code": "forward(input);\narcRight(input);\nforward(input);", "hint": "Class 2 · Movement foundations. Suggested input: 1–5.", "model": "Movement/EVS foundation: compare path shapes; distances and timing are illustrative."},
+    {"id": "c3-array", "title": "Three-row multiplication scan", "classes": [3], "subject": "math", "topic": "Multiplication arrays", "input": 4, "inputLabel": "Length of each row", "inputMin": 2, "inputMax": 8, "mode": "draw", "concept": "Three equal long runs represent 3 × input. The two short connecting moves are extra travel, not part of the multiplication total.", "challenge": "Compare 3 × input with the full travelled distance. Why are they different?", "code": "for (let row = 1; row <= 3; row++) {\n  forward(input);\n  if (row < 3) {\n    if (row % 2 == 1) { right(); forward(1); right(); }\n    else { left(); forward(1); left(); }\n  }\n}", "hint": "Class 3 · Multiplication arrays. Suggested input: 2–8."},
+    {"id": "c3-perimeter", "title": "Walk a rectangle boundary", "classes": [3], "subject": "math", "topic": "Perimeter", "input": 4, "inputLabel": "Long side", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The short side is 2. One complete boundary has length 2 × (input + 2).", "challenge": "Which commands return the robot to its starting corner?", "code": "repeat (2) { forward(input); right(); forward(2); right(); }", "hint": "Class 3 · Perimeter. Suggested input: 1–8."},
+    {"id": "c3-symmetry", "title": "Diamond symmetry", "classes": [3], "subject": "math", "topic": "Shape symmetry", "input": 3, "inputLabel": "Length of each side", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Four equal diagonal sides form a diamond with mirror symmetry. The visible outline is closed.", "challenge": "Find two mirror lines through the diamond. Does a reflection change its side lengths?", "code": "turn(45);\nrepeat (4) { forward(input); turn(90); }", "hint": "Class 3 · Shape symmetry. Suggested input: 1–6."},
+    {"id": "c3-equal-moves", "title": "Equal moves along a line", "classes": [3], "subject": "physics", "topic": "Movement foundations", "input": 6, "inputLabel": "Number of equal moves", "inputMin": 2, "inputMax": 10, "mode": "draw", "concept": "Equal distances separate the marked stops. Compare the gaps, rather than how quickly the animation runs.", "challenge": "Which gaps look equal? What would change if one forward(1) became forward(2)?", "code": "repeat (input) { forward(1); }", "hint": "Class 3 · Movement foundations. Suggested input: 2–10.", "model": "Introductory measurement and movement: equal spatial intervals, not a speed measurement."},
+    {"id": "c4-half-circle", "title": "A half-circle journey", "classes": [4], "subject": "math", "topic": "Fractions of a turn", "input": 3, "inputLabel": "Radius", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Two quarter-circle arcs make a half-circle and turn the heading through 180 degrees.", "challenge": "How many more quarter arcs would close the circle?", "code": "repeat (2) { arcRight(input); }", "hint": "Class 4 · Fractions of a turn. Suggested input: 1–6."},
+    {"id": "c4-area", "title": "Square area versus boundary", "classes": [4], "subject": "math", "topic": "Area and perimeter", "input": 4, "inputLabel": "Side length", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The robot traces the boundary: perimeter = 4 × input. The enclosed square has area input × input square units.", "challenge": "Double input. Does area double, or become four times as large?", "code": "repeat (4) { forward(input); right(); }", "hint": "Class 4 · Area and perimeter. Suggested input: 1–8."},
+    {"id": "c4-pinwheel", "title": "Quarter-turn pinwheel", "classes": [4], "subject": "math", "topic": "Rotational patterns", "input": 3, "inputLabel": "Spoke length", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Each out-and-back spoke is followed by a quarter turn. Four spokes complete one full turn.", "challenge": "Which parts of the travelled path are retraced?", "code": "repeat (4) { forward(input); reverse(input); right(); }", "hint": "Class 4 · Rotational patterns. Suggested input: 1–6."},
+    {"id": "c4-circle", "title": "Travel around a circle", "classes": [4], "subject": "physics", "topic": "Circular movement foundations", "input": 2, "inputLabel": "Radius", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Four joined quarter-circle arcs make a circular route. The robot faces a new direction throughout the trip.", "challenge": "Does the robot finish where it began? Is its direction always the same?", "code": "repeat (4) { arcRight(input); }", "hint": "Class 4 · Circular movement foundations. Suggested input: 1–6.", "model": "Movement foundation: an illustrative circular path, without a model of forces or speed."},
+    {"id": "c5-flower", "title": "Four-circle flower", "classes": [5], "subject": "math", "topic": "Rotational symmetry", "input": 2, "inputLabel": "Circle radius", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "One loop draws a circle; the outer loop rotates that circle motif through four quarter turns.", "challenge": "Where is the shared starting point? Predict the pattern with only two repeats.", "code": "repeat (4) {\n  repeat (4) { arcRight(input); }\n  right();\n}", "hint": "Class 5 · Rotational symmetry. Suggested input: 1–5."},
+    {"id": "c5-scale", "title": "Scale a rectangle by 2", "classes": [5], "subject": "math", "topic": "Scale and measurement", "input": 3, "inputLabel": "Small rectangle width", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "The second rectangle doubles both side lengths. Its perimeter doubles and its area is four times the first area. Both outlines share a corner.", "challenge": "Compare length labels on matching sides of the two outlines.", "code": "for (let scale = 1; scale <= 2; scale++) {\n  repeat (2) {\n    forward(input * scale); right();\n    forward(2 * scale); right();\n  }\n}", "hint": "Class 5 · Scale and measurement. Suggested input: 1–5."},
+    {"id": "c5-map", "title": "Compass-route map", "classes": [5], "subject": "math", "topic": "Maps and directions", "input": 4, "inputLabel": "Eastward distance", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The route travels east, north, west and south. East/west distances match, so the robot returns to Start.", "challenge": "Point north on the board. Why does right() not always mean east?", "code": "right(); forward(input);\nleft(); forward(2);\nleft(); forward(input);\nleft(); forward(2);", "hint": "Class 5 · Maps and directions. Suggested input: 1–8."},
+    {"id": "c5-ray", "title": "A straight-ray model", "classes": [5], "subject": "physics", "topic": "Light foundations", "input": 5, "inputLabel": "Number of ray segments", "inputMin": 2, "inputMax": 8, "mode": "draw", "concept": "The robot draws a straight ray across equally spaced stops, an introductory representation of straight-line light travel in a uniform medium.", "challenge": "What would a bend in this drawing suggest about the model?", "code": "right(); repeat (input) { forward(1); }", "hint": "Class 5 · Light foundations. Suggested input: 2–8.", "model": "Science foundation: the robot traces a ray diagram; it is not a travelling light pulse or an optical simulation."},
+    {"id": "c6-hexagon", "title": "Regular hexagon route", "classes": [6], "subject": "math", "topic": "Angles and polygons", "input": 3, "inputLabel": "Side length", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Six equal sides and exterior turns of 60 degrees close a regular hexagon. Each interior angle is 120 degrees.", "challenge": "Why is the turn 60 degrees rather than 120 degrees?", "code": "repeat (6) { forward(input); turn(60); }", "hint": "Class 6 · Angles and polygons. Suggested input: 1–6."},
+    {"id": "c6-ratio", "title": "Ratio staircase: 1 to 2", "classes": [6], "subject": "math", "topic": "Ratio", "input": 2, "inputLabel": "Size of one part", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "Every rise is one part and every sideways run is two parts: the length ratio stays 1:2 as input changes.", "challenge": "Try inputs 1 and 3. What changes, and what ratio stays constant?", "code": "repeat (3) { forward(input); right(); forward(2 * input); left(); }", "hint": "Class 6 · Ratio. Suggested input: 1–5."},
+    {"id": "c6-measure-curve", "title": "Measure a bent journey", "classes": [6], "subject": "physics", "topic": "Distance and measurement", "input": 3, "inputLabel": "Straight length / radius", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Two straight lengths and a quarter-circle bend form one continuous travelled route. Distance follows the whole path, not the gap between its ends.", "challenge": "How could a string help measure a curved path on paper?", "code": "forward(input); arcRight(input); forward(input);", "hint": "Class 6 · Distance and measurement. Suggested input: 1–6.", "model": "An illustrative route for measurement. The arc uses a chosen model radius, not calibrated robot hardware."},
+    {"id": "c6-reflection", "title": "A ray reflected through 90°", "classes": [6], "subject": "physics", "topic": "Light and reflection", "input": 3, "inputLabel": "Horizontal / vertical offset", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "The ray reaches a horizontal mirror and reflects with equal 45-degree angles to the normal. The dotted normal is a reference, not a travelled segment.", "challenge": "Compare the incoming and outgoing slopes on either side of the normal.", "code": "moveTo(input, -input);\nmoveTo(2 * input, 0);", "hint": "Class 6 · Light and reflection. Suggested input: 1–6.", "scene": "mirror45", "model": "The robot traces an ideal reflection diagram in a plane; it does not simulate light propagation."},
+    {"id": "c7-triangle", "title": "Equilateral triangle route", "classes": [7], "subject": "math", "topic": "Triangle angles", "input": 3, "inputLabel": "Side length", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Three 120-degree exterior turns close an equilateral triangle. Its interior angles are 60 degrees each and total 180 degrees.", "challenge": "Explain why the robot turns through the exterior angle.", "code": "repeat (3) { forward(input); turn(120); }", "hint": "Class 7 · Triangle angles. Suggested input: 1–6."},
+    {"id": "c7-integers", "title": "Positive and negative steps", "classes": [7], "subject": "math", "topic": "Integers and directed movement", "input": 4, "inputLabel": "Number of repeats", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "Each repeat moves +2 and then −1 along the same line. Net position increases by 1, but travelled distance increases by 3.", "challenge": "Which direction represents a negative move? Explain why distance cannot be negative.", "code": "right(); repeat (input) { forward(2); reverse(1); }", "hint": "Class 7 · Integers and directed movement. Suggested input: 1–8."},
+    {"id": "c7-uniform-graph", "title": "Uniform-motion distance–time graph", "classes": [7], "subject": "physics", "topic": "Motion and time", "input": 2, "inputLabel": "Speed (distance units / time unit)", "inputMin": 1, "inputMax": 4, "mode": "draw", "concept": "The plotted points satisfy distance = speed × time. The straight graph has a constant slope.", "challenge": "Double input. Which graph becomes steeper, and why?", "code": "for (let time = 0; time <= 5; time++) { moveTo(time, input * time); }", "hint": "Class 7 · Motion and time. Suggested input: 1–4.", "axes": {"x": "Time", "y": "Distance"}, "model": "The robot traces a graph, not the object’s physical route. Animation speed is not the measured speed."},
+    {"id": "c7-mirror", "title": "Change the reflection angle", "classes": [7], "subject": "physics", "topic": "Light: plane mirror", "input": 2, "inputLabel": "Horizontal offset", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "The mirror is horizontal. Equal horizontal offsets on the incoming and outgoing legs give equal angles to the vertical normal.", "challenge": "Increase input while keeping the vertical offset 3. How do both angles change?", "code": "moveTo(input, -3); moveTo(2 * input, 0);", "hint": "Class 7 · Light: plane mirror. Suggested input: 1–5.", "scene": "mirror", "model": "An ideal ray diagram: the solid robot trail is the light path; the dashed line is the normal."},
+    {"id": "c8-polygon", "title": "Any regular polygon", "classes": [8], "subject": "math", "topic": "Exterior angles", "input": 5, "inputLabel": "Number of sides", "inputMin": 3, "inputMax": 12, "mode": "draw", "concept": "Equal exterior turns of 360 ÷ input degrees close a regular polygon. The exterior-angle sum is 360 degrees.", "challenge": "Compare 3, 5 and 8 sides. How does the exterior turn change?", "code": "if (input >= 3 && input <= 12) {\n  repeat (input) { forward(2); turn(360 / input); }\n} else { print(\"Choose 3 to 12 sides.\"); }", "hint": "Class 8 · Exterior angles. Suggested input: 3–12."},
+    {"id": "c8-odd-squares", "title": "Odd lengths, square-number total", "classes": [8], "subject": "math", "topic": "Squares and number patterns", "input": 5, "inputLabel": "Number of odd lengths", "inputMin": 1, "inputMax": 10, "mode": "draw", "concept": "The travelled lengths are 1, 3, 5… . Their sum is input squared. This is a distance identity; the drawn spiral is not a filled square area.", "challenge": "Predict the total distance for 6 odd lengths before running.", "code": "for (let n = 1; n <= input; n++) { forward(2 * n - 1); right(); }", "hint": "Class 8 · Squares and number patterns. Suggested input: 1–10."},
+    {"id": "c8-periscope", "title": "Two-mirror periscope path", "classes": [8], "subject": "physics", "topic": "Repeated reflection", "input": 3, "inputLabel": "Mirror separation", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Two reflections at parallel 45-degree mirrors produce an emerging ray parallel to the incoming ray, with a sideways offset.", "challenge": "Trace both direction changes. Would one mirror alone give the same exit direction?", "code": "right(); forward(2);\nright(); forward(input);\nleft(); forward(2);", "hint": "Class 8 · Repeated reflection. Suggested input: 1–6.", "scene": "periscope", "model": "A schematic two-mirror ray path. Mirror lines are context guides, not robot travel."},
+    {"id": "c8-pressure", "title": "Contact area and pressure", "classes": [8], "subject": "physics", "topic": "Force and pressure", "input": 3, "inputLabel": "Contact width", "inputMin": 1, "inputMax": 6, "mode": "draw", "concept": "Two rectangular contact outlines have the same width but heights 2 and 4. For the same force, doubling contact area halves pressure.", "challenge": "Identify the larger contact area. Which would exert less pressure under the same force?", "code": "for (let height = 2; height <= 4; height += 2) {\n  repeat (2) { forward(input); right(); forward(height); right(); }\n}", "hint": "Class 8 · Force and pressure. Suggested input: 1–6.", "model": "The robot outlines contact areas; its direction is not a force arrow. Force is held equal in the comparison."},
+    {"id": "c9-coordinate", "title": "Coordinate rectangle", "classes": [9], "subject": "math", "topic": "Coordinate geometry", "input": 4, "inputLabel": "Width on the x-axis", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The robot joins (0,0), (input,0), (input,3), (0,3) and (0,0). Coordinates locate vertices; all four sides are travelled.", "challenge": "Read each vertex and identify equal opposite sides.", "code": "moveTo(input, 0); moveTo(input, 3); moveTo(0, 3); moveTo(0, 0);", "hint": "Class 9 · Coordinate geometry. Suggested input: 1–8.", "axes": {"x": "x", "y": "y"}},
+    {"id": "c9-linear", "title": "Graph the line y = 2x", "classes": [9], "subject": "math", "topic": "Linear equations in two variables", "input": 5, "inputLabel": "Maximum x-coordinate", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "Every marked point satisfies y = 2x. The robot joins them in increasing x order, making a straight-line graph.", "challenge": "Choose a marked point. How can you verify its coordinates satisfy the equation?", "code": "for (let x = 0; x <= input; x++) { moveTo(x, 2 * x); }", "hint": "Class 9 · Linear equations in two variables. Suggested input: 1–8.", "axes": {"x": "x", "y": "y"}, "model": "A coordinate graph traced by the robot. The coordinate axes are reference lines, not travelled paths."},
+    {"id": "c9-acceleration", "title": "Accelerated-motion distance–time graph", "classes": [9], "subject": "physics", "topic": "Motion: uniform acceleration", "input": 1, "inputLabel": "Acceleration (model units)", "inputMin": 1, "inputMax": 3, "mode": "draw", "concept": "With zero initial speed and position, s = ½at². Increasing gaps in distance for equal time increments make the graph curve upward.", "challenge": "Compare successive rises. Are they equal as in uniform motion?", "code": "for (let time = 0; time <= 6; time++) { moveTo(time, input * time * time / 2); }", "hint": "Class 9 · Motion: uniform acceleration. Suggested input: 1–3.", "axes": {"x": "Time", "y": "Distance"}, "model": "The robot joins sampled graph points with straight segments. This is a graph of motion, not the object’s physical trajectory."},
+    {"id": "c9-displacement", "title": "Distance versus displacement", "classes": [9], "subject": "physics", "topic": "Motion: distance and displacement", "input": 4, "inputLabel": "Eastward distance", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The robot travels input units east and 3 units north. Distance is input + 3; displacement is the direct start-to-end vector, whose length squared is input² + 9.", "challenge": "For input 4, compare distance 7 with displacement length 5. Which line was actually travelled?", "code": "moveTo(input, 0); moveTo(input, 3);", "hint": "Class 9 · Motion: distance and displacement. Suggested input: 1–8.", "axes": {"x": "East", "y": "North"}, "scene": "displacement", "model": "The dashed displacement guide is not travelled. Only the solid L-shaped line belongs to the robot’s trail."},
+    {"id": "c10-ap", "title": "Arithmetic-progression spiral", "classes": [10], "subject": "math", "topic": "Arithmetic progressions", "input": 2, "inputLabel": "Common difference", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "Six side lengths form an AP starting at 1 with common difference input. Their sum is 6 + 15 × input.", "challenge": "Calculate the six side lengths and predict total travel before running.", "code": "let length = 1;\nrepeat (6) { forward(length); right(); length += input; }", "hint": "Class 10 · Arithmetic progressions. Suggested input: 1–5."},
+    {"id": "c10-trig", "title": "A 3:4:5 trigonometry triangle", "classes": [10], "subject": "math", "topic": "Trigonometric ratios", "input": 4, "inputLabel": "Base length", "inputMin": 1, "inputMax": 8, "mode": "draw", "concept": "The height is ¾ of the base, so the right triangle has side ratio 3:4:5. At Start, sin θ = 3/5, cos θ = 4/5 and tan θ = 3/4.", "challenge": "Scale input from 4 to 8. Do the trigonometric ratios change?", "code": "moveTo(input, 0); moveTo(input, 3 * input / 4); moveTo(0, 0);", "hint": "Class 10 · Trigonometric ratios. Suggested input: 1–8.", "axes": {"x": "x", "y": "y"}, "scene": "right-triangle"},
+    {"id": "c10-slab", "title": "Refraction through a glass slab", "classes": [10], "subject": "physics", "topic": "Light: refraction", "input": 2, "inputLabel": "Slab thickness", "inputMin": 1, "inputMax": 5, "mode": "draw", "concept": "For an ideal slab of refractive index 1.5 in air and 45-degree incidence, the internal ray is about 28.13 degrees to the normal. The emerging ray is parallel to the incoming ray.", "challenge": "Increase slab thickness. What happens to the lateral shift while the exit direction stays parallel?", "code": "moveTo(2, -2);\nmoveTo(2 + 0.5345224838 * input, -2 - input);\nmoveTo(4 + 0.5345224838 * input, -4 - input);", "hint": "Class 10 · Light: refraction. Suggested input: 1–5.", "scene": "slab", "model": "A schematic ray diagram using Snell’s law for the stated fixed index and incidence angle; no optical hardware is connected."},
+    {"id": "c10-field", "title": "Circular magnetic-field lines", "classes": [10], "subject": "physics", "topic": "Magnetic effects of current", "input": 3, "inputLabel": "Number of circular outlines", "inputMin": 1, "inputMax": 4, "mode": "draw", "concept": "The circular parts represent magnetic field lines around a straight wire carrying current into the page. Clockwise direction matches the right-hand thumb rule.", "challenge": "Which parts are circular field-line representations, and which straight parts only reposition the robot?", "code": "for (let radius = 1; radius <= input; radius++) {\n  moveTo(radius, 0);\n  turn(90);\n  repeat (4) { arcRight(radius); }\n}", "hint": "Class 10 · Magnetic effects of current. Suggested input: 1–4.", "scene": "wire", "model": "Circular arcs are field-line diagrams. Straight radial links are robot repositioning and are not magnetic field lines or particle trajectories."},
+    {"id": "c10-circuit", "title": "A closed circuit route", "classes": [10], "subject": "physics", "topic": "Electricity: closed circuits", "input": 4, "inputLabel": "Long side of the loop", "inputMin": 2, "inputMax": 8, "mode": "draw", "concept": "A complete conducting loop is needed for steady current in this simple circuit diagram. The cell and resistor are context symbols along the closed route.", "challenge": "Which command could leave the loop open? This drawing does not calculate current or resistance.", "code": "right();\nrepeat (2) { forward(input); left(); forward(2); left(); }", "hint": "Class 10 · Electricity: closed circuits. Suggested input: 2–8.", "scene": "circuit", "model": "The robot traces a circuit diagram, not an electron’s measured motion. This is a closed-path model, not a circuit solver."}
+  ];
+  // Shared, pure geometry: one unit is one step in the selected movement mode.
+  function motion(start,command,args=[],mode='draw',origin={x:300,y:300}){
+    const unit=mode==='grid'?50:25, radians=a=>a*Math.PI/180;
+    if(command==='P'){const x=origin.x+args[0]*unit,y=origin.y-args[1]*unit,dx=x-start.x,dy=y-start.y,distance=Math.hypot(dx,dy),a=distance?Math.atan2(dx,-dy)*180/Math.PI:start.a;return {arc:false,amount:distance/unit,distance,label:'('+args.map(value=>Number(value.toFixed(2))).join(', ')+')',point(t){return {x:start.x+t*dx,y:start.y+t*dy,a};}};}
+    const arc=['AL','AR','WL','WR'].includes(command),sign=command.endsWith('L')?-1:1;
+    const amount=args[0]??(command.startsWith('W')?2:1),radius=amount*unit;
+    const cx=start.x+sign*radius*Math.cos(radians(start.a)),cy=start.y+sign*radius*Math.sin(radians(start.a));
+    return {arc,radius,amount,distance:arc?Math.PI*radius/2:amount*unit,
+      point(t){const a=start.a+(arc?sign*90*t:0);if(arc)return {x:cx-sign*radius*Math.cos(radians(a)),y:cy-sign*radius*Math.sin(radians(a)),a};const distance=(command==='B'?-1:1)*amount*unit*t;return {x:start.x+Math.sin(radians(a))*distance,y:start.y-Math.cos(radians(a))*distance,a};}
+    };
+  }
+  globalThis.WizbotCode={parse,run,examples,motion,LIMITS,CodeError};
+})();
+
+
+</script>
+
+<!-- EMBEDDED WIZBOT WORKSHOP GEOMETRY & SCORING MODEL -->
+<script id="wizbot-workshop-model">
+
+// Shared deterministic geometry, scoring and dependency-free vector PDF writer.
+const WizbotWorkshop=(()=>{
+ const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+ function model(mode='draw',start={x:0,y:0,a:0},speed=1,turnSpeed=90){
+  const unit=mode==='grid'?50:25,points=[{...start}],moves=[];let pose={...start},length=0,seconds=0;
+  function move(command,args=[]){
+   moves.push({command,args:[...args]});
+   if(command==='A'){seconds+=1;return true;}
+   const turn=command==='T'?args[0]:['L','R','L45','R45','L30','R30'].includes(command)?(command[0]==='L'?-1:1)*(command.includes('45')?45:command.includes('30')?30:90):null;
+   if(turn!==null){pose.a+=turn;seconds+=Math.abs(turn)/turnSpeed;return true;}
+   const motion=WizbotCode.motion(pose,command,args,mode,{x:0,y:0});
+   if(command==='P'&&motion.distance){const angle=((motion.point(1).a-pose.a+540)%360+360)%360-180;seconds+=Math.abs(angle)/turnSpeed;}
+   if(motion.distance){for(let i=1;i<=64;i++)points.push(motion.point(i/64));pose=motion.point(1);length+=motion.distance;seconds+=motion.distance/unit/speed;}
+   return true;
+  }
+  return {move,finish:()=>({mode,unit,points,moves,pose:{...pose},length,seconds})};
+ }
+ async function trace(source,input,mode,speed=1,turnSpeed=90){const route=model(mode,undefined,speed,turnSpeed);await WizbotCode.run(source,{input,onMove:route.move,yieldControl:async()=>{}});return route.finish();}
+ function series(q,kind){const scale=WizbotSeries.scale(q),graph=kind==='graph',start={x:0,y:graph?-q.terms[0]/scale*25:0,a:graph?90:0},route=model('draw',start);q.terms.forEach((n,i)=>{const v=n===null?q.options[q.answer]:n;if(graph){if(i)route.move('P',[i*2,v/scale]);}else{route.move('F',[v/scale]);route.move('R');}});return route.finish();}
+ function statements(source){let count=0;function visit(node){if(Array.isArray(node)){node.forEach(visit);return;}if(!node||typeof node!=='object')return;if(['let','assign','if','repeat','while','for','call'].includes(node.kind))count++;Object.values(node).forEach(visit);}visit(WizbotCode.parse(source));return count;}
+ function resample(points,n=160){const cumulative=[0];for(let i=1;i<points.length;i++)cumulative.push(cumulative.at(-1)+distance(points[i-1],points[i]));const total=cumulative.at(-1);if(!total)return Array.from({length:n},()=>points[0]);let j=1;return Array.from({length:n},(_,i)=>{const d=total*i/(n-1);while(j<cumulative.length-1&&cumulative[j]<d)j++;const ratio=(d-cumulative[j-1])/(cumulative[j]-cumulative[j-1]||1),a=points[j-1],b=points[j];return{x:a.x+(b.x-a.x)*ratio,y:a.y+(b.y-a.y)*ratio};});}
+ function matches(target,actual){if(target.length<=0||actual.length<=0)return false;const tolerance=target.unit*.08;if(Math.abs(target.length-actual.length)>Math.max(tolerance,target.length*.015))return false;const a=resample(target.points),b=resample(actual.points);return a.every((p,i)=>distance(p,b[i])<=tolerance)&&Math.abs(((target.pose.a-actual.pose.a)%360+540)%360-180)<=5;}
+ function score(target,actual,source,referenceStatements,codingSeconds){
+  const valid=matches(target,actual),lines=statements(source),code=valid?Math.min(400,Math.round(400*referenceStatements/Math.max(1,lines))):0,time=valid?Math.min(400,Math.round(400*target.seconds/Math.max(.001,actual.seconds))):0,coding=valid?Math.round(200/(1+Math.max(0,codingSeconds)/120)):0;
+  return{valid,lines,robotSeconds:actual.seconds,codingSeconds,code,time,coding,total:code+time+coding};
+ }
+ const ascii=text=>String(text).replace(/[²³½πθ°√→÷×]/g,c=>({'²':'^2','³':'^3','½':'1/2','π':'pi','θ':'theta','°':' deg','√':'sqrt ','→':'->','÷':'/','×':'x'}[c])).normalize('NFKD').replace(/[–—−]/g,'-').replace(/[^\x20-\x7e]/g,'');
+ function references(route,details){
+  const lines=[],words=[],u=route.unit,n=details.input||1;
+  const line=(x1,y1,x2,y2)=>lines.push([{x:x1*u,y:-y1*u},{x:x2*u,y:-y2*u}]);
+  const word=(x,y,label)=>words.push({x:x*u,y:-y*u,label});
+  const xs=route.points.map(p=>p.x/u),ys=route.points.map(p=>-p.y/u),loX=Math.min(...xs),hiX=Math.max(...xs),loY=Math.min(...ys),hiY=Math.max(...ys);
+  if(details.axes){
+   line(Math.min(0,loX)-.5,0,hiX+.5,0);line(0,Math.min(0,loY)-.5,0,hiY+.5);
+   word(hiX+.2,-.8,details.axes.x);word(.2,hiY+.9,details.axes.y);
+   const dx=Math.max(1,Math.ceil((hiX-loX)/6)),dy=Math.max(1,Math.ceil((hiY-loY)/6));
+   for(let x=Math.ceil(loX/dx)*dx;x<=hiX;x+=dx)word(x,-.3,String(x));
+   for(let y=Math.ceil(loY/dy)*dy;y<=hiY;y+=dy)if(y)word(.15,y,String(y));
+  }
+  if(['mirror','mirror45'].includes(details.scene)){const y=details.scene==='mirror45'?-n:-3;line(-1,y,2*n+1,y);word(2*n,y-.5,'Mirror');line(n,y-2,n,y+2);word(n+.2,y+1.7,'Normal');}
+  if(details.scene==='periscope')for(const [i,y] of [0,-n].entries()){line(1.2,y+.8,2.8,y-.8);word(2.9,y+.3,'Mirror '+(i+1));}
+  if(details.scene==='slab'){for(const y of [-2,-2-n])line(loX-1,y,hiX+1,y);word(loX,-1.5,'Air');word(loX,-2-n/2,'Glass n = 1.5');word(loX,-3-n,'Air');line(2,-1,2,-3);line(2+.5345224838*n,-1-n,2+.5345224838*n,-3-n);}
+  if(details.scene==='displacement'){line(0,0,n,3);word(n/2,2,'Displacement');}
+  if(details.scene==='right-triangle'){line(n-.3,0,n-.3,.3);line(n-.3,.3,n,.3);}
+  if(details.scene==='wire')word(-.2,.7,'Current into page (x)');
+  if(details.scene==='circuit'){line(n/2-.12,-.35,n/2-.12,.35);line(n/2+.12,-.2,n/2+.12,.2);word(n/2,-.8,'Cell');line(n/2-.4,1.82,n/2+.4,1.82);line(n/2-.4,2.18,n/2+.4,2.18);word(n/2,2.5,'Resistor');}
+  return {lines,words};
+ }
+ const escape=text=>ascii(text).replace(/([\\()])/g,'\\$1');
+ function pdf(route,details,settings){
+  const mm=72/25.4,landscape=settings.orientation==='landscape',W=(landscape?297:210)*mm,H=(landscape?210:297)*mm,margin=28;
+  const include=key=>settings.sections?.[key]!==false;
+  function wrapLines(value,max){const rows=[];let row='';for(const word of ascii(value).split(/\s+/)){if((row+' '+word).length>max&&row){rows.push(row);row='';}row+=(row?' ':'')+word;}if(row)rows.push(row);return rows;}
+  const chars=Math.floor((W-2*margin)/5),guides=references(route,details),footer=[];
+  if(include('concept'))footer.push({lines:wrapLines('CONCEPT: '+details.concept,chars),size:9});
+  if(include('try'))footer.push({lines:wrapLines('TRY: '+details.challenge,chars),size:9});
+  if(include('guidesNote')&&guides.lines.length)footer.push({lines:['Dashed lines are references, not travelled paths.'],size:8});
+  const workspace=include('code')||include('explain');
+  const notes=[];
+  if(include('test'))notes.push('Test: predicted time ____ s   observed time ____ s   error / improvement __________________');
+  if(include('print'))notes.push('Print A4 at 100% / Actual size. Measure the printed step; calibrate the real bot before running.');
+  if(include('model'))notes.push('Illustrative model: a drawing unit or graph value is not automatically a real robot step.');
+  const noteRows=notes.flatMap(note=>wrapLines(note,Math.floor((W-2*margin)/4.4)));
+  const footerHeight=footer.reduce((total,block)=>total+block.lines.length*(block.size+3)+5,0)+(workspace?118:0)+noteRows.length*12;
+  const bottom=margin+(footerHeight?footerHeight+12:0),top=H-margin-(include('header')?84:0);
+  const box={x:margin,y:bottom,w:W-2*margin,h:top-bottom};
+  if(box.h<100)throw Error('Too much worksheet text for this orientation. Exclude some sections.');
+  const allPoints=[...route.points,...guides.lines.flat(),...guides.words],xs=allPoints.map(p=>p.x),ys=allPoints.map(p=>p.y),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),spanX=Math.max(maxX-minX,route.unit),spanY=Math.max(maxY-minY,route.unit);
+  const fit=Math.min((box.w-60)/spanX,(box.h-60)/spanY),scale=settings.scale==='calibrated'?settings.stepMM*mm/route.unit:fit;
+  if(spanX*scale>box.w-60+.01||spanY*scale>box.h-60+.01)throw Error('This calibrated route will not fit one A4 page. Reduce mm per step or choose Fit route.');
+  const ox=box.x+box.w/2-(minX+maxX)/2*scale,oy=box.y+box.h/2+(minY+maxY)/2*scale;
+  const X=x=>ox+x*scale,Y=y=>oy-y*scale,num=n=>Number(n.toFixed(3));let c='0 G 0 g 1 w\n';const svg=[],xml=value=>ascii(value).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+  const line=(x1,y1,x2,y2,width=.6)=>{svg.push(`<line x1="${x1}" y1="${H-y1}" x2="${x2}" y2="${H-y2}" stroke="black" stroke-width="${width}"/>`);c+=`${width} w ${num(x1)} ${num(y1)} m ${num(x2)} ${num(y2)} l S\n`;};
+  const text=(x,y,value,size=10)=>{svg.push(`<text x="${x}" y="${H-y}" font-family="Arial,Helvetica,sans-serif" font-size="${size}" fill="black">${xml(value)}</text>`);c+=`BT /F1 ${size} Tf ${num(x)} ${num(y)} Td (${escape(value)}) Tj ET\n`;};
+  function wrapped(value,x,y,max=90,size=9,maxLines=3){const words=ascii(value).split(/\s+/);let row='',lines=0;for(const word of words){if((row+' '+word).length>max&&row){text(x,y,row,size);y-=size+3;row='';if(++lines>=maxLines)return y;}row+=(row?' ':'')+word;}if(row)text(x,y,row,size);return y-size-3;}
+  if(include('header')){
+   text(margin,H-margin-14,'WIZBOT | PLAN - CODE - TEST',14);
+   text(margin,H-margin-33,details.title.slice(0,Math.floor((W-2*margin)/6)),11);
+   text(margin,H-margin-52,'Name: ____________________   Class: ______   Date: __________',10);
+   text(margin,H-margin-69,`${route.mode.toUpperCase()} model | Printed step = ${num(route.unit*scale/mm)} mm | Grid gap = ${settings.gridMM} mm`,9);
+  }
+  svg.push(`<rect x="${box.x}" y="${H-box.y-box.h}" width="${box.w}" height="${box.h}" fill="none" stroke="black" stroke-width=".65"/>`);
+  c+=`.65 w ${box.x} ${box.y} ${num(box.w)} ${box.h} re S\nq ${box.x} ${box.y} ${num(box.w)} ${box.h} re W n\n`;
+  const gap=settings.gridMM*mm;
+  if(settings.grid==='lines'){for(let x=box.x+gap;x<box.x+box.w;x+=gap)line(x,box.y,x,box.y+box.h,.25);for(let y=box.y+gap;y<box.y+box.h;y+=gap)line(box.x,y,box.x+box.w,y,.25);}
+  if(settings.grid==='dots'){for(let x=box.x+gap;x<box.x+box.w;x+=gap)for(let y=box.y+gap;y<box.y+box.h;y+=gap){c+=`${num(x-.5)} ${num(y-.5)} 1 1 re f\n`;svg.push(`<rect x="${x-.5}" y="${H-y-.5}" width="1" height="1" fill="black"/>`);}}
+  if(guides.lines.length||guides.words.length){c+='[3 3] 0 d\n';guides.lines.forEach(([a,b])=>{line(X(a.x),Y(a.y),X(b.x),Y(b.y),.6);svg[svg.length-1]=svg.at(-1).replace('/>',' stroke-dasharray="3 3"/>');});c+='[] 0 d\n';guides.words.forEach(p=>text(X(p.x),Y(p.y),p.label,7));}
+  if(settings.path){svg.push(`<path d="${route.points.map((p,i)=>`${i?'L':'M'}${num(X(p.x))} ${num(H-Y(p.y))}`).join(' ')}" fill="none" stroke="black" stroke-width="${settings.width}"/>`);c+=`${settings.width} w [] 0 d\n`+route.points.map((p,i)=>`${num(X(p.x))} ${num(Y(p.y))} ${i?'l':'m'}`).join('\n')+'\nS\n';}
+  c+='Q\n';const start=route.points[0],finish=route.points.at(-1),sx=X(start.x),sy=Y(start.y),fx=X(finish.x),fy=Y(finish.y);
+  svg.push(`<rect x="${sx-3}" y="${H-sy-3}" width="6" height="6" fill="white" stroke="black"/><rect x="${fx-3}" y="${H-fy-3}" width="6" height="6" fill="white" stroke="black"/>`);
+  c+=`1 g 0 G 1.2 w ${num(sx-3)} ${num(sy-3)} 6 6 re B\n0 g\n`;text(sx+7,sy+9,'START',8);
+  const angle=(start.a||0)*Math.PI/180,ax=sx+Math.sin(angle)*18,ay=sy+Math.cos(angle)*18;line(sx,sy,ax,ay,1.2);line(ax,ay,ax-Math.sin(angle+.55)*7,ay-Math.cos(angle+.55)*7,1.2);line(ax,ay,ax-Math.sin(angle-.55)*7,ay-Math.cos(angle-.55)*7,1.2);
+  c+=`${num(fx-3)} ${num(fy-3)} 6 6 re S\n`;text(fx+7,fy-14,distance(start,finish)<.01?'FINISH (return)':'FINISH',8);
+  let y=box.y-16;
+  for(const block of footer){for(const row of block.lines){text(margin,y,row,block.size);y-=block.size+3;}y-=5;}
+  if(workspace){
+   const columns=include('code')&&include('explain')?2:1,gap=20,width=(box.w-gap*(columns-1))/columns;
+   const labels=[...(include('code')?['CODE / BUTTON PLAN']:[]),...(include('explain')?['PREDICT - MEASURE - EXPLAIN']:[])];
+   labels.forEach((label,index)=>{const x=margin+index*(width+gap);text(x,y,label,10);for(let i=0;i<6;i++)line(x,y-14-i*16,x+width,y-14-i*16,.4);});y-=118;
+  }
+  for(const row of noteRows){text(margin,y,row,8);y-=12;}
+  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>',`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${num(W)} ${num(H)}] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>`,'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',`<< /Length ${c.length} >>\nstream\n${c}endstream`];
+  let output='%PDF-1.4\n',offsets=[0];objects.forEach((obj,i)=>{offsets.push(output.length);output+=`${i+1} 0 obj\n${obj}\nendobj\n`;});const xref=output.length;output+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`+offsets.slice(1).map(offset=>String(offset).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;const bytes=new TextEncoder().encode(output);bytes.layout={width:W,height:H,grid:{...box},printedStepMM:route.unit*scale/mm};bytes.preview=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="white"/>${svg.join('')}</svg>`;return bytes;
+ }
+ return{model,trace,series,statements,matches,score,pdf,resample};
+})();
+
+
+</script>
+
+<!-- ARENA LOGIC -->
+<script>
+(() => {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const examples = WizbotCode.examples;
+
+  let currentIdx = 0;
+  let activeChallenge = null;
+  let runToken = 0;
+  let running = false;
+  let pose = { x: 300, y: 300, a: 0 };
+  let trail = '';
+  let cameraScale = 1;
+  let pathStart = { x: 300, y: 300 };
+  let pathBounds = { minX: 300, maxX: 300, minY: 300, maxY: 300 };
+  let segmentMarks = [];
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // Populate Question Selector
+  const selector = $('question-selector');
+  examples.forEach((ex, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = 'Q' + (i + 1) + ': ' + ex.title + ' (Cl ' + ex.classes.join(',') + ')';
+    selector.appendChild(opt);
+  });
+
+  async function loadQuestion(index) {
+    if (index < 0) index = 0;
+    if (index >= examples.length) index = examples.length - 1;
+    currentIdx = index;
+    selector.value = index;
+
+    $('btn-prev-q').disabled = (index === 0);
+    $('btn-next-q').disabled = (index === examples.length - 1);
+
+    if (running) { runToken++; running = false; }
+
+    const ex = examples[index];
+    const speed = 1.0;
+    const turn = 90;
+
+    // Compute reference target path
+    const refRoute = await WizbotWorkshop.trace(ex.code, ex.input, ex.mode, speed, turn);
+    const refStatements = WizbotWorkshop.statements(ex.code);
+
+    activeChallenge = {
+      example: ex,
+      route: refRoute,
+      referenceStatements: refStatements,
+      speed,
+      turn
+    };
+
+    // Update Question Card
+    $('q-number').textContent = 'Question ' + (index + 1) + ' of ' + examples.length;
+    $('q-badge').textContent = 'Class ' + ex.classes.join(', ') + ' · ' + ex.subject.toUpperCase();
+    $('q-title').textContent = ex.title;
+    $('q-text').textContent = ex.concept;
+    $('q-challenge').innerHTML = '<strong>Challenge Goal:</strong> ' + (ex.challenge || 'Follow the target route.');
+    $('q-input').textContent = ex.input;
+    $('q-mode').textContent = ex.mode === 'grid' ? 'GRID (90° turns)' : 'DRAW (angles & curves)';
+    $('q-distance').textContent = Number(refRoute.length / refRoute.unit).toFixed(1) + ' steps';
+
+    renderTarget();
+    resetBot();
+  }
+
+  function renderTarget() {
+    const group = $('target-route');
+    if (!activeChallenge) { group.replaceChildren(); return; }
+
+    const r = activeChallenge.route;
+    const points = r.points;
+    const start = points[0];
+    const finish = points.at(-1);
+
+    pathBounds = {
+      minX: Math.min(...points.map(p => p.x + 300)),
+      maxX: Math.max(...points.map(p => p.x + 300)),
+      minY: Math.min(...points.map(p => p.y + 300)),
+      maxY: Math.max(...points.map(p => p.y + 300))
+    };
+    fitCamera();
+
+    const s = cameraScale;
+    const d = points.map((p, i) => (i ? 'L' : 'M') + (p.x + 300) + ' ' + (p.y + 300)).join(' ');
+
+    group.innerHTML =
+      '<path d="' + d + '" fill="none" stroke="#173e38" stroke-dasharray="' + (6 * s) + ' ' + (6 * s) + '" stroke-width="' + (2.5 * s) + '" vector-effect="non-scaling-stroke"/>' +
+      '<circle cx="' + (start.x + 300) + '" cy="' + (start.y + 300) + '" r="' + (7 * s) + '" fill="#ffc968" stroke="#173e38" stroke-width="' + (2 * s) + '"/>' +
+      '<text x="' + (start.x + 300 + 12 * s) + '" y="' + (start.y + 300 + 18 * s) + '" font-size="' + (12 * s) + '" font-weight="700" fill="#173e38">START</text>' +
+      '<circle cx="' + (finish.x + 300) + '" cy="' + (finish.y + 300) + '" r="' + (7 * s) + '" fill="#fff" stroke="#173e38" stroke-width="' + (2 * s) + '"/>' +
+      '<text x="' + (finish.x + 300 + 12 * s) + '" y="' + (finish.y + 300 - 8 * s) + '" font-size="' + (12 * s) + '" font-weight="700" fill="#173e38">FINISH</text>';
+  }
+
+  function resetBot() {
+    if (!activeChallenge) return;
+    const start = activeChallenge.route.points[0];
+    pose = { x: start.x + 300, y: start.y + 300, a: start.a || 0 };
+    trail = 'M' + pose.x + ' ' + pose.y;
+    segmentMarks = [];
+    $('trail').setAttribute('d', trail);
+    drawBot();
+    $('pose-readout').textContent = 'Pos: (' + (pose.x - 300).toFixed(0) + ', ' + (pose.y - 300).toFixed(0) + ') · Angle: ' + (pose.a % 360).toFixed(0) + '°';
+  }
+
+  function fitCamera() {
+    const span = Math.max(180, Math.max(pathBounds.maxX - pathBounds.minX, pathBounds.maxY - pathBounds.minY) / 0.8);
+    cameraScale = span / 600;
+    const half = 0.4 * span;
+    const cx = Math.max(pathBounds.maxX - half, Math.min(300, pathBounds.minX + half));
+    const cy = Math.max(pathBounds.maxY - half, Math.min(300, pathBounds.minY + half));
+    const x = cx - span / 2, y = cy - span / 2;
+    $('board').setAttribute('viewBox', x + ' ' + y + ' ' + span + ' ' + span);
+    $('board-background').setAttribute('x', x);
+    $('board-background').setAttribute('y', y);
+    $('board-background').setAttribute('width', span);
+    $('board-background').setAttribute('height', span);
+
+    const spacing = 50 * Math.pow(2, Math.ceil(Math.log2(cameraScale)));
+    const dots = $('dots');
+    dots.setAttribute('width', spacing);
+    dots.setAttribute('height', spacing);
+    const dot = dots.querySelector('circle');
+    if (dot) {
+      dot.setAttribute('cx', spacing / 2);
+      dot.setAttribute('cy', spacing / 2);
+      dot.setAttribute('r', 2 * cameraScale);
+    }
+    renderPathMarks();
+  }
+
+  function drawBot() {
+    $('bot').setAttribute('transform', 'translate(' + pose.x + ' ' + pose.y + ') rotate(' + pose.a + ') scale(' + cameraScale + ')');
+    $('trail').setAttribute('d', trail);
+  }
+
+  function renderPathMarks() {
+    const group = $('path-labels');
+    if (!group) return;
+    group.replaceChildren();
+    if (!$('toggle-dimensions').checked) return;
+    const s = cameraScale;
+    segmentMarks.forEach(mark => {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      el.setAttribute('x', mark.x);
+      el.setAttribute('y', mark.y);
+      el.setAttribute('font-size', 10 * s);
+      el.setAttribute('fill', '#09665f');
+      el.setAttribute('font-weight', '600');
+      el.setAttribute('text-anchor', 'middle');
+      el.textContent = mark.text;
+      group.appendChild(el);
+    });
+  }
+
+  async function executeStep(c, token, args = []) {
+    if (c === 'T') {
+      pose.a += args[0];
+      drawBot();
+      return true;
+    }
+    if (['L', 'R', 'L45', 'R45', 'L30', 'R30'].includes(c)) {
+      pose.a += (c.startsWith('L') ? -1 : 1) * (c.includes('45') ? 45 : c.includes('30') ? 30 : 90);
+      drawBot();
+      return true;
+    }
+    if (c === 'A') {
+      $('bot').querySelector('circle').setAttribute('fill', '#b4a5ee');
+      await delay(120);
+      $('bot').querySelector('circle').setAttribute('fill', '#ffc968');
+      return token === runToken;
+    }
+
+    const mode = activeChallenge.example.mode;
+    const movement = WizbotCode.motion({ ...pose }, c, args, mode, pathStart);
+    if (movement.distance === 0) return true;
+
+    for (let i = 1; i <= 16; i++) {
+      if (token !== runToken) return false;
+      const next = movement.point(i / 16);
+      pose = next;
+      if (movement.arc) {
+        trail += ' A' + movement.radius + ' ' + movement.radius + ' 0 0 ' + (c.endsWith('L') ? 0 : 1) + ' ' + pose.x.toFixed(3) + ' ' + pose.y.toFixed(3);
+      } else {
+        trail += ' L' + pose.x.toFixed(3) + ' ' + pose.y.toFixed(3);
+      }
+      pathBounds.minX = Math.min(pathBounds.minX, pose.x);
+      pathBounds.maxX = Math.max(pathBounds.maxX, pose.x);
+      pathBounds.minY = Math.min(pathBounds.minY, pose.y);
+      pathBounds.maxY = Math.max(pathBounds.maxY, pose.y);
+      fitCamera();
+      drawBot();
+      await delay(14);
+    }
+
+    if (token !== runToken) return false;
+    const mid = movement.point(0.5);
+    segmentMarks.push({
+      x: mid.x,
+      y: mid.y,
+      text: movement.label || ((movement.arc ? 'r=' : '') + Number(movement.amount.toFixed(1)))
+    });
+    renderPathMarks();
+    return true;
+  }
+
+  // Animate Route Button
+  $('btn-animate').addEventListener('click', async () => {
+    if (running || !activeChallenge) return;
+    running = true;
+    const token = ++runToken;
+    $('btn-animate').textContent = '⏹ Stop Trace';
+
+    resetBot();
+    renderTarget();
+
+    const ch = activeChallenge;
+    try {
+      await WizbotCode.run(ch.example.code, {
+        input: ch.example.input,
+        shouldStop: () => token !== runToken,
+        onMove: async (command, args) => {
+          if (token !== runToken) return false;
+          return executeStep(command, token, args);
+        }
+      });
+    } catch (_) {
+    } finally {
+      if (token === runToken) {
+        running = false;
+        $('btn-animate').textContent = '▶ Trace Route';
+      }
+    }
+  });
+
+  // Reset Arena
+  $('btn-reset').addEventListener('click', () => {
+    if (running) { runToken++; running = false; }
+    $('btn-animate').textContent = '▶ Trace Route';
+    resetBot();
+    renderTarget();
+  });
+
+  // Navigation handlers
+  selector.addEventListener('change', () => loadQuestion(Number(selector.value)));
+  $('btn-prev-q').addEventListener('click', () => loadQuestion(currentIdx - 1));
+  $('btn-next-q').addEventListener('click', () => loadQuestion(currentIdx + 1));
+  $('toggle-dimensions').addEventListener('change', renderPathMarks);
+
+  // Initial load
+  loadQuestion(0);
+})();
+</script>
+</body>
+</html>
