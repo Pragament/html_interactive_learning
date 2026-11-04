@@ -119,6 +119,27 @@ a:hover { text-decoration: underline; }
   font-size: 14px;
 }
 
+.btn-pictoblox {
+  background: linear-gradient(135deg, #ff7a45 0%, #ff5722 100%);
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 750;
+  padding: 10px 20px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(255, 87, 34, 0.3);
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-pictoblox:hover {
+  background: linear-gradient(135deg, #f4511e 0%, #e64a19 100%);
+  box-shadow: 0 6px 18px rgba(255, 87, 34, 0.42);
+  transform: translateY(-1px);
+}
+
 /* Two Column Layout: Question & Visual Arena */
 .arena-grid {
   display: grid;
@@ -316,6 +337,7 @@ footer {
       <h1>Wizbot Robotics Competition Arena</h1>
       <p>Explore robotics competition route questions and observe the target paths in the Visual Arena.</p>
     </div>
+    <a href="https://pictoblox.ai/" target="_blank" rel="noopener noreferrer" class="btn-pictoblox">🚀 Open PictoBlox ↗</a>
   </div>
 
   <div class="arena-grid">
