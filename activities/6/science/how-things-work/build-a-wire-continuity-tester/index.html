@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Build a Wire Continuity Tester — Class 6 Science</title>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-how-things-work-build-a-wire-continuity-tester",
+  "order": 323,
+  "class": "VI",
+  "classes": [
+    "V",
+    "VI"
+  ],
+  "subject": "Science",
+  "topic": "How Things Work",
+  "subtopic": null,
+  "title": "Build a Wire Continuity Tester",
+  "description": "Construct a 5V USB wire continuity tester on a breadboard with an LED, resistor, and probes. Test unbroken and broken wires, predict outcomes, record trials in a notebook, and troubleshoot circuits.",
+  "activityType": "simulation",
+  "status": "active"
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Baloo+2:wght@500;600;700;800&display=swap');
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+/* Layout: sticky progress header over full-width bands that follow See > Understand > Build > Experiment > Observe > Learn.
+   The dark simulator bench is the one bold moment; everything else stays calm and readable. */
+:root{
+  --bg:#EDF3F6; --surface:#FFFFFF; --surface-2:#F4F8FA; --ink:#12202E; --muted:#4A5D6E; --line:#CBDAE3;
+  --led:#1769FF; --led-soft:#DCE8FF; --pcb:#0F8A5B; --pcb-soft:#D6F2E5; --amber:#F2B632; --amber-soft:#FFF0C7; --amber-ink:#7A4B00;
+  --probe:#D92D43; --probe-soft:#FFE1E5; --violet:#6D45C9; --good:#0B7A50; --bad:#C0263A;
+  --stage:#0C1A29; --stage-2:#14293D; --stage-ink:#DCE9F3; --stage-line:#27425A;
+  --focus:#1769FF;
+  --font-display:'Baloo 2','Trebuchet MS','Segoe UI',system-ui,sans-serif;
+  --font-body:'Atkinson Hyperlegible','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B1620; --surface:#12212E; --surface-2:#182B3A; --ink:#E8F1F7; --muted:#9FB5C6; --line:#2A4152;
+    --led:#5B9BFF; --led-soft:#18325C; --pcb:#3CC68E; --pcb-soft:#12382B; --amber:#F7C654; --amber-soft:#3A2F10; --amber-ink:#F7D88A;
+    --probe:#FF6B7C; --probe-soft:#41181F; --violet:#A98BFF; --good:#4AD49A; --bad:#FF8090;
+    --stage:#08121C; --stage-2:#102232; --stage-ink:#DCE9F3; --stage-line:#27425A; --focus:#8DB8FF;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1620; --surface:#12212E; --surface-2:#182B3A; --ink:#E8F1F7; --muted:#9FB5C6; --line:#2A4152;
+  --led:#5B9BFF; --led-soft:#18325C; --pcb:#3CC68E; --pcb-soft:#12382B; --amber:#F7C654; --amber-soft:#3A2F10; --amber-ink:#F7D88A;
+  --probe:#FF6B7C; --probe-soft:#41181F; --violet:#A98BFF; --good:#4AD49A; --bad:#FF8090;
+  --stage:#08121C; --stage-2:#102232; --stage-ink:#DCE9F3; --stage-line:#27425A; --focus:#8DB8FF;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:18px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.1;margin:0;text-wrap:balance;font-weight:700}
+h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(1.9rem,4vw,2.7rem)}
+h3{font-size:1.35rem}
+p{margin:0 0 .8em}
+.muted{color:var(--muted)}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{padding-block:clamp(44px,7vw,88px);scroll-margin-top:118px}
+.band.alt{background:var(--surface)}
+.band > .wrap{display:flex;flex-direction:column;gap:clamp(24px,4vw,40px)}
+.sec-head{display:flex;flex-direction:column;gap:12px;max-width:720px}
+.sec-head p{font-size:1.15rem;color:var(--muted);margin:0}
+.phase{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font-family:var(--font-display);font-weight:700;font-size:.95rem;padding:4px 14px 4px 10px;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.phase::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+.phase.see{--c:var(--led)}.phase.understand{--c:var(--pcb)}.phase.build{--c:var(--amber-ink)}.phase.experiment{--c:var(--probe)}.phase.observe{--c:var(--violet)}.phase.learn{--c:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 24px;border-radius:99px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);font-family:var(--font-display);font-weight:700;font-size:1.05rem;cursor:pointer;transition:transform .12s,background .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 0 var(--ink)}
+.btn:active{transform:translateY(0);box-shadow:none}
+.btn.primary{background:var(--led);border-color:var(--led);color:#fff}
+.btn.primary:hover{box-shadow:0 4px 0 color-mix(in srgb,var(--led) 55%,#000)}
+.btn.small{min-height:40px;padding:6px 16px;font-size:.95rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:22px}
+.alt .card{background:var(--surface-2)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.grid>*{min-width:0}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--surface);border-bottom:2px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:16px;padding-block:10px}
+.brand{font-family:var(--font-display);font-weight:800;font-size:1.15rem;white-space:nowrap}
+.brand i{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--led);margin-right:8px;box-shadow:0 0 0 4px var(--led-soft)}
+.nav{flex:1;min-width:0;overflow-x:auto;scrollbar-width:thin}
+.nav ol{display:flex;gap:4px;list-style:none;margin:0;padding:2px 0}
+.nv{display:flex;align-items:center;gap:8px;white-space:nowrap;border:0;background:transparent;padding:6px 12px;border-radius:99px;cursor:pointer;font-weight:700;font-size:.92rem;color:var(--muted)}
+.nv:hover{background:var(--surface-2)}
+.nv.cur{background:var(--led-soft);color:var(--ink)}
+.nv .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:11px;line-height:1;color:#fff;flex:none}
+.nv.done .dot{background:var(--good);border-color:var(--good)}
+.nv.done .dot::after{content:"";width:6px;height:3px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.prog{display:flex;flex-direction:column;gap:4px;min-width:112px;font-size:.8rem;font-weight:700;color:var(--muted);text-align:right}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--good);border-radius:99px;transition:width .4s}
+.safe-strip{background:var(--amber-soft);color:var(--amber-ink);font-size:.9rem;font-weight:700}
+.safe-strip .wrap{padding-block:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.safe-strip button{border:0;background:none;color:inherit;text-decoration:underline;font-weight:700;cursor:pointer;padding:0}
+
+/* hero */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;align-items:start}
+.bigq{font-family:var(--font-display);font-weight:700;font-size:clamp(1.4rem,3vw,2rem);line-height:1.2;background:var(--amber-soft);color:var(--ink);border-radius:18px;padding:14px 20px;margin:20px 0}
+.lead{font-size:1.2rem}
+.cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.goals ul{margin:12px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:8px}
+.project-fig{margin:0;display:flex;flex-direction:column;gap:10px}
+.project-fig img{display:block;width:100%;height:auto;border-radius:24px;border:2px solid var(--line);background:#fff}
+.project-fig figcaption,.note{font-size:.95rem;color:var(--muted)}
+.verdict{display:flex;gap:14px;align-items:flex-start}
+.verdict .badge{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-family:var(--font-display);color:#fff}
+.verdict.ok .badge{background:var(--good)}.verdict.no .badge{background:var(--bad)}
+.verdict h3{margin-bottom:4px}
+
+/* safety */
+.band.safety{background:var(--amber-soft);border-block:3px solid var(--amber)}
+.safety .sec-head p{color:var(--amber-ink)}
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));counter-reset:r}
+.rules li{counter-increment:r;background:var(--surface);border:2px solid var(--amber);border-radius:18px;padding:14px 18px 14px 62px;position:relative;font-weight:700;color:var(--ink)}
+.rules li::before{content:counter(r);position:absolute;left:16px;top:12px;width:32px;height:32px;border-radius:50%;background:var(--amber);color:#2A1B00;display:grid;place-items:center;font-family:var(--font-display);font-weight:800}
+.adult{display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:var(--surface);border:3px solid var(--probe);border-radius:22px;padding:18px 22px}
+.adult strong{font-family:var(--font-display);font-size:1.2rem;color:var(--probe)}
+.check{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-weight:700}
+.check input{width:26px;height:26px;flex:none;accent-color:var(--good);margin:0}
+
+/* parts */
+.parts-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;background:var(--led-soft);font-weight:700}
+.part{display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:16px;transition:border-color .15s,transform .15s}
+.alt .part{background:var(--surface-2)}
+.part:hover{border-color:var(--led);transform:translateY(-3px)}
+.part[aria-expanded="true"]{border-color:var(--pcb);background:var(--pcb-soft)}
+.part .ic{background:var(--stage-2);border-radius:16px;padding:8px;display:grid;place-items:center}
+.part .ic svg{width:100%;max-width:150px;height:auto}
+.part h3{font-size:1.2rem}
+.part .hint{font-size:.9rem;color:var(--muted);font-weight:700}
+.part[aria-expanded="true"] .hint{color:var(--pcb)}
+.part .detail{display:flex;flex-direction:column;gap:8px;font-size:1rem}
+.part .detail b{font-family:var(--font-display);display:block;font-size:.95rem;color:var(--pcb)}
+.part .detail p{margin:0}
+
+/* how it works */
+.circ-crop{width:100%;aspect-ratio:445/290;border-radius:16px;border:2px solid var(--line);background-color:#fff}
+.pipes{display:grid;gap:14px}
+.pipe{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px 16px}
+.alt .pipe{background:var(--surface-2)}
+.pipe svg{width:100%;height:auto;display:block}
+.pipe p{margin:4px 0 0;font-size:.95rem;font-weight:700}
+.pipe-wall{fill:none;stroke:#7C93A6;stroke-width:6;stroke-linecap:round}
+.drop{fill:#37A7FF}
+.pipe.ok .drop{animation:dropR 2.2s linear infinite}
+.pipe.no .drop{animation:dropStop 2.2s ease-in infinite}
+@keyframes dropR{from{transform:translateX(0)}to{transform:translateX(250px)}}
+@keyframes dropStop{0%{transform:translateX(0);opacity:1}80%{transform:translateX(100px);opacity:1}100%{transform:translateX(104px);opacity:0}}
+.toggle{display:inline-flex;background:var(--line);border-radius:99px;padding:4px;gap:4px}
+.toggle button{border:0;background:transparent;border-radius:99px;padding:8px 20px;font-family:var(--font-display);font-weight:700;font-size:1rem;cursor:pointer;min-height:44px}
+.toggle button[aria-pressed="true"]{background:var(--surface);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.chain{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 22px}
+.chip{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:12px;text-align:center;font-weight:700;font-size:.95rem;line-height:1.25;min-height:76px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.alt .chip{background:var(--surface-2)}
+.chip small{font-weight:400;color:var(--muted);font-size:.8rem}
+.chain li:not(:last-child) .chip::after{content:"";position:absolute;right:-17px;top:50%;width:12px;height:12px;border-top:3px solid var(--muted);border-right:3px solid var(--muted);transform:translateY(-50%) rotate(45deg);opacity:.6}
+.chain li:nth-child(4) .chip::after{display:none}
+.chain.good .chip{animation:lit 4s linear infinite;animation-delay:calc(var(--i)*.5s)}
+@keyframes lit{0%{background:var(--surface);border-color:var(--line)}1%,12%{background:var(--amber-soft);border-color:var(--amber);transform:scale(1.04)}13%,100%{background:var(--surface);border-color:var(--line);transform:none}}
+.chain.broken .chip{opacity:.55}
+.chain.broken .chip.gap{opacity:1;border:3px dashed var(--bad);background:var(--probe-soft)}
+.flow-out{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.led-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;font-family:var(--font-display);font-weight:800;border:2px solid var(--line);background:var(--surface-2)}
+.led-pill i{width:14px;height:14px;border-radius:50%;background:#5C7185}
+.led-pill.on{background:var(--led-soft);border-color:var(--led)}
+.led-pill.on i{background:#2F9BFF;box-shadow:0 0 10px 3px #2F9BFF}
+.means li{margin-bottom:6px}
+.words{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))}
+.words dt{font-family:var(--font-display);font-weight:700;color:var(--led)}
+.words dd{margin:2px 0 0;font-size:.98rem}
+
+/* build */
+.usb-chip{display:inline-flex;gap:10px;align-items:center;padding:8px 18px;border-radius:99px;font-weight:700;background:var(--probe-soft);color:var(--ink);border:2px solid var(--probe)}
+.usb-chip.ready{background:var(--pcb-soft);border-color:var(--pcb)}
+.segs{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;list-style:none;margin:0;padding:0}
+.segs button{width:100%;min-height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-family:var(--font-display);font-weight:800;font-size:1.05rem;cursor:pointer}
+.segs button.seen{background:var(--pcb-soft);border-color:var(--pcb)}
+.segs button[aria-current="step"]{background:var(--led);border-color:var(--led);color:#fff}
+.step-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.step-media{display:flex;flex-direction:column;gap:12px;align-items:flex-start;min-width:0}
+.crop{position:relative;width:min(100%,calc(380px*var(--ar)));aspect-ratio:var(--ar);background-image:url(circuit.webp);background-repeat:no-repeat;border-radius:18px;border:2px solid var(--line);background-color:#fff}
+.hl{position:absolute;transform:translate(-50%,-50%);border:4px solid var(--probe);border-radius:50%;box-shadow:0 0 0 3px #fff;animation:ring 1.6s ease-in-out infinite}
+.hl.box{border-radius:10px;transform:translate(-50%,-50%)}
+.hl b{position:absolute;left:-4px;top:-4px;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:var(--probe);color:#fff;font:800 14px/26px var(--font-display);text-align:center;border:2px solid #fff}
+@keyframes ring{50%{box-shadow:0 0 0 7px rgba(217,45,67,.28)}}
+.legend{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-weight:700;font-size:.98rem}
+.legend li{display:flex;gap:10px;align-items:center}
+.legend b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--probe);color:#fff;display:grid;place-items:center;font:800 13px var(--font-display)}
+.step-body{display:flex;flex-direction:column;gap:14px;min-width:0}
+.step-no{font-family:var(--font-display);font-weight:700;color:var(--amber-ink);margin:0}
+.tip{background:var(--amber-soft);border-radius:16px;padding:12px 16px;font-weight:700;color:var(--ink)}
+.conn{font-family:var(--font-display);font-weight:700;padding:10px 16px;border-radius:14px;background:var(--led-soft);margin:0}
+.checks{display:grid;gap:10px}
+.lock{background:var(--probe-soft);border:2px solid var(--probe);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.unlock{background:var(--pcb-soft);border:2px solid var(--pcb);border-radius:16px;padding:16px}
+.unlock ol{margin:8px 0 0;padding-left:1.3em;display:grid;gap:6px}
+.step-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tablewrap{overflow-x:auto;border-radius:16px;border:2px solid var(--line)}
+table{border-collapse:collapse;width:100%;background:var(--surface)}
+.alt table{background:var(--surface-2)}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-display);background:var(--led-soft);font-size:1rem}
+tr:last-child td{border-bottom:0}
+
+/* simulator */
+.band.sim{background:var(--stage);color:var(--stage-ink)}
+.sim .sec-head p,.sim .muted{color:#9DB6C9}
+.sim .phase{--c:#FF8A99}
+.bench{background:var(--stage-2);border:2px solid var(--stage-line);border-radius:30px;padding:clamp(14px,2.5vw,26px);display:flex;flex-direction:column;gap:18px}
+.simtag{display:inline-flex;align-self:flex-start;gap:10px;align-items:center;background:#FFE08A;color:#3A2700;font-weight:700;padding:6px 16px;border-radius:99px;font-size:.95rem}
+.stage-scroll{overflow-x:auto;border-radius:22px}
+.stage{min-width:560px;background:radial-gradient(120% 90% at 50% 0%,#17314A 0,#0C1A29 70%);border-radius:22px}
+.sim-svg{display:block;width:100%;height:auto}
+.sim-svg text{font-family:var(--font-body);font-weight:700}
+.lbl{fill:#BFD3E3;font-size:16px}
+.lbl-dark{fill:#3A4A57;font-size:13px}
+.board-txt{fill:#fff;font-size:14px}
+.plbl{font-size:16px}
+.plbl.a{fill:#FF8A99}.plbl.b{fill:#E7EEF4}
+.glow{opacity:0;transition:opacity .3s}
+.bulb{fill:#27406B;stroke:#4C6EA8;stroke-width:2;transition:fill .25s}
+.rays{opacity:0;stroke:#9ED0FF;stroke-width:3;stroke-linecap:round;transition:opacity .25s}
+.ledg.on .glow{opacity:1;animation:pulse 1.6s ease-in-out infinite}
+.ledg.on .bulb{fill:#4FB0FF;stroke:#CDEBFF}
+.ledg.on .rays{opacity:1}
+@keyframes pulse{50%{transform:scale(1.12)}}
+.glow{transform-origin:468px 118px;transform-box:view-box}
+.flow,.flow-glow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .2s}
+.flow{stroke:#FFF1B0;stroke-width:4;stroke-dasharray:1 13}
+.flow-glow{stroke:#FFC83D;stroke-width:9;opacity:0}
+.flow.run{opacity:1;animation:dash .7s linear infinite}
+.flow-glow.run{opacity:.3}
+@keyframes dash{to{stroke-dashoffset:-14}}
+.stopm{opacity:0;transition:opacity .2s}
+.stopm.show{opacity:1}
+.stopm circle.pulse{animation:stopp 1.4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes stopp{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.9)}}
+.wut{opacity:0;transition:opacity .35s}
+.wut.show{opacity:1}
+.wut .v{display:none}.wut[data-view="good"] .v-good,.wut[data-view="broken"] .v-broken,.wut[data-view="cover"] .v-cover{display:inline}
+.usbg{transition:transform .4s}
+.usbg.out{transform:translateX(-46px)}
+.unp{opacity:0;transition:opacity .3s}
+.unp.show{opacity:1}
+.controls{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.tcard{background:var(--stage);border:2px solid var(--stage-line);border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.tcard h3{font-size:1.1rem;color:#fff}
+.tcard h3 span{display:inline-block;margin-left:6px;font-size:.85rem;color:#7FE0B0}
+.tcard .btn{width:100%;background:var(--stage-2);color:#fff;border-color:#5C7C96}
+.tcard .btn:hover{box-shadow:0 4px 0 #5C7C96}
+.tcard .btn.go{background:var(--led);border-color:var(--led)}
+.status{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px;align-items:stretch}
+.status .box{background:var(--stage);border:2px solid var(--stage-line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.status .led-pill{background:#102232;border-color:#3A5A74;color:#fff}
+.status .led-pill.on{background:#12315F;border-color:#4FA0FF}
+.msg h3{font-size:1.6rem;color:#fff}
+.msg.pass h3{color:#7FE0B0}.msg.fail h3{color:#FF9AA7}.msg.warn h3{color:#FFE08A}
+.msg p{margin:0;color:#C9DBE9}
+.switch{display:flex;align-items:center;gap:12px;cursor:pointer;font-weight:700;color:#fff}
+.switch input{width:26px;height:26px;accent-color:#4FB0FF;margin:0}
+.sim .btn.ghost{background:transparent;color:#fff;border-color:#8FB1C9}
+.sim .btn.ghost:hover{box-shadow:0 4px 0 #8FB1C9}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+/* predict */
+.pred-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:start}
+.scen{display:grid;gap:8px}
+.scen button{display:flex;gap:12px;align-items:center;text-align:left;border:2px solid var(--line);background:var(--surface-2);border-radius:16px;padding:10px 14px;cursor:pointer;font-weight:700;min-height:48px}
+.scen button[aria-pressed="true"]{border-color:var(--led);background:var(--led-soft)}
+.scen button .tick{margin-left:auto;color:var(--good)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{min-height:64px;font-size:1.2rem;border:3px solid var(--line);border-radius:18px;background:var(--surface);font-family:var(--font-display);font-weight:800;cursor:pointer}
+.choice[aria-pressed="true"]{border-color:var(--led);background:var(--led-soft)}
+.choice[disabled]{cursor:default}
+.result{border-radius:18px;padding:16px 18px;font-weight:700}
+.result.right{background:var(--pcb-soft);border:2px solid var(--pcb)}
+.result.wrong{background:var(--amber-soft);border:2px solid var(--amber)}
+.result h3{margin-bottom:6px}
+.result p{margin:0 0 6px;font-weight:400}
+.pstage{background:var(--stage);border-radius:22px;padding:10px;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.pstage .stage-scroll{border-radius:16px}
+
+/* notebook */
+.nb-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.nb th:first-child,.nb td:first-child{width:70px}
+.nb select,.nb input[type=text]{width:100%;min-height:44px;border-radius:12px;border:2px solid var(--line);background:var(--surface);padding:6px 10px}
+.nb select[data-v="ON"]{border-color:var(--led);background:var(--led-soft)}
+.nb select[data-v="OFF"]{border-color:var(--muted)}
+.nb .what{font-weight:700}
+.csvbox{display:flex;flex-direction:column;gap:10px}
+.csvbox textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;border-radius:12px;border:2px solid var(--line);background:var(--surface);padding:10px}
+.think{display:grid;gap:14px;counter-reset:q}
+.think label{display:flex;flex-direction:column;gap:6px;font-weight:700}
+.think textarea{min-height:70px;border-radius:12px;border:2px solid var(--line);background:var(--surface);padding:10px;font-weight:400}
+
+/* fix */
+.fix{display:flex;flex-direction:column;gap:10px;text-align:left;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:16px;width:100%}
+.alt .fix{background:var(--surface-2)}
+.fix h3{font-size:1.15rem}
+.fix .sym{display:flex;gap:10px;align-items:center;font-weight:700;color:var(--bad)}
+.fix .sym i{width:14px;height:14px;border-radius:50%;background:#5C7185;flex:none}
+.fix .sym i.on{background:#2F9BFF;box-shadow:0 0 8px #2F9BFF}
+.fix .sym i.dim{background:#3E7BC0;opacity:.55}
+.fix[aria-expanded="true"]{border-color:var(--pcb)}
+.fix .more{display:flex;flex-direction:column;gap:8px;font-weight:400;font-size:1rem}
+.fix .more b{display:block;font-family:var(--font-display);color:var(--pcb)}
+.fix .more p{margin:0}
+.fix .go-first{font-size:.85rem;font-weight:700;color:var(--amber-ink);background:var(--amber-soft);border-radius:99px;padding:2px 12px;align-self:flex-start}
+
+/* quiz */
+.quiz{max-width:760px}
+.qtop{display:flex;justify-content:space-between;gap:12px;font-weight:700;color:var(--muted);flex-wrap:wrap}
+.opts{display:grid;gap:10px;margin:16px 0}
+.opt{text-align:left;min-height:56px;border:2px solid var(--line);border-radius:16px;background:var(--surface);padding:10px 16px;cursor:pointer;font-size:1.05rem}
+.opt:hover:not([disabled]){border-color:var(--led)}
+.opt.right{border-color:var(--good);background:var(--pcb-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--probe-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:16px;padding:12px 16px;margin-bottom:14px}
+.fb.right{background:var(--pcb-soft)}.fb.wrong{background:var(--amber-soft)}
+.score{font-family:var(--font-display);font-size:clamp(3rem,10vw,5rem);font-weight:800;line-height:1}
+
+/* summary */
+.learn{display:flex;gap:14px;align-items:flex-start}
+.learn .n{flex:none;width:42px;height:42px;border-radius:50%;background:var(--pcb);color:#fff;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:1.2rem}
+.congrats{background:var(--led);color:#fff;border-radius:28px;padding:clamp(24px,5vw,44px);display:flex;flex-direction:column;gap:12px}
+.congrats h2{color:#fff}
+.congrats .btn{align-self:flex-start;background:#fff;color:#0B2B66;border-color:#fff}
+footer{padding-block:28px 40px}
+footer .wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center;font-size:.92rem;color:var(--muted)}
+.reset-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .hero-grid,.step-card,.pred-grid,.status{grid-template-columns:minmax(0,1fr)}
+  .chain{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chain li:nth-child(4) .chip::after{display:block}
+  .chain li:nth-child(even) .chip::after{display:none}
+  .prog{display:none}
+  .brand{display:none}
+}
+@media (max-width:760px){
+  .nb thead{position:absolute;left:-9999px}
+  .nb,.nb tbody,.nb tr,.nb td{display:block;width:100%}
+  .nb tr{padding:12px;border-bottom:3px solid var(--line)}
+  .nb td{border:0;padding:6px 0}
+  .nb td::before{content:attr(data-label);display:block;font-size:.85rem;font-weight:700;color:var(--muted)}
+  .nb td:first-child{width:100%}
+}
+@media (max-width:640px){
+  .stage{min-width:0}
+  .sim-svg .lbl{font-size:25px}
+  .sim-svg .plbl{font-size:27px}
+  .sim-svg .board-txt{font-size:20px}
+  .sim-svg .lbl-dark,.sim-svg .lbl.usb5{display:none}
+}
+@media (max-width:480px){
+  body{font-size:17px}
+  .choices{grid-template-columns:1fr}
+  .segs{gap:4px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .chain.good .chip{background:var(--amber-soft);border-color:var(--amber)}
+  .flow.run{stroke-dasharray:none;opacity:.9}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand"><i></i>Continuity Lab</div>
+    <nav class="nav" aria-label="Sections"><ol id="navList"></ol></nav>
+    <div class="prog" aria-live="polite"><span id="progText">0 of 11 done</span><div class="bar"><i id="progBar"></i></div></div>
+  </div>
+  <div class="safe-strip"><div class="wrap">
+    <span>Safety first: 5 V USB power only. Test separate, unpowered wires only. Never test wall sockets or 230 V AC.</span>
+    <button type="button" data-go="safety">Read the rules</button>
+  </div></div>
+</header>
+
+<main>
+<!-- SECTION 1 -->
+<section class="band" id="intro">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="phase see">See</span>
+        <h1 style="margin-top:14px">Build a Wire Continuity Tester</h1>
+        <p class="bigq">How can we find out if a wire is broken?</p>
+        <p class="lead">Electricity needs a complete path to travel. If a wire is broken, electricity cannot pass through it. We can use a small LED light to check whether the wire is connected.</p>
+        <p>A continuity tester does exactly that. It sends a tiny, safe current through the wire you want to check. If the blue LED lights up, the wire is joined from one end to the other.</p>
+        <div class="cta">
+          <button class="btn primary" id="startBtn" type="button">Start experiment</button>
+          <span class="muted">For Classes 5 and 6</span>
+        </div>
+      </div>
+      <aside class="card goals">
+        <h3>What you will learn</h3>
+        <ul>
+          <li>Electricity needs a complete path to flow.</li>
+          <li>How to tell the positive and negative legs of an LED apart.</li>
+          <li>What a resistor does.</li>
+          <li>How to use two probes to test a separate, unpowered wire.</li>
+          <li>How to watch carefully and write down what happened.</li>
+        </ul>
+      </aside>
+    </div>
+    <figure class="project-fig">
+      <img src="circuit.webp" width="1536" height="1024" alt="Top view of the 5 volt USB wire continuity tester on a mini breadboard. A USB breakout board feeds a 1 kilo-ohm resistor and a blue LED. Two probes touch the ends of a yellow wire under test. A circuit diagram, test results and safety note are shown around the picture.">
+      <figcaption>The project picture. When you look at it, follow the wire colours: the red wire from the LED is Probe A, and the black wire from GND is Probe B.</figcaption>
+    </figure>
+    <div class="grid g2">
+      <div class="card verdict ok"><div class="badge">✓</div><div><h3>Wire joined end to end</h3><p style="margin:0">The LED lights up. The wire has continuity. That is a PASS.</p></div></div>
+      <div class="card verdict no"><div class="badge">✕</div><div><h3>Wire broken inside</h3><p style="margin:0">The LED stays off. The path is open. That is a FAIL.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section class="band safety" id="safety">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase build">Safety</span>
+      <h2>Safety rules. Read them first.</h2>
+      <p>Our tester is low voltage, but electricity needs respect. These rules keep everyone safe.</p>
+    </div>
+    <ol class="rules">
+      <li>Disconnect the USB before changing any connections.</li>
+      <li>Use only a 5 V USB power supply.</li>
+      <li>Test only separate, unpowered wires.</li>
+      <li>Never test wall sockets, 230 V AC, live circuits or powered equipment.</li>
+      <li>Never put the probes into USB ports, wall sockets or appliances.</li>
+      <li>Ask a teacher or adult to check the circuit before you connect USB power.</li>
+      <li>Never let VBUS (+5 V) touch GND directly. That makes a short circuit.</li>
+    </ol>
+    <div class="adult">
+      <div><strong>Adult supervision</strong><p style="margin:4px 0 0">Before you build the real tester, ask a teacher or adult to be with you. The simulator on this page is a computer drawing, so it is safe to play with anytime.</p></div>
+      <label class="check"><input type="checkbox" id="safetyRead"><span>I have read the safety rules</span></label>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<section class="band alt" id="parts">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase see">See</span>
+      <h2>Meet the components</h2>
+      <p>Click each component to discover what it does.</p>
+    </div>
+    <div class="parts-top"><span class="pill" id="partsCount" aria-live="polite">0 of 8 discovered</span></div>
+    <div class="grid g4" id="partsGrid"></div>
+  </div>
+</section>
+
+<!-- SECTION 3 -->
+<section class="band" id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase understand">Understand</span>
+      <h2>How does it work?</h2>
+      <p>Think of electricity like water in a pipe. If the pipe is joined, water can pass. If the pipe has a gap, water cannot pass.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h3 style="margin-bottom:12px">The circuit diagram</h3>
+        <div class="circ-crop" id="circCrop" role="img" aria-label="Circuit diagram from the project picture: plus 5 volt VBUS, 1 kilo-ohm resistor, blue LED, then Probe A and Probe B going to the wire, and GND at the bottom."></div>
+        <p class="note" style="margin-top:10px">From the project picture. The current starts at +5 V, goes through the resistor and the LED, then waits at Probe A and Probe B for a wire to complete the path back to GND.</p>
+      </div>
+      <div class="pipes">
+        <div class="pipe ok"><svg viewBox="0 0 300 64" role="img" aria-label="Water flowing through a joined pipe"><path class="pipe-wall" d="M8 14H292M8 50H292"/><g><circle class="drop" cx="20" cy="32" r="6"/><circle class="drop" cx="20" cy="32" r="6" style="animation-delay:-.7s"/><circle class="drop" cx="20" cy="32" r="6" style="animation-delay:-1.4s"/></g></svg><p>Pipe joined: water passes. This is a good wire.</p></div>
+        <div class="pipe no"><svg viewBox="0 0 300 64" role="img" aria-label="Water blocked by a gap in a pipe"><path class="pipe-wall" d="M8 14H120M8 50H120M180 14H292M180 50H292"/><path d="M142 20l16 24M158 20l-16 24" stroke="#D92D43" stroke-width="5" stroke-linecap="round"/><g><circle class="drop" cx="20" cy="32" r="6"/><circle class="drop" cx="20" cy="32" r="6" style="animation-delay:-.7s"/><circle class="drop" cx="20" cy="32" r="6" style="animation-delay:-1.4s"/></g></svg><p>Pipe has a gap: water cannot pass. This is a broken wire.</p></div>
+      </div>
+    </div>
+
+    <div class="card" id="flowCard">
+      <div class="row" style="justify-content:space-between;margin-bottom:16px">
+        <h3>Follow the electricity</h3>
+        <div class="toggle" role="group" aria-label="Choose the wire under test">
+          <button type="button" id="flowGood" aria-pressed="true">Good wire</button>
+          <button type="button" id="flowBroken" aria-pressed="false">Broken wire</button>
+        </div>
+      </div>
+      <ol class="chain good" id="chain"></ol>
+      <div class="flow-out">
+        <span class="led-pill on" id="flowLed"><i></i><span>LED ON</span></span>
+        <p id="flowTxt" style="margin:0;flex:1;min-width:220px">The path is complete. Electricity flows all the way round, so the LED glows.</p>
+      </div>
+    </div>
+
+    <div class="grid g3 means">
+      <div class="card"><h3>A complete path</h3><p style="margin:6px 0 0">Electricity can flow, so the LED lights.</p></div>
+      <div class="card"><h3>A good wire</h3><p style="margin:6px 0 0">It completes the circuit between Probe A and Probe B.</p></div>
+      <div class="card"><h3>A broken wire</h3><p style="margin:6px 0 0">It makes a gap. Electricity cannot cross it.</p></div>
+      <div class="card" style="border-color:var(--led)"><h3>LED ON means</h3><p style="margin:6px 0 0">Continuity. The path is complete.</p></div>
+      <div class="card" style="border-color:var(--bad)"><h3>LED OFF means</h3><p style="margin:6px 0 0">The path is open, or there is a problem in the setup.</p></div>
+      <div class="card"><h3>Remember</h3><p style="margin:6px 0 0">This tester checks only whether a path exists. It does not measure resistance, and it cannot tell if a wire is safe for big currents.</p></div>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:14px">Important words</h3>
+      <dl class="words" id="words"></dl>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<section class="band alt" id="build">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase build">Build</span>
+      <h2>Build the experiment</h2>
+      <p>Eight small steps, one at a time. Read each step before you touch any parts.</p>
+    </div>
+    <div class="row"><span class="usb-chip" id="usbChip">USB is unplugged while you build</span></div>
+    <ol class="segs" id="segs"></ol>
+    <div class="card" id="stepCard"></div>
+    <div class="step-nav">
+      <button class="btn" type="button" id="prevStep">Previous</button>
+      <button class="btn primary" type="button" id="nextStep">Next step</button>
+    </div>
+    <div class="grid g3">
+      <div class="card"><h3>Read the labels</h3><p style="margin:6px 0 0">Never guess the USB pin positions. Read the printed labels on your board.</p></div>
+      <div class="card"><h3>No direct short</h3><p style="margin:6px 0 0">Do not connect VBUS directly to GND. That is a short circuit.</p></div>
+      <div class="card"><h3>Holes vary</h3><p style="margin:6px 0 0">Breadboard hole positions are different on every board. Follow the connections below, not hole numbers.</p></div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">Connection summary</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Start here</th><th>Connect to</th></tr></thead>
+        <tbody>
+          <tr><td>USB VBUS (+5V)</td><td>One end of the resistor</td></tr>
+          <tr><td>Other end of resistor</td><td>LED longer leg (anode +)</td></tr>
+          <tr><td>LED shorter leg (cathode −)</td><td>Probe A</td></tr>
+          <tr><td>Probe B</td><td>USB GND (0V)</td></tr>
+          <tr><td>Wire being tested</td><td>Between the free metal tips of Probe A and Probe B</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<section class="band sim" id="sim">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase experiment">Experiment</span>
+      <h2 style="color:#fff">The test lab</h2>
+      <p>Try three tests. Watch the LED and the path of the electricity.</p>
+    </div>
+    <div class="bench">
+      <span class="simtag">Digital simulation. This is a computer drawing, not the real circuit.</span>
+      <div class="stage-scroll"><div class="stage" id="simStage"></div></div>
+      <div class="controls">
+        <div class="tcard"><h3>Test 1: Probe check <span id="t1ok"></span></h3>
+          <button class="btn go" type="button" id="bTouch">Touch probes together</button>
+          <button class="btn" type="button" id="bSep">Separate probes</button></div>
+        <div class="tcard"><h3>Test 2: Good wire <span id="t2ok"></span></h3>
+          <button class="btn go" type="button" id="bGood">Test a good wire</button></div>
+        <div class="tcard"><h3>Test 3: Broken wire <span id="t3ok"></span></h3>
+          <button class="btn go" type="button" id="bBroken">Test a broken wire</button></div>
+        <div class="tcard"><h3>Controls</h3>
+          <button class="btn ghost" type="button" id="bReset">Reset</button>
+          <label class="switch"><input type="checkbox" id="pwr" checked><span>USB power is plugged in</span></label></div>
+      </div>
+      <div class="status">
+        <div class="box">
+          <h3 style="color:#fff;font-size:1.1rem">Connection status</h3>
+          <span class="led-pill" id="simLed"><i></i><span>LED OFF</span></span>
+          <span class="led-pill" id="simPath"><i></i><span>Path open</span></span>
+        </div>
+        <div class="box msg" id="simMsg" aria-live="polite">
+          <h3 id="simHead">Ready to test</h3>
+          <p id="simBody">The probes are apart, so the path is open and the LED is OFF. Pick a test to begin.</p>
+          <div class="row"><button class="btn small ghost" type="button" id="bSave" hidden>Save result to notebook</button><span id="saveNote" class="muted" style="font-size:.95rem"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6 -->
+<section class="band" id="predict">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase experiment">Experiment</span>
+      <h2>Make a prediction</h2>
+      <p>Scientists guess first, then test. Pick a test, predict the LED, then run it.</p>
+    </div>
+    <div class="pred-grid">
+      <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <div><h3 style="margin-bottom:10px">1. Pick a test</h3><div class="scen" id="scen"></div></div>
+        <div class="card" id="qCard">
+          <h3 style="margin-bottom:10px">2. Predict</h3>
+          <p id="qText" style="font-weight:700"></p>
+          <div class="choices">
+            <button class="choice" type="button" data-p="ON" aria-pressed="false">LED ON</button>
+            <button class="choice" type="button" data-p="OFF" aria-pressed="false">LED OFF</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+        <h3>3. Run the test</h3>
+        <div class="pstage">
+          <div class="stage-scroll"><div class="stage" id="predStage"></div></div>
+          <div class="row" style="padding:0 6px 6px"><button class="btn primary" type="button" id="runPred" disabled>Run this test</button><span class="muted" id="runHint" style="color:#9DB6C9">Choose LED ON or LED OFF first.</span></div>
+        </div>
+        <div id="predResult" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7 -->
+<section class="band alt" id="notebook">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase observe">Observe</span>
+      <h2>Your experiment notebook</h2>
+      <p>Predictions you run above are saved here. Write your own conclusion for each trial. Your notebook stays on this device.</p>
+    </div>
+    <div class="nb-tools">
+      <button class="btn small primary" type="button" id="nbAdd">Add observation</button>
+      <button class="btn small" type="button" id="nbExport">Export as CSV</button>
+      <span id="nbClearWrap"><button class="btn small" type="button" id="nbClear">Clear notebook</button></span>
+    </div>
+    <div class="tablewrap"><table class="nb" id="nb">
+      <thead><tr><th>Trial</th><th>What did you test?</th><th>My prediction</th><th>Actual LED result</th><th>My conclusion</th></tr></thead>
+      <tbody id="nbBody"></tbody>
+    </table></div>
+    <div class="csvbox" id="csvBox" hidden>
+      <p style="margin:0"><b>Your CSV is ready.</b> If a file did not download, copy the text and paste it into a spreadsheet.</p>
+      <textarea id="csvText" readonly aria-label="CSV text"></textarea>
+      <div class="row"><button class="btn small" type="button" id="csvCopy">Copy CSV</button><span id="csvNote" class="muted"></span></div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:12px">Think and answer</h3>
+      <div class="think" id="think"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8 -->
+<section class="band" id="fix">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase observe">Observe</span>
+      <h2>If it does not work</h2>
+      <p>Do not worry. Every inventor has to fix things. Open each card to see what to check.</p>
+    </div>
+    <div class="grid g3" id="fixGrid"></div>
+  </div>
+</section>
+
+<!-- SECTION 9 -->
+<section class="band alt" id="quiz">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase learn">Learn</span>
+      <h2>Test your knowledge</h2>
+      <p>Eight questions. You will see right away if your answer is correct.</p>
+    </div>
+    <div class="card quiz" id="quizCard"></div>
+  </div>
+</section>
+
+<!-- SECTION 10 -->
+<section class="band" id="summary">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="phase learn">Learn</span>
+      <h2>What have we learned?</h2>
+    </div>
+    <div class="grid g3">
+      <div class="card learn"><div class="n">1</div><p style="margin:0">Electricity needs a complete path.</p></div>
+      <div class="card learn"><div class="n">2</div><p style="margin:0">A good wire allows electricity to pass.</p></div>
+      <div class="card learn"><div class="n">3</div><p style="margin:0">A broken wire stops the flow.</p></div>
+      <div class="card learn"><div class="n">4</div><p style="margin:0">The LED helps us identify continuity.</p></div>
+      <div class="card learn"><div class="n">5</div><p style="margin:0">A resistor protects the LED.</p></div>
+      <div class="card"><p style="margin:0"><b>Remember:</b> this tester checks whether a path exists. It does not measure normal working current or exact resistance, and it does not tell you if a wire is safe for large currents.</p></div>
+    </div>
+    <div class="congrats">
+      <h2>Congratulations! You have completed the Wire Continuity Tester experiment!</h2>
+      <p style="margin:0;font-size:1.1rem">You saw it, understood it, built it, tested it, observed it and learned it.</p>
+      <button class="btn" type="button" data-go="intro">Back to the start</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <span>Your progress and notebook are saved in this browser only.</span>
+  <span class="reset-row" id="resetRow"><button class="btn small" type="button" id="resetAll">Clear my saved progress</button></span>
+</div></footer>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem(k)}catch(e){}}
+};
+const K1='wct.progress.v1', K2='wct.notebook.v1';
+const defaults=()=>({started:false,safety:false,comp:[],flow:{good:false,broken:false},buildMax:0,checks:[],tests:{t1:false,t2:false,t3:false},preds:[],quizDone:false,quizBest:null,fix:[],seenSummary:false,think:{}});
+const S=Object.assign(defaults(),store.get(K1,{}));
+const save=()=>store.set(K1,S);
+const reduced=RM;
+
+/* ---------- navigation + progress ---------- */
+const SECS=[['intro','Start'],['safety','Safety'],['parts','Parts'],['how','How it works'],['build','Build'],['sim','Test lab'],['predict','Predict'],['notebook','Notebook'],['fix','Fix it'],['quiz','Quiz'],['summary','Wrap-up']];
+function nbHasConclusion(){return NB.some(r=>r.concl&&r.concl.trim())}
+function doneMap(){return{
+  intro:S.started, safety:S.safety, parts:S.comp.length>=8, how:S.flow.good&&S.flow.broken,
+  build:S.buildMax>=7, sim:S.tests.t1&&S.tests.t2&&S.tests.t3, predict:S.preds.length>=3,
+  notebook:nbHasConclusion(), fix:S.fix.length>=6, quiz:S.quizDone, summary:S.seenSummary
+};}
+const navList=$('#navList');
+SECS.forEach(([id,label])=>{
+  const li=document.createElement('li');
+  li.innerHTML=`<button type="button" class="nv" data-go="${id}" data-id="${id}"><span class="dot"></span><span>${label}</span></button>`;
+  navList.appendChild(li);
+});
+function updateNav(){
+  const d=doneMap(); let n=0;
+  $$('.nv').forEach(b=>{const k=b.dataset.id;const on=!!d[k];b.classList.toggle('done',on);if(on)n++;});
+  $('#progText').textContent=n+' of '+SECS.length+' done';
+  $('#progBar').style.width=(n/SECS.length*100)+'%';
+}
+function go(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b){e.preventDefault();go(b.dataset.go);}});
+const io=new IntersectionObserver(es=>{es.forEach(en=>{
+  if(en.isIntersecting){
+    $$('.nv').forEach(b=>b.classList.toggle('cur',b.dataset.id===en.target.id));
+    const cur=$('.nv.cur');if(cur&&cur.scrollIntoView)try{const n=$('.nav');const r=cur.getBoundingClientRect(),nr=n.getBoundingClientRect();if(r.left<nr.left||r.right>nr.right)n.scrollLeft+=r.left-nr.left-40;}catch(e){}
+    if(en.target.id==='summary'&&!S.seenSummary){S.seenSummary=true;save();updateNav();}
+  }});},{rootMargin:'-35% 0px -55% 0px'});
+SECS.forEach(([id])=>io.observe(document.getElementById(id)));
+$('#startBtn').addEventListener('click',()=>{S.started=true;save();updateNav();go('safety');});
+$('#safetyRead').checked=S.safety;
+$('#safetyRead').addEventListener('change',e=>{S.safety=e.target.checked;save();updateNav();});
+
+/* ---------- parts ---------- */
+const dots=(x0,x1,ys)=>ys.map(y=>{let s='';for(let x=x0;x<=x1;x+=8)s+=`<rect x="${x}" y="${y}" width="4" height="4" rx="1"/>`;return s}).join('');
+const ICONS={
+ bb:`<svg viewBox="0 0 120 80" aria-hidden="true"><rect x="8" y="12" width="104" height="56" rx="8" fill="#F1F4F6" stroke="#B9C5CD" stroke-width="2"/><g fill="#8D9AA4">${dots(16,100,[20,27,34,48,55,62])}</g><rect x="12" y="38" width="96" height="6" fill="#D9E1E6"/></svg>`,
+ led:`<svg viewBox="0 0 120 80" aria-hidden="true"><path d="M44 44V28a16 16 0 0 1 32 0v16z" fill="#3D8BFF"/><ellipse cx="53" cy="24" rx="4" ry="7" fill="#fff" opacity=".55"/><rect x="40" y="44" width="40" height="6" rx="2" fill="#2457B5"/><path d="M52 50v26M68 50v18" stroke="#C9D3DA" stroke-width="3.5"/><text x="30" y="72" fill="#9FB5C6" font-size="11" font-family="sans-serif" font-weight="700">+</text><text x="82" y="68" fill="#9FB5C6" font-size="11" font-family="sans-serif" font-weight="700">−</text></svg>`,
+ res:`<svg viewBox="0 0 120 80" aria-hidden="true"><path d="M6 40H114" stroke="#C9D3DA" stroke-width="3.5"/><rect x="30" y="26" width="60" height="28" rx="12" fill="#D8B07A"/><rect x="42" y="26" width="6" height="28" fill="#6B3E1F"/><rect x="53" y="26" width="6" height="28" fill="#111"/><rect x="64" y="26" width="6" height="28" fill="#D33"/><rect x="78" y="26" width="5" height="28" fill="#C9A227"/></svg>`,
+ usb:`<svg viewBox="0 0 120 80" aria-hidden="true"><rect x="26" y="8" width="82" height="64" rx="8" fill="#0F8A5B" stroke="#0A6B46" stroke-width="2"/><rect x="6" y="28" width="34" height="24" rx="4" fill="#C9D3DA" stroke="#8793A0"/><rect x="12" y="35" width="22" height="10" fill="#4C5965"/><g fill="#F2C94C"><circle cx="98" cy="20" r="4"/><circle cx="98" cy="35" r="4"/><circle cx="98" cy="50" r="4"/><circle cx="98" cy="62" r="4"/></g><g fill="#fff" font-size="9" font-family="sans-serif" font-weight="700"><text x="52" y="23">VBUS</text><text x="52" y="38">D−</text><text x="52" y="53">D+</text><text x="52" y="65">GND</text></g></svg>`,
+ sup:`<svg viewBox="0 0 120 80" aria-hidden="true"><rect x="6" y="28" width="10" height="5" fill="#C9D3DA"/><rect x="6" y="40" width="10" height="5" fill="#C9D3DA"/><rect x="16" y="16" width="52" height="48" rx="9" fill="#F4F6F8" stroke="#B9C5CD" stroke-width="2"/><text x="42" y="46" text-anchor="middle" font-size="17" font-weight="800" fill="#12202E" font-family="sans-serif">5V</text><rect x="68" y="32" width="12" height="16" fill="#222"/><path d="M80 40C100 40 94 66 114 66" stroke="#2A3640" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+ pa:`<svg viewBox="0 0 120 80" aria-hidden="true"><path d="M60 8C60 -4 20 -2 18 30" stroke="#E5384B" stroke-width="4" fill="none"/><rect x="48" y="8" width="24" height="42" rx="9" fill="#E5384B"/><path d="M52 50h16l-6 22h-4z" fill="#C9D3DA"/><circle cx="60" cy="28" r="9" fill="#fff"/><text x="60" y="33" text-anchor="middle" font-size="14" font-weight="800" fill="#B01E30" font-family="sans-serif">A</text></svg>`,
+ pb:`<svg viewBox="0 0 120 80" aria-hidden="true"><path d="M60 8C60 -4 100 -2 102 30" stroke="#394652" stroke-width="4" fill="none"/><rect x="48" y="8" width="24" height="42" rx="9" fill="#2B3743" stroke="#6B7C8B" stroke-width="2"/><path d="M52 50h16l-6 22h-4z" fill="#C9D3DA"/><circle cx="60" cy="28" r="9" fill="#fff"/><text x="60" y="33" text-anchor="middle" font-size="14" font-weight="800" fill="#12202E" font-family="sans-serif">B</text></svg>`,
+ wire:`<svg viewBox="0 0 120 80" aria-hidden="true"><rect x="10" y="36" width="100" height="8" rx="4" fill="#F2C230"/><rect x="4" y="37" width="16" height="6" fill="#D58A47"/><rect x="100" y="37" width="16" height="6" fill="#D58A47"/><text x="60" y="66" text-anchor="middle" font-size="12" font-weight="700" fill="#9FB5C6" font-family="sans-serif">?</text></svg>`
+};
+const PARTS=[
+ {n:'Mini breadboard',i:'bb',w:'A small board full of tiny holes. Inside the board, some holes are joined together in short groups. On many boards, five holes in a row are joined.',j:'It holds the parts and joins some holes together, so we can build the circuit without glue or soldering.'},
+ {n:'Blue LED',i:'led',w:'LED means Light Emitting Diode. It is a tiny light that works one way round only. The longer leg is positive (anode). The shorter leg is negative (cathode).',j:'It lights up to tell us the wire has continuity.'},
+ {n:'1 kΩ resistor',i:'res',w:'A part that limits how much electric current can flow. It has no positive or negative side. About 1 kΩ is a common choice for this circuit.',j:'It protects the LED from too much current.'},
+ {n:'USB breakout board',i:'usb',w:'A small board that brings the USB pins out to labelled holes: VBUS (+5V), GND (0V), D+ and D−.',j:'It gives our circuit +5V and 0V. We do not use D+ and D−.'},
+ {n:'USB 5V power supply',i:'sup',w:'A low-voltage power supply, like the small charger for a phone. It gives out 5 volts.',j:'It powers the tester. We plug it in only after an adult has checked the circuit.'},
+ {n:'Probe A',i:'pa',w:'A jumper wire joined to the LED cathode. The free end has a metal tip.',j:'It touches one end of the wire we want to test.'},
+ {n:'Probe B',i:'pb',w:'A jumper wire joined to USB GND (0V). The free end has a metal tip.',j:'It touches the other end of the wire we want to test.'},
+ {n:'Wire under test',i:'wire',w:'A separate wire that is not connected to any battery, computer, wall socket or powered equipment.',j:'It is the wire we check. If it is good, it completes the circuit.'}
+];
+const partsGrid=$('#partsGrid');
+PARTS.forEach((p,i)=>{
+  const b=document.createElement('button');b.type='button';b.className='part';b.setAttribute('aria-expanded','false');b.dataset.i=i;
+  b.innerHTML=`<div class="ic">${ICONS[p.i]}</div><h3>${p.n}</h3><span class="hint">Click to discover</span><div class="detail" hidden><p><b>What is it?</b>${p.w}</p><p><b>Its job here</b>${p.j}</p></div>`;
+  partsGrid.appendChild(b);
+});
+function partsUI(){
+  $('#partsCount').textContent=S.comp.length+' of 8 discovered';
+  $$('.part').forEach(b=>{const i=+b.dataset.i;const seen=S.comp.includes(i);$('.hint',b).textContent=seen?(b.getAttribute('aria-expanded')==='true'?'Click to close':'Discovered ✓'):'Click to discover';});
+}
+partsGrid.addEventListener('click',e=>{
+  const b=e.target.closest('.part');if(!b)return;const i=+b.dataset.i;
+  const open=b.getAttribute('aria-expanded')==='true';
+  b.setAttribute('aria-expanded',String(!open));$('.detail',b).hidden=open;
+  if(!S.comp.includes(i)){S.comp.push(i);save();updateNav();}
+  partsUI();
+});
+partsUI();
+
+/* ---------- image crops ---------- */
+function applyCrop(el,c){
+  el.style.backgroundSize=(1536/c.w*100)+'% auto';
+  el.style.backgroundPosition=(c.x/(1536-c.w)*100)+'% '+(c.y/(1024-c.h)*100)+'%';
+  el.style.setProperty('--ar',(c.w/c.h).toFixed(4));
+}
+const cc=$('#circCrop');cc.style.backgroundImage='url(circuit.webp)';cc.style.backgroundRepeat='no-repeat';
+applyCrop(cc,{x:1080,y:72,w:445,h:290});
+
+/* ---------- words ---------- */
+const WORDS=[['Electricity','A form of energy that can move through wires and power devices.'],['Circuit','A complete path that electricity can travel around.'],['Continuity','A complete, unbroken path for electricity.'],['Open circuit','A broken or incomplete path. Electricity cannot flow around it.'],['LED','A small light. LED means Light Emitting Diode.'],['Resistor','A part that reduces or limits the flow of electric current.'],['Probe','A test lead with a metal tip that touches the wire being checked.'],['GND / Ground','The 0-volt return connection in this low-voltage circuit.']];
+$('#words').innerHTML=WORDS.map(w=>`<div class="card"><dt>${w[0]}</dt><dd>${w[1]}</dd></div>`).join('');
+
+/* ---------- flow chain ---------- */
+const CHAIN=[['USB VBUS','+5V'],['1 kΩ resistor',''],['LED anode','+ (longer leg)'],['LED cathode','− (shorter leg)'],['Probe A',''],['Wire under test',''],['Probe B',''],['USB GND','0V']];
+$('#chain').innerHTML=CHAIN.map((c,i)=>`<li style="--i:${i}"><div class="chip${i===5?' gap-slot':''}">${c[0]}${c[1]?`<small>${c[1]}</small>`:''}</div></li>`).join('');
+function setFlow(kind,silent){
+  const good=kind==='good';
+  const ch=$('#chain');ch.className='chain '+kind;
+  $$('.chip',ch).forEach((c,i)=>c.classList.toggle('gap',!good&&i===5));
+  $('#flowGood').setAttribute('aria-pressed',String(good));$('#flowBroken').setAttribute('aria-pressed',String(!good));
+  const lp=$('#flowLed');lp.classList.toggle('on',good);$('span',lp).textContent=good?'LED ON':'LED OFF';
+  $('#flowTxt').textContent=good?'The path is complete. Electricity flows all the way round, so the LED glows.':'There is a gap in the wire. The path is open, so nothing flows and the LED stays off.';
+  if(!silent){S.flow[kind]=true;save();updateNav();}
+}
+$('#flowGood').addEventListener('click',()=>setFlow('good'));
+$('#flowBroken').addEventListener('click',()=>setFlow('broken'));
+
+/* ---------- build stepper ---------- */
+const STEPS=[
+ {t:'Find the USB power pins',crop:{x:180,y:290,w:240,h:200},hl:[{k:'c',x:.617,y:.185,d:15,l:'VBUS is +5V'},{k:'c',x:.604,y:.795,d:15,l:'GND is 0V'},{k:'b',x:.44,y:.42,w:.2,h:.33,l:'D+ and D− are data pins. Do not use them.'}],
+  text:'Look at the printed labels on the USB breakout board. VBUS is +5V. GND is 0V. D+ and D− are data pins, and we do not use them in this circuit.',tip:'Never guess where the pins are. Boards are different, so always read the labels.',conn:'USB VBUS = +5V, USB GND = 0V'},
+ {t:'Place the LED',crop:{x:560,y:200,w:300,h:240},hl:[{k:'c',x:.357,y:.56,d:15,l:'Longer leg: anode (+)'},{k:'c',x:.49,y:.56,d:15,l:'Shorter leg: cathode (−)'}],
+  text:'Find the two LED legs. The longer leg is the positive leg (anode). The shorter leg is the negative leg (cathode). Push them into separate breadboard groups so they are not joined together.',tip:'The LED only works one way round. If it does not light later, check the legs first.',conn:'Anode and cathode go in different connected groups'},
+ {t:'Add the resistor',crop:{x:300,y:270,w:420,h:160},hl:[{k:'b',x:.55,y:.39,w:.22,h:.4,l:'1 kΩ resistor'}],
+  text:'Connect the 1 kΩ resistor between the USB positive supply connection and the LED anode. Put one end of the resistor in the same group as the LED’s longer leg. Put the other end in a different, unused group.',tip:'A resistor has no positive or negative side. It can go in either way round.',conn:'Resistor end 1 → LED anode (+)'},
+ {t:'Connect USB positive',crop:{x:250,y:260,w:360,h:150},hl:[{k:'c',x:.217,y:.447,d:11,l:'VBUS (+5V) pin'},{k:'b',x:.46,y:.5,w:.45,h:.22,l:'Jumper wire to the free end of the resistor'}],
+  text:'With the USB still unplugged, connect a jumper wire from VBUS (+5V) to the free end of the resistor.',tip:'Do not connect VBUS directly to GND.',conn:'USB VBUS (+5V) → free end of resistor'},
+ {t:'Connect Probe A',crop:{x:560,y:250,w:320,h:400},hl:[{k:'c',x:.46,y:.21,d:15,l:'LED cathode (shorter leg)'},{k:'c',x:.9,y:.86,d:13,l:'The red wire carries on down to Probe A’s metal tip'}],
+  text:'Connect a separate jumper wire to the same breadboard group as the LED’s shorter leg. Leave the other end free. That free end is Probe A. Its metal tip will touch one end of the wire you test.',tip:'In the picture, Probe A is the red wire that starts at the LED.',conn:'LED cathode (−) → Probe A'},
+ {t:'Connect Probe B',crop:{x:250,y:410,w:250,h:240},hl:[{k:'c',x:.3,y:.17,d:20,l:'USB GND (0V) pin'},{k:'c',x:.64,y:.95,d:16,l:'The black wire carries on down to Probe B’s metal tip'}],
+  text:'Connect another jumper wire to USB GND (0V). Leave the other end free. That free end is Probe B. Its metal tip will touch the other end of the wire you test.',tip:'In the picture, Probe B is the black wire that starts at GND.',conn:'USB GND (0V) → Probe B'},
+ {t:'Check everything',crop:{x:0,y:100,w:1080,h:550},hl:[],special:'check',
+  text:'With the USB still unplugged, check every connection. Then ask a teacher or adult to look at your circuit.',tip:'Look for stray strands of metal wire that might join +5V to GND.',conn:''},
+ {t:'Connect USB power',crop:{x:0,y:290,w:420,h:220},hl:[{k:'b',x:.28,y:.56,w:.5,h:.52,l:'The USB cable goes in last'}],special:'power',
+  text:'',tip:'',conn:''}
+];
+const CHECKS=['The LED’s longer leg is on the resistor side, and its shorter leg goes to Probe A.','The resistor connects VBUS to the LED’s longer leg.','I read the labels: VBUS goes to the resistor, GND goes to Probe B.','No loose metal strands join +5V to GND.','The USB is still unplugged.','A teacher or adult has checked my circuit and said it is OK.'];
+let cur=0;
+const segs=$('#segs');
+STEPS.forEach((s,i)=>{const li=document.createElement('li');li.innerHTML=`<button type="button" data-s="${i}" aria-label="Step ${i+1}: ${esc(s.t)}">${i+1}</button>`;segs.appendChild(li);});
+const unlocked=()=>CHECKS.every((_,i)=>S.checks.includes(i));
+function renderStep(){
+  const s=STEPS[cur];
+  $$('button',segs).forEach((b,i)=>{b.classList.toggle('seen',i<=Math.max(cur,0)&&i<cur||(i===7&&S.buildMax>=7));b.removeAttribute('aria-current');if(i===cur)b.setAttribute('aria-current','step');});
+  const ar=(s.crop.w/s.crop.h).toFixed(4);
+  const rings=s.hl.map((h,i)=>h.k==='c'
+    ?`<span class="hl" style="left:${h.x*100}%;top:${h.y*100}%;width:${h.d}%;aspect-ratio:1"><b>${i+1}</b></span>`
+    :`<span class="hl box" style="left:${h.x*100}%;top:${h.y*100}%;width:${h.w*100}%;height:${h.h*100}%"><b>${i+1}</b></span>`).join('');
+  const legend=s.hl.length?`<ol class="legend">${s.hl.map((h,i)=>`<li><b>${i+1}</b><span>${esc(h.l)}</span></li>`).join('')}</ol>`:'';
+  let body='';
+  if(s.special==='check'){
+    body=`<p>${s.text}</p><div class="checks">${CHECKS.map((c,i)=>`<label class="check"><input type="checkbox" data-c="${i}" ${S.checks.includes(i)?'checked':''}><span>${c}</span></label>`).join('')}</div><div class="tip">${s.tip}</div>`;
+  }else if(s.special==='power'){
+    body=unlocked()
+     ?`<div class="unlock"><b style="font-family:var(--font-display)">Your adult has approved the circuit. You may connect USB power.</b><ol><li>Plug in the USB 5V supply.</li><li>Keep the two probes apart at first. The LED should be OFF, because the circuit is open.</li><li>Now touch the probe tips together. The LED should light. Go to the test lab to practise.</li></ol></div><div class="tip">If the LED does not behave like this, unplug the USB and ask an adult to help. The “If it does not work” cards can help.</div>`
+     :`<div class="lock"><b style="font-family:var(--font-display);font-size:1.1rem">Locked: not yet</b><p style="margin:0">Connect USB power only after the wiring has been checked and an adult has approved it. Finish all six checks in Step 7 first.</p><button class="btn small" type="button" data-s="6">Go to Step 7</button></div>`;
+  }else{
+    body=`<p>${s.text}</p><div class="tip">${s.tip}</div><p class="conn">${s.conn}</p>`;
+  }
+  $('#stepCard').innerHTML=`<div class="step-card"><div class="step-media"><div class="crop" style="--ar:${ar}">${rings}</div>${legend}</div><div class="step-body"><p class="step-no">Step ${cur+1} of 8</p><h3>${s.t}</h3>${body}</div></div>`;
+  const c=$('#stepCard .crop');applyCrop(c,s.crop);
+  $('#prevStep').disabled=cur===0;
+  const nx=$('#nextStep');nx.disabled=cur===7;nx.textContent=cur===6?'Next: connect power':'Next step';
+  const chip=$('#usbChip'),ready=cur===7&&unlocked();
+  chip.classList.toggle('ready',ready);chip.textContent=ready?'USB can be plugged in now':'USB must stay unplugged while you build';
+  if(ready&&S.buildMax<7){S.buildMax=7;save();updateNav();}
+  else if(cur>S.buildMax&&!ready&&cur<7){S.buildMax=Math.max(S.buildMax,cur);save();}
+}
+$('#prevStep').addEventListener('click',()=>{if(cur>0){cur--;renderStep();}});
+$('#nextStep').addEventListener('click',()=>{if(cur<7){cur++;renderStep();}});
+segs.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){cur=+b.dataset.s;renderStep();}});
+$('#stepCard').addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(b){cur=+b.dataset.s;renderStep();}});
+$('#stepCard').addEventListener('change',e=>{
+  const c=e.target.closest('[data-c]');if(!c)return;const i=+c.dataset.c;
+  S.checks=S.checks.filter(x=>x!==i);if(c.checked)S.checks.push(i);save();
+});
+renderStep();
+
+/* ---------- reusable simulator stage ---------- */
+function createStage(root,opts){
+  opts=opts||{};
+  const uid='s'+Math.random().toString(36).slice(2,8);
+  root.innerHTML=`
+<svg class="sim-svg" viewBox="0 0 760 430" role="img" aria-label="Simulation of the wire continuity tester: USB board, resistor, blue LED, Probe A, Probe B and the wire under test.">
+ <defs>
+  <radialGradient id="gl-${uid}"><stop offset="0" stop-color="#8CCBFF" stop-opacity=".95"/><stop offset=".45" stop-color="#2F7BFF" stop-opacity=".4"/><stop offset="1" stop-color="#1769FF" stop-opacity="0"/></radialGradient>
+  <pattern id="ho-${uid}" width="14" height="14" patternUnits="userSpaceOnUse"><rect x="4.5" y="4.5" width="5" height="5" rx="1" fill="#9AA7B0"/></pattern>
+  <filter id="bl-${uid}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+ </defs>
+ <rect x="165" y="36" width="485" height="210" rx="16" fill="#F1F4F6" stroke="#C4CED5" stroke-width="2"/>
+ <rect x="182" y="46" width="451" height="3" fill="#E5484D" opacity=".7"/><rect x="182" y="54" width="451" height="3" fill="#3B82F6" opacity=".7"/>
+ <rect x="178" y="64" width="459" height="72" fill="url(#ho-${uid})"/>
+ <rect x="178" y="140" width="459" height="12" rx="3" fill="#DDE4E8"/>
+ <rect x="178" y="158" width="459" height="72" fill="url(#ho-${uid})"/>
+ <!-- USB board -->
+ <rect x="34" y="124" width="16" height="56" rx="3" fill="#3A4652"/>
+ <rect x="34" y="58" width="92" height="176" rx="10" fill="#0F8A5B" stroke="#0A6B46" stroke-width="2"/>
+ <g class="usbg"><rect x="0" y="134" width="12" height="36" fill="#222"/><rect x="12" y="118" width="40" height="68" rx="5" fill="#C9D3DA" stroke="#8793A0" stroke-width="2"/><rect x="20" y="134" width="24" height="36" fill="#4C5965"/></g>
+ <g fill="#fff" class="board-txt"><text x="60" y="96" class="board-txt">VBUS</text><text x="60" y="138" class="board-txt" opacity=".6">D−</text><text x="60" y="162" class="board-txt" opacity=".6">D+</text><text x="60" y="212" class="board-txt">GND</text></g>
+ <g fill="#F2C94C"><circle cx="116" cy="92" r="5"/><circle cx="116" cy="134" r="5" opacity=".5"/><circle cx="116" cy="158" r="5" opacity=".5"/><circle cx="116" cy="208" r="5"/></g>
+ <text x="14" y="228" class="lbl unp" fill="#FFE08A" style="fill:#FFE08A;font-size:14px">USB unplugged</text>
+ <text x="80" y="50" class="lbl usb5" text-anchor="middle">USB 5 V</text>
+ <!-- wires -->
+ <path d="M116,92 C150,92 180,98 214,98" stroke="#F08A3C" stroke-width="6" fill="none" stroke-linecap="round"/>
+ <path d="M328,98 C376,98 376,188 452,188" stroke="#F2B632" stroke-width="5" fill="none" stroke-linecap="round"/>
+ <path d="M484,176 H600" stroke="#E5384B" stroke-width="6" fill="none" stroke-linecap="round"/>
+ <!-- resistor -->
+ <path d="M214,98H236M306,98H328" stroke="#B9C5CD" stroke-width="4"/>
+ <rect x="236" y="86" width="70" height="24" rx="10" fill="#D8B07A"/>
+ <rect x="248" y="86" width="6" height="24" fill="#6B3E1F"/><rect x="259" y="86" width="6" height="24" fill="#111"/><rect x="270" y="86" width="6" height="24" fill="#D33"/><rect x="288" y="86" width="5" height="24" fill="#C9A227"/>
+ <text x="271" y="76" class="lbl" text-anchor="middle" style="fill:#3A4A57">1 kΩ resistor</text>
+ <!-- LED -->
+ <g class="ledg">
+  <circle class="glow" cx="468" cy="118" r="82" fill="url(#gl-${uid})"/>
+  <g class="rays"><path d="M432,86l-9,-7M504,86l9,-7M418,118h-10M518,118h10"/></g>
+  <path d="M452,188V152M484,176V152" stroke="#C9D3DA" stroke-width="4"/>
+  <path class="bulb" d="M440,146V112a28,28 0 0 1 56,0V146Z"/>
+  <rect x="434" y="146" width="68" height="8" rx="3" fill="#2D5FB8"/>
+  <ellipse cx="456" cy="104" rx="5" ry="11" fill="#fff" opacity=".4"/>
+ </g>
+ <text x="468" y="76" class="lbl" text-anchor="middle" style="fill:#3A4A57">Blue LED</text>
+ <text x="446" y="214" class="lbl-dark" text-anchor="end">Anode +</text><text x="490" y="214" class="lbl-dark">Cathode −</text>
+ <!-- flow -->
+ <path class="flow-glow" d=""/><path class="flow" d=""/>
+ <!-- leads -->
+ <path class="leadA" d="" stroke="#E5384B" stroke-width="6" fill="none" stroke-linecap="round"/>
+ <path class="leadB" d="" stroke="#2B3743" stroke-width="6" fill="none" stroke-linecap="round"/>
+ <path class="leadBhi" d="" stroke="#6B7C8B" stroke-width="1.5" fill="none" opacity=".5"/>
+ <!-- wire under test -->
+ <g class="wut" data-view="good">
+  <g class="v v-good"><rect x="230" y="358" width="310" height="8" rx="4" fill="#F2C230"/><rect x="222" y="359" width="16" height="6" fill="#D58A47"/><rect x="532" y="359" width="16" height="6" fill="#D58A47"/></g>
+  <g class="v v-broken"><rect x="230" y="358" width="128" height="8" rx="4" fill="#F2C230"/><rect x="412" y="358" width="128" height="8" rx="4" fill="#F2C230"/><rect x="222" y="359" width="16" height="6" fill="#D58A47"/><rect x="532" y="359" width="16" height="6" fill="#D58A47"/><path d="M356,359l9,-6M357,364l10,4M414,359l-9,-6M413,364l-10,4" stroke="#D58A47" stroke-width="2" stroke-linecap="round"/></g>
+  <g class="v v-cover"><rect x="230" y="358" width="310" height="8" rx="4" fill="#47B8A8"/><rect x="222" y="359" width="16" height="6" fill="#D58A47"/><rect x="532" y="359" width="16" height="6" fill="#D58A47"/><circle cx="385" cy="362" r="13" fill="#0C1A29" stroke="#BFD3E3" stroke-width="2"/><text x="385" y="368" text-anchor="middle" style="fill:#fff;font-size:16px">?</text></g>
+  <text x="385" y="400" class="lbl wl" text-anchor="middle">Wire under test</text>
+ </g>
+ <!-- stop marker -->
+ <g class="stopm"><circle class="pulse" r="14" fill="none" stroke="#FF6B7C" stroke-width="3"/><circle r="12" fill="#2A0F14" stroke="#FF6B7C" stroke-width="3"/><path d="M-5,-5L5,5M5,-5L-5,5" stroke="#FF6B7C" stroke-width="3" stroke-linecap="round"/></g>
+ <!-- probes -->
+ <g class="pB"><path d="M-4,-24H4L1,0H-1Z" fill="#D5DEE5"/><rect x="-10" y="-84" width="20" height="62" rx="8" fill="#2B3743" stroke="#6B7C8B" stroke-width="2"/><circle cx="0" cy="-52" r="9" fill="#fff"/><text x="0" y="-47" text-anchor="middle" style="fill:#12202E;font-size:14px">B</text><text x="-16" y="-34" text-anchor="end" class="plbl b">Probe B</text></g>
+ <g class="pA"><path d="M-4,-24H4L1,0H-1Z" fill="#D5DEE5"/><rect x="-10" y="-84" width="20" height="62" rx="8" fill="#E5384B"/><circle cx="0" cy="-52" r="9" fill="#fff"/><text x="0" y="-47" text-anchor="middle" style="fill:#B01E30;font-size:14px">A</text><text x="16" y="-34" class="plbl a">Probe A</text></g>
+</svg>`;
+  const q=s=>root.querySelector(s);
+  const el={leadA:q('.leadA'),leadB:q('.leadB'),leadBhi:q('.leadBhi'),pA:q('.pA'),pB:q('.pB'),wut:q('.wut'),led:q('.ledg'),flow:q('.flow'),glow:q('.flow-glow'),stop:q('.stopm'),usb:q('.usbg'),unp:q('.unp')};
+  const HOME={ax:540,bx:230,ty:334},PRESS=357,MID=385;
+  const st={ax:HOME.ax,bx:HOME.bx,ty:HOME.ty,power:true,mode:'apart',wire:null,touching:false,pressed:false,busy:false,last:'idle'};
+  let token=0,lastOn=false;
+  const lead=(x0,y0,x1,y1)=>`M${x0},${y0} C${x0},${(y0+(y1-y0)*.6).toFixed(1)} ${x1.toFixed(1)},${(y1-(y1-y0)*.4).toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  const pathOk=()=>(st.mode==='touch'&&st.touching)||(st.mode==='wire'&&st.pressed&&st.wire&&st.wire.good);
+  const connected=()=>st.power&&pathOk();
+  function render(){
+    const hy=st.ty-80;
+    el.leadA.setAttribute('d',lead(600,176,st.ax,hy));
+    el.leadB.setAttribute('d',lead(118,208,st.bx,hy));
+    el.leadBhi.setAttribute('d','');
+    el.pA.setAttribute('transform',`translate(${st.ax.toFixed(1)},${st.ty.toFixed(1)})`);
+    el.pB.setAttribute('transform',`translate(${st.bx.toFixed(1)},${st.ty.toFixed(1)})`);
+    const on=connected();
+    el.led.classList.toggle('on',on);
+    const fy=(st.mode==='wire'?st.ty+3:st.ty).toFixed(1);
+    const d=`M118,92 C150,92 180,98 214,98 L328,98 C376,98 376,188 452,188 L452,152 L484,152 L484,176 L600,176 ${lead(600,176,st.ax,hy)} L${st.ax.toFixed(1)},${fy} L${st.bx.toFixed(1)},${fy} L${st.bx.toFixed(1)},${hy} ${lead(st.bx,hy,118,208).replace(/^M[^C]+/,'')}`;
+    el.flow.setAttribute('d',d);el.glow.setAttribute('d',d);
+    el.flow.classList.toggle('run',on);el.glow.classList.toggle('run',on);
+    el.usb.classList.toggle('out',!st.power);el.unp.classList.toggle('show',!st.power);
+    // stop marker
+    let showStop=st.power&&!pathOk()&&!st.busy&&(st.mode==='apart'||(st.mode==='wire'&&st.pressed));
+    if(showStop){const gy=st.mode==='wire'?362:st.ty+6;el.stop.setAttribute('transform',`translate(${MID},${gy})`);}
+    el.stop.classList.toggle('show',showStop);
+    if(on!==lastOn){lastOn=on;opts.onLed&&opts.onLed(on);}
+  }
+  function tween(to,ms,my){
+    return new Promise(res=>{
+      if(reduced||ms===0){Object.assign(st,to);render();return res();}
+      const from={ax:st.ax,bx:st.bx,ty:st.ty},t0=performance.now();
+      const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+      (function f(now){
+        if(my!==token)return res();
+        const t=Math.min(1,(now-t0)/ms),e=ease(t);
+        for(const k in to)st[k]=from[k]+(to[k]-from[k])*e;
+        render();t<1?requestAnimationFrame(f):res();
+      })(t0);
+    });
+  }
+  const wait=(ms,my)=>new Promise(r=>setTimeout(r,reduced?0:ms));
+  function setBusy(b){st.busy=b;root.dispatchEvent(new CustomEvent('busy',{detail:b}));}
+  function info(sc){
+    if(!st.power&&sc!=='idle')return{head:'No power',body:'The USB is unplugged, so there is no power and the LED stays OFF. Plug the USB in to test again.',kind:'warn',scenario:sc,led:false};
+    const m={
+      idle:{head:'Ready to test',body:'The probes are apart, so the path is open and the LED is OFF. Pick a test to begin.',kind:''},
+      touch:{head:'Great! The tester is working.',body:'The probe tips touch, so the path is complete. Electricity flows through the resistor, the LED and back to GND, and the LED lights.',kind:'pass'},
+      apart:{head:'The circuit is now open.',body:'There is a gap between the probes. Electricity cannot cross the gap, so the LED is OFF.',kind:'warn'},
+      good:{head:'PASS – This wire has continuity!',body:'The metal inside the wire is joined from end to end. It completes the circuit, so the LED glows blue.',kind:'pass'},
+      broken:{head:'FAIL – This wire does not have continuity.',body:'The wire has a break. Electricity stops at the gap, so the path is open and the LED stays OFF.',kind:'fail'}
+    };
+    return Object.assign({scenario:sc,led:connected()},m[sc]||m.idle);
+  }
+  function finish(sc){st.last=sc;const i=info(sc);opts.onInfo&&opts.onInfo(i);return i;}
+  async function touch(){
+    const my=++token;setBusy(true);st.touching=false;st.pressed=false;st.wire=null;st.mode='touch';el.wut.classList.remove('show');render();
+    opts.onInfo&&opts.onInfo({head:'Moving the probes…',body:'Watch the probe tips.',kind:'',moving:true});
+    await tween({ax:MID+2,bx:MID-2,ty:HOME.ty},700,my);if(my!==token)return null;
+    st.touching=true;setBusy(false);render();return finish('touch');
+  }
+  async function separate(){
+    const my=++token;setBusy(true);st.touching=false;st.pressed=false;st.wire=null;st.mode='apart';el.wut.classList.remove('show');render();
+    opts.onInfo&&opts.onInfo({head:'Moving the probes…',body:'Watch the probe tips.',kind:'',moving:true});
+    await tween(HOME,600,my);if(my!==token)return null;
+    setBusy(false);render();return finish('apart');
+  }
+  async function testWire(kind,good){
+    const my=++token;setBusy(true);st.touching=false;st.pressed=false;
+    const isGood=kind==='good'?true:kind==='broken'?false:!!good;
+    st.mode='wire';st.wire={good:isGood,hidden:kind==='mystery'};render();
+    el.wut.dataset.view=kind==='mystery'?'cover':(isGood?'good':'broken');
+    opts.onInfo&&opts.onInfo({head:'Moving the probes…',body:'The probes are touching the two ends of the wire.',kind:'',moving:true});
+    await tween({ax:HOME.ax,bx:HOME.bx,ty:HOME.ty},500,my);if(my!==token)return null;
+    el.wut.classList.add('show');await wait(450,my);if(my!==token)return null;
+    await tween({ty:PRESS},450,my);if(my!==token)return null;
+    st.pressed=true;setBusy(false);
+    if(kind==='mystery')el.wut.dataset.view=isGood?'good':'broken';
+    render();
+    const i=finish(isGood?'good':'broken');i.scenario=kind;return i;
+  }
+  async function reset(){
+    const my=++token;st.touching=false;st.pressed=false;st.wire=null;st.mode='apart';setBusy(true);render();el.wut.classList.remove('show');
+    await tween(HOME,450,my);if(my!==token)return;
+    setBusy(false);render();finish('idle');
+  }
+  function setPower(b){st.power=b;render();if(st.last!=='idle')finish(st.last);else opts.onInfo&&opts.onInfo(info('idle'));}
+  render();
+  return{touch,separate,testWire,reset,setPower,state:()=>({...st,led:connected()}),connected};
+}
+
+/* ---------- notebook model ---------- */
+const BASE=['Probe tips touching','Probe tips apart','Good wire','Broken wire','Another unpowered wire'];
+const defaultNB=()=>BASE.map((w,i)=>({n:i+1,what:w,pred:'',actual:'',concl:'',fixed:true}));
+let NB=store.get(K2,null);if(!Array.isArray(NB)||!NB.length)NB=defaultNB();
+const saveNB=()=>store.set(K2,NB);
+function renderNB(){
+  const tb=$('#nbBody');
+  tb.innerHTML=NB.map((r,i)=>`<tr data-i="${i}">
+   <td data-label="Trial">${r.n}</td>
+   <td data-label="What did you test?">${r.fixed?`<span class="what">${esc(r.what)}</span>`:`<input type="text" data-f="what" value="${esc(r.what)}" maxlength="80" aria-label="What did you test? Trial ${r.n}" placeholder="What did you test?">`}</td>
+   <td data-label="My prediction"><select data-f="pred" data-v="${r.pred}" aria-label="My prediction, trial ${r.n}"><option value="">Choose</option><option value="ON"${r.pred==='ON'?' selected':''}>LED ON</option><option value="OFF"${r.pred==='OFF'?' selected':''}>LED OFF</option></select></td>
+   <td data-label="Actual LED result"><select data-f="actual" data-v="${r.actual}" aria-label="Actual LED result, trial ${r.n}"><option value="">Choose</option><option value="ON"${r.actual==='ON'?' selected':''}>LED ON</option><option value="OFF"${r.actual==='OFF'?' selected':''}>LED OFF</option></select></td>
+   <td data-label="My conclusion"><input type="text" data-f="concl" value="${esc(r.concl)}" maxlength="200" aria-label="My conclusion, trial ${r.n}" placeholder="What does it tell you?"></td></tr>`).join('');
+}
+$('#nbBody').addEventListener('input',e=>{const t=e.target.closest('[data-f]');if(!t)return;const i=+t.closest('tr').dataset.i;NB[i][t.dataset.f]=t.value;if(t.tagName==='SELECT')t.dataset.v=t.value;saveNB();updateNav();});
+$('#nbAdd').addEventListener('click',()=>{NB.push({n:NB.length+1,what:'',pred:'',actual:'',concl:'',fixed:false});saveNB();renderNB();const inp=$$('#nbBody tr:last-child input')[0];if(inp)inp.focus();});
+function renderClear(confirming){
+  const w=$('#nbClearWrap');
+  if(!confirming){
+    w.innerHTML='<button class="btn small" type="button" id="nbClear">Clear notebook</button>';
+    $('#nbClear').addEventListener('click',()=>renderClear(true));
+  }else{
+    w.innerHTML='<span class="reset-row"><b>Clear every row?</b><button class="btn small" type="button" id="nbYes">Yes, clear it</button><button class="btn small" type="button" id="nbNo">Keep it</button></span>';
+    $('#nbYes').addEventListener('click',()=>{NB=defaultNB();saveNB();renderNB();$('#csvBox').hidden=true;renderClear(false);updateNav();});
+    $('#nbNo').addEventListener('click',()=>renderClear(false));
+  }
+}
+renderClear(false);
+function recordNB(row,patch){
+  const r=NB.find(x=>x.n===row&&x.fixed);if(!r)return;Object.assign(r,patch);saveNB();renderNB();updateNav();
+}
+function csvEsc(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function buildCSV(){
+  const lab=v=>v==='ON'?'LED ON':v==='OFF'?'LED OFF':'';
+  const rows=[['Trial','What did you test?','My prediction','Actual LED result','My conclusion']].concat(NB.map(r=>[r.n,r.what,lab(r.pred),lab(r.actual),r.concl]));
+  return rows.map(r=>r.map(csvEsc).join(',')).join('\r\n');
+}
+$('#nbExport').addEventListener('click',()=>{
+  const csv=buildCSV();$('#csvText').value=csv;$('#csvBox').hidden=false;$('#csvNote').textContent='';
+  try{const b=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='wire-continuity-notebook.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}catch(e){}
+});
+$('#csvCopy').addEventListener('click',()=>{
+  const ta=$('#csvText');
+  const fallback=()=>{ta.focus();ta.select();$('#csvNote').textContent='Press Ctrl+C (or Cmd+C) to copy the selected text.';};
+  try{navigator.clipboard.writeText(ta.value).then(()=>{$('#csvNote').textContent='Copied!';},fallback);}catch(e){fallback();}
+});
+const THINK=['Why does the LED light when the wire is good?','What happens when there is a break in the wire?','Why do we use a resistor with the LED?','Which two probe tips touch the wire being tested?','Why must the wire being tested be disconnected from other power sources?'];
+$('#think').innerHTML=THINK.map((q,i)=>`<label for="th${i}">${i+1}. ${q}<textarea id="th${i}" data-t="${i}" maxlength="400">${esc(S.think[i]||'')}</textarea></label>`).join('');
+$('#think').addEventListener('input',e=>{const t=e.target.closest('[data-t]');if(t){S.think[t.dataset.t]=t.value;save();}});
+
+/* ---------- main simulator wiring ---------- */
+const lastSim={sc:null};
+const simBtns=['#bTouch','#bSep','#bGood','#bBroken'].map(s=>$(s));
+const sim=createStage($('#simStage'),{
+  onLed(on){const p=$('#simLed');p.classList.toggle('on',on);$('span',p).textContent=on?'LED ON':'LED OFF';const q=$('#simPath');q.classList.toggle('on',on);$('span',q).textContent=on?'Path complete':'Path open';},
+  onInfo(i){
+    $('#simHead').textContent=i.head;$('#simBody').textContent=i.body;
+    const m=$('#simMsg');m.classList.remove('pass','fail','warn');if(i.kind)m.classList.add(i.kind);
+    if(i.moving){$('#bSave').hidden=true;return;}
+    const rec=['touch','apart','good','broken'].includes(i.scenario);
+    lastSim.sc=rec?i.scenario:null;lastSim.led=i.led;
+    $('#bSave').hidden=!rec;$('#saveNote').textContent='';
+    if(i.scenario==='touch'&&i.led&&!S.tests.t1){S.tests.t1=true;mark();}
+    if(i.scenario==='good'&&i.led&&!S.tests.t2){S.tests.t2=true;mark();}
+    if(i.scenario==='broken'&&!i.led&&!S.tests.t3&&sim.state().power){S.tests.t3=true;mark();}
+  }
+});
+function mark(){save();updateNav();['t1','t2','t3'].forEach(k=>{$('#'+k+'ok').textContent=S.tests[k]?'✓ done':'';});}
+mark();
+$('#simStage').addEventListener('busy',e=>{simBtns.forEach(b=>b.disabled=e.detail);});
+$('#bTouch').addEventListener('click',()=>sim.touch());
+$('#bSep').addEventListener('click',()=>sim.separate());
+$('#bGood').addEventListener('click',()=>sim.testWire('good'));
+$('#bBroken').addEventListener('click',()=>sim.testWire('broken'));
+$('#bReset').addEventListener('click',()=>{sim.reset();});
+$('#pwr').addEventListener('change',e=>sim.setPower(e.target.checked));
+const ROWMAP={touch:1,apart:2,good:3,broken:4};
+$('#bSave').addEventListener('click',()=>{
+  const sc=lastSim.sc;if(!sc)return;
+  recordNB(ROWMAP[sc],{actual:lastSim.led?'ON':'OFF'});
+  $('#saveNote').textContent='Saved in your notebook (trial '+ROWMAP[sc]+').';
+});
+
+/* ---------- predictions ---------- */
+const SC=[
+ {k:'touch',row:1,label:'Probe tips touching',q:'What do you think will happen when the two probe tips touch each other?'},
+ {k:'apart',row:2,label:'Probe tips apart',q:'What do you think the LED will do when the two probe tips are apart?'},
+ {k:'good',row:3,label:'A good wire',q:'What do you think will happen when both probes touch a good wire?'},
+ {k:'broken',row:4,label:'A broken wire',q:'What do you think will happen when the probes touch the two sides of a broken wire?'},
+ {k:'mystery',row:5,label:'Another unpowered wire',q:'This is a mystery wire. It might be good, or it might be broken inside the plastic. What will the LED do?'}
+];
+let pSel=0,pGuess=null,pRan=false;
+const pstage=createStage($('#predStage'),{});
+$('#predStage').addEventListener('busy',e=>{if(e.detail)$('#runPred').disabled=true;});
+const scen=$('#scen');
+function renderScen(){
+  scen.innerHTML=SC.map((s,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===pSel}"><span>${s.label}</span>${S.preds.includes(s.k)?'<span class="tick" aria-label="done">✓</span>':''}</button>`).join('');
+  $('#qText').textContent=SC[pSel].q;
+}
+function resetPred(){
+  pGuess=null;pRan=false;$$('.choice').forEach(b=>{b.setAttribute('aria-pressed','false');b.disabled=false;});
+  $('#predResult').innerHTML='';$('#runPred').disabled=true;$('#runHint').textContent='Choose LED ON or LED OFF first.';
+  pstage.reset();
+}
+scen.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;pSel=+b.dataset.i;renderScen();resetPred();});
+$$('.choice').forEach(b=>b.addEventListener('click',()=>{
+  if(pRan)return;pGuess=b.dataset.p;$$('.choice').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  $('#runPred').disabled=false;$('#runHint').textContent='Now run the test and see.';
+}));
+const WHY={
+ touch:{ON:'The two tips touch, so the path is complete. Electricity can flow through the resistor and the LED, so the LED lights.',OFF:''},
+ apart:{ON:'',OFF:'The tips are apart, so there is a gap in the path. Electricity cannot cross a gap, so the LED stays off.'},
+ good:{ON:'A good wire is joined from end to end. It completes the circuit, so electricity flows and the LED lights.',OFF:''},
+ broken:{ON:'',OFF:'A broken wire has a gap inside. The path is open, so electricity cannot flow and the LED stays off.'}
+};
+$('#runPred').addEventListener('click',async()=>{
+  if(!pGuess)return;const s=SC[pSel];$('#runPred').disabled=true;$('#predResult').innerHTML='';
+  let res;
+  if(s.k==='touch')res=await pstage.touch();
+  else if(s.k==='apart'){await pstage.touch();res=await pstage.separate();}
+  else if(s.k==='good')res=await pstage.testWire('good');
+  else if(s.k==='broken')res=await pstage.testWire('broken');
+  else res=await pstage.testWire('mystery',Math.random()<.5);
+  if(!res)return;
+  const actual=res.led?'ON':'OFF',right=actual===pGuess;pRan=true;
+  $$('.choice').forEach(b=>b.disabled=true);
+  const why=s.k==='mystery'?(res.led?'The mystery wire was good. Its metal path is joined from end to end, so the LED lit up.':'The mystery wire was broken inside. Wires can break under the plastic where you cannot see. The path was open, so the LED stayed off.'):WHY[s.k][actual];
+  $('#predResult').innerHTML=`<div class="result ${right?'right':'wrong'}"><h3>${right?'Your prediction was correct!':'Not quite. Good scientists learn from this.'}</h3><p>You predicted LED ${pGuess}. The LED was ${actual}.</p><p>${why}</p><p class="muted">Saved in your notebook (trial ${s.row}).</p><button class="btn small" type="button" id="again" style="margin-top:6px">Try this test again</button></div>`;
+  $('#again').addEventListener('click',resetPred);
+  $('#runHint').textContent='Pick another test, or try this one again.';
+  recordNB(s.row,{pred:pGuess,actual});
+  if(!S.preds.includes(s.k)){S.preds.push(s.k);save();updateNav();renderScen();}
+});
+renderScen();
+
+/* ---------- troubleshooting ---------- */
+const FIX=[
+ {t:'LED never lights: check the LED direction',led:'off',w:'An LED only works one way round. If it is backwards, no light comes on.',c:'Check that the longer leg is on the resistor side. The shorter leg goes to Probe A.'},
+ {t:'LED never lights: check the breadboard',led:'off',w:'A jumper wire may be in the wrong group of holes, so the path is not joined up.',c:'Push each wire firmly into the correct connected group.'},
+ {t:'LED never lights: check VBUS and GND',led:'off',w:'The USB pins may be mixed up. Power goes in the wrong place.',c:'Read the labels. Use VBUS for +5V and GND for 0V. Never guess by position.'},
+ {t:'LED never lights: check the resistor',led:'off',w:'The resistor may not be the right kind for this circuit.',c:'Use a known resistor, about 1 kΩ, and ask an adult to check it.'},
+ {t:'LED stays on all the time',led:'on',w:'Probe A and Probe B may be touching each other, or a stray strand of wire is joining them.',c:'Unplug the USB and move the probes apart. Look for stray wire strands.'},
+ {t:'LED is very dim',led:'dim',w:'The resistor may be too large, or one of the connections is poor.',c:'Unplug the USB and ask an adult to check the resistor and the connections.'}
+];
+$('#fixGrid').innerHTML=FIX.map((f,i)=>`<button class="fix" type="button" data-i="${i}" aria-expanded="false"><span class="sym"><i class="${f.led==='on'?'on':f.led==='dim'?'dim':''}"></i>${f.led==='on'?'LED is ON':f.led==='dim'?'LED is dim':'LED is off'}</span><h3>${f.t}</h3><span class="go-first">Unplug the USB first</span><span class="more" hidden><span><b>Why it happens</b><p>${f.w}</p></span><span><b>What to check</b><p>${f.c}</p></span></span></button>`).join('');
+$('#fixGrid').addEventListener('click',e=>{const b=e.target.closest('.fix');if(!b)return;const open=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',String(!open));$('.more',b).hidden=open;const i=+b.dataset.i;if(!S.fix.includes(i)){S.fix.push(i);save();updateNav();}});
+
+/* ---------- quiz ---------- */
+const QZ=[
+ {q:'What is continuity?',a:'A complete, unbroken path for electricity',w:['A type of battery','The colour of a wire','How bright an LED is'],e:'Continuity means electricity has an unbroken path from one end to the other.'},
+ {q:'Why does the LED glow?',a:'A complete circuit lets a small current flow through it',w:['It gets hot from the probes','The resistor makes light','The breadboard is magnetic'],e:'When the path is complete, current flows through the LED and it lights up.'},
+ {q:'What is the job of the resistor?',a:'It limits the current to protect the LED',w:['It makes the LED much brighter','It stores electricity','It changes the LED colour'],e:'Too much current can damage an LED. The resistor keeps the current small and safe.'},
+ {q:'Which LED leg is longer?',a:'The positive leg (anode)',w:['The negative leg (cathode)','Both legs are the same','The longer leg is always cut off'],e:'The longer leg is the anode (+). The shorter leg is the cathode (−).'},
+ {q:'What happens when a wire breaks?',a:'The path is open, so the LED stays off',w:['The LED glows brighter','Electricity jumps across the gap','The wire becomes a magnet'],e:'A break makes a gap. Electricity cannot cross it, so nothing flows.'},
+ {q:'What does Probe A do?',a:'It joins to the LED cathode and touches one end of the wire under test',w:['It plugs into the USB port','It holds the resistor in place','It joins directly to +5V'],e:'Probe A comes from the LED cathode. Its tip touches one end of the wire you test.'},
+ {q:'Why should we unplug the USB before changing connections?',a:'So nothing can short-circuit while we move parts',w:['So the LED lasts longer','So the resistor cools down','It does not matter'],e:'Changing a live circuit can make a short circuit. Always unplug first.'},
+ {q:'Why must we never test household electrical wires?',a:'230 V AC can cause serious injury. This tester is only for unpowered wires.',w:['The LED would be too dim','The probes are too short','The resistor would melt slowly'],e:'Household electricity is very dangerous. Only test separate, unpowered wires.'}
+];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+let qi=0,qscore=0,qopts=[],qans=null;
+function renderQuiz(){
+  const c=$('#quizCard');
+  if(qi>=QZ.length){
+    if(!S.quizDone||S.quizBest===null||qscore>S.quizBest){S.quizDone=true;S.quizBest=Math.max(S.quizBest||0,qscore);save();updateNav();}
+    const msg=qscore===8?'Perfect! You are a continuity expert.':qscore>=6?'Great work! You understand the tester well.':qscore>=4?'Good try! Read the parts you missed and try again.':'Keep going! Look at the build steps and try again.';
+    c.innerHTML=`<p class="qtop"><span>Quiz complete</span><span>Best score: ${S.quizBest} / 8</span></p><p class="score">${qscore} / 8</p><h3 style="margin:10px 0 16px">${msg}</h3><button class="btn primary" type="button" id="qAgain">Try again</button>`;
+    $('#qAgain').addEventListener('click',()=>{qi=0;qscore=0;qans=null;renderQuiz();});return;
+  }
+  const Q=QZ[qi];if(!qopts[qi])qopts[qi]=shuffle([Q.a].concat(Q.w));
+  c.innerHTML=`<div class="qtop"><span>Question ${qi+1} of ${QZ.length}</span><span>Score: ${qscore}</span></div><h3 style="margin-top:10px">${Q.q}</h3><div class="opts">${qopts[qi].map((o,i)=>`<button class="opt" type="button" data-o="${i}">${esc(o)}</button>`).join('')}</div><div id="qfb" aria-live="polite"></div><div class="row"><button class="btn primary" type="button" id="qNext" hidden>${qi===QZ.length-1?'See my score':'Next question'}</button></div>`;
+  qans=null;
+}
+$('#quizCard').addEventListener('click',e=>{
+  const o=e.target.closest('.opt');
+  if(o&&qans===null){
+    const Q=QZ[qi],i=+o.dataset.o,pick=qopts[qi][i],ok=pick===Q.a;qans=i;if(ok)qscore++;
+    $$('.opt').forEach((b,j)=>{b.disabled=true;const v=qopts[qi][j];if(v===Q.a)b.classList.add('right');else if(j===i)b.classList.add('wrong');});
+    $('#qfb').innerHTML=`<div class="fb ${ok?'right':'wrong'}"><b>${ok?'Correct!':'Not quite.'}</b> ${Q.e}</div>`;
+    $('#qNext').hidden=false;$('#qNext').focus({preventScroll:true});
+  }
+  if(e.target.id==='qNext'){qi++;renderQuiz();}
+});
+renderQuiz();
+
+/* ---------- reset all ---------- */
+$('#resetAll').addEventListener('click',()=>{
+  $('#resetRow').innerHTML=`<b>Clear all progress and your notebook?</b><button class="btn small" type="button" id="raYes">Yes, clear</button><button class="btn small" type="button" id="raNo">Keep</button>`;
+  $('#raYes').addEventListener('click',()=>{store.del(K1);store.del(K2);location.reload();});
+  $('#raNo').addEventListener('click',()=>{$('#resetRow').innerHTML='<button class="btn small" type="button" id="resetAll2">Clear my saved progress</button>';$('#resetAll2').addEventListener('click',()=>$('#resetAll').click());});
+});
+
+/* ---------- init ---------- */
+renderNB();
+setFlow('good',true);
+save();updateNav();
+$$('.nv')[0].classList.add('cur');
+})();
+</script>
+</body>
+</html>
