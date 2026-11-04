@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wizbot Young Coder's Handbook</title>
+  <style>
+    /* Global styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f7f9fc;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #1e2a3a;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nav-bar {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .nav-bar a {
+      color: #0f8278;
+      text-decoration: none;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .nav-bar .print-btn {
+      background: #0f8278;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .nav-bar .print-btn:hover {
+      background: #09665f;
+    }
+
+    .handbook {
+      max-width: 1100px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 20px 30px -10px rgba(0, 20, 40, 0.15);
+      padding: 2rem 2rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* decorative accent */
+    .handbook::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, #ff8a5c, #ffb347, #47b8ff, #a77bff);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: #1e2a3a;
+      border-left: 8px solid #ffb347;
+      padding-left: 1.2rem;
+    }
+
+    h1 small {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #5d6f84;
+      display: block;
+      margin-top: 0.1rem;
+      letter-spacing: 0;
+    }
+
+    /* concept cards */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+      margin: 1.5rem 0 2rem;
+    }
+
+    .concept-card {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1.5rem 1.8rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(0, 0, 0, 0.02);
+      border: 1px solid #e9edf4;
+      transition: 0.15s ease;
+      position: relative;
+    }
+
+    .concept-card:hover {
+      border-color: #cbd6e6;
+      box-shadow: 0 8px 18px rgba(30, 42, 58, 0.06);
+    }
+
+    .concept-card h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      background: #eef2f7;
+      color: #2b3e55;
+      white-space: nowrap;
+    }
+
+    .badge.orange {
+      background: #ffe6d5;
+      color: #b24d0e;
+    }
+
+    .badge.yellow {
+      background: #fff1c1;
+      color: #8a6d0b;
+    }
+
+    .badge.blue {
+      background: #dbecff;
+      color: #155a9c;
+    }
+
+    .golden-rule, .everyday-life, .robot-note {
+      background: #f9fbfe;
+      border-left: 4px solid #ffb347;
+      padding: 0.6rem 1rem;
+      margin: 1rem 0;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: #2d4055;
+    }
+
+    .everyday-life {
+      border-left-color: #47b8ff;
+    }
+
+    .robot-note {
+      border-left-color: #a77bff;
+      font-style: normal;
+    }
+
+    .highlight {
+      background: #fff7e6;
+      padding: 0.1rem 0.3rem;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      color: #b24d0e;
+    }
+
+    .code-block {
+      background: #1e2a3a;
+      color: #e2e9f2;
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      margin: 1rem 0 0.2rem;
+      display: inline-block;
+      width: auto;
+      border: 1px solid #2e4058;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .code-inline {
+      background: #f1f5f9;
+      font-family: 'Courier New', monospace;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+      font-weight: 500;
+      color: #b24d0e;
+      font-size: 0.95rem;
+    }
+
+    /* variables image-like representation */
+    .var-block-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0 0.5rem;
+      align-items: center;
+    }
+
+    .var-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #ffb347;
+      border-radius: 30px;
+      padding: 0.35rem 0.9rem 0.35rem 0.7rem;
+      font-weight: 600;
+      color: #1e2a3a;
+      font-size: 0.95rem;
+      border: 1px solid #e5942e;
+      box-shadow: 0 2px 0 #b46f1e;
+    }
+
+    .var-pill span {
+      background: white;
+      padding: 0.1rem 0.6rem;
+      border-radius: 30px;
+      font-weight: 700;
+      margin-left: 0.3rem;
+    }
+
+    .arrow-note {
+      color: #3b5b7a;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .arrow-note::before {
+      content: "→";
+      font-weight: 700;
+      color: #ff8a5c;
+      font-size: 1.3rem;
+    }
+
+    /* loops table */
+    .loop-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 0.5rem;
+      font-size: 0.95rem;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .loop-table th {
+      background: #eef2f7;
+      text-align: left;
+      padding: 0.7rem 1rem;
+      font-weight: 600;
+      color: #1e2a3a;
+      border-bottom: 1px solid #d0dae8;
+    }
+
+    .loop-table td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #e9edf4;
+      vertical-align: top;
+      background: white;
+    }
+
+    .loop-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .loop-table .mono {
+      font-family: 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 0.1rem 0.4rem;
+      border-radius: 6px;
+    }
+
+    /* if-else fork diagram */
+    .fork-diagram {
+      background: #f3f8ff;
+      border-radius: 18px;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 0.2rem;
+      border: 1px dashed #b8cde0;
+    }
+
+    .fork-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .fork-symbol {
+      font-family: 'Courier New', monospace;
+      background: #ffffff;
+      padding: 0.2rem 0.9rem;
+      border-radius: 30px;
+      border: 1px solid #cbdae9;
+      font-weight: 600;
+      color: #0e4b7a;
+    }
+
+    /* challenge table (missions) */
+    .mission-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.8rem 0 0.8rem;
+      font-size: 0.95rem;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e2e9f2;
+    }
+
+    .mission-table th {
+      background: #1e2a3a;
+      color: white;
+      font-weight: 600;
+      padding: 1rem 1rem;
+      text-align: left;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+    }
+
+    .mission-table td {
+      padding: 1rem 1rem;
+      background: white;
+      border-bottom: 1px solid #e9edf4;
+      vertical-align: top;
+    }
+
+    .mission-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mission-table .level-tag {
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      display: inline-block;
+      margin-bottom: 0.2rem;
+      background: #eef2f7;
+      color: #1e2a3a;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .mission-table td:first-child {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* mod example row */
+    .mod-example {
+      background: #f2f7ff;
+      padding: 0.8rem 1.2rem;
+      border-radius: 14px;
+      margin: 1.5rem 0 0.2rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      border-left: 6px solid #47b8ff;
+      color: #12416b;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    .mod-example span {
+      background: white;
+      padding: 0.15rem 0.6rem;
+      border-radius: 30px;
+      border: 1px solid #b8d0e8;
+    }
+
+    hr {
+      margin: 2rem 0 0.5rem;
+      border: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #d0dae8, transparent);
+    }
+
+    /* responsive */
+    @media (max-width: 700px) {
+      .handbook {
+        padding: 1.5rem 1rem;
+      }
+      h1 {
+        font-size: 1.7rem;
+        padding-left: 0.8rem;
+      }
+      .concept-card {
+        padding: 1.2rem;
+      }
+      .mission-table th, .mission-table td {
+        padding: 0.8rem 0.6rem;
+      }
+      .var-pill {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+      .nav-bar {
+        display: none;
+      }
+      .handbook {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="nav-bar" aria-label="Quick navigation">
+  <a href="./index.html">← Back to Wizbot Academy</a><a href="./competition.html" style="color:#0f8278;text-decoration:none;font-weight:700;">🏆 Competition Arena</a>
+  <button type="button" class="print-btn" onclick="window.print()">Print Handbook ⎙</button>
+</nav>
+
+<div class="handbook">
+  <h1>
+    Wizbot Young Coder's Handbook
+    <small>Sequence · Events · Loops · Variables · Decisions</small>
+  </h1>
+
+  <!-- CONCEPTS -->
+  <div class="concept-grid">
+
+    <!-- Concept 1: Sequence -->
+    <div class="concept-card">
+      <h2>
+        Concept 1: Sequence
+        <span class="badge blue">The Chef's Recipe</span>
+      </h2>
+      <div class="golden-rule">
+        <strong>THE GOLDEN RULE</strong><br>
+        Everyday Life: If you bake a cake, you cannot put frosting on the cake before you bake it! You must mix → bake → cool → frost.
+      </div>
+      <p>Robots have no imagination – they are exact machines. They read blocks strictly from top to bottom, one single block at a time. If block 2 comes before block 1, the robot will do them in that exact backwards order.</p>
+    </div>
+
+    <!-- Concept 2: Events -->
+    <div class="concept-card">
+      <h2>
+        Concept 2: Events
+        <span class="badge yellow">The Starter Whistle</span>
+      </h2>
+      <div class="everyday-life">
+        <strong>YELLOW / ORANGE BLOCKS</strong><br>
+        Everyday Life: Runners at a race stand frozen at the starting line. They do not run until the referee blows the whistle.
+      </div>
+      <p>Blocks cannot start themselves. An Event is the trigger that tells Wizbot: <strong>"Wake up and start reading!"</strong></p>
+      <div class="code-block" style="background: #fff2db; color: #1e2a3a; border: 1px solid #f7d9a6;">
+        <span style="background: #ffb347; padding: 0.2rem 0.8rem; border-radius: 30px; font-weight: 700;">when clicked</span>
+        <span class="arrow-note" style="margin-left: 0.5rem;">Tells Wizbot to start as soon as the green flag button is tapped in PictoBlox.</span>
+      </div>
+    </div>
+
+    <!-- Concept 3: Loops -->
+    <div class="concept-card">
+      <h2>
+        Concept 3: Loops
+        <span class="badge yellow">The Energy Saver</span>
+      </h2>
+      <div class="everyday-life">
+        <strong>REPEAT VS. FOREVER</strong><br>
+        Everyday Life: If your teacher says "Jump 5 times," you don't say "Jump, jump, jump, jump, jump." You count inside your head while jumping!
+      </div>
+      <table class="loop-table">
+        <thead>
+          <tr><th>Loop Block</th><th>What Wizbot Does</th><th>Real-World Analogy</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">repeat (10) times</span></td>
+            <td>Runs the blocks inside 10 times, then stops and moves on.</td>
+            <td>Bouncing a basketball 10 times during practice.</td>
+          </tr>
+          <tr>
+            <td><span class="mono">forever</span></td>
+            <td>Never stops! Keeps doing the blocks inside until battery off.</td>
+            <td>A ceiling fan that spins non-stop until switched off.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Concept 4: Variables -->
+    <div class="concept-card">
+      <h2>
+        Concept 4: Variables
+        <span class="badge orange">Wizbot's Memory Box</span>
+      </h2>
+      <div class="everyday-life" style="border-left-color: #ff8a5c;">
+        <strong>ORANGE BLOCKS</strong><br>
+        Everyday Life: Imagine a cardboard box labeled "Score". When you score a goal, you erase the paper inside and write a new number.
+      </div>
+      <p>A Variable is a labeled box in computer memory that holds one number at a time:</p>
+      <div class="var-block-row">
+        <div class="var-pill">
+          set <span>counter</span> to <span>1</span>
+        </div>
+        <div class="arrow-note">Puts the number 1 inside the box to start fresh.</div>
+      </div>
+      <div class="var-block-row">
+        <div class="var-pill" style="background: #ffc085;">
+          change <span>counter</span> by <span>1</span>
+        </div>
+        <div class="arrow-note">Adds +1 to whatever is already inside (1 becomes 2, then 3, then 4).</div>
+      </div>
+    </div>
+
+    <!-- Concept 5: Decisions -->
+    <div class="concept-card">
+      <h2>
+        Concept 5: Decisions
+        <span class="badge blue">The If / Else Fork</span>
+      </h2>
+      <div class="everyday-life" style="border-left-color: #47b8ff;">
+        <strong>FORK IN THE ROAD</strong><br>
+        Everyday Life: IF it is raining outside → put on raincoat. ELSE → wear a sun hat!
+      </div>
+      <p>An If - Else block lets your robot ask a question. If the answer is YES (True), it takes the top road. If the answer is NO (False), it takes the bottom road.</p>
+      <div class="fork-diagram">
+        <div class="fork-line">
+          <span class="fork-symbol">if &lt; question is YES &gt; then</span> → Turn Left
+          <span style="margin: 0 0.5rem; font-weight: 300;">|</span>
+          <span class="fork-symbol">else</span> → Turn Right (Takes this turn whenever the answer is NO!)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOD EXAMPLES (page 2 top) -->
+  <div class="mod-example">
+    <span>1 mod 2 = 1 (Odd step)</span> → 1 leftover! Condition is FALSE → Wizbot takes else!
+    <span>2 mod 2 = 0 (Even step)</span> → 0 leftover! Condition is TRUE → Wizbot takes then!
+    <span>3 mod 2 = 1 (Odd step)</span> → 1 leftover! Wizbot switches back!
+  </div>
+
+  <!-- LOAD / ARITHMETIC PROGRESSION -->
+  <div style="background: #f4f9ff; border-radius: 1.2rem; padding: 1rem 1.5rem; margin: 2rem 0 1rem; border-left: 6px solid #a77bff;">
+    <h3 style="font-weight: 600; font-size: 1.2rem; margin-bottom: 0.3rem;">📐 Load: Arithmetic-progression spiral</h3>
+    <p>Six side lengths form an AP starting at 1 with common difference input. Their sum is <strong>6 + 15 × input</strong>.</p>
+    <p style="font-size: 0.95rem; color: #3b5b7a;"><strong>Observe / change:</strong> Calculate the six side lengths and predict total travel before running. The solid teal line shows actual robot travel in this browser model.</p>
+  </div>
+
+  <div style="background: #f2f8f2; border-radius: 1.2rem; padding: 1rem 1.5rem; margin: 1rem 0 1.5rem; border-left: 6px solid #47b8ff;">
+    <h3 style="font-weight: 600; font-size: 1.2rem; margin-bottom: 0.3rem;">↩️ Straight, curved, straight</h3>
+    <p>The route contains straight parts and a quarter-circle bend. The arrow follows the tangent while the robot curves.</p>
+    <p style="font-size: 0.95rem; color: #3b5b7a;"><strong>Observe / change:</strong> Find where the path changes from straight to curved. Movement/EVS foundation: compare path shapes; distances and timing are illustrative.</p>
+  </div>
+
+  <!-- CHALLENGE TABLE -->
+  <h2 style="font-size: 1.6rem; font-weight: 600; margin: 2rem 0 0.8rem;">The Young Inventor's Challenge: <span style="color:#b24d0e;">Plan Your Own Zigzag!</span></h2>
+
+  <table class="mission-table">
+    <thead>
+      <tr>
+        <th>Level / Mission</th>
+        <th>Goal</th>
+        <th>Your Coding Hint</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="level-tag" style="background:#e1f0d8; color:#2e6b1e;">Level 1: Easy</span><br>Classic Zigzag</td>
+        <td>Make Wizbot walk forward and alternate between 90° left and right turns for 6 steps.</td>
+        <td>Check your <span class="code-inline">mod 2 = 0</span> condition and make sure your counter changes by 1 every loop!</td>
+      </tr>
+      <tr>
+        <td><span class="level-tag" style="background:#fff0cc; color:#8a6d0b;">Level 2: Medium</span><br>Lightning Sharp</td>
+        <td>Change the zigzag from square corners to sharp jagged lightning bolts across the floor.</td>
+        <td>What happens if you change both turn angles from 90° down to 45° or 60°?</td>
+      </tr>
+      <tr>
+        <td><span class="level-tag" style="background:#ffe0c2; color:#a1440c;">Level 3: Hard</span><br>Growing Tail</td>
+        <td>Make each zigzag segment longer than the previous one as Wizbot travels forward!</td>
+        <td>Can you multiply your variable or drop it into the forward driving time slot so each dash lasts longer?</td>
+      </tr>
+      <tr>
+        <td><span class="level-tag" style="background:#f0d9ff; color:#5e1b8c;">Level 4: Master</span><br>The 3-Way Dance</td>
+        <td>Create a 3-way pattern: Step 1 goes Left, Step 2 goes Right, and Step 3 does a 360° Spin!</td>
+        <td>Try using mod 3! What are the 3 possible remainders when dividing any number by 3?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr />
+  <p style="text-align: center; color: #8c9eb2; font-size: 0.85rem; margin-top: 1rem;">Wizbot Young Coder's Handbook — Sequence, Events, Loops, Variables, Decisions</p>
+</div>
+</body>
+</html>
+
