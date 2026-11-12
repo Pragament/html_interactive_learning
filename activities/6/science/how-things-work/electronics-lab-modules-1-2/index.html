@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electronics Lab: Electricity and Circuits (Modules 1–2) — Class 6 Science</title>
+<script type="application/json" id="activity-metadata">
+{
+  "schemaVersion": 1,
+  "id": "6-science-how-things-work-electronics-lab-modules-1-2",
+  "order": 324,
+  "class": "VI",
+  "classes": [
+    "V",
+    "VI"
+  ],
+  "subject": "Science",
+  "topic": "How Things Work",
+  "subtopic": null,
+  "title": "Electronics Lab: Electricity and Circuits (Modules 1–2)",
+  "description": "Interactive electronics laboratory covering Module 1 (Electricity, sources, conductors and insulators) and Module 2 (Circuits, open vs closed paths, and mini-projects). Includes self-checking assessments and breadboard projects leading to the wire continuity tester.",
+  "activityType": "simulation",
+  "status": "active"
+}
+</script>
+<style>
+:root{--ink:#12263f;--paper:#eaf5f1;--card:#fff;--yellow:#ffc533;--teal:#0e9f87;--coral:#ff6b57;--blue:#2f6fed;--soft:#f5fbf9;--mute:#4a5f78}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;color:var(--ink);font-size:18px;line-height:1.5;
+background:var(--paper) linear-gradient(rgba(18,38,63,.06) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,rgba(18,38,63,.06) 1px,transparent 1px) 0 0/28px 28px}
+#app{max-width:1000px;margin:0 auto;padding:16px 14px 30px;outline:none}
+h1,h2,h3{line-height:1.15;margin:0 0 .4em}
+h1{font-size:clamp(1.9rem,5vw,2.8rem)}h2{font-size:1.5rem}h3{font-size:1.15rem}
+p{margin:.3em 0 .6em}
+button,.btn{font:inherit;font-weight:700;cursor:pointer;border:3px solid var(--ink);background:var(--yellow);color:var(--ink);border-radius:12px;padding:.5em 1em;box-shadow:0 4px 0 var(--ink);transition:transform .08s,box-shadow .08s;text-decoration:none;display:inline-block}
+button:hover:not(:disabled),.btn:hover{transform:translateY(-1px)}
+button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.ghost{background:#fff}button.good{background:#7ee0c3}button.bad{background:#ffb0a4}button.blue{background:#a9c4ff}
+button.sm{font-size:.85rem;padding:.3em .7em;box-shadow:0 3px 0 var(--ink)}
+:focus-visible{outline:4px solid var(--blue);outline-offset:2px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin-bottom:14px;position:sticky;top:6px;z-index:5}
+.top .ttl{font-weight:800;flex:1;min-width:150px}
+.bar{height:14px;background:#dfe9e6;border:2px solid var(--ink);border-radius:9px;overflow:hidden;min-width:100px;flex:1}
+.bar i{display:block;height:100%;background:var(--teal);transition:width .4s}
+.hero{padding:22px 4px 8px}
+.hero p{font-size:1.15rem;color:var(--mute);max-width:36em}
+.bolt{display:inline-block;background:var(--yellow);border:3px solid var(--ink);border-radius:12px;padding:0 .3em;margin-right:.2em;transform:rotate(-4deg)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:18px;margin:18px 0}
+.mcard{background:#fff;border:3px solid var(--ink);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:5px 5px 0 var(--ink)}
+.mcard.lock{filter:grayscale(.7);opacity:.8}
+.mcard .art{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:3px solid var(--ink);font-size:3rem}
+.mcard .art b{font-size:1.1rem;background:#fff;border:3px solid var(--ink);border-radius:10px;padding:2px 10px}
+.mcard .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.mcard p{font-size:.95rem;color:var(--mute);margin:0}
+.meta{font-size:.85rem;display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--mute)}
+.badge{display:inline-block;font-weight:800;font-size:.8rem;border:2px solid var(--ink);border-radius:20px;padding:1px 10px;background:#fff;width:fit-content}
+.badge.done{background:#59d9a8}.badge.prog{background:var(--yellow)}.badge.lock{background:#d6dde5}.badge.soon{background:#cfd8ff}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sp{flex:1}
+.panel{background:#fff;border:3px solid var(--ink);border-radius:16px;padding:14px 16px;margin:16px 0}
+.panel.tint{background:#fff7d6}.panel.green{background:#dff7ee}.panel.red{background:#ffe5e0}
+.blk{background:#fff;border:3px solid var(--ink);border-radius:16px;margin:16px 0;overflow:hidden}
+.blk>h3{margin:0;padding:6px 14px;border-bottom:3px solid var(--ink);display:flex;gap:10px;align-items:center;font-size:1rem}
+.blk>h3 span{background:var(--ink);color:#fff;border-radius:8px;width:1.7em;height:1.7em;display:grid;place-items:center;font-size:.9rem}
+.blk>div{padding:12px 16px}
+.blk.def>h3{background:#cfe3ff}.blk.exp>h3{background:#fff0b3}.blk.viz>h3{background:#d5f5e9}.blk.demo>h3{background:#ffd9d2}.blk.learn>h3{background:#e7dcff}.blk.act>h3{background:#ffe2a8}
+.big{font-size:1.25rem;font-weight:700}
+.learn ol{margin:0;padding-left:1.3em}.learn li{margin:.3em 0;font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.mini{border:2px solid var(--ink);border-radius:12px;padding:8px;text-align:center;background:var(--soft);font-size:.9rem}
+.mini .em{font-size:2.2rem;display:block}
+.widget{background:#fff;border:3px dashed var(--ink);border-radius:14px;padding:10px}
+.widget .ctl{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.widget .say{background:var(--soft);border-left:6px solid var(--teal);padding:6px 12px;border-radius:8px;font-weight:700;margin-top:6px}
+.widget .say.off{border-color:var(--coral)}
+.circ{width:100%;max-width:520px;display:block;margin:0 auto;height:auto}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tile{border:3px solid var(--ink);border-radius:14px;padding:8px;text-align:center;background:#fff;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:none}
+.tile .em{font-size:2.4rem;display:block}.tile.on{background:#fff3b0}.tile.on .em.fan{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.tile.on .em.fan{animation:none}*{scroll-behavior:auto!important;transition:none!important}}
+.media{margin:8px 0}.media img,.media video{max-width:100%;border:3px solid var(--ink);border-radius:12px;display:block}
+.ph{display:flex;flex-direction:column;gap:4px;border:3px dashed var(--coral);background:#fff3f0;border-radius:12px;padding:12px;font-size:.9rem}
+.ph[hidden]{display:none}
+.ph b{color:#b23a28}.ph code{font-size:.8rem;color:var(--mute);word-break:break-all}
+.opts{display:grid;gap:8px;margin:8px 0}
+.opt{text-align:left;background:#fff;box-shadow:0 3px 0 var(--ink);font-weight:600}
+.opt.sel{background:#cfe3ff}.opt.ok{background:#7ee0c3}.opt.no{background:#ffb0a4}
+.fb{min-height:1.6em;font-weight:700;margin-top:6px}
+.q svg{max-width:100%}
+select{font:inherit;padding:.3em;border:3px solid var(--ink);border-radius:10px;background:#fff;max-width:100%}
+.mrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}.mrow span{min-width:9em;font-weight:700}
+.score{font-size:3rem;font-weight:900}
+.res{border:3px solid var(--ink);border-radius:12px;padding:8px 12px;margin:8px 0;background:#fff}.res.ok{border-color:var(--teal);background:#e6faf3}.res.no{border-color:var(--coral);background:#fff0ed}
+table{border-collapse:collapse;width:100%;font-size:.9rem;background:#fff}th,td{border:2px solid var(--ink);padding:5px 8px;text-align:left;vertical-align:top}th{background:#cfe3ff}
+.scroll{overflow-x:auto}
+details{border:2px solid var(--ink);border-radius:10px;padding:6px 12px;margin:6px 0;background:#fff}summary{cursor:pointer;font-weight:700}
+.steps{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.steps li{display:flex;gap:10px;align-items:flex-start;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;background:#fff}
+.steps li.done{background:#e6faf3;border-color:var(--teal)}
+.steps input{width:26px;height:26px;margin-top:3px;flex:none}
+.dots{display:flex;gap:6px;flex-wrap:wrap}.dots a{width:34px;height:34px;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;text-decoration:none;color:var(--ink);font-weight:800;background:#fff;font-size:.9rem}.dots a.seen{background:#7ee0c3}.dots a.cur{background:var(--yellow)}
+.foot{text-align:center;font-size:.85rem;color:var(--mute);padding:0 12px 30px}
+@media(max-width:560px){body{font-size:17px}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main id="app" tabindex="-1"></main>
+<footer class="foot">Your progress is saved in this browser on this device only. Use 5 V USB power only. Ask a teacher to check your circuit.</footer>
+<noscript><p style="padding:2rem">Please turn on JavaScript to use the Electronics Lab.</p></noscript>
+<script>
+'use strict';
+/* ===== helpers & storage (localStorage only, no accounts) ===== */
+const APP=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={
+  get(k,d){try{const v=localStorage.getItem('swct:'+k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('swct:'+k,JSON.stringify(v))}catch(e){}},
+  del(k){try{localStorage.removeItem('swct:'+k)}catch(e){}}
+};
+let P=store.get('progress',{});
+const mp=id=>P['m'+id]||(P['m'+id]={seen:[],acts:{},quiz:null,steps:{},built:{}});
+const save=()=>store.set('progress',P);
+const getGroup=()=>store.get('group','A');
+const unlockAll=()=>store.get('unlockAll',false);
+const allSeen=m=>m.sections.every((_,i)=>mp(m.id).seen.includes(i));
+const mandatoryDone=m=>m.projects.length===0||m.projects.some(p=>p.mandatory&&mp(m.id).built[p.id]);
+const isDone=m=>!!(mp(m.id).quiz&&mp(m.id).quiz.passed)&&mandatoryDone(m);
+const isUnlocked=id=>true;
+function learnPct(m){const p=mp(m.id);const parts=m.sections.length+1+(m.projects.length?1:0);
+  let n=p.seen.length+(p.quiz&&p.quiz.passed?1:0)+(m.projects.length&&mandatoryDone(m)?1:0);return Math.round(100*n/parts)}
+const go=h=>{location.hash=h};
+const percent=n=>`<div class="bar" role="progressbar" aria-valuenow="${n}" aria-valuemin="0" aria-valuemax="100"><i style="width:${n}%"></i></div>`;
+
+/* ===== widgets: tiny interactive components ===== */
+const WG={};let wn=0;const pending=[];
+function widget(def){const id='w'+(++wn);WG[id]={d:def,s:JSON.parse(JSON.stringify(def.state||{}))};pending.push(id);return `<div class="widget" id="${id}"></div>`}
+function wr(id){const w=WG[id],el=document.getElementById(id);if(el)el.innerHTML=w.d.render(w.s,id)}
+function wa(id,k,v){const w=WG[id];w.d.act(w.s,k,v);wr(id)}
+function mountAll(){while(pending.length)wr(pending.shift())}
+const btn=(id,k,label,cls='',v='')=>`<button class="${cls}" onclick="wa('${id}','${k}',${JSON.stringify(v).replace(/"/g,'&quot;')})">${label}</button>`;
+
+/* ===== media with honest placeholders ===== */
+function media(kind,file,desc){
+  const src=`assets/${kind==='video'?'video':'img'}/${file}`;
+  const tag=kind==='video'?`<video controls preload="none" src="${src}" onerror="phShow(this)"></video>`:`<img src="${src}" alt="${esc(desc)}" onerror="phShow(this)">`;
+  return `<figure class="media">${tag}<div class="ph" hidden><b>PLACEHOLDER – ${kind.toUpperCase()} NOT ADDED YET</b><span>Needed: ${esc(desc)}</span><code>${src}</code></div></figure>`}
+function phShow(el){el.hidden=true;el.nextElementSibling.hidden=false}
+
+/* ===== read aloud (browser voice) ===== */
+function speak(text){if(!('speechSynthesis' in window)){alert('Read aloud is not supported in this browser.');return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.9;speechSynthesis.speak(u)}
+
+/* ===== circuit drawing (accurate symbols, animated current) ===== */
+let cn=0;
+function circuit(o={}){
+  const id='c'+(++cn);
+  o=Object.assign({src:true,wire:'good',gap:'switch',closed:true,load:'led',noLoad:false,color:'#ff4d4d',labels:false,glow:null,mat:null,trace:null},o);
+  const res=o.res!==undefined?o.res:o.load==='led';
+  const flow=!!(o.src&&!o.noLoad&&o.wire==='good'&&(o.gap==='none'||(o.gap==='switch'&&o.closed)||(o.gap==='material'&&o.mat&&o.mat.c)));
+  const lit=flow?(o.glow==null?1:o.glow):0;
+  const K='#12263f',W='#c97b2a';let s=`<path id="${id}" d="M60,40 H340 V180 H60 Z" fill="none" stroke="${W}" stroke-width="5" stroke-linejoin="round"/>`;
+  // power source
+  if(o.src){s+=`<rect x="38" y="78" width="44" height="66" fill="#fff"/><line x1="60" y1="78" x2="60" y2="96" stroke="${K}" stroke-width="4"/><line x1="60" y1="118" x2="60" y2="144" stroke="${K}" stroke-width="4"/><line x1="40" y1="96" x2="80" y2="96" stroke="${K}" stroke-width="5"/><line x1="49" y1="118" x2="71" y2="118" stroke="${K}" stroke-width="9"/><text x="22" y="100" font-size="20" font-weight="700" fill="${K}">+</text><text x="26" y="132" font-size="22" font-weight="700" fill="${K}">−</text>`}
+  else s+=`<rect x="38" y="78" width="44" height="66" fill="#fff" stroke="#999" stroke-dasharray="5"/><text x="60" y="118" font-size="22" text-anchor="middle" fill="#999">?</text>`;
+  // resistor
+  if(res)s+=`<rect x="155" y="25" width="70" height="30" fill="#fff"/><polyline points="155,40 170,40 175,28 185,52 195,28 205,52 210,40 225,40" fill="none" stroke="${K}" stroke-width="3.5" stroke-linejoin="round"/>`;
+  // load
+  s+=`<rect x="316" y="76" width="48" height="68" fill="#fff"/>`;
+  if(o.noLoad)s+=`<rect x="318" y="80" width="44" height="60" fill="#fff" stroke="#999" stroke-dasharray="5"/><text x="340" y="118" font-size="22" text-anchor="middle" fill="#999">?</text>`;
+  else if(o.load==='led')s+=`<circle cx="340" cy="108" r="36" fill="${o.color}" opacity="${(.5*lit).toFixed(2)}"/><line x1="340" y1="76" x2="340" y2="95" stroke="${K}" stroke-width="4"/><line x1="340" y1="125" x2="340" y2="144" stroke="${K}" stroke-width="4"/><polygon points="323,95 357,95 340,122" fill="${lit?o.color:'#fff'}" stroke="${K}" stroke-width="3.5" stroke-linejoin="round"/><line x1="323" y1="125" x2="357" y2="125" stroke="${K}" stroke-width="4.5"/>`;
+  else s+=`<circle cx="340" cy="110" r="40" fill="#ffd23f" opacity="${(.55*lit).toFixed(2)}"/><line x1="340" y1="76" x2="340" y2="92" stroke="${K}" stroke-width="4"/><line x1="340" y1="128" x2="340" y2="144" stroke="${K}" stroke-width="4"/><circle cx="340" cy="110" r="19" fill="${lit?'#ffe066':'#fff'}" stroke="${K}" stroke-width="3.5"/><path d="M331,119 q4.5,-15 9,0 q4.5,-15 9,0" fill="none" stroke="${K}" stroke-width="2.5"/>`;
+  // gap: switch or material
+  if(o.gap==='switch'){s+=`<rect x="172" y="168" width="56" height="24" fill="#fff"/><circle cx="170" cy="180" r="5.5" fill="${K}"/><circle cx="230" cy="180" r="5.5" fill="${K}"/><line x1="170" y1="180" x2="${o.closed?226:222}" y2="${o.closed?180:150}" stroke="${K}" stroke-width="5" stroke-linecap="round"/>`}
+  if(o.gap==='material'){const m=o.mat;s+=`<rect x="172" y="168" width="56" height="24" fill="#fff"/><circle cx="170" cy="180" r="5.5" fill="${K}"/><circle cx="230" cy="180" r="5.5" fill="${K}"/><rect x="178" y="156" width="44" height="48" rx="8" fill="#fff" stroke="${K}" stroke-width="2.5" ${m?'':'stroke-dasharray="5"'}/><text x="200" y="189" font-size="28" text-anchor="middle">${m?m.i:'?'}</text>${m?`<text x="200" y="220" font-size="13" text-anchor="middle" fill="${K}" font-weight="700">${esc(m.n)}</text>`:''}`}
+  if(o.wire==='broken')s+=`<rect x="96" y="30" width="28" height="20" fill="#fff"/><circle cx="96" cy="40" r="4.5" fill="#fff" stroke="${K}" stroke-width="2.5"/><circle cx="124" cy="40" r="4.5" fill="#fff" stroke="${K}" stroke-width="2.5"/><text x="110" y="24" font-size="16" text-anchor="middle" fill="#d33">✂ cut!</text>`;
+  if(flow)for(let i=0;i<7;i++)s+=`<circle r="5.5" fill="#ffd23f" stroke="${K}" stroke-width="1.5"><animateMotion dur="4.2s" begin="${(-i*0.6).toFixed(1)}s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
+  if(o.trace!=null){const T=[[60,88],[200,40],[340,108],[280,180],[200,180],[60,165]][o.trace]||[60,88];s+=`<circle cx="${T[0]}" cy="${T[1]}" r="13" fill="#ffd23f" stroke="${K}" stroke-width="3"/>`}
+  if(o.labels){const L=(x,y,t,a='middle')=>`<text x="${x}" y="${y}" font-size="13" font-weight="700" fill="${K}" text-anchor="${a}">${t}</text>`;
+    s+=L(76,112,'◀ Power source','start')+L(200,16,res?'Resistor':'')+L(324,112,o.load==='led'?'LED ▶':'Bulb ▶','end')+(o.gap==='switch'?L(200,138,'Switch'):'')+L(150,64,'Wire')}
+  return `<svg viewBox="0 0 400 ${o.mat?228:206}" class="circ" role="img" aria-label="Circuit diagram: ${flow?'current flowing, load ON':'no current, load OFF'}">${s}</svg>`}
+
+/* ===== shared page pieces ===== */
+function topbar(m,extra=''){const p=learnPct(m);return `<nav class="top" aria-label="Module navigation"><button class="ghost sm" onclick="go('/')">🏠 Home</button><button class="ghost sm" onclick="go('/m/${m.id}')">Module ${m.id}</button><div class="ttl">${esc(m.title)}</div>${extra}<div class="bar" aria-label="Module progress ${p}%"><i style="width:${p}%"></i></div><b>${p}%</b></nav>`}
+function setPage(html){APP.innerHTML=html;mountAll();APP.focus();window.scrollTo(0,0)}
+function kitBlock(kitId){const k=KITS[kitId];if(!k)return '';const g=getGroup();
+  return `<div class="panel tint"><h3>👩‍🏫 Teacher: give out Kit ${kitId} now</h3><p>Each student (Group ${g}) receives:</p><ul>${kitItems(kitId,g).map(x=>`<li>${x}</li>`).join('')}</ul><p>Earlier kits stay with the student. <a href="#/teacher">See the full plan</a>.</p></div>`}
+function groupPicker(){const g=getGroup();return `<span class="chip">My group: ${['A','B','C'].map(x=>`<button class="sm ${x===g?'':'ghost'}" onclick="setGroup('${x}')" aria-pressed="${x===g}">${x}</button>`).join('')}</span>`}
+function setGroup(x){store.set('group',x);route()}
+
+/* ===== pages ===== */
+function route(){
+  const h=location.hash.replace(/^#\/?/,'').split('/');
+  try{
+    if(h[0]==='teacher')return teacherPage();
+    if(h[0]==='m'&&MODS[+h[1]]){const m=MODS[+h[1]];
+      if(!isUnlocked(m.id))return setPage(`<div class="panel red"><h2>🔒 Module ${m.id} is locked</h2><p>Finish Module ${m.id-1} first (pass the quiz${MODS[m.id-1]&&MODS[m.id-1].projects.length?' and build the mandatory project':''}).</p><button onclick="go('/')">Back home</button></div>`);
+      if(h[2]==='s')return sectionPage(m,Math.min(Math.max(+h[3]||0,0),m.sections.length-1));
+      if(h[2]==='quiz')return quizPage(m);
+      if(h[2]==='projects')return projectsPage(m);
+      if(h[2]==='p')return projectPage(m,h[3]);
+      return overviewPage(m)}
+  }catch(e){console.error("ROUTE ERR",e.stack)}
+  homePage()}
+
+function homePage(){
+  const cards=PLAN.map(p=>{const m=MODS[p.n];let status='',btn='',badge='',assess='Assessment: not available yet';
+    if(m){const q=mp(m.id).quiz,done=isDone(m),un=isUnlocked(m.id);
+      assess=q?(q.passed?`Assessment: passed ${q.score}/10`:`Assessment: last score ${q.score}/10`):'Assessment: not taken';
+      if(!un){badge='<span class="badge lock">🔒 Locked</span>';btn=`<button disabled>Finish Module ${m.id-1} first</button>`}
+      else if(done){badge='<span class="badge done">✔ COMPLETED</span>';btn=`<button class="good" onclick="go('/m/${m.id}')">Review module</button>`}
+      else{const st=learnPct(m)>0;badge=`<span class="badge ${st?'prog':''}">${st?'In progress':'Not started'}</span>`;btn=`<button onclick="go('/m/${m.id}')">${st?'Continue Learning':'Start Learning'}</button>`}}
+    else if(p.final){badge='<span class="badge prog">Final project</span>';btn=`<a class="btn" href="${FINAL_URL}" target="_blank" rel="noopener">Open final project</a>`}
+    else{badge='<span class="badge soon">Coming soon</span>';btn='<button disabled>Coming soon</button>'}
+    return `<article class="mcard ${badge.includes('lock')?'lock':''}"><div class="art" style="background:${p.bg}"><span aria-hidden="true">${p.icon}</span><b>Module ${p.n}</b></div><div class="body"><h3>${esc(p.name)}</h3>${badge}<p>${esc(p.desc)}</p><div class="meta"><span>📖 ${p.secs} learning sections</span><span>📝 ${assess}</span></div>${m?`<div class="row">${percent(learnPct(m))}<b>${learnPct(m)}%</b></div>`:''}<div class="sp"></div>${btn}</div></article>`}).join('');
+  setPage(`<header class="hero"><h1><span class="bolt">⚡</span>Smart Wire Connectivity Tester</h1><p>Learn Electronics, Experiment, and Build Your Own Project!</p><div class="row">${groupPicker()}<button class="ghost sm" onclick="go('/teacher')">👩‍🏫 Teacher page</button><button class="bad sm" onclick="resetAll()">Reset all progress</button></div></header><section class="grid" aria-label="Modules">${cards}</section>`)}
+function resetAll(){if(confirm('Reset ALL progress on this device? Every module will become not started. This cannot be undone.')){P={};store.del('progress');store.del('unlockAll');route()}}
+
+function overviewPage(m){const p=mp(m.id),q=p.quiz,ready=allSeen(m),passed=q&&q.passed;
+  const first=m.sections.findIndex((_,i)=>!p.seen.includes(i));
+  setPage(`${topbar(m)}<h1>${m.icon} Module ${m.id}: ${esc(m.title)}</h1><p class="big">${esc(m.intro)}</p>
+  <div class="panel"><h3>You will learn</h3><ul>${m.goals.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  <div class="panel"><h3>Learning sections</h3><ol>${m.sections.map((s,i)=>`<li>${p.seen.includes(i)?'✅':'⬜'} <a href="#/m/${m.id}/s/${i}">${esc(s.t)}</a></li>`).join('')}</ol>
+  <button onclick="go('/m/${m.id}/s/${first<0?0:first}')">${p.seen.length?'Continue Learning':'Start Learning'}</button></div>
+  <div class="panel ${passed?'green':''}"><h3>📝 Assessment ${passed?'– PASSED ✔':''}</h3><p>10 questions. Get 8 or more right to pass.${q?` Last score: ${q.score}/10.`:''}</p><button ${ready?'':'disabled'} onclick="go('/m/${m.id}/quiz')">${q?'Open assessment':'Take assessment'}</button>${ready?'':'<p>Finish all learning sections first.</p>'}</div>
+  ${m.projects.length?`<div class="panel ${passed?'':'tint'}"><h3>🛠 Choose Your Project and Start Building!</h3>${passed?`<p>${mandatoryDone(m)?'Mandatory project done ✔':'Build the mandatory project to complete this module.'}</p><button onclick="go('/m/${m.id}/projects')">See projects</button>`:'<p>Pass the assessment to unlock your mini-projects.</p>'}</div>`:`<div class="panel"><p>Module ${m.id} has no building project. You have not received any parts yet. Nice work learning first!</p></div>`}
+  ${passed&&m.kit?kitBlock(m.kit):''}
+  ${isDone(m)?`<div class="panel green"><h2>✔ COMPLETED</h2>${MODS[m.id+1]?`<button class="good" onclick="go('/m/${m.id+1}')">Go to Module ${m.id+1}</button>`:''}</div>`:''}
+  <button class="bad sm" onclick="restartModule(${m.id})">Restart this module</button>`)}
+function restartModule(id){if(confirm(`Restart Module ${id}? Your learning progress, assessment and projects for this module will be reset. Other modules are not changed.`)){delete P['m'+id];save();route()}}
+
+function sectionPage(m,i){const s=m.sections[i],p=mp(m.id);if(!p.seen.includes(i)){p.seen.push(i);save()}
+  const last=i===m.sections.length-1,done=p.acts[i];
+  const dots=m.sections.map((_,j)=>`<a href="#/m/${m.id}/s/${j}" class="${j===i?'cur':p.seen.includes(j)?'seen':''}" aria-label="Section ${j+1}">${j+1}</a>`).join('');
+  setPage(`${topbar(m)}<div class="row"><div class="dots">${dots}</div><span class="sp"></span><button class="ghost sm" onclick="speak(${JSON.stringify(s.t+'. '+s.def+' '+s.ex)})">🔊 Read aloud</button></div>
+  <h1>${esc(s.t)}</h1>
+  <section class="blk def"><h3><span>B</span>Definition</h3><div class="big">${esc(s.def)}</div></section>
+  <section class="blk exp"><h3><span>C</span>In simple words</h3><div><p>${esc(s.ex)}</p><p>🌍 <b>Real life:</b> ${esc(s.rw)}</p></div></section>
+  <section class="blk viz"><h3><span>D</span>See it</h3><div>${s.viz()}</div></section>
+  <section class="blk demo"><h3><span>E</span>Try the demonstration</h3><div>${s.demo()}</div></section>
+  <section class="blk learn"><h3><span>F</span>What did we learn?</h3><div><ol>${s.learn.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div></section>
+  <section class="blk act"><h3><span>G</span>Your turn: predict!</h3><div><p class="big">${esc(s.act.q)}</p><div class="opts">${s.act.o.map((o,j)=>`<button class="opt" onclick="actPick(${m.id},${i},${j},this)">${esc(o)}</button>`).join('')}</div><div class="fb" id="fb" aria-live="polite">${done?'✅ You already got this one right.':''}</div></div></section>
+  <div class="row">${i>0?`<button class="ghost" onclick="go('/m/${m.id}/s/${i-1}')">◀ Previous section</button>`:`<button class="ghost" onclick="go('/m/${m.id}')">◀ Module page</button>`}<span class="sp"></span>${last?`<button onclick="go('/m/${m.id}')">Finish learning ▶ Assessment</button>`:`<button onclick="go('/m/${m.id}/s/${i+1}')">Next section ▶</button>`}</div>`)}
+function actPick(mid,i,j,el){const m=MODS[mid],a=m.sections[i].act,fb=document.getElementById('fb');
+  if(j===a.a){el.classList.add('ok');fb.textContent='✅ Yes! '+a.why;mp(mid).acts[i]=true;save()}
+  else{el.classList.add('no');fb.textContent='🤔 Not quite. Think again, then try another answer.'}}
+
+/* ===== assessment ===== */
+let QZ=null;
+function quizPage(m){
+  if(!allSeen(m))return setPage(`${topbar(m)}<div class="panel tint"><h2>Finish learning first</h2><p>Visit every learning section, then come back.</p><button onclick="go('/m/${m.id}')">Back to module</button></div>`);
+  if(!QZ||QZ.mid!==m.id)QZ={mid:m.id,i:0,a:Array(10).fill(null),done:false};
+  drawQuiz()}
+function drawQuiz(){const m=MODS[QZ.mid],q=m.quiz[QZ.i],a=QZ.a[QZ.i];
+  if(QZ.done)return resultPage(m);
+  let body='';
+  if(q.t==='match')body=q.l.map((l,k)=>`<div class="mrow"><span>${esc(l)}</span><select aria-label="${esc(l)}" onchange="qSet(${k},this.value)"><option value="">Choose…</option>${q.r.map((r,j)=>`<option value="${j}" ${a&&a[k]==j&&a[k]!==''?'selected':''}>${esc(r)}</option>`).join('')}</select></div>`).join('');
+  else body=`<div class="opts">${q.o.map((o,j)=>`<button class="opt ${a===j?'sel':''}" onclick="qSet(${j})">${esc(o)}</button>`).join('')}</div>`;
+  setPage(`${topbar(m)}<h2>Assessment: Question ${QZ.i+1} of 10</h2>${percent((QZ.i+1)*10)}<div class="panel q"><p class="big">${esc(q.q)}</p>${q.img?`<div>${q.img()}</div>`:''}${body}</div><div class="row"><button class="ghost" ${QZ.i?'':'disabled'} onclick="qGo(-1)">◀ Back</button><span class="sp"></span>${QZ.i<9?`<button onclick="qGo(1)">Next ▶</button>`:`<button class="good" onclick="qSubmit()">Submit answers</button>`}</div><p id="cnt">${cntTxt(m)}</p><div class="dots">${m.quiz.map((qq,k)=>`<a href="javascript:void 0" onclick="QZ.i=${k};drawQuiz()" class="${k===QZ.i?'cur':isAns(qq,QZ.a[k])?'seen':''}" aria-label="Question ${k+1}${isAns(qq,QZ.a[k])?' answered':' not answered'}">${k+1}</a>`).join('')}</div>`)}
+const cntTxt=m=>{const n=m.quiz.filter((q,k)=>isAns(q,QZ.a[k])).length;return `${n} of 10 answered. ${n<10?'Green numbers are answered.':'All done! Press Submit.'}`};
+function qSet(k,v){if(MODS[QZ.mid].quiz[QZ.i].t==='match'){const q=MODS[QZ.mid].quiz[QZ.i];const a=QZ.a[QZ.i]||Array(q.l.length).fill('');a[k]=v;QZ.a[QZ.i]=a;drawQuiz();return}
+  QZ.a[QZ.i]=k;drawQuiz()}
+function qGo(d){QZ.i+=d;drawQuiz()}
+const isAns=(q,a)=>a!==null&&a!==undefined&&(q.t==='match'?q.l.every((_,k)=>a[k]!==''&&a[k]!==undefined):true);
+function isRight(q,a){if(a===null||a===undefined)return false;return q.t==='match'?q.a.every((x,k)=>String(a[k])===String(x)):a===q.a}
+function qSubmit(){const m=MODS[QZ.mid];const un=m.quiz.map((q,i)=>isAns(q,QZ.a[i])?0:i+1).filter(Boolean);
+  if(un.length){alert(`Please answer question ${un.join(', ')} first. For matching questions, choose an answer in every row.`);QZ.i=un[0]-1;drawQuiz();return}
+  const score=m.quiz.reduce((n,q,i)=>n+(isRight(q,QZ.a[i])?1:0),0),p=mp(m.id),pass=score>=8;
+  p.quiz={score,passed:pass||!!(p.quiz&&p.quiz.passed)};save();QZ.done=true;QZ.score=score;QZ.pass=pass;drawQuiz()}
+function resultPage(m){const sc=QZ.score,pass=QZ.pass;
+  setPage(`${topbar(m)}<div class="panel ${pass?'green':'red'}"><div class="score">${sc} / 10</div><h2>${pass?'PASSED 🎉':'TRY AGAIN'}</h2>${pass?`<span class="badge done">✔ COMPLETED quiz</span><p>${m.projects.length?'Your projects are unlocked! Build the mandatory project to complete this module.':'Module complete! Great learning.'}</p>`:'<p>You need 8 correct answers to pass. Read the explanations, then try again.</p>'}<div class="row">${pass?(m.projects.length?`<button onclick="go('/m/${m.id}/projects')">🛠 Choose your project</button>`:`<button onclick="go('/m/${m.id}')">Module page</button>`):''}${!pass?`<button onclick="QZ=null;quizPage(MODS[${m.id}])">Restart assessment</button><button class="ghost" onclick="go('/m/${m.id}/s/0')">Relearn module</button>`:`<button class="ghost" onclick="QZ=null;quizPage(MODS[${m.id}])">Take again</button>`}</div></div>${pass&&m.kit?kitBlock(m.kit):''}
+  ${m.quiz.map((q,i)=>{const ok=isRight(q,QZ.a[i]);const mine=QZ.a[i]===null?'(no answer)':q.t==='match'?q.l.map((l,k)=>`${l} → ${QZ.a[i][k]===''||QZ.a[i][k]===undefined?'?':q.r[QZ.a[i][k]]}`).join('; '):q.o[QZ.a[i]];
+    const right=q.t==='match'?q.l.map((l,k)=>`${l} → ${q.r[q.a[k]]}`).join('; '):q.o[q.a];
+    return `<div class="res ${ok?'ok':'no'}"><b>${ok?'✔':'✘'} Q${i+1}. ${esc(q.q)}</b>${ok?'':`<br>Your answer: ${esc(mine)}`}<br>Correct answer: ${esc(right)}<br><i>${esc(q.why)}</i></div>`}).join('')}`)}
+
+/* ===== projects ===== */
+function compList(pr,g){return pr.comps(GROUPS[g]).map(c=>`<li>${c}</li>`).join('')}
+function projectsPage(m){const p=mp(m.id);
+  if(!(p.quiz&&p.quiz.passed))return setPage(`${topbar(m)}<div class="panel tint"><h2>🔒 Projects are locked</h2><p>Pass the assessment first.</p><button onclick="go('/m/${m.id}')">Back</button></div>`);
+  setPage(`${topbar(m,groupPicker())}<h1>🛠 Choose Your Project and Start Building!</h1><p class="big">Build the <b>mandatory</b> project. Optional projects give extra practice.</p>${m.kit?kitBlock(m.kit):''}<div class="grid">${m.projects.map(pr=>`<article class="mcard"><div class="art" style="background:${pr.bg}"><span aria-hidden="true">${pr.icon}</span><b>${pr.mandatory?'Mandatory':'Optional'}</b></div><div class="body"><h3>${esc(pr.name)}</h3>${p.built[pr.id]?'<span class="badge done">✔ Built</span>':`<span class="badge ${pr.mandatory?'prog':''}">${pr.mandatory?'Must build':'Extra practice'}</span>`}<p>${esc(pr.obj)}</p><p><b>Needs:</b> ${esc(pr.needs)}</p><div class="sp"></div><button onclick="go('/m/${m.id}/p/${pr.id}')">Open project</button></div></article>`).join('')}</div>`)}
+function projectPage(m,pid){const pr=m.projects.find(x=>x.id===pid);if(!pr)return go('/m/'+m.id+'/projects');
+  const p=mp(m.id);if(!(p.quiz&&p.quiz.passed))return go('/m/'+m.id);
+  const g=getGroup(),G=GROUPS[g],steps=pr.steps(G),st=p.steps[pid]||(p.steps[pid]={}),n=Object.values(st).filter(Boolean).length;
+  setPage(`${topbar(m,groupPicker())}<button class="ghost sm" onclick="go('/m/${m.id}/projects')">◀ All projects</button><h1>${pr.icon} ${esc(pr.name)} <span class="badge ${pr.mandatory?'prog':''}">${pr.mandatory?'Mandatory':'Optional'}</span></h1>
+  <div class="panel"><h3>🎯 Objective</h3><p>${esc(pr.obj)}</p><h3>You will learn</h3><ul>${pr.learn.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p><b>Do this first:</b> ${esc(pr.prereq)}</p></div>
+  <div class="panel"><h3>🧰 You need (Group ${g})</h3><ul>${compList(pr,g)}</ul>${media('img',pr.photo[0],pr.photo[1])}<p>Never guess the USB board pins. Read the printed labels.</p></div>
+  <div class="panel"><h3>📐 Circuit diagram</h3>${pr.diagram(G)}<p>${esc(pr.text)}</p>${media('video',pr.video[0],pr.video[1])}</div>
+  <div class="panel tint"><h3>🛠 Build it step by step</h3><p>⚠ USB must stay <b>unplugged</b> while you build. Breadboard holes can differ: follow the connections.</p><ul class="steps">${steps.map((s,i)=>`<li class="${st[i]?'done':''}"><input type="checkbox" id="st${i}" ${st[i]?'checked':''} onchange="stepTick(${m.id},'${pid}',${i},this)"><label for="st${i}">${s}</label></li>`).join('')}</ul><p id="stc"><b>${n} of ${steps.length} steps done</b></p></div>
+  <div class="panel green"><h3>✅ What should happen</h3><p>${esc(pr.expect)}</p><h3>💡 How it works</h3><p>${esc(pr.how)}</p></div>
+  <div class="panel"><h3>🔧 If it does not work</h3>${pr.fix.map(f=>`<details><summary>${esc(f[0])}</summary><p>${esc(f[1])}</p></details>`).join('')}</div>
+  <div class="panel ${p.built[pid]?'green':''}"><button class="good" onclick="builtIt(${m.id},'${pid}')">${p.built[pid]?'✔ Built! (tap to undo)':'I built it and it works!'}</button></div>`)}
+function stepTick(mid,pid,i,el){const st=mp(mid).steps[pid]||(mp(mid).steps[pid]={});st[i]=el.checked;save();el.closest('li').classList.toggle('done',el.checked);
+  const n=Object.values(st).filter(Boolean).length,tot=document.querySelectorAll('.steps li').length;document.getElementById('stc').innerHTML=`<b>${n} of ${tot} steps done</b>`}
+function builtIt(mid,pid){const p=mp(mid);p.built[pid]=!p.built[pid];save();projectPage(MODS[mid],pid);
+  const m=MODS[mid];if(p.built[pid]&&isDone(m))setTimeout(()=>alert(`🎉 Module ${mid} is COMPLETED!`),50)}
+
+/* ===== teacher page ===== */
+function teacherPage(){const rows=PLAN.map(p=>`<tr><td>${p.n}</td><td>${esc(p.name)}</td><td>${esc(p.concepts)}</td><td>${esc(p.intro)}</td><td>${esc(p.kitTxt)}</td><td>${esc(p.proj)}</td><td>${esc(p.mand)}</td></tr>`).join('');
+  const gr=Object.entries(GROUPS).map(([k,g])=>`<tr><td>${k}</td><td>${g.led}</td><td>${g.res} (${g.rb})</td><td>${g.mA} mA</td></tr>`).join('');
+  setPage(`<nav class="top"><button class="ghost sm" onclick="go('/')">🏠 Home</button><div class="ttl">Teacher page</div></nav><h1>👩‍🏫 Teacher page</h1>
+  <div class="panel tint"><h3>How it works</h3><p>Students pass each assessment (8 of 10) and build the mandatory project. Then the teacher gives the next kit. Progress is saved only in each browser. There are no accounts and no certificates.</p></div>
+  <div class="panel"><h3>Module and kit plan</h3><div class="scroll"><table><tr><th>#</th><th>Module</th><th>Concepts</th><th>Introduced</th><th>Kit given after passing</th><th>Mini-projects</th><th>Mandatory</th></tr>${rows}</table></div></div>
+  <div class="panel"><h3>Group kit variations (Kit 1 stage)</h3><div class="scroll"><table><tr><th>Group</th><th>LED</th><th>Resistor</th><th>Worst-case LED current at 5 V</th></tr>${gr}</table></div><p>Worst case uses the <b>lowest</b> likely forward voltage for each colour (red 1.8 V, green 2.0 V, blue 2.8 V), because colours differ. All are far below the 20 mA LED limit. Never use a resistor below 330 Ω with a 5 V supply. The final project uses a blue LED with 1 kΩ for every group.</p></div>
+  <div class="panel"><h3>Check before class</h3><ul><li>Use a regulated 5 V USB supply or power bank only.</li><li>Check that jumper wire ends fit your USB breakout board (male-to-male or female-to-male).</li><li>Students must never test mains sockets or 230 V equipment.</li></ul></div>
+  <div class="panel red"><h3>Teacher tools</h3><label><input type="checkbox" ${unlockAll()?'checked':''} onchange="store.set('unlockAll',this.checked);route()"> Unlock all modules on this device (for demos)</label></div>`)}
+
+
+const FINAL_URL=(typeof location!=='undefined'&&(location.hostname==='edulabs.technikh.com'||!location.hostname||location.hostname==='localhost'||location.hostname==='127.0.0.1'))?'../build-a-wire-continuity-tester/index.html':'https://edulabs.technikh.com/activities/6/science/how-things-work/build-a-wire-continuity-tester/index.html';
+
+/* ===== group kit variations (all safe on 5 V; worst-case current uses LOWEST likely Vf) ===== */
+const GROUPS={
+  A:{led:'Red',c:'#ff4d4d',res:'330 Ω',rb:'orange, orange, brown',mA:'≈ 9.7'},
+  B:{led:'Green',c:'#2dbd6e',res:'470 Ω',rb:'yellow, violet, brown',mA:'≈ 6.4'},
+  C:{led:'Blue',c:'#3b6cff',res:'680 Ω',rb:'blue, grey, brown',mA:'≈ 3.2'}};
+const KITS={1:{n:'Kit 1'}};
+function kitItems(k,g){const G=GROUPS[g];
+  if(k===1)return ['1 × USB 5 V breakout board','1 × mini breadboard','3 × jumper wires',`1 × ${G.led} LED`,`1 × ${G.res} resistor`];return[]}
+
+/* ===== full 7-module plan (M1–M2 built; M3–M6 planned; M7 = final project site) ===== */
+const PLAN=[
+ {n:1,icon:'💡',bg:'#cfe3ff',name:'Discover the World of Electricity',desc:'What electricity is, where it comes from, conductors, insulators and safety.',secs:5,concepts:'Electricity, sources, current, conductors/insulators, safety',intro:'Nothing (no parts yet)',kitTxt:'No kit',proj:'None (no parts yet)',mand:'None'},
+ {n:2,icon:'🔌',bg:'#fff0b3',name:"Let's Build an Electrical Circuit",desc:'Circuits, power sources, wires, open and closed circuits.',secs:5,concepts:'Circuit, power source, wires, open/closed, path of current',intro:'USB 5 V breakout, mini breadboard, jumper wires (and one ready LED + resistor to act as the "bulb")',kitTxt:'Kit 1: 1 USB 5 V breakout, 1 mini breadboard, 3 jumpers, 1 LED + 1 resistor (by group)',proj:'Jumper-Wire Switch Lamp; Find the Gap; Two-Gap Lamp',mand:'Jumper-Wire Switch Lamp'},
+ {n:3,icon:'🔬',bg:'#d5f5e9',name:'Meet the Electronic Components',desc:'LED polarity, resistor values and colour bands, breadboard and wires.',secs:5,concepts:'LED, polarity, resistor, colour bands, why a resistor protects an LED',intro:'All LED colours and resistor values',kitTxt:'Kit 2: 2 red, 2 green, 1 blue LED; 2 each of 330 Ω, 470 Ω, 680 Ω, 1 kΩ',proj:'Colour Lamp Match; Backwards LED Test; Brightness Compare',mand:'Colour Lamp Match'},
+ {n:4,icon:'🧩',bg:'#ffd9d2',name:'Become a Breadboard Expert',desc:'Rows, rails, placing parts and finding mistakes.',secs:5,concepts:'Connected rows, power rails, placement, common mistakes',intro:'More jumpers, LEDs, resistors',kitTxt:'Kit 3: 5 jumpers, 2 LEDs, 2 resistors',proj:'Rail-Powered Lamp; Find the Mistake Board; Two Lamps',mand:'Rail-Powered Lamp'},
+ {n:5,icon:'🔦',bg:'#e7dcff',name:'Make Your First LED Circuit',desc:'Series path, LED plus resistor, testing an LED.',secs:5,concepts:'Series path, current flow, resistor protection, testing an LED',intro:'More jumpers, LEDs, resistors',kitTxt:'Kit 4: 5 jumpers, 2 LEDs, 2 resistors',proj:'LED Lamp with Pull-Out Switch; Brightness Dial; Night-Light',mand:'LED Lamp with Pull-Out Switch'},
+ {n:6,icon:'🔎',bg:'#ffe2a8',name:'Discover Wire Connectivity',desc:'Continuity, working and broken wires, testing probes.',secs:5,concepts:'Continuity, working vs broken wire, probes, LED as indicator',intro:'2 testing probes, 3 testing wires',kitTxt:'Kit 5: 2 testing probes, 3 testing wires, 3 jumpers',proj:'Probe Touch Tester; Good or Broken?; Guess then Test',mand:'Probe Touch Tester'},
+ {n:7,final:1,icon:'🏁',bg:'#59d9a8',name:'Final Project: Wire Connectivity Tester',desc:'Build the real tester: USB 5 V, 1 kΩ, blue LED and two probes.',secs:5,concepts:'Combine every skill; test good and broken wires',intro:'No new parts (teacher checks the checklist)',kitTxt:'Check: USB board, mini breadboard, blue LED, 1 kΩ, 2 probes, jumpers',proj:'The final project site',mand:'Build the tester'}];
+
+/* ===== reusable demo widgets ===== */
+const say=(on,a,b)=>`<div class="say ${on?'':'off'}" aria-live="polite">${on?a:b}</div>`;
+const rows=a=>`<div class="cards">${a.map(x=>`<div class="mini"><span class="em">${x[0]}</span><b>${x[1]}</b><br>${x[2]||''}</div>`).join('')}</div>`;
+
+const houseDemo=()=>widget({state:{main:true,d:{}},
+ render(s,id){const dev=[['light','💡','Light'],['fan','🌀','Fan'],['tv','📺','TV'],['phone','📱','Phone charger']];
+  return `<svg viewBox="0 0 400 60" class="circ" aria-hidden="true"><polygon points="20,56 200,6 380,56" fill="#ffb199" stroke="#12263f" stroke-width="4" stroke-linejoin="round"/></svg>
+  <div class="ctl">${btn(id,'main',s.main?'Main switch: ON':'Main switch: OFF',s.main?'good':'bad')}</div>
+  <div class="cards">${dev.map(d=>{const on=s.main&&s.d[d[0]];return `<button class="tile ${on?'on':''}" onclick="wa('${id}','dev','${d[0]}')" aria-pressed="${!!on}"><span class="em ${d[0]==='fan'?'fan':''}">${d[1]}</span>${d[2]}<br>${on?'ON':'OFF'}</button>`}).join('')}</div>
+  ${say(s.main,'Tap a device to switch it on. Electricity is ready!','The main switch is OFF, so nothing can work, even if a device is switched on.')}`},
+ act(s,k,v){if(k==='main')s.main=!s.main;else s.d[v]=!s.d[v]}});
+
+const sunDemo=()=>widget({state:{sky:'sun'},
+ render(s,id){const em={sun:'☀️',cloud:'⛅',night:'🌙'}[s.sky],g={sun:1,cloud:.45,night:0}[s.sky];
+  return `<p class="big">${em} A solar-powered lamp</p>${circuit({src:s.sky!=='night',gap:'none',glow:g,color:'#ffd23f',labels:true,res:false})}
+  <div class="ctl">${btn(id,'s','☀️ Sunny',s.sky==='sun'?'good':'ghost','sun')}${btn(id,'s','⛅ Cloudy',s.sky==='cloud'?'good':'ghost','cloud')}${btn(id,'s','🌙 Night',s.sky==='night'?'good':'ghost','night')}</div>
+  ${say(g>0,g===1?'Bright sunlight: the panel makes lots of electricity. The lamp is bright.':'Clouds block some light: less electricity, so the lamp is dim.','No sunlight: no electricity from the panel, so the lamp is OFF.')}`},
+ act(s,k,v){s.sky=v}});
+
+const wireDemo=(load)=>widget({state:{wire:'good'},
+ render(s,id){const ok=s.wire==='good';
+  return `${circuit({wire:s.wire,gap:'none',load,res:load==='led',labels:true})}
+  <div class="ctl">${btn(id,'w','✂ Disconnect the wire',ok?'bad':'ghost','broken')}${btn(id,'w','🔧 Reconnect the wire',ok?'ghost':'good','good')}</div>
+  ${say(ok,'The path is complete. Current flows (yellow dots) and the light is ON.','The wire is cut. The path is broken, current stops and the light is OFF.')}`},
+ act(s,k,v){s.wire=v}});
+
+const MATS=[{n:'Copper wire',i:'🟠',c:1},{n:'Iron nail',i:'🔩',c:1},{n:'Coin',i:'🪙',c:1},{n:'Pencil lead',i:'✏️',c:1},{n:'Plastic ruler',i:'📏',c:0},{n:'Rubber band',i:'⭕',c:0},{n:'Wooden stick',i:'🪵',c:0},{n:'Dry paper',i:'📄',c:0}];
+const matDemo=()=>widget({state:{m:null,t:{}},
+ render(s,id){const m=s.m!==null?MATS[s.m]:null;
+  return `<p>Pick a material to place between the two wire ends:</p><div class="ctl">${MATS.map((x,i)=>btn(id,'m',`${x.i} ${x.n}`,s.m===i?'blue':'ghost sm',i)).join('')}</div>
+  ${circuit({gap:'material',mat:m,labels:false})}
+  ${m?say(m.c,`${m.n} is a <b>conductor</b>. Current passes, so the LED glows.`,`${m.n} is an <b>insulator</b>. Current cannot pass, so the LED stays OFF.`):'<div class="say off">Choose a material to test.</div>'}
+  <p><b>Your results:</b> ${Object.keys(s.t).length?MATS.filter((x,i)=>s.t[i]!==undefined).map(x=>`${x.c?'✅':'⛔'} ${x.n}`).join(' · '):'none yet'}</p>`},
+ act(s,k,v){s.m=v;s.t[v]=1}});
+
+const SAFE=[['Using a 5 V USB supply for our experiments',1,'Low voltage is the safe choice for learning.'],['Poking a wire into a wall socket',0,'Wall sockets can seriously hurt you. Never do this.'],['Touching switches or plugs with wet hands',0,'Water helps electricity pass through your body. Dry your hands first.'],['Unplugging the USB before changing the circuit',1,'Power OFF first, then change wires.'],['Asking a teacher to check the circuit before power ON',1,'A second pair of eyes catches mistakes.'],['Pulling a plug out by its wire',0,'Hold the plug itself. Pulling the wire can break it.']];
+const safeDemo=()=>widget({state:{i:0,sc:0,r:null},
+ render(s,id){if(s.i>=SAFE.length)return `<div class="say">🎉 You finished! Score: ${s.sc} / ${SAFE.length}</div><div class="ctl">${btn(id,'again','Play again','ghost')}</div>`;
+  const c=SAFE[s.i];return `<p class="big">Is this SAFE or UNSAFE?</p><div class="panel"><b>${c[0]}</b></div>${s.r===null?`<div class="ctl">${btn(id,'a','✅ Safe','good',1)}${btn(id,'a','⛔ Unsafe','bad',0)}</div>`:`${say(s.r,'✔ Correct! '+c[2],'✘ Not quite. '+c[2])}<div class="ctl">${btn(id,'n','Next ▶')}</div>`}<p>Question ${s.i+1} of ${SAFE.length}</p>`},
+ act(s,k,v){if(k==='a'){s.r=SAFE[s.i][1]===v;if(s.r)s.sc++}else if(k==='n'){s.i++;s.r=null}else{s.i=0;s.sc=0;s.r=null}}});
+
+const partsDemo=()=>widget({state:{src:false,wires:false,load:false,sw:true},
+ render(s,id){const miss=[!s.src&&'power source',!s.wires&&'wires',!s.load&&'bulb'].filter(Boolean),on=!miss.length&&s.sw;
+  return `<div class="ctl">${btn(id,'src',(s.src?'✔ ':'+ ')+'Power source',s.src?'good':'ghost')}${btn(id,'wires',(s.wires?'✔ ':'+ ')+'Wires',s.wires?'good':'ghost')}${btn(id,'load',(s.load?'✔ ':'+ ')+'Bulb',s.load?'good':'ghost')}${btn(id,'sw',s.sw?'Switch: ON (closed)':'Switch: OFF (open)',s.sw?'good':'bad')}</div>
+  ${circuit({src:s.src,wire:s.wires?'good':'broken',noLoad:!s.load,load:'bulb',res:false,closed:s.sw,labels:true})}
+  ${miss.length?say(0,'','Still missing: '+miss.join(', ')+'. The loop is not complete.'):say(on,'Complete loop and switch closed: the bulb glows!','The loop is complete but the switch is open, so the bulb is OFF.')}`},
+ act(s,k){s[k]=!s[k]}});
+
+const srcDemo=()=>widget({state:{s:'none'},
+ render(s,id){const on=s.s!=='none',t={none:'No power source: nothing pushes the current.',battery:'A battery pushes current around the circuit.',usb:'A USB supply gives 5 volts. This is what we use in our kit.'}[s.s];
+  return `${circuit({src:on,gap:'switch',closed:true,load:'bulb',res:false,labels:true})}<div class="ctl">${btn(id,'s','No source',s.s==='none'?'bad':'ghost','none')}${btn(id,'s','🔋 Battery',s.s==='battery'?'good':'ghost','battery')}${btn(id,'s','🔌 USB 5 V',s.s==='usb'?'good':'ghost','usb')}</div>${say(on,t,t)}`},
+ act(s,k,v){s.s=v}});
+
+const pairDemo=()=>widget({state:{a:true,b:false},
+ render(s,id){const c=(k,n)=>`<div><h3>${n}: ${s[k]?'CLOSED':'OPEN'}</h3>${circuit({closed:s[k],load:'bulb',res:false})}<div class="ctl">${btn(id,k,s[k]?'Open the switch':'Close the switch',s[k]?'bad':'good')}</div>${say(s[k],'Path complete: bulb ON','Path broken: bulb OFF')}</div>`;
+  return `<div class="two">${c('a','Circuit A')}${c('b','Circuit B')}</div>`},
+ act(s,k){s[k]=!s[k]}});
+
+const STOPS=['Current leaves the + end of the power source.','It travels along the top wire.','It reaches the bulb. The bulb turns electrical energy into light and heat.','It carries on along the right-hand wire.','It passes through the closed switch.','It returns to the − end of the power source. Then it goes round again!'];
+const traceDemo=()=>widget({state:{t:0},
+ render(s,id){return `${circuit({trace:s.t,load:'bulb',res:false,labels:true})}<p class="say">Stop ${s.t+1} of 6: ${STOPS[s.t]}</p><div class="ctl">${s.t>0?btn(id,'p','◀ Back','ghost'):''}${s.t<5?btn(id,'n','Follow the current ▶'):btn(id,'r','Start again','good')}</div>`},
+ act(s,k){s.t=k==='n'?s.t+1:k==='p'?s.t-1:0}});
+
+const waterViz=()=>{const K='#12263f',dots=(y,c,n)=>Array.from({length:n},(_,i)=>`<circle r="6" cy="${y}" fill="${c}" stroke="${K}" stroke-width="1.5"><animateMotion dur="4s" begin="${-i*(4/n)}s" repeatCount="indefinite" path="M60,0 H340"/></circle>`).join('');
+ return `<svg viewBox="0 0 400 230" class="circ" role="img" aria-label="Water flows through a pipe; electric current flows through a wire"><text x="200" y="22" font-size="15" font-weight="700" text-anchor="middle" fill="${K}">💧 Water in a pipe</text><rect x="50" y="42" width="300" height="32" rx="16" fill="#bfe3ff" stroke="${K}" stroke-width="3"/><g transform="translate(0,58)">${dots(0,'#2f9bff',7)}</g><text x="200" y="98" font-size="13" text-anchor="middle" fill="${K}">A pump pushes water. Water flows along the pipe.</text>
+ <text x="200" y="136" font-size="15" font-weight="700" text-anchor="middle" fill="${K}">⚡ Electric current in a wire</text><rect x="50" y="156" width="300" height="32" rx="16" fill="#f4c58d" stroke="${K}" stroke-width="3"/><g transform="translate(0,172)">${dots(0,'#ffd23f',7)}</g><text x="200" y="212" font-size="13" text-anchor="middle" fill="${K}">A power source pushes current. It flows along the wire.</text></svg>`};
+const wireSection=()=>`<svg viewBox="0 0 400 190" class="circ" role="img" aria-label="Cross-section of a wire: copper core inside plastic coating"><circle cx="120" cy="95" r="80" fill="#4f6cff" stroke="#12263f" stroke-width="4"/><circle cx="120" cy="95" r="46" fill="#d98a3a" stroke="#12263f" stroke-width="4"/><text x="250" y="60" font-size="16" font-weight="700" fill="#12263f">Copper core</text><text x="250" y="80" font-size="13" fill="#12263f">(conductor: carries current)</text><text x="250" y="130" font-size="16" font-weight="700" fill="#12263f">Plastic cover</text><text x="250" y="150" font-size="13" fill="#12263f">(insulator: keeps us safe)</text><line x1="166" y1="85" x2="244" y2="58" stroke="#12263f" stroke-width="2"/><line x1="186" y1="125" x2="244" y2="128" stroke="#12263f" stroke-width="2"/></svg>`;
+const matCard=(img)=>`<div class="mini"><span class="em">${img[0]}</span>${img[1]}</div>`;
+
+/* ===== MODULE 1 ===== */
+const M1={id:1,icon:'💡',title:'Discover the World of Electricity',intro:'Find out what electricity is, where it comes from, and how to stay safe around it.',kit:null,
+ goals:['Understand what electricity is','Learn about electric current','Tell conductors from insulators','Know the basic safety rules'],
+ sections:[
+ {t:'What is Electricity?',def:'Electricity is a form of energy that makes electrical devices work.',ex:'Electricity switches on lights, spins fans, charges phones and runs televisions. When electricity stops, they all stop.',rw:'At home, the lights go off when there is a power cut.',
+  viz:()=>rows([['💡','Light','gives light'],['🌀','Fan','moves air'],['📺','TV','shows pictures'],['📱','Phone charger','fills the battery']])+media('img','m1-appliances.jpg','Real photograph of common home appliances (bulb, fan, TV, phone charger)'),demo:houseDemo,
+  learn:['Electricity is a form of energy.','It makes lights, fans and TVs work.','Devices need electricity switched ON to work.'],
+  act:{q:'The fan is switched on, but the main switch of the house is OFF. What happens?',o:['The fan spins','The fan stays still','The fan glows'],a:1,why:'With the main switch OFF, no electricity reaches the fan.'}},
+ {t:'Sources of Electricity',def:'A source of electricity is something that gives electrical energy to devices.',ex:'A battery stores energy in chemicals. A solar panel uses sunlight. Power stations send electricity to homes through wires. A USB charger turns it into a gentle 5 volts.',rw:'A torch uses a battery. Some street lamps use solar panels.',
+  viz:()=>rows([['🔋','Battery','chemical energy'],['☀️','Solar panel','sunlight'],['🏭','Power station','sends power to homes'],['🔌','USB supply','safe 5 V for our kit']])+media('img','m1-sources.jpg','Photographs of a battery, a solar panel, and a USB power adapter'),demo:sunDemo,
+  learn:['Batteries, sunlight and power stations are sources.','A source gives energy to devices.','Our experiments use a safe 5 V USB supply.'],
+  act:{q:'A solar-powered lamp is left in a dark cupboard all day. Will it light up?',o:['Yes, always','No, there is no sunlight to make electricity','Only if it is cold'],a:1,why:'A solar panel needs light to make electricity.'}},
+ {t:'What is Electric Current?',def:'Electric current is the flow of electric charge through a material such as a wire.',ex:'Think of electricity like water flowing through a pipe. Just as water travels through a pipe, electric current travels through a wire.',rw:'When you switch on a lamp, current flows through the wires inside it.',
+  viz:waterViz,demo:()=>`<p>Here is a 5 V power source, wires, a resistor and an LED. Cut the wire and watch.</p>`+wireDemo('led'),
+  learn:['Current is the flow of electric charge.','Current flows through wires like water in a pipe.','A cut wire stops the current.'],
+  act:{q:'What will happen to the LED if a wire in the circuit is disconnected?',o:['It glows brighter','It turns OFF','Nothing changes'],a:1,why:'Without a complete path the current cannot flow, so the LED turns OFF.'}},
+ {t:'Conductors and Insulators',def:'Conductors let electricity pass through them easily. Insulators do not.',ex:'Metals like copper are conductors. Plastic, rubber and wood are insulators. A wire has a copper core and a plastic cover, so it uses both.',rw:'The plastic on a charger cable stops current from reaching your fingers.',
+  viz:()=>`<div class="two"><div><h3>✅ Conductors</h3>${rows([['🟠','Copper'],['🔩','Iron'],['🪙','Coin']])}</div><div><h3>⛔ Insulators</h3>${rows([['📏','Plastic'],['⭕','Rubber'],['🪵','Wood']])}</div></div>`+media('img','m1-copper-and-plastic.jpg','Photograph of a copper wire next to a piece of plastic'),demo:matDemo,
+  learn:['Conductors let current pass.','Insulators block current.','Wires use a conductor inside and an insulator outside.'],
+  act:{q:'A plastic ruler is placed between the two wire ends. Will the LED glow?',o:['Yes','No, plastic is an insulator','Only a little'],a:1,why:'Plastic is an insulator, so the path stays open.'}},
+ {t:'Electrical Safety',def:'Electrical safety means following rules so electricity never hurts us or our things.',ex:'We use only low-voltage 5 V USB power for experiments. We never touch wall sockets, never use wet hands, and always ask a teacher to check.',rw:'A plug has plastic around it so your fingers stay safe.',
+  viz:()=>`<div class="two"><div class="panel green"><h3>✅ Do</h3><ul><li>Use 5 V USB only</li><li>Unplug before changing wires</li><li>Ask a teacher to check</li></ul></div><div class="panel red"><h3>⛔ Never</h3><ul><li>Touch wall sockets</li><li>Use wet hands</li><li>Touch bare wires of mains power</li></ul></div></div>`,demo:safeDemo,
+  learn:['Use only 5 V USB power in experiments.','Never touch wall sockets or use wet hands.','Unplug first, then change the circuit.'],
+  act:{q:'Your circuit is powered and you want to move a wire. What do you do first?',o:['Move it quickly','Unplug the USB power','Wet your hands'],a:1,why:'Always switch the power OFF before changing anything.'}}],
+ quiz:[
+ {t:'mc',q:'What is electricity?',o:['A form of energy that makes devices work','A type of plastic','A kind of water'],a:0,why:'Electricity is energy that runs lights, fans, TVs and more.'},
+ {t:'tf',q:'True or false: Electricity can only come from a wall socket.',o:['True','False'],a:1,why:'Batteries and solar panels are sources too.'},
+ {t:'mc',q:'Look at the pictures. Which one is a CONDUCTOR?',img:()=>`<div class="cards">${matCard(['📏','A: Plastic ruler'])}${matCard(['🟠','B: Copper wire'])}${matCard(['🪵','C: Wooden stick'])}</div>`,o:['A','B','C'],a:1,why:'Copper is a metal, and metals are conductors.'},
+ {t:'match',q:'Match each material with its type.',l:['Copper wire','Rubber band','Iron nail','Wooden stick'],r:['Conductor','Insulator'],a:[0,1,0,1],why:'Metals conduct; rubber and wood insulate.'},
+ {t:'mc',q:'Electric current is the flow of…',o:['electric charge','paint','sound'],a:0,why:'Current is the flow of electric charge through a material such as a wire.'},
+ {t:'tf',q:'True or false: It is safe to touch a switch with wet hands.',o:['True','False'],a:1,why:'Water helps electricity pass through your body. Dry hands first.'},
+ {t:'mc',q:'Which source stores energy in chemicals?',o:['Battery','Solar panel','Wind'],a:0,why:'A battery stores chemical energy.'},
+ {t:'mc',q:'Look at the circuit. A plastic ruler is in the gap. Will the LED glow?',img:()=>circuit({gap:'material',mat:MATS[4]}),o:['Yes, it glows','No, it stays OFF'],a:1,why:'Plastic is an insulator, so there is no complete path.'},
+ {t:'mc',q:'Which power supply is safe for our experiments?',o:['5 V USB','A wall socket','Any wire from a pole'],a:0,why:'Only low-voltage 5 V USB. Never use mains sockets.'},
+ {t:'mc',q:'Why are wires covered in plastic?',o:['Plastic is an insulator and keeps us safe','To make them heavy','To make them taste good'],a:0,why:'Plastic insulation keeps current inside the wire and protects us.'}]
+ ,projects:[]};
+
+/* ===== MODULE 2 ===== */
+const dgm=G=>`<div class="two"><div><h3>Switch closed</h3>${circuit({labels:true,color:G.c,closed:true})}</div><div><h3>Switch open (jumper pulled out)</h3>${circuit({labels:true,color:G.c,closed:false})}</div></div>`;
+const fixCommon=[['The LED does not glow','Check the LED legs. The longer leg (+) must be on the side that goes to the resistor and VBUS. Turn it around (with USB unplugged) and try again.'],['I am not sure the USB is on','Check that the USB cable is pushed in and the power source is switched on.'],['Parts feel loose','Push resistor and LED legs firmly into the holes. Check each jumper end.'],['A part feels hot','Unplug the USB at once. Tell your teacher. Check that a resistor is in the circuit.']];
+const M2={id:2,icon:'🔌',title:"Let's Build an Electrical Circuit",intro:'Discover how electricity needs a complete loop, and what happens when the loop is broken.',kit:1,
+ goals:['Know what a circuit is','Name the power source, wires and bulb','Tell open and closed circuits apart','Follow the path of current'],
+ sections:[
+ {t:'What is an Electric Circuit?',def:'An electric circuit is a complete path that electric current can travel around.',ex:'A circuit is like a racetrack that makes a loop. It needs a power source, wires and something that uses the energy, like a bulb. A switch can open or close the loop.',rw:'The torch in your home is a circuit: battery, wires, switch and bulb.',
+  viz:()=>circuit({labels:true,load:'bulb',res:false})+media('img','m2-simple-circuit-photo.jpg','Photo of a real simple circuit: battery, wires, switch and bulb'),demo:partsDemo,
+  learn:['A circuit is a complete path.','It needs a power source, wires and a bulb.','A switch opens or closes the path.'],
+  act:{q:'Meera has a bulb and a battery but no wires. Will the bulb glow?',o:['Yes','No, the path is not complete','Only at night'],a:1,why:'Without wires there is no path for current.'}},
+ {t:'What is a Power Source?',def:'A power source is the part that pushes electric current around a circuit.',ex:'A power source is like a pump pushing water around a pipe. It has two ends: a positive (+) end and a negative (−) end.',rw:'Batteries and USB chargers are power sources.',
+  viz:()=>rows([['🔋','Battery','+ and − ends'],['🔌','USB 5 V','our kit uses this']])+media('img','m2-usb-breakout.jpg','Photograph of the USB 5 V breakout board with VBUS and GND pins labelled'),demo:srcDemo,
+  learn:['A power source pushes current around.','It has a + end and a − end.','Our kit uses a 5 V USB supply.'],
+  act:{q:'Which power source does our kit use?',o:['5 V USB','Wall socket','Lightning'],a:0,why:'USB 5 V is low voltage, so it is safe for learners.'}},
+ {t:'What are Connecting Wires?',def:'Connecting wires are metal wires that carry current from one part of a circuit to another.',ex:'Inside is copper, which is a conductor. Outside is plastic, which is an insulator. If a wire is broken inside, current cannot pass. We will use this idea in the final project!',rw:'The cable on a phone charger is a connecting wire.',
+  viz:()=>wireSection()+media('img','m2-jumper-wires.jpg','Photograph of different jumper wires and a cut-open wire showing the copper core'),demo:()=>wireDemo('bulb'),
+  learn:['Wires carry current between parts.','Copper inside carries it; plastic outside protects.','A broken wire stops the current.'],
+  act:{q:'A wire is cut in the middle. What happens to the bulb?',o:['It glows','It turns OFF','It gets brighter'],a:1,why:'A cut wire makes a gap, so the circuit is open.'}},
+ {t:'Open and Closed Circuits',def:'In a closed circuit the path is complete and current flows. In an open circuit the path is broken and current stops.',ex:'Think of a drawbridge: when it is closed, cars can cross. When it is open, they must stop. A switch opens and closes the circuit.',rw:'Pressing a light switch closes the circuit; the light comes on.',
+  viz:()=>rows([['🌉','Closed bridge','cars cross = closed circuit'],['🚧','Open bridge','cars stop = open circuit']]),demo:pairDemo,
+  learn:['Closed circuit: current flows, bulb ON.','Open circuit: no current, bulb OFF.','A switch opens or closes the path.'],
+  act:{q:'You open the switch in a working circuit. What happens?',o:['The bulb stays ON','The bulb turns OFF','The battery grows'],a:1,why:'Opening the switch makes an open circuit.'}},
+ {t:'How Does Electricity Travel?',def:'Current travels from the + end of the power source, round the circuit, and back to the − end.',ex:'Current is not used up. It goes round and round like runners on a track. The bulb changes the electrical energy into light and heat.',rw:'In a torch, current goes out of the battery, through the bulb and back into the battery.',
+  viz:()=>rows([['➕','Start','+ end of the source'],['🔁','Loop','round the circuit'],['➖','Finish','back to the − end']]),demo:traceDemo,
+  learn:['Current goes from + round to −.','It is not used up on the way.','The path must be a complete loop.'],
+  act:{q:'After the bulb, is some of the current "used up" so less comes back?',o:['Yes, half is gone','No, the same current goes round the loop','It turns into water'],a:1,why:'Current keeps flowing round. The bulb uses energy, not the current itself.'}}],
+ quiz:[
+ {t:'mc',q:'What is an electric circuit?',o:['A complete path for current','A kind of battery','A type of metal'],a:0,why:'A circuit is a complete path for current to travel around.'},
+ {t:'mc',q:'Which parts does a simple circuit need?',o:['Power source, wires and a bulb','Only a bulb','Water and a pipe'],a:0,why:'We need a source, wires and a load such as a bulb.'},
+ {t:'tf',q:'True or false: Current flows in an open circuit.',o:['True','False'],a:1,why:'An open circuit has a gap, so current stops.'},
+ {t:'mc',q:'Look at the circuit. Will the bulb glow?',img:()=>circuit({load:'bulb',res:false,closed:true}),o:['Yes','No'],a:0,why:'The switch is closed, so the loop is complete.'},
+ {t:'mc',q:'Look at the circuit. Will the bulb glow?',img:()=>circuit({load:'bulb',res:false,closed:false}),o:['Yes','No'],a:1,why:'The switch is open, so the path is broken.'},
+ {t:'mc',q:'What does a switch do?',o:['Opens or closes the path','Makes electricity','Colours the wires'],a:0,why:'A switch opens or closes the circuit.'},
+ {t:'match',q:'Match each part with its job.',l:['Power source','Wire','Switch','Bulb'],r:['Pushes the current','Carries the current','Opens or closes the path','Lights up'],a:[0,1,2,3],why:'Each part has its own job.'},
+ {t:'tf',q:'True or false: Current is used up and disappears at the bulb.',o:['True','False'],a:1,why:'Current keeps flowing round the loop.'},
+ {t:'mc',q:'A wire is cut in the middle of a circuit. The circuit is now…',o:['Open','Closed','Faster'],a:0,why:'A cut wire makes a gap, so the circuit is open.'},
+ {t:'mc',q:'Where does the current return to?',o:['The − end of the power source','The wall','The air'],a:0,why:'Current goes out of + and returns to −.'}],
+ projects:[
+ {id:'switch-lamp',mandatory:1,icon:'💡',bg:'#fff0b3',name:'Jumper-Wire Switch Lamp',obj:'Build a lamp and use a jumper wire as a switch to open and close the circuit.',needs:'Kit 1',prereq:'Pass the Module 2 assessment. Your teacher gives you Kit 1.',
+  learn:['Build a complete circuit on a breadboard','See open and closed circuits for real','Practise safe power-off building'],
+  comps:G=>['1 × USB 5 V breakout board','1 × mini breadboard',`1 × ${G.led} LED`,`1 × ${G.res} resistor (bands: ${G.rb})`,'2 × jumper wires'],
+  photo:['m2-p1-parts.jpg','Photo of all parts for Project 1 laid out and labelled'],video:['m2-p1-build.mp4','Video showing the lamp being built and the jumper being pulled out and pushed back in'],diagram:dgm,text:'Current leaves VBUS (+5 V), passes the resistor and LED, then returns to GND through Jumper 2. Pulling Jumper 2 opens the circuit.',
+  steps:G=>['Unplug the USB board. Always build with the power OFF.','Put the mini breadboard flat in front of you.',`Take the ${G.res} resistor (bands: ${G.rb}). Push one leg into hole <b>a10</b> and the other into hole <b>a14</b>.`,`Take the ${G.led} LED. Find the <b>longer leg (+)</b>. Push it into <b>c14</b>. Push the short leg into <b>c15</b>.`,'<b>Jumper 1:</b> connect the USB board VBUS (+5 V) pin to hole <b>b10</b>.','<b>Jumper 2 (your switch):</b> connect hole <b>d15</b> to the USB board GND pin.','Ask your teacher to check. Then plug in the USB power.','Watch the LED glow. Pull Jumper 2 out: the LED turns OFF. Push it back: it glows again.'],
+  expect:'The LED glows when Jumper 2 is in. It turns OFF when you pull Jumper 2 out.',how:'Jumper 2 completes the path back to GND. Pulling it makes a gap, so it is an open circuit. The resistor protects the LED.',fix:fixCommon},
+ {id:'find-gap',mandatory:0,icon:'🕵️',bg:'#d5f5e9',name:'Find the Gap',obj:'Find a hidden gap in a circuit by following the path of current.',needs:'Kit 1 + a partner',prereq:'Finish Project 1.',
+  learn:['Follow the path from + to − to find a break','Test one connection at a time','Use a spare jumper to check a wire'],
+  comps:G=>['Your Project 1 circuit',`Your spare 3rd jumper wire`,'A partner'],photo:['m2-p2-parts.jpg','Photo of the circuit with one leg slightly lifted'],video:['m2-p2-demo.mp4','Video of a student following the path to find a loose connection'],diagram:dgm,text:'A loose leg or half-inserted jumper makes a hidden gap, so the circuit is open.',
+  steps:G=>['Unplug USB. Build the Project 1 lamp.','Look away. Your partner lifts ONE leg or wire slightly so there is a hidden gap.','Plug in USB. The LED is OFF. Predict: where is the gap?','Unplug USB. Start at VBUS and check every connection along the path, one by one.','Found it? Push it in firmly. Plug in USB: the LED glows.','Swap roles with your partner.'],
+  expect:'The LED is OFF until the gap is found and fixed.',how:'Current needs a complete path. Checking along the path finds where it is broken. This is exactly what a continuity tester does.',fix:fixCommon},
+ {id:'two-gap',mandatory:0,icon:'🚪',bg:'#ffd9d2',name:'Two-Gap Lamp',obj:'Use two jumpers in a row so BOTH must be in place for the lamp to glow.',needs:'Kit 1',prereq:'Finish Project 1.',
+  learn:['Parts in one path all have to be joined','One gap anywhere stops the whole circuit'],
+  comps:G=>['Your Project 1 circuit','The 3rd jumper wire'],photo:['m2-p3-parts.jpg','Photo of the two-jumper lamp'],video:['m2-p3-demo.mp4','Video showing either jumper being pulled to switch the lamp OFF'],diagram:dgm,text:'The two jumpers are in the same single path. If either is pulled out, the path is open.',
+  steps:G=>['Unplug USB. Take your Project 1 lamp.','Move Jumper 2 out of <b>d15</b>.','<b>Jumper 3:</b> connect <b>d15</b> to hole <b>d20</b>.','<b>Jumper 2:</b> connect <b>e20</b> to the USB board GND pin.','Ask your teacher to check. Plug in USB: the LED glows.','Pull Jumper 3, then push it in. Pull Jumper 2, then push it in. What happens each time?'],
+  expect:'The LED glows only when BOTH jumpers are in place.',how:'The path goes through both jumpers one after the other. A gap in either one opens the circuit.',fix:fixCommon}]};
+
+const MODS={1:M1,2:M2};
+
+
+addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
