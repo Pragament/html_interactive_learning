@@ -318,6 +318,21 @@ footer {
   color: var(--muted);
   margin-top: 36px;
 }
+.student-coding { margin-top: 22px; }
+.coding-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.coding-head p { color:var(--muted); margin-top:4px; }
+.block-toolbar { display:flex; flex-wrap:wrap; gap:8px; margin:18px 0 12px; }
+.block-toolbar button { background:#e8f4ff; border-color:#bdd8f1; color:#174c78; }
+.block-workspace { min-height:130px; padding:14px; border:2px dashed #c9d9d2; border-radius:12px; background:#f7fbf8; }
+.program-block { display:flex; align-items:center; gap:9px; width:max-content; max-width:100%; margin:7px 0; padding:9px 12px; border-radius:9px 14px 14px 9px; background:#f5c95e; color:#263a34; font-weight:700; box-shadow:0 2px 0 #d7a839; }
+.program-block.turn { background:#9fd2f5; box-shadow:0 2px 0 #70add7; }
+.program-block .block-symbol { font-size:18px; }
+.program-block input { width:62px; padding:3px 6px; border:1px solid #9ab6a9; border-radius:6px; background:white; }
+.program-block button { padding:2px 7px; font-size:12px; }
+.program-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.generated-code { margin-top:14px; padding:14px; border-radius:10px; background:#173e38; color:#fff; white-space:pre-wrap; overflow-wrap:anywhere; min-height:90px; font:13px/1.6 ui-monospace,Consolas,monospace; }
+.coding-status { margin-top:10px; color:var(--muted); font-weight:600; }
+@media(max-width:640px){ .program-block { width:100%; } }
 </style>
 </head>
 <body>
@@ -343,7 +358,7 @@ footer {
   <div class="arena-grid">
     
     <!-- LEFT: THE QUESTION -->
-    <section class="arena-card" aria-labelledby="question-heading">
+    <section class="arena-card" id="question-card" aria-labelledby="question-heading">
       <div class="card-title-bar">
         <h2 id="question-heading">📝 The Question</h2>
         <div class="question-nav">
@@ -420,6 +435,41 @@ footer {
     </section>
 
   </div>
+
+  <section class="arena-card student-coding" aria-labelledby="coding-heading">
+    <div class="coding-head">
+      <div>
+        <h2 id="coding-heading">🧩 Build your robot program</h2>
+        <p>Add command blocks, arrange them in order, then run your program against the target route.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="question-badge">Block coding · JavaScript is generated for you</span>
+        <span class="question-badge" id="coding-timer" aria-label="Time since track was shown">Time 00:00</span>
+      </div>
+    </div>
+    <div id="quiz-prompt-wrap" class="question-box" hidden style="margin-top:14px">
+      <strong>Challenge from your quiz</strong>
+      <p id="quiz-prompt" style="margin-top:6px"></p>
+    </div>
+    <div class="block-toolbar" aria-label="Add a coding block">
+      <button type="button" data-add-block="forward">＋ Move forward</button>
+      <button type="button" data-add-block="reverse">＋ Move backward</button>
+      <button type="button" data-add-block="left">＋ Turn left</button>
+      <button type="button" data-add-block="right">＋ Turn right</button>
+      <button type="button" data-add-block="left45">＋ Turn left 45°</button>
+      <button type="button" data-add-block="right45">＋ Turn right 45°</button>
+      <button type="button" id="wrap-repeat">⟳ Repeat last two blocks</button>
+    </div>
+    <div id="block-workspace" class="block-workspace" aria-label="Your block program" aria-live="polite"></div>
+    <div class="program-actions">
+      <button type="button" id="clear-blocks">Clear blocks</button>
+      <button type="button" id="run-blocks" class="primary">▶ Run program</button>
+      <button type="button" id="submit-block-code">Submit code to quiz</button>
+    </div>
+    <h3 style="margin-top:18px">JavaScript generated from your blocks</h3>
+    <pre id="generated-code" class="generated-code" aria-label="Generated JavaScript code"></pre>
+    <p id="coding-status" class="coding-status" role="status">Add blocks to start building your program.</p>
+  </section>
 </main>
 
 <footer>
@@ -752,7 +802,7 @@ const WizbotWorkshop=(()=>{
     $('btn-prev-q').disabled = (index === 0);
     $('btn-next-q').disabled = (index === examples.length - 1);
 
-    if (running) { runToken++; running = false; }
+    if (running) { runToken++; running = false; $('run-blocks').disabled = false; }
 
     const ex = examples[index];
     const speed = 1.0;
@@ -782,6 +832,10 @@ const WizbotWorkshop=(()=>{
 
     renderTarget();
     resetBot();
+    challengeStartedAt = performance.now();
+    firstSuccessfulAt = null;
+    lastRunSuccessful = false;
+    lastRobotSeconds = null;
   }
 
   function renderTarget() {
@@ -956,6 +1010,7 @@ const WizbotWorkshop=(()=>{
   // Reset Arena
   $('btn-reset').addEventListener('click', () => {
     if (running) { runToken++; running = false; }
+    $('run-blocks').disabled = false;
     $('btn-animate').textContent = '▶ Trace Route';
     resetBot();
     renderTarget();
@@ -967,8 +1022,225 @@ const WizbotWorkshop=(()=>{
   $('btn-next-q').addEventListener('click', () => loadQuestion(currentIdx + 1));
   $('toggle-dimensions').addEventListener('change', renderPathMarks);
 
+  // Student block workspace. Blocks are translated to the safe teaching
+  // interpreter for simulation and to JavaScript commands for quiz answers.
+  const blockWorkspace = $('block-workspace');
+  const blockCode = $('generated-code');
+  const blockStatus = $('coding-status');
+  const blocks = [];
+  let challengeStartedAt = null;
+  let firstSuccessfulAt = null;
+  let lastRunSuccessful = false;
+  let lastRobotSeconds = null;
+  function updateCodingTimer() {
+    if (challengeStartedAt === null) return;
+    const end = firstSuccessfulAt || performance.now();
+    const total = Math.max(0, Math.floor((end - challengeStartedAt) / 1000));
+    const minutes = String(Math.floor(total / 60)).padStart(2, '0');
+    const seconds = String(total % 60).padStart(2, '0');
+    $('coding-timer').textContent = `Time ${minutes}:${seconds}`;
+  }
+  setInterval(updateCodingTimer, 1000);
+  const blockInfo = {
+    forward: {label:'Move forward', symbol:'⬆', js:'forward', dsl:'forward'},
+    reverse: {label:'Move backward', symbol:'⬇', js:'reverse', dsl:'reverse'},
+    left: {label:'Turn left', symbol:'↶', js:'left', dsl:'left'},
+    right: {label:'Turn right', symbol:'↷', js:'right', dsl:'right'},
+    left45: {label:'Turn left 45°', symbol:'↶', js:'left45', dsl:'left45'},
+    right45: {label:'Turn right 45°', symbol:'↷', js:'right45', dsl:'right45'}
+  };
+  const usesDistance = type => type === 'forward' || type === 'reverse';
+  const validDistance = value => Math.max(1, Math.min(30, Math.round(Number(value) || 1)));
+
+  function blockSources() {
+    let loopId = 0;
+    function compile(list, indent = 0) {
+      const pad = '  '.repeat(indent);
+      return list.map(block => {
+        if (block.type === 'repeat') {
+          const count = validDistance(block.count);
+          const id = `repeat${++loopId}`;
+          const body = compile(block.children, indent + 1);
+          return {
+            js: `${pad}for (let ${id} = 0; ${id} < ${count}; ${id}++) {\n${body.js}\n${pad}}`,
+            dsl: `${pad}repeat (${count}) {\n${body.dsl}\n${pad}}`
+          };
+        }
+        const info = blockInfo[block.type];
+        const args = usesDistance(block.type) ? `(${validDistance(block.distance)})` : '()';
+        return {js: `${pad}${info.js}${args};`, dsl: `${pad}${info.dsl}${args};`};
+      }).reduce((result, line) => ({
+        js: result.js ? `${result.js}\n${line.js}` : line.js,
+        dsl: result.dsl ? `${result.dsl}\n${line.dsl}` : line.dsl
+      }), {js:'', dsl:''});
+    }
+    const source = compile(blocks);
+    return {js: source.js || '// Add command blocks to generate your program.', dsl: source.dsl};
+  }
+
+  function renderBlocks() {
+    blockWorkspace.replaceChildren();
+    if (!blocks.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'Your blocks will appear here in the order the robot will run them.';
+      empty.style.color = 'var(--muted)';
+      blockWorkspace.append(empty);
+    }
+    function renderList(list, container = blockWorkspace, depth = 0) { list.forEach((block, index) => {
+      if (block.type === 'repeat') {
+        const group = document.createElement('div');
+        group.style.marginLeft = `${depth * 18}px`;
+        group.style.paddingLeft = '8px';
+        group.style.borderLeft = '3px solid #a891d6';
+        const row = document.createElement('div');
+        row.className = 'program-block';
+        row.style.background = '#d6c6f2'; row.style.boxShadow = '0 2px 0 #aa8cda';
+        const symbol = document.createElement('span'); symbol.className = 'block-symbol'; symbol.textContent = '⟳'; row.append(symbol);
+        const title = document.createElement('span'); title.textContent = 'Repeat'; row.append(title);
+        const amount = document.createElement('input'); amount.type = 'number'; amount.min = '1'; amount.max = '30'; amount.value = String(validDistance(block.count)); amount.setAttribute('aria-label', 'Repeat count');
+        amount.addEventListener('input', () => { block.count = validDistance(amount.value); updateGeneratedCode(); }); row.append(amount);
+        const times = document.createElement('span'); times.textContent = 'times'; row.append(times);
+        const moveUp = document.createElement('button'); moveUp.type = 'button'; moveUp.textContent = '↑'; moveUp.title = 'Move repeat block up';
+        moveUp.addEventListener('click', () => { if (index > 0) [list[index], list[index - 1]] = [list[index - 1], list[index]]; renderBlocks(); }); row.append(moveUp);
+        const moveDown = document.createElement('button'); moveDown.type = 'button'; moveDown.textContent = '↓'; moveDown.title = 'Move repeat block down';
+        moveDown.addEventListener('click', () => { if (index < list.length - 1) [list[index], list[index + 1]] = [list[index + 1], list[index]]; renderBlocks(); }); row.append(moveDown);
+        const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = '×'; remove.title = 'Remove repeat block';
+        remove.addEventListener('click', () => { list.splice(index, 1); renderBlocks(); }); row.append(remove);
+        group.append(row);
+        if (block.children.length) renderList(block.children, group, depth + 1);
+        else { const empty = document.createElement('p'); empty.textContent = 'Repeat block is empty. Add two commands, then use “Repeat last two blocks”.'; empty.style.margin = '5px 0 8px 16px'; empty.style.color = 'var(--muted)'; group.append(empty); }
+        container.append(group);
+        return;
+      }
+      const info = blockInfo[block.type];
+      const row = document.createElement('div');
+      row.style.marginLeft = `${depth * 18}px`;
+      row.className = 'program-block' + (block.type.startsWith('left') || block.type.startsWith('right') ? ' turn' : '');
+      const label = document.createElement('span');
+      label.className = 'block-symbol';
+      label.textContent = info.symbol;
+      row.append(label);
+      const text = document.createElement('span');
+      text.textContent = info.label;
+      row.append(text);
+      if (usesDistance(block.type)) {
+        const amount = document.createElement('input');
+        amount.type = 'number'; amount.min = '1'; amount.max = '30'; amount.step = '1';
+        amount.value = String(validDistance(block.distance)); amount.setAttribute('aria-label', 'Number of steps');
+        amount.addEventListener('input', () => {
+          block.distance = validDistance(amount.value);
+          updateGeneratedCode();
+        });
+        row.append(amount);
+        const units = document.createElement('span'); units.textContent = 'steps'; row.append(units);
+      }
+      for (const [labelText, offset, title] of [['↑', -1, 'Move block up'], ['↓', 1, 'Move block down'], ['×', 0, 'Remove block']]) {
+        const action = document.createElement('button');
+        action.type = 'button'; action.textContent = labelText; action.title = title; action.setAttribute('aria-label', title);
+        action.addEventListener('click', () => {
+          if (offset === 0) list.splice(index, 1);
+          else if (index + offset >= 0 && index + offset < list.length) [list[index], list[index + offset]] = [list[index + offset], list[index]];
+          renderBlocks();
+        });
+        row.append(action);
+      }
+      container.append(row);
+    }); }
+    renderList(blocks);
+    updateGeneratedCode();
+  }
+
+  function updateGeneratedCode() {
+    lastRunSuccessful = false;
+    lastRobotSeconds = null;
+    updateCodingTimer();
+    const {js} = blockSources();
+    blockCode.textContent = js;
+  }
+
+  document.querySelectorAll('[data-add-block]').forEach(button => button.addEventListener('click', () => {
+    const type = button.dataset.addBlock;
+    blocks.push({type, distance: 1});
+    renderBlocks();
+    blockStatus.textContent = 'Block added. Move it, adjust its steps, or add another command.';
+  }));
+  $('wrap-repeat').addEventListener('click', () => {
+    if (blocks.length < 2) { blockStatus.textContent = 'Add at least two command blocks first, then wrap them in a repeat block.'; return; }
+    const children = blocks.splice(-2, 2);
+    blocks.push({type:'repeat', count:2, children});
+    renderBlocks();
+    blockStatus.textContent = 'The last two blocks are now inside a repeat block. Change how many times they run.';
+  });
+  $('clear-blocks').addEventListener('click', () => {
+    blocks.splice(0, blocks.length); renderBlocks();
+    blockStatus.textContent = 'Blocks cleared. Add commands to build a new program.';
+  });
+  $('submit-block-code').addEventListener('click', () => {
+    if (!blocks.length) { blockStatus.textContent = 'Add at least one command block before submitting.'; return; }
+    if (!lastRunSuccessful || firstSuccessfulAt === null) { blockStatus.textContent = 'Run your program and reach the target before sending your code to the quiz.'; return; }
+    const source = blockSources();
+    const codingTimeMs = Math.round(firstSuccessfulAt - challengeStartedAt);
+    const codeLines = source.js.split('\n').filter(line => line.trim()).length;
+    const resultComment = `// Wizbot result: targetReached=true; codingTimeMs=${codingTimeMs}; robotTimeSeconds=${Number(lastRobotSeconds || 0).toFixed(2)}; codeLines=${codeLines}`;
+    const submittedCode = `${resultComment}\n${source.js}`;
+    if (window.parent === window) {
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(submittedCode).then(() => { blockStatus.textContent = 'Successful code and timing copied. Paste it into your answer.'; }).catch(() => { blockStatus.textContent = 'Successful code is ready in the generated JavaScript panel.'; });
+      else blockStatus.textContent = 'Successful code is ready in the generated JavaScript panel.';
+    } else {
+      window.parent.postMessage({type:'wizbot-code-submit', code:submittedCode}, '*');
+      blockStatus.textContent = 'Successful code and timing sent to your short-answer response. Finish and submit the quiz when ready.';
+    }
+  });
+  $('run-blocks').addEventListener('click', async () => {
+    if (running || !activeChallenge) return;
+    if (!blocks.length) { blockStatus.textContent = 'Add command blocks before running your program.'; return; }
+    const source = blockSources().dsl;
+    running = true;
+    const token = ++runToken;
+    $('run-blocks').disabled = true;
+    blockStatus.textContent = 'Robot is following your program…';
+    resetBot();
+    try {
+      const actual = await WizbotWorkshop.trace(source, activeChallenge.example.input, activeChallenge.example.mode, activeChallenge.speed, activeChallenge.turn);
+      await WizbotCode.run(source, {
+        input: activeChallenge.example.input,
+        shouldStop: () => token !== runToken,
+        onMove: (command, args) => token === runToken ? executeStep(command, token, args) : false
+      });
+      if (token !== runToken) return;
+      const success = WizbotWorkshop.matches(activeChallenge.route, actual);
+      lastRunSuccessful = success;
+      lastRobotSeconds = success ? actual.seconds : null;
+      if (success && firstSuccessfulAt === null) { firstSuccessfulAt = performance.now(); updateCodingTimer(); }
+      blockStatus.textContent = success ? 'Target reached! Submit the generated code to your quiz answer.' : 'Not on the target route yet. Compare the trails, then adjust your blocks.';
+    } catch (error) {
+      if (token === runToken) blockStatus.textContent = error.message || 'This block sequence could not run.';
+    } finally {
+      if (token === runToken) { running = false; $('run-blocks').disabled = false; }
+    }
+  });
+  renderBlocks();
+
+  // In an embedded quiz, the question comes from Supabase. This page supplies
+  // the block editor and route; a teacher-selected route number is passed in
+  // the question text using the marker documented in the project README.
+  const embedParams = new URLSearchParams(location.search);
+  const embeddedInQuiz = embedParams.get('embed') === '1';
+  const requestedChallenge = Number(embedParams.get('challenge'));
+  if (embeddedInQuiz) {
+    document.querySelector('.topbar').hidden = true;
+    document.querySelector('.page-title-row').hidden = true;
+    document.querySelector('footer').hidden = true;
+    $('question-card').hidden = true;
+    document.querySelector('.arena-grid').style.gridTemplateColumns = '1fr';
+    $('quiz-prompt').textContent = embedParams.get('prompt') || 'Build a block program for the route shown.';
+    $('quiz-prompt-wrap').hidden = false;
+    const questionNav = document.querySelector('.question-nav');
+    if (questionNav) questionNav.hidden = true;
+  }
+
   // Initial load
-  loadQuestion(0);
+  loadQuestion(embeddedInQuiz && requestedChallenge > 0 ? requestedChallenge - 1 : 0);
 })();
 </script>
 </body>
